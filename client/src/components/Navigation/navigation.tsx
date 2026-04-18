@@ -1,6 +1,8 @@
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
+import { isFranchiseOrMaster } from 'fizz-kidz'
+
 import { useAuth } from '@components/Hooks/context/useAuth'
 import { useOrg } from '@components/Session/use-org'
 import afterSchool from '@drawables/after-school.webp'
@@ -44,20 +46,20 @@ const programs: NavigationItem[] = [
         accentSoft: 'rgba(0, 194, 227, 0.16)',
     },
     {
-        title: 'Play Lab',
-        description: "Our dedicated under 5's year old program that expolores sensory and play.",
-        to: 'play-lab',
-        imgSrc: kingsville,
-        accent: '#9ecc48',
-        accentSoft: 'rgba(158, 204, 72, 0.16)',
-    },
-    {
         title: 'After School Program',
         description: 'Art & Science programs run at schools.',
         to: 'after-school-program',
         imgSrc: afterSchool,
         accent: '#f6ba34',
         accentSoft: 'rgba(246, 186, 52, 0.18)',
+    },
+    {
+        title: 'Preschool Program',
+        description: 'Manage staff attendance for our new term-based preschool program',
+        to: 'preschool-program',
+        imgSrc: kingsville,
+        accent: '#9ecc48',
+        accentSoft: 'rgba(158, 204, 72, 0.16)',
     },
 ]
 
@@ -111,6 +113,14 @@ const adminItems: NavigationItem[] = [
         imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=envelope&scale=70&backgroundColor=E91171',
         accent: '#ff4f9c',
         accentSoft: 'rgba(255, 79, 156, 0.14)',
+    },
+    {
+        title: 'Preschool Program Invoicing',
+        description: 'Send invoices and track payment status for Preschool Program enrolments.',
+        to: 'preschool-program-invoicing',
+        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=envelope&scale=70&backgroundColor=F6BA34',
+        accent: '#f6ba34',
+        accentSoft: 'rgba(246, 186, 52, 0.18)',
     },
     {
         title: 'Payroll',
@@ -193,7 +203,7 @@ export const Navigation = () => {
                         items={creations}
                     />
                     <Section title="Quick links" subtitle="Open-and-go references." items={usefulLinks} />
-                    {hasPermission('admin') && (
+                    {hasPermission('admin') && isFranchiseOrMaster(currentOrg!) && (
                         <Section
                             title="Ops & admin"
                             subtitle="Tools to manage all our operations. Requires admin access to view."

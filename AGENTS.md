@@ -46,6 +46,12 @@ This guide orients you to the codebase and points to the authoritative README fi
 - Shared types/logic: add to `server/fizz-kidz` and export via its `src/index.ts`.
 - Server SDKs: instantiate lazily (e.g., Square/Acuity/Xero) to reduce cold starts.
 
+## Verification Workflow
+- After making changes, always run verification in this order for the files or package touched: Prettier, then lint, then typecheck.
+- For client changes, prefer running the local client formatter directly so it uses the repo plugin setup (for example from `client/`: `./node_modules/.bin/prettier --write <files>`).
+- Do not leave formatting-only diffs for the user to discover on save; format changed files before finishing.
+- If lint/typecheck output includes unrelated pre-existing warnings elsewhere in the repo, call that out clearly instead of treating them as part of the current change.
+
 ## Common Tasks
 - Add a new API surface: create a feature folder in `server/src/<feature>/`, define or extend a tRPC router, and register it with `appRouter` so it flows through the `api` function.
 - Webhooks/PubSub: place routers/handlers under `server/src/<feature>/functions/`; webhooks are mounted from `server/src/api.ts`, while Pub/Sub tasks publish/listen on the shared `background` topic via `server/src/pubsub.ts`.

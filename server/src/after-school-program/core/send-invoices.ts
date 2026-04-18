@@ -5,7 +5,6 @@ import {
     type SendInvoiceParams,
 } from 'fizz-kidz'
 
-
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { env } from '@/init'
 import { SquareClient } from '@/square/core/square-client'
@@ -54,7 +53,8 @@ export async function sendInvoices(input: SendInvoiceParams[]) {
                     }
                 }
 
-                const amount = invoiceData.numberOfWeeks * parseFloat(enrolment.price) * 100 // cents
+                const unitPriceInCents = Math.round(Number(enrolment.price) * 100)
+                const amount = invoiceData.numberOfWeeks * unitPriceInCents
 
                 // 3. send invoice
                 const invoice = await sendInvoice({

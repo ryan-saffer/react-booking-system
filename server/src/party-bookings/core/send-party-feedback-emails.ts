@@ -8,6 +8,8 @@ import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { MailClient } from '../../sendgrid/MailClient'
 import { logError, midnight } from '../../utilities'
 
+const skippedEmails = ['conzelios@rocketmail.com']
+
 export async function sendPartyFeedbackEmails() {
     const today = midnight(DateTime.now().setZone('Australia/Melbourne'))
     const startDate = today.minus({ days: 1 }).toJSDate() // yesterday
@@ -22,30 +24,41 @@ export async function sendPartyFeedbackEmails() {
 
     const mailClient = await MailClient.getInstance()
 
-    const result = await Promise.allSettled(
-        querySnap.docs.map((docSnap) => {
-            const firestoreBooking = docSnap.data()
-            const booking = {
-                ...firestoreBooking,
-                dateTime: firestoreBooking.dateTime.toDate(),
-            } satisfies Booking
+    const emailJobs = querySnap.docs.flatMap((docSnap) => {
+        const firestoreBooking = docSnap.data()
+        const booking = {
+            ...firestoreBooking,
+            dateTime: firestoreBooking.dateTime.toDate(),
+        } satisfies Booking
 
-            return mailClient.sendEmail(
-                'partyFeedback',
-                booking.parentEmail,
-                {
-                    parentName: booking.parentFirstName,
-                    childName: booking.childName,
-                    reviewUrl: getReviewUrl(booking.location),
-                },
-                { subject: `Did ${booking.childName} have fun yesterday? 🎉` }
-            )
-        })
-    )
+        const normalizedParentEmail = booking.parentEmail.trim().toLowerCase()
+
+        if (skippedEmails.includes(normalizedParentEmail)) {
+            return []
+        }
+
+        return [
+            {
+                bookingId: docSnap.id,
+                promise: mailClient.sendEmail(
+                    'partyFeedback',
+                    booking.parentEmail,
+                    {
+                        parentName: booking.parentFirstName,
+                        childName: booking.childName,
+                        reviewUrl: getReviewUrl(booking.location),
+                    },
+                    { subject: `Did ${booking.childName} have fun yesterday? 🎉` }
+                ),
+            },
+        ]
+    })
+
+    const result = await Promise.allSettled(emailJobs.map(({ promise }) => promise))
 
     result.map((it, idx) => {
         if (it.status === 'rejected') {
-            logError(`error sending feedback email for booking with id: '${querySnap.docs[idx].id}'`)
+            logError(`error sending feedback email for booking with id: '${emailJobs[idx].bookingId}'`)
         }
     })
 }

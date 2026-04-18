@@ -128,20 +128,19 @@ export default async function scheduleAfterSchoolProgram(
         }
     }
 
-    if (input.joinMailingList) {
-        try {
-            const zohoClient = new ZohoClient()
-            await zohoClient.addAfterSchoolProgramContact({
-                firstName: appointment.parent.firstName,
-                lastName: appointment.parent.lastName,
-                email: appointment.parent.email,
-                mobile: appointment.parent.phone,
-                childName: input.child.firstName,
-                childBirthdayISO: input.child.dob,
-            })
-        } catch (err) {
-            logError(`unable to add after school program enrolment to zoho with id: ${appointment.id}`, err)
-        }
+    try {
+        const zohoClient = new ZohoClient()
+        await zohoClient.addAfterSchoolProgramContact({
+            firstName: appointment.parent.firstName,
+            lastName: appointment.parent.lastName,
+            email: appointment.parent.email,
+            mobile: appointment.parent.phone,
+            childName: input.child.firstName,
+            childBirthdayISO: input.child.dob,
+            optOutOfMarketing: !input.joinMailingList,
+        })
+    } catch (err) {
+        logError(`unable to add after school program enrolment to zoho with id: ${appointment.id}`, err)
     }
 
     // send the confirmation email

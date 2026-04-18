@@ -80,7 +80,7 @@ export class MailClient {
                 ...(emailInfo.bcc || []),
                 ...options.bcc,
                 ...(options.bccBookings ? ['bookings@fizzkidz.com.au'] : []),
-                'lszcngs3_78g0kbqh@mails1.zohocrm.com.au', // zoho crm bcc dropbox
+                '8gvzc6g7_w0e8cp7c@mails1.zohocrm.com.au', // zoho crm bcc dropbox
             ]
         }
 
@@ -795,6 +795,34 @@ export class MailClient {
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'play_lab_cancellation.mjml',
+                    useMjml: true,
+                }
+            case 'preschoolProgramBookingConfirmation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Preschool Program Booking Confirmation',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'preschool_program_booking_confirmation.mjml',
+                    useMjml: true,
+                }
+            case 'preschoolProgramUnenrolmentConfirmation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Preschool Program Unenrolment Confirmation',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'preschool_program_unenrolment_confirmation.mjml',
                     useMjml: true,
                 }
             case 'rsvpToParty':

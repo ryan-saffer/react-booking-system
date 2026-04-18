@@ -66,9 +66,22 @@ export async function sendInvoice(input: {
             input,
         })
 
+    if (!order.id)
+        throwTrpcError(
+            'INTERNAL_SERVER_ERROR',
+            'creating order returned no order id for after school program invoice',
+            null,
+            {
+                input,
+            }
+        )
+
+    const invoiceNumber = buildAfterSchoolInvoiceNumber(referenceId, order.id)
+
     const { invoice } = await square.invoices
         .create({
             invoice: {
+                invoiceNumber,
                 orderId: order.id,
                 primaryRecipient: { customerId },
                 paymentRequests: [
@@ -117,4 +130,8 @@ export async function sendInvoice(input: {
     })
 
     return invoice
+}
+
+function buildAfterSchoolInvoiceNumber(referenceId: string, orderId: string) {
+    return `ASP-${referenceId.slice(-6).toUpperCase()}-${orderId.slice(-6).toUpperCase()}`
 }

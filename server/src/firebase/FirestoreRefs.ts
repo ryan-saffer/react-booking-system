@@ -9,6 +9,7 @@ import type {
     Invitation,
     InvitationsV2,
     Rsvp,
+    PreschoolProgramEnrolment,
     ZohoAccessToken,
 } from 'fizz-kidz'
 
@@ -36,6 +37,16 @@ export class FirestoreRefs {
 
     static async afterSchoolEnrolment(appointmentId: string) {
         return (await this.afterSchoolEnrolments()).doc(appointmentId)
+    }
+
+    static async preschoolProgramEnrolments() {
+        return (await FirestoreClient.getInstance()).collection(
+            'preschoolProgramEnrolments'
+        ) as Collection<PreschoolProgramEnrolment>
+    }
+
+    static async preschoolProgramEnrolment(enrolmentId: string) {
+        return (await this.preschoolProgramEnrolments()).doc(enrolmentId)
     }
 
     static async events() {

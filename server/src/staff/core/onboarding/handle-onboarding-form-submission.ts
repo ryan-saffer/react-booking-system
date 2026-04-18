@@ -1,15 +1,20 @@
 import { logger } from 'firebase-functions/v2'
 import { State } from 'xero-node/dist/gen/model/payroll-au/state'
 
-import type { Employee, OnboardingForm, PaperFormResponse, WWCC } from 'fizz-kidz'
-import { getQuestionValue } from 'fizz-kidz'
+import type { Employee, FranchiseOrMaster, OnboardingForm, PaperFormResponse, WWCC } from 'fizz-kidz'
+import { getFranchiseOrMaster, getQuestionValue } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { DriveClient } from '@/google/DriveClient'
 import { MailClient } from '@/sendgrid/MailClient'
 import { logError } from '@/utilities'
 
-const CURRENT_STAFF_FOLDER_ID = '11CgIoNzfcAcvY2ciz65LPsc3Jw_xjKba'
+const STAFF_FOLDER_ID_BY_BUSINESS = {
+    master: '1c4ZkdG6bKMKv2mi5Dxvku3c__ue3y5HL',
+    balwyn: '1hU2qgD3WDDvTmdB3z8QsOwU2eGi3wtqx',
+    kingsville: '1aHludRI1qiTd-GiAUPlZT6VHBYG5mGJ9',
+} as const satisfies Record<FranchiseOrMaster, string>
+
 // const STAFF_ORDINARY_HOURS_RATE_ID =
 //     env === 'prod' ? '1ef5805a-5208-4d89-8f35-620104543ed4' : '4b2bb657-a2be-40ff-a13d-3aeee69d34ce'
 // const PAYROLL_CALENDAR_ID =
@@ -87,7 +92,8 @@ export async function handleOnboardingFormSubmission(data: PaperFormResponse<Onb
     const driveClient = await DriveClient.getInstance()
     let folderId: string | null | undefined = null
     try {
-        folderId = await driveClient.createFolder(`${employee.firstName} ${employee.lastName}`, CURRENT_STAFF_FOLDER_ID)
+        const parentFolderId = STAFF_FOLDER_ID_BY_BUSINESS[getFranchiseOrMaster(employee.studio)]
+        folderId = await driveClient.createFolder(`${employee.firstName} ${employee.lastName}`, parentFolderId)
 
         // TFN form
         if (employee.tfnForm) {

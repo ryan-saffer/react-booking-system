@@ -44,6 +44,20 @@ export type Emails = {
         receiptUrl: string | undefined
     }
 
+    preschoolProgramBookingConfirmation: {
+        parentName: string
+        childName: string
+        className: string
+        location: string
+        appointmentTimes: string[]
+    }
+
+    preschoolProgramUnenrolmentConfirmation: {
+        parentName: string
+        childName: string
+        className: string
+    }
+
     // AFTER SCHOOL PROGRAM
     termContinuationEmail: {
         parentName: string

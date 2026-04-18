@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom'
 
-import type { Permission } from 'fizz-kidz'
+import { isFranchiseOrMaster, type Permission } from 'fizz-kidz'
 
 import { useAuth } from '@components/Hooks/context/useAuth'
 
@@ -9,16 +9,29 @@ import { useOrg } from './use-org'
 
 import type { ReactNode } from 'react'
 
-export function ProtectedRoute({ permission, children }: { permission: Permission; children: ReactNode }) {
+export function ProtectedRoute({
+    permission,
+    franchiseOrMaster = false,
+    children,
+}: {
+    permission: Permission
+
+    franchiseOrMaster?: boolean
+    children: ReactNode
+}) {
     const authUser = useAuth()
-    const { hasPermission } = useOrg()
-    if (!authUser) {
+    const { hasPermission, currentOrg } = useOrg()
+    if (!authUser || !currentOrg) {
         return <Navigate to="/sign-in" />
     }
 
-    if (hasPermission(permission)) {
-        return children
-    } else {
+    if (!hasPermission(permission)) {
         return <Unauthorised />
     }
+
+    if (franchiseOrMaster && !isFranchiseOrMaster(currentOrg)) {
+        return <Navigate to="/dashboard" />
+    }
+
+    return children
 }

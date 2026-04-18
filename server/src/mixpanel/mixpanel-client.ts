@@ -81,7 +81,7 @@ export type MixpanelEvent = {
         distinct_id: string
         invitationId: string
         view: // used the sidebar on desktop
-            | 'sidebar'
+        | 'sidebar'
             // used the mobile drawer
             | 'drawer'
             // used the section just sitting under the invite on mobile (no drawer)
@@ -162,6 +162,24 @@ export type MixpanelEvent = {
         childGrade: string
         className: string
     }
+    'preschool-program-enrolment': {
+        distinct_id: string
+        appointmentTypeId: number
+        calendarId: number
+        location: StudioOrTest
+        childAge: string
+        className: string
+        numberOfWeeks: number
+    }
+    'preschool-program-unenrolment': {
+        distinct_id: string
+        appointmentTypeId: number
+        calendarId: number
+        location: StudioOrTest
+        childAge: string
+        className: string
+        numberOfWeeks: number
+    }
     'play-lab-booking': {
         distinct_id: string
         bookingType: 'term-booking' | 'casual'
@@ -193,5 +211,7 @@ const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'birthday-party-form-completed': 'Birthday Party Form Completed',
     'after-school-program-enrolment': 'After School Program Enrolment',
     'after-school-program-unenrolment': 'After School Program Unenrolment',
+    'preschool-program-enrolment': 'Preschool Program Enrolment',
+    'preschool-program-unenrolment': 'Preschool Program Unenrolment',
     'play-lab-booking': 'Play Lab Booking',
 }

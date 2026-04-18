@@ -196,25 +196,24 @@ export async function bookPlayLab(input: BookPlayLabProps) {
     )
 
     // MARK: CRM
-    if (input.joinMailingList) {
-        const zohoClient = new ZohoClient()
-        try {
-            for (const child of input.children) {
-                // cannot use `Promise.all()` here, since each child is added individually.
-                // doing them concurrently writes each child into the same free slot, and overwrite each other.
-                // the most ideal fix is to pass all children into the zoho client, and the client can handle multiple children at once..
-                // but cbf for now.
-                await zohoClient.addPlayLabContact({
-                    firstName: input.parentFirstName,
-                    email: input.parentEmail,
-                    studio: AcuityUtilities.getStudioByCalendarId(input.classes[0].calendarID),
-                    childName: child.firstName,
-                    childBirthdayISO: child.dob.split('T')[0],
-                })
-            }
-        } catch (err) {
-            logError(`unable to add play lab booking to zoho with parent email '${input.parentEmail}'`, err, { input })
+    const zohoClient = new ZohoClient()
+    try {
+        for (const child of input.children) {
+            // cannot use `Promise.all()` here, since each child is added individually.
+            // doing them concurrently writes each child into the same free slot, and overwrite each other.
+            // the most ideal fix is to pass all children into the zoho client, and the client can handle multiple children at once..
+            // but cbf for now.
+            await zohoClient.addPlayLabContact({
+                firstName: input.parentFirstName,
+                email: input.parentEmail,
+                studio: AcuityUtilities.getStudioByCalendarId(input.classes[0].calendarID),
+                childName: child.firstName,
+                childBirthdayISO: child.dob.split('T')[0],
+                optOutOfMarketing: !input.joinMailingList,
+            })
         }
+    } catch (err) {
+        logError(`unable to add play lab booking to zoho with parent email '${input.parentEmail}'`, err, { input })
     }
 
     // MARK: Confirmation email
