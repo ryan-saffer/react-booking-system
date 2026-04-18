@@ -13,6 +13,14 @@ export function isFranchise(studio: StudioOrMaster): studio is FranchiseStudio {
     return FRANCHISE_STUDIOS.includes(studio as any)
 }
 
+export function isFranchiseOrMaster(studio: StudioOrMaster): studio is FranchiseOrMaster {
+    if (studio === 'master') return true
+
+    if (isFranchise(studio)) return true
+
+    return false
+}
+
 export function getFranchiseOrMaster(studio: StudioOrMaster): FranchiseOrMaster {
     if (studio === 'master') {
         return 'master'

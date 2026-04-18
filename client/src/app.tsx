@@ -288,7 +288,7 @@ const router = createBrowserRouter([
                                 index: true,
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute permission="admin">
+                                        <ProtectedRoute permission="admin" franchiseOrMaster>
                                             <AfterSchoolProgramInvoicingPage />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -298,7 +298,7 @@ const router = createBrowserRouter([
                                 path: 'class',
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute permission="admin">
+                                        <ProtectedRoute permission="admin" franchiseOrMaster>
                                             <AfterSchoolProgramInvoicing />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -403,7 +403,7 @@ const router = createBrowserRouter([
                                 index: true,
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute permission="admin">
+                                        <ProtectedRoute permission="admin" franchiseOrMaster>
                                             <PreschoolProgramInvoicingPage />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -413,7 +413,7 @@ const router = createBrowserRouter([
                                 path: 'program',
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute permission="admin">
+                                        <ProtectedRoute permission="admin" franchiseOrMaster>
                                             <PreschoolProgramInvoiceStatusPage />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -425,7 +425,7 @@ const router = createBrowserRouter([
                         path: 'payroll',
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
-                                <ProtectedRoute permission="admin">
+                                <ProtectedRoute permission="admin" franchiseOrMaster>
                                     <Payroll />
                                 </ProtectedRoute>
                             </Suspense>
@@ -435,7 +435,7 @@ const router = createBrowserRouter([
                         path: 'onboarding',
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
-                                <ProtectedRoute permission="admin">
+                                <ProtectedRoute permission="admin" franchiseOrMaster>
                                     <Onboarding />
                                 </ProtectedRoute>
                             </Suspense>
