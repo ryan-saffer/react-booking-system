@@ -1,6 +1,8 @@
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
+import { isFranchiseOrMaster } from 'fizz-kidz'
+
 import { useAuth } from '@components/Hooks/context/useAuth'
 import { useOrg } from '@components/Session/use-org'
 import afterSchool from '@drawables/after-school.webp'
@@ -201,7 +203,7 @@ export const Navigation = () => {
                         items={creations}
                     />
                     <Section title="Quick links" subtitle="Open-and-go references." items={usefulLinks} />
-                    {hasPermission('admin') && (
+                    {hasPermission('admin') && isFranchiseOrMaster(currentOrg!) && (
                         <Section
                             title="Ops & admin"
                             subtitle="Tools to manage all our operations. Requires admin access to view."
