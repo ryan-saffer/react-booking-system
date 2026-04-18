@@ -10,7 +10,6 @@ import type { ClientStatus } from '../utilities/types'
 import type { drive_v3 } from 'googleapis'
 import type { ReadableStream } from 'stream/web'
 
-
 export class DriveClient {
     private static instance: DriveClient
     #status: ClientStatus = 'not-initialised'
