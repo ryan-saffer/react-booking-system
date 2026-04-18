@@ -12,3 +12,11 @@ export type StudioOrTest = Studio | 'test'
 export function isFranchise(studio: StudioOrMaster): studio is FranchiseStudio {
     return FRANCHISE_STUDIOS.includes(studio as any)
 }
+
+export function getFranchiseOrMaster(studio: StudioOrMaster): FranchiseOrMaster {
+    if (studio === 'master') {
+        return 'master'
+    }
+
+    return isFranchise(studio) ? studio : 'master'
+}
