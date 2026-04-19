@@ -1,3 +1,4 @@
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Copy, Download, Mail, MessageCircleMore, PartyPopper, Sparkles } from 'lucide-react'
 import { WhatsappShareButton } from 'react-share'
 import { toast } from 'sonner'
@@ -6,9 +7,8 @@ import { getRsvpUrl } from 'fizz-kidz'
 
 import { WhatsappIcon } from '@drawables/icons/whatsapp'
 import { Button } from '@ui-components/button'
-import { Dialog, DialogContent } from '@ui-components/dialog'
+import { Dialog, DialogContent, DialogTitle } from '@ui-components/dialog'
 import { Input } from '@ui-components/input'
-import { Label } from '@ui-components/label'
 
 import { useInvitation } from '../hooks/use-invitation'
 import { useInvitationImage } from '../hooks/use-invitation-image'
@@ -41,7 +41,13 @@ export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; clos
 
     return (
         <Dialog open={isOpen} onOpenChange={close}>
-            <DialogContent className="twp max-w-3xl overflow-hidden border-none bg-gradient-to-br from-[#F7F1FF] via-white to-[#EAF6FF] p-0">
+            <DialogContent
+                className="twp max-w-3xl overflow-hidden border-none bg-gradient-to-br from-[#F7F1FF] via-white to-[#EAF6FF] p-0"
+                aria-describedby={undefined}
+            >
+                <VisuallyHidden>
+                    <DialogTitle>Share your invitation</DialogTitle>
+                </VisuallyHidden>
                 <div className="space-y-6 p-6 sm:p-8">
                     <div className="flex flex-wrap items-start justify-between gap-4">
                         <div className="space-y-2">
@@ -82,21 +88,19 @@ export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; clos
 
                     <div className="grid grid-cols-3 gap-3">
                         <ShareTile>
-                            <WhatsappShareButton id="whatsapp" url={inviteUrl}>
-                                <WhatsappIcon aria-hidden="true" size={32} />
-                            </WhatsappShareButton>
-                            <Label
-                                htmlFor="whatsapp"
-                                className="mt-2 cursor-pointer text-sm font-semibold text-slate-800"
+                            <WhatsappShareButton
+                                url={inviteUrl}
+                                aria-label="Share on WhatsApp"
+                                className="absolute inset-0 z-10 h-full w-full rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9B3EEA] focus-visible:ring-offset-2"
                             >
-                                WhatsApp
-                            </Label>
+                                <span className="sr-only">Share on WhatsApp</span>
+                            </WhatsappShareButton>
+                            <WhatsappIcon aria-hidden="true" size={32} />
+                            <span className="mt-2 text-sm font-semibold text-slate-800">WhatsApp</span>
                         </ShareTile>
                         <ShareTile onClick={() => window.open(`sms://?body=${encodeURIComponent(inviteUrl)}`)}>
                             <MessageCircleMore id="sms" className="h-8 w-8 text-slate-800" />
-                            <Label htmlFor="sms" className="mt-2 cursor-pointer text-sm font-semibold text-slate-800">
-                                SMS
-                            </Label>
+                            <span className="mt-2 text-sm font-semibold text-slate-800">SMS</span>
                         </ShareTile>
                         <ShareTile
                             onClick={() =>
@@ -106,9 +110,7 @@ export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; clos
                             }
                         >
                             <Mail id="email" className="h-8 w-8 text-slate-800" />
-                            <Label htmlFor="email" className="mt-2 cursor-pointer text-sm font-semibold text-slate-800">
-                                Email
-                            </Label>
+                            <span className="mt-2 text-sm font-semibold text-slate-800">Email</span>
                         </ShareTile>
                     </div>
 
@@ -124,13 +126,22 @@ export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; clos
 
 function ShareTile({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
     return (
-        <button
+        <div
             onClick={onClick}
-            className="group flex h-full w-full flex-col items-center justify-center rounded-xl border border-white/70 bg-white/80 p-3 text-slate-700 shadow-sm transition hover:border-[#9B3EEA]/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9B3EEA] focus-visible:ring-offset-2"
+            onKeyDown={(event) => {
+                if (!onClick) return
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault()
+                    onClick()
+                }
+            }}
+            role={onClick ? 'button' : undefined}
+            tabIndex={onClick ? 0 : undefined}
+            className="group relative flex h-full w-full flex-col items-center justify-center rounded-xl border border-white/70 bg-white/80 p-3 text-slate-700 shadow-sm transition hover:border-[#9B3EEA]/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9B3EEA] focus-visible:ring-offset-2"
         >
             <span className="flex flex-col items-center justify-center gap-1 group-hover:text-[#9B3EEA]">
                 {children}
             </span>
-        </button>
+        </div>
     )
 }

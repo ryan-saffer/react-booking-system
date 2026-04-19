@@ -1,4 +1,5 @@
 import { Share } from '@mui/icons-material'
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { useMutation } from '@tanstack/react-query'
 import { Download, Edit, Loader2, Sparkles, Wand2 } from 'lucide-react'
 import { useState } from 'react'
@@ -8,7 +9,7 @@ import type { InvitationsV2 } from 'fizz-kidz'
 
 import Loader from '@components/Shared/Loader'
 import { Button } from '@ui-components/button'
-import { Dialog, DialogContent } from '@ui-components/dialog'
+import { Dialog, DialogContent, DialogTitle } from '@ui-components/dialog'
 import { useTRPC } from '@utils/trpc'
 
 import { CreateInvitationForm } from '../create-invitation-form'
@@ -72,7 +73,13 @@ export function EditInvitationDialog({
                 close()
             }}
         >
-            <DialogContent className="twp max-h-[90vh] w-full max-w-[95vw] overflow-auto border-none bg-gradient-to-br from-[#F7F1FF] via-white to-[#EAF6FF] p-0 sm:max-w-6xl sm:overflow-auto">
+            <DialogContent
+                className="twp max-h-[90vh] w-full max-w-[95vw] overflow-auto border-none bg-gradient-to-br from-[#F7F1FF] via-white to-[#EAF6FF] p-0 sm:max-w-6xl sm:overflow-auto"
+                aria-describedby={undefined}
+            >
+                <VisuallyHidden>
+                    <DialogTitle>Your invite is ready to share</DialogTitle>
+                </VisuallyHidden>
                 {!isEditing ? (
                     <div className="grid gap-6 p-6 sm:p-8">
                         <div className="flex flex-wrap items-start justify-between gap-6 pr-10">
