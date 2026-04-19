@@ -1,6 +1,6 @@
 import { logger } from 'firebase-functions/v2'
 
-import type { InvitationOption } from 'fizz-kidz'
+import type { InvitationOption, InvitationsV2 } from 'fizz-kidz'
 import { type Studio, type StudioOrTest } from 'fizz-kidz'
 
 import type { ClientStatus } from '../utilities/types'
@@ -61,11 +61,27 @@ export type MixpanelEvent = {
         partyDate: Date
         invitation: InvitationOption
     }
+    'invitation-generated-v2': {
+        bookingId: string
+        invitationId: string
+        partyDate: Date
+        invitation: InvitationsV2.InvitationOption
+        parentName: string
+        parentEmail: string
+    }
+    'invitation-rsvp': {
+        bookingId: string
+        invitationId: string
+        partyDate: Date
+        parentName: string
+        parentEmail: string
+        numberOfChildren: number
+    }
     'invitation-coupon-signup': {
         distinct_id: string
         invitationId: string
         view: // used the sidebar on desktop
-        | 'sidebar'
+            | 'sidebar'
             // used the mobile drawer
             | 'drawer'
             // used the section just sitting under the invite on mobile (no drawer)
@@ -106,6 +122,7 @@ export type MixpanelEvent = {
         type: 'studio' | 'mobile'
         childAge: string
         date: string // ISO
+        useRsvpSystem: boolean
     }
     'birthday-party-form-completed': {
         distinct_id: string
@@ -183,6 +200,8 @@ export type MixpanelEvent = {
 
 const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'invitation-generated': 'Invitation Generated',
+    'invitation-generated-v2': 'Invitation Generated [New]',
+    'invitation-rsvp': 'Invitation RSVP',
     'invitation-coupon-signup': 'Invitation Coupon Code Signup',
     'holiday-program-website-discount': 'Website Holiday Program Discount Generated',
     'website-enquiry': 'Website Enquiry',

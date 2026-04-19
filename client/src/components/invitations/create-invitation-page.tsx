@@ -7,13 +7,14 @@ import { useEffect, useState } from 'react'
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { Img } from 'react-image'
 import { Link, useLocation } from 'react-router-dom'
-import { WhatsappIcon, WhatsappShareButton } from 'react-share'
+import { WhatsappShareButton } from 'react-share'
 import { Toaster, toast } from 'sonner'
 
 import { STUDIOS, capitalise, getApplicationDomain } from 'fizz-kidz'
 import type { InvitationOption, Studio } from 'fizz-kidz'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import { WhatsappIcon } from '@drawables/icons/whatsapp'
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@ui-components/dialog'
@@ -30,7 +31,6 @@ import { useTRPC } from '@utils/trpc'
 
 import { InvitationTemplates } from './constants'
 import { Navbar } from './navbar'
-
 
 type TForm = {
     childName: string
@@ -480,7 +480,7 @@ function SuccessDialog({
 }) {
     const { state } = useLocation()
     const invitationText = `You're invited to ${childName}'s party!`
-    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV)}/invitation/${invitationId}?type=${encodeURIComponent(state.invitation)}`
+    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV, import.meta.env.DEV)}/invitation/${invitationId}?type=${encodeURIComponent(state.invitation)}`
 
     const copy = () => {
         navigator.clipboard.writeText(inviteUrl)
@@ -495,7 +495,6 @@ function SuccessDialog({
                 const invitationRef = ref(firebase.storage, `invitations/${invitationId}/invitation.png`)
                 const url = await getDownloadURL(invitationRef)
                 setInvitationUrl(url)
-                console.log(url)
             }
         }
         getInvitation()
@@ -526,7 +525,7 @@ function SuccessDialog({
                     <div className="grid grid-cols-2 items-center justify-center p-4 min-[350px]:grid-cols-4">
                         <div className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100">
                             <WhatsappShareButton id="whatsapp" url={inviteUrl}>
-                                <WhatsappIcon size={36} round />
+                                <WhatsappIcon size={36} />
                             </WhatsappShareButton>
                             <Label htmlFor="whatsapp" className="mt-2 cursor-pointer">
                                 Whatsapp

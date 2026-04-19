@@ -1,9 +1,11 @@
-import type { Studio } from 'fizz-kidz/src/core/studio'
 import { type StudioOrTest } from 'fizz-kidz/src/core/studio'
-import type { Booking } from '../partyBookings/booking'
+
 import { capitalise } from './stringUtilities'
 
-export function getLocationAddress(location: Studio) {
+import type { Booking } from '../partyBookings/booking'
+import type { Studio } from 'fizz-kidz/src/core/studio'
+
+export function getStudioAddress(location: Studio) {
     switch (location) {
         case 'balwyn':
             return '184 Whitehorse Rd, Balwyn VIC 3103'
@@ -54,7 +56,10 @@ export function getPartyEndDate(start: Date, partyLength: Booking['partyLength']
     return endDate
 }
 
-export function getApplicationDomain(environment: 'prod' | 'dev') {
+export function getApplicationDomain(environment: 'prod' | 'dev', useEmulator: boolean) {
+    if (useEmulator) {
+        return 'http://localhost:3000'
+    }
     return environment === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://dev.fizzkidz.com.au'
 }
 
@@ -142,5 +147,5 @@ export function studioNameAndAddress(studio: StudioOrTest) {
         return 'TEST'
     }
 
-    return `Fizz Kidz ${capitalise(studio)}\nStudio<br>${getLocationAddress(studio)}`
+    return `Fizz Kidz ${capitalise(studio)}\nStudio<br>${getStudioAddress(studio)}`
 }

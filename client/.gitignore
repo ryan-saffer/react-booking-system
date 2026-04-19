@@ -74,3 +74,5 @@ vite.config.js
 
 # apple certs for apple pay. they get copied on predeploy
 public/.well-known
+# typescript build cache
+tsconfig.tsbuildinfo
