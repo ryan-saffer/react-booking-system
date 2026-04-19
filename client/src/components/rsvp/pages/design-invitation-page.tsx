@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { TRPCClientError } from '@trpc/client'
 import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Sparkles, Wand2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -34,37 +34,41 @@ export function DesignInvitationPage() {
     const navigate = useNavigate()
 
     const [api, setApi] = useState<CarouselApi>()
-    const [selectedInvitation, setSelectedInvitation] = useState(0)
-    const [canScrollPrev, setCanScrollPrev] = useState(false)
-    const [canScrollNext, setCanScrollNext] = useState(false)
+    const subscribeToCarousel = useCallback(
+        (onStoreChange: () => void) => {
+            if (!api) {
+                return () => {}
+            }
+
+            api.on('select', onStoreChange)
+            api.on('reInit', onStoreChange)
+
+            return () => {
+                api.off('select', onStoreChange)
+                api.off('reInit', onStoreChange)
+            }
+        },
+        [api]
+    )
+    const selectedInvitation = useSyncExternalStore(
+        subscribeToCarousel,
+        () => api?.selectedScrollSnap() ?? 0,
+        () => 0
+    )
+    const canScrollPrev = useSyncExternalStore(
+        subscribeToCarousel,
+        () => api?.canScrollPrev() ?? false,
+        () => false
+    )
+    const canScrollNext = useSyncExternalStore(
+        subscribeToCarousel,
+        () => api?.canScrollNext() ?? false,
+        () => false
+    )
 
     const [finishPressed, setFinishPressed] = useState(false)
 
     const { mutateAsync: linkInvitation } = useMutation(trpc.parties.linkInvitation.mutationOptions())
-
-    // keep carousel selection and nav button state in sync with Embla events
-    useEffect(() => {
-        if (!api) {
-            setCanScrollPrev(false)
-            setCanScrollNext(false)
-            return
-        }
-
-        const syncCarouselState = () => {
-            setSelectedInvitation(api.selectedScrollSnap())
-            setCanScrollPrev(api.canScrollPrev())
-            setCanScrollNext(api.canScrollNext())
-        }
-
-        syncCarouselState()
-        api.on('select', syncCarouselState)
-        api.on('reInit', syncCarouselState)
-
-        return () => {
-            api.off('select', syncCarouselState)
-            api.off('reInit', syncCarouselState)
-        }
-    }, [api])
 
     // scroll to top when moving between steps
     useEffect(() => {

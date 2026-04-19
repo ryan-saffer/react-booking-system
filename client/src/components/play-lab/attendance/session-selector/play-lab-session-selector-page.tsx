@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { Loader2 } from 'lucide-react'
 import { DateTime } from 'luxon'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { AcuityConstants, ObjectEntries, addOrdinalSuffix, capitalise } from 'fizz-kidz'
@@ -16,7 +16,6 @@ import { Skeleton } from '@ui-components/skeleton'
 import { useTRPC } from '@utils/trpc'
 
 import type { ReactNode } from 'react'
-
 
 function Root({ children }: { children: ReactNode }) {
     return (
@@ -46,16 +45,13 @@ export function PlayLabSessionSelectorPage() {
 
     const showLocationSelector = currentOrg === 'master'
 
-    const [selectedCalendar, setSelectedCalendar] = useState<string | null>(
-        currentOrg === 'master' ? null : `${AcuityConstants.StoreCalendars[currentOrg!]}`
-    )
+    const [selectedCalendarOverride, setSelectedCalendarOverride] = useState<string | null>(null)
     const [selectedAppointmentType, setSelectedAppointmentType] = useState<string | null>(null)
     const [selectedClass, setSelectedClass] = useState<string | null>(null)
     const [showPreviousSessions, setShowPreviousSessions] = useState(false)
-
-    useEffect(() => {
-        setSelectedCalendar(currentOrg === 'master' ? null : `${AcuityConstants.StoreCalendars[currentOrg!]}`)
-    }, [currentOrg])
+    const [today] = useState(() => DateTime.now())
+    const selectedCalendar =
+        currentOrg === 'master' ? selectedCalendarOverride : `${AcuityConstants.StoreCalendars[currentOrg!]}`
 
     const {
         data: appointmentTypes,
@@ -90,8 +86,6 @@ export function PlayLabSessionSelectorPage() {
     const isPending = isLoadingAppointmentTypes || isLoadingClasses
     const isError = isErrorAppointmentTypes || isErrorClasses
 
-    const now = useRef(DateTime.now())
-
     const filteredAppointmentTypes = useMemo(
         () => appointmentTypes?.filter((it) => it.calendarIDs.includes(parseInt(selectedCalendar || ''))) || [],
         [appointmentTypes, selectedCalendar]
@@ -109,11 +103,11 @@ export function PlayLabSessionSelectorPage() {
                 if (showPreviousSessions) return true
 
                 const classDate = DateTime.fromISO(it.time, { setZone: true })
-                const todayInClassZone = now.current.setZone(classDate.zoneName).startOf('day')
+                const todayInClassZone = today.setZone(classDate.zoneName).startOf('day')
 
                 return classDate.startOf('day') >= todayInClassZone
             }) || [],
-        [classes, selectedAppointmentType, selectedCalendar, showPreviousSessions]
+        [classes, selectedAppointmentType, selectedCalendar, showPreviousSessions, today]
     )
 
     const filteredStudios = useMemo(
@@ -168,8 +162,7 @@ export function PlayLabSessionSelectorPage() {
                 {showLocationSelector && (
                     <Select
                         onValueChange={(id) => {
-                            console.log(id)
-                            setSelectedCalendar(id)
+                            setSelectedCalendarOverride(id)
                             setSelectedAppointmentType(null)
                             setSelectedClass(null)
                         }}
@@ -258,7 +251,7 @@ export function PlayLabSessionSelectorPage() {
                                 const klass = classes?.find((it) => it.id === parseInt(selectedClass))
                                 if (klass) {
                                     const classDate = DateTime.fromISO(klass.time, { setZone: true })
-                                    const todayInClassZone = now.current.setZone(classDate.zoneName).startOf('day')
+                                    const todayInClassZone = today.setZone(classDate.zoneName).startOf('day')
                                     const isPast = classDate.startOf('day') < todayInClassZone
                                     if (isPast) setSelectedClass(null)
                                 }

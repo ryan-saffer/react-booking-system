@@ -18,7 +18,7 @@ import { styled } from '@mui/material/styles'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import { useMutation } from '@tanstack/react-query'
 import { DateTime } from 'luxon'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
 import {
@@ -44,7 +44,7 @@ import type { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
 import WithErrorDialog from '@components/Dialogs/ErrorDialog'
 import { useTRPC } from '@utils/trpc'
 
-import { getEmptyValues, mapFirestoreBookingToFormValues, mapFormToBooking } from '../utilities'
+import { mapFirestoreBookingToFormValues, mapFormToBooking } from '../utilities'
 import { validateFormOnChange, validateFormOnSubmit } from '../validation'
 
 import type { ExistingBookingFormFields } from './types'
@@ -74,11 +74,8 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     showConfirmationDialog,
 }) => {
     const trpc = useTRPC()
-    const [formValues, setFormValues] = useState<ExistingBookingFormFields>(getEmptyValues())
-
-    useEffect(() => {
-        setFormValues(mapFirestoreBookingToFormValues(booking))
-    }, [booking])
+    const mappedBooking = useMemo(() => mapFirestoreBookingToFormValues(booking), [booking])
+    const [draftFormValues, setDraftFormValues] = useState<ExistingBookingFormFields | null>(null)
 
     const updateBookingMutation = useMutation(trpc.parties.updatePartyBooking.mutationOptions())
     const deleteBookingMutation = useMutation(trpc.parties.deletePartyBooking.mutationOptions())
@@ -89,6 +86,7 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
 
     const [editing, setEditing] = useState(false)
     const [loading, setLoading] = useState(false)
+    const formValues = draftFormValues ?? mappedBooking
 
     const displayAddress = formValues.type.value === 'mobile'
     const displayDateTimeLocation = editing
@@ -115,11 +113,12 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     const displayProducts = ObjectKeys(booking.products || {}).length > 0
 
     const handleEdit = () => {
+        setDraftFormValues(cloneFormValues(mappedBooking))
         setEditing(true)
     }
 
     const cancelEdit = () => {
-        setFormValues(mapFirestoreBookingToFormValues(booking))
+        setDraftFormValues(null)
         setEditing(false)
     }
 
@@ -181,7 +180,7 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
 
     function updateFormValues<K extends keyof FormBooking>(field: K, value: FormBooking[K]) {
         if (value !== null) {
-            let formCopy = { ...formValues }
+            let formCopy = cloneFormValues(draftFormValues ?? mappedBooking)
             const prop = formCopy[field]
             if (prop) prop.value = value
             formCopy = validateFormOnChange(formCopy, field, value) as ExistingBookingFormFields
@@ -192,16 +191,16 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                 formCopy.address.error = false
             }
 
-            setFormValues(formCopy)
+            setDraftFormValues(formCopy)
         }
     }
 
     const handleSubmit = async () => {
-        let tmpFormValues = { ...formValues }
+        let tmpFormValues = cloneFormValues(formValues)
         tmpFormValues = validateFormOnSubmit(tmpFormValues) as ExistingBookingFormFields
         // if there is an error (fields are empty), update the values and return
         if (tmpFormValues) {
-            setFormValues(tmpFormValues)
+            setDraftFormValues(tmpFormValues)
             return
         }
 
@@ -1011,6 +1010,12 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
 
 function createUniqueId(field: string, id: string) {
     return `${field}-${id}`
+}
+
+function cloneFormValues(formValues: ExistingBookingFormFields): ExistingBookingFormFields {
+    return Object.fromEntries(
+        Object.entries(formValues).map(([key, value]) => [key, { ...value }])
+    ) as ExistingBookingFormFields
 }
 
 export const ExistingBookingForm = WithConfirmationDialog(WithErrorDialog(InnerExistingBookingForm))
