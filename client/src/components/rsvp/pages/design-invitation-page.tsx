@@ -36,22 +36,35 @@ export function DesignInvitationPage() {
 
     const [api, setApi] = useState<CarouselApi>()
     const [selectedInvitation, setSelectedInvitation] = useState(0)
+    const [canScrollPrev, setCanScrollPrev] = useState(false)
+    const [canScrollNext, setCanScrollNext] = useState(false)
 
     const [finishPressed, setFinishPressed] = useState(false)
 
     const { mutateAsync: linkInvitation } = useMutation(trpc.parties.linkInvitation.mutationOptions())
 
-    // track selected carousel item
+    // keep carousel selection and nav button state in sync with Embla events
     useEffect(() => {
         if (!api) {
+            setCanScrollPrev(false)
+            setCanScrollNext(false)
             return
         }
 
-        setSelectedInvitation(api.selectedScrollSnap())
-
-        api.on('select', () => {
+        const syncCarouselState = () => {
             setSelectedInvitation(api.selectedScrollSnap())
-        })
+            setCanScrollPrev(api.canScrollPrev())
+            setCanScrollNext(api.canScrollNext())
+        }
+
+        syncCarouselState()
+        api.on('select', syncCarouselState)
+        api.on('reInit', syncCarouselState)
+
+        return () => {
+            api.off('select', syncCarouselState)
+            api.off('reInit', syncCarouselState)
+        }
     }, [api])
 
     // scroll to top when moving between steps
@@ -140,7 +153,14 @@ export function DesignInvitationPage() {
                 </div>
                 <div className="mt-8">
                     {step === 1 && (
-                        <Step1 api={api} setApi={setApi} nextStep={nextStep} selectedInvitation={selectedInvitation} />
+                        <Step1
+                            api={api}
+                            setApi={setApi}
+                            nextStep={nextStep}
+                            selectedInvitation={selectedInvitation}
+                            canScrollPrev={canScrollPrev}
+                            canScrollNext={canScrollNext}
+                        />
                     )}
                     {step === 2 && (
                         <Step2
@@ -166,11 +186,15 @@ function Step1({
     setApi,
     nextStep,
     selectedInvitation,
+    canScrollPrev,
+    canScrollNext,
 }: {
     api: CarouselApi | undefined
     setApi: (api: CarouselApi) => void
     nextStep: () => void
     selectedInvitation: number
+    canScrollPrev: boolean
+    canScrollNext: boolean
 }) {
     const selectedName = INVITATIONS[selectedInvitation]?.name
 
@@ -192,7 +216,7 @@ function Step1({
             <div className="px-4 py-6 sm:px-6">
                 <div className="mb-4 flex items-center justify-center gap-3">
                     <Button
-                        disabled={!api?.canScrollPrev()}
+                        disabled={!canScrollPrev}
                         variant="outline"
                         size="icon"
                         className="rounded-full bg-white/80"
@@ -204,7 +228,7 @@ function Step1({
                         Swipe or tap to preview
                     </p>
                     <Button
-                        disabled={!api?.canScrollNext()}
+                        disabled={!canScrollNext}
                         variant="outline"
                         size="icon"
                         className="rounded-full bg-white/80"

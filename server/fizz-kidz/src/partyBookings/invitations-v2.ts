@@ -21,6 +21,7 @@ type MobileInvitation = BaseInvitation & { $type: 'mobile'; address: string }
 export type Invitation = StudioInvitation | MobileInvitation
 
 export type InvitationOption =
+    | 'Kpop Demon Hunters'
     | 'Freckles'
     | 'Stripes'
     | 'Dots'

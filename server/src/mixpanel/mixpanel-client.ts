@@ -1,6 +1,6 @@
 import { logger } from 'firebase-functions/v2'
 
-import type { InvitationOption } from 'fizz-kidz'
+import type { InvitationOption, InvitationsV2 } from 'fizz-kidz'
 import { type Studio, type StudioOrTest } from 'fizz-kidz'
 
 import type { ClientStatus } from '../utilities/types'
@@ -65,7 +65,7 @@ export type MixpanelEvent = {
         bookingId: string
         invitationId: string
         partyDate: Date
-        invitation: InvitationOption
+        invitation: InvitationsV2.InvitationOption
         parentName: string
         parentEmail: string
     }
@@ -81,7 +81,7 @@ export type MixpanelEvent = {
         distinct_id: string
         invitationId: string
         view: // used the sidebar on desktop
-        | 'sidebar'
+            | 'sidebar'
             // used the mobile drawer
             | 'drawer'
             // used the section just sitting under the invite on mobile (no drawer)

@@ -20,5 +20,5 @@ type Child = {
 export type RsvpStatus = Rsvp['children'][number]['rsvp']
 
 export function getRsvpUrl(env: 'dev' | 'prod', useEmulator: boolean, bookingId: string) {
-    return `${getCloudFunctionsDomain(env, useEmulator)}/webhooks/invitation/${bookingId}`
+    return `${getCloudFunctionsDomain(env, useEmulator)}/api/api/webhooks/invitation/${bookingId}`
 }
