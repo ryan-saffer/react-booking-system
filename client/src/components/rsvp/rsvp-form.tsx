@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { CalendarIcon, CircleX, Loader2, Plus } from 'lucide-react'
 import { Fragment, useEffect, useState } from 'react'
-import { useFieldArray, useForm, useWatch } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -20,6 +20,7 @@ import { SelectContent, SelectForm, SelectItem, SelectValue } from '@ui-componen
 import { Separator } from '@ui-components/separator'
 import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
+import { usePartialFieldArray } from '@utils/formUtils'
 import { cn } from '@utils/tailwind'
 import { useTRPC } from '@utils/trpc'
 
@@ -64,6 +65,8 @@ const formSchema = z.object({
     joinMailingList: z.boolean(),
 })
 
+type Form = z.infer<typeof formSchema>
+
 export function RsvpForm({
     invitation,
     onComplete,
@@ -72,7 +75,7 @@ export function RsvpForm({
     onComplete: (status: 'attending' | 'not-attending') => void
 }) {
     const trpc = useTRPC()
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<Form>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             parentName: '',
@@ -96,12 +99,12 @@ export function RsvpForm({
         fields: children,
         append: appendChild,
         remove: removeChild,
-    } = useFieldArray({
+    } = usePartialFieldArray({
         control: form.control,
         name: 'children',
     })
 
-    const watchedChildren = useWatch({ control: form.control, name: 'children' })
+    const watchedChildren = useWatch({ control: form.control, name: 'children' }) ?? []
 
     useEffect(() => {
         form.setFocus('parentName')
@@ -111,7 +114,7 @@ export function RsvpForm({
     // needed to close date picker when date is chosen
     const [openCalendars, setOpenCalendars] = useState<Record<string, boolean>>({})
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: Form) {
         try {
             await sendRsvp({ ...values, bookingId: invitation.bookingId, invitationId: invitation.id })
             const hasAttending = values.children.some((child) => child.rsvp === 'attending')
@@ -170,9 +173,10 @@ export function RsvpForm({
                     />
                     <SectionBreak title="Children Details" />
                     {children.map((child, idx) => {
-                        const watchChild = watchedChildren[idx]
+                        const watchedChild = watchedChildren[idx] ?? form.getValues(`children.${idx}`)
+
                         return (
-                            <Fragment key={idx}>
+                            <Fragment key={child.id}>
                                 {children.length > 1 && (
                                     <div className="flex items-center gap-2">
                                         <h3 className="font-medium">{getChildNumber(idx + 1)}</h3>
@@ -269,7 +273,7 @@ export function RsvpForm({
                                     render={({ field }) => (
                                         <FormItem>
                                             <SelectForm
-                                                label={`Will ${watchChild.name || 'this child'} be able to attend?`}
+                                                label={`Will ${watchedChild?.name || 'this child'} be able to attend?`}
                                                 onValueChange={field.onChange}
                                                 defaultValue={''}
                                                 disabled={isPending}
@@ -283,14 +287,14 @@ export function RsvpForm({
                                         </FormItem>
                                     )}
                                 />
-                                {watchChild.rsvp === 'attending' && (
+                                {watchedChild?.rsvp === 'attending' && (
                                     <FormField
                                         control={form.control}
                                         name={`children.${idx}.hasAllergies` as const}
                                         render={({ field }) => (
                                             <FormItem>
                                                 <SelectForm
-                                                    label={`Does ${watchChild.name || 'this child'} have any allergies?`}
+                                                    label={`Does ${watchedChild?.name || 'this child'} have any allergies?`}
                                                     onValueChange={(value) => {
                                                         if (value === 'yes') {
                                                             field.onChange(true)
@@ -312,14 +316,14 @@ export function RsvpForm({
                                         )}
                                     />
                                 )}
-                                {watchChild.rsvp === 'attending' && watchChild.hasAllergies && (
+                                {watchedChild?.rsvp === 'attending' && watchedChild?.hasAllergies && (
                                     <FormField
                                         control={form.control}
                                         name={`children.${idx}.allergies` as const}
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>
-                                                    Please enter {watchChild.name || 'the child'}'s allergies here
+                                                    Please enter {watchedChild?.name || 'the child'}'s allergies here
                                                 </FormLabel>
                                                 <FormDescription>
                                                     This information is for the host's planning. Fizz Kidz doesn't
@@ -348,7 +352,7 @@ export function RsvpForm({
                                     rsvp: undefined,
                                     hasAllergies: undefined,
                                     allergies: '',
-                                } as any,
+                                },
                                 { shouldFocus: true }
                             )
                         }
