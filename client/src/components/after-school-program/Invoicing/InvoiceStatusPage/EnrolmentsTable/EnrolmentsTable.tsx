@@ -4,10 +4,9 @@ import { useQuery } from '@tanstack/react-query'
 import { useMutation } from '@tanstack/react-query'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, Dropdown, Space, Table, Tag } from 'antd'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
-
 
 import type { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import WithConfirmationDialog from '@components/Dialogs/ConfirmationDialog'
@@ -18,7 +17,6 @@ import { useTRPC } from '@utils/trpc'
 
 import EnrolmentDetails from './EnrolmentDetails'
 import InvoiceStatusCell from './InvoiceStatusCell'
-
 
 import type { MenuProps } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
@@ -92,7 +90,7 @@ const InnerEnrolmentsTable: React.FC<Props> = ({
     showConfirmationDialog,
 }) => {
     const trpc = useTRPC()
-    const [loading, setLoading] = useState(true)
+    const [isProcessing, setIsProcessing] = useState(false)
     const [changingClass, setChangingClass] = useState(false)
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
     const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([])
@@ -127,9 +125,7 @@ const InnerEnrolmentsTable: React.FC<Props> = ({
         }
     }
 
-    useEffect(() => {
-        setLoading(isLoadingInvoices)
-    }, [isLoadingInvoices])
+    const loading = isLoadingInvoices || isProcessing
 
     const handleActionButtonClick: MenuProps['onClick'] = async (e) => {
         const key = e.key as MenuKey
@@ -186,7 +182,7 @@ const InnerEnrolmentsTable: React.FC<Props> = ({
                 })
 
                 if (confirmed) {
-                    setLoading(true)
+                    setIsProcessing(true)
                     try {
                         await unenrollMutation.mutateAsync({
                             appointmentIds: selectedRowKeys.map((it) => it.toString()),
@@ -195,14 +191,14 @@ const InnerEnrolmentsTable: React.FC<Props> = ({
                     } catch {
                         showError({ message: 'There was an error unenrolling from the term.' })
                     }
-                    setLoading(false)
+                    setIsProcessing(false)
                 }
             }
         }
     }
 
     const sendInvoices = async (numberOfWeeks: number) => {
-        setLoading(true)
+        setIsProcessing(true)
         try {
             const result = await sendInvoicesMutation.mutateAsync(
                 selectedRowKeys.map((it) => ({ id: it.toString(), numberOfWeeks }))
@@ -217,11 +213,11 @@ const InnerEnrolmentsTable: React.FC<Props> = ({
         } catch {
             showError({ message: 'Some invoices failed to send. Please go through them to see which ones failed!' })
         }
-        setLoading(false)
+        setIsProcessing(false)
     }
 
     const sendTermContinuationEmails = async () => {
-        setLoading(true)
+        setIsProcessing(true)
         try {
             const result = await sendContinuationEmailsMutation.mutateAsync({
                 appointmentIds: selectedRowKeys.map((it) => it.toString()),
@@ -236,7 +232,7 @@ const InnerEnrolmentsTable: React.FC<Props> = ({
         } catch {
             showError({ message: 'There was an error sending the emails' })
         }
-        setLoading(false)
+        setIsProcessing(false)
     }
 
     const columns: ColumnsType<TableData> = useMemo(

@@ -17,7 +17,6 @@ import { Step2 } from '../components/step-2/step-2'
 import Step3 from '../components/step-3/step-3'
 import { useCart } from '../state/cart-store'
 
-
 import type dayjs from 'dayjs'
 
 export type Form = {
@@ -43,7 +42,7 @@ export const CustomerBookingPage = () => {
     const [searchParams] = useSearchParams()
     const appointmentTypeId = parseInt(searchParams.get('id') || '0') as AcuityConstants.AppointmentTypeValue
 
-    const nowRef = useRef(Date.now())
+    const [minDate] = useState(() => Date.now())
 
     const [formValues, setFormValues] = useState<Partial<Form>>({})
     const [form] = AntdForm.useForm()
@@ -67,7 +66,7 @@ export const CustomerBookingPage = () => {
                     ? [appointmentTypeId]
                     : [AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM],
             includeUnavailable: true,
-            minDate: nowRef.current,
+            minDate,
         })
     )
 

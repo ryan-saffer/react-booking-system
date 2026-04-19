@@ -10,7 +10,7 @@ import { SheetsClient } from '@/google/SheetsClient'
 import { projectId } from '@/init'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
-import { logError, throwTrpcError } from '@/utilities'
+import { isUsingEmulator, logError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
 const env = projectId === 'bookings-prod' ? 'prod' : 'dev'
@@ -200,7 +200,9 @@ export default async function scheduleAfterSchoolProgram(
                 parentName: input.parent.firstName,
                 childName: input.child.firstName,
                 className: input.className,
-                portalUrl: `${getApplicationDomain(env)}/parent-portal/${appointment.id}`,
+                portalUrl: `${getApplicationDomain(env, isUsingEmulator())}/parent-portal/${
+                    appointment.id
+                }`,
             })
             appointment.emails.portalLinkEmailSent = true
             await newDoc.set(appointment, { merge: true })

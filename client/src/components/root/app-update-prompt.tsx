@@ -100,12 +100,6 @@ export function AppUpdatePrompt({ pollIntervalMs = 5 * 60_000 }: { pollIntervalM
         }
     }, [pollIntervalMs, currentVersion])
 
-    useEffect(() => {
-        if (updateAvailable) {
-            setOpen(true)
-        }
-    }, [updateAvailable])
-
     const handleRefresh = () => {
         const url = new URL(window.location.href)
         url.searchParams.set('v', latest?.version ?? `${Date.now()}`)

@@ -28,7 +28,7 @@
         <mj-spacer height="30px" />
 
         <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
-          {{header}}
+          {{ header }}
         </mj-text>
 
       </mj-column>
@@ -45,17 +45,13 @@
 
         <mj-text>Hi {{ parentName }}, </mj-text>
 
-        <mj-text>
-          {{{ openingLine }}}
-        </mj-text>
+        <mj-text> {{{ openingLine }}} </mj-text>
 
       </mj-column>
 
       <mj-column width="50%">
 
-        <mj-text font-weight="bold" padding-bottom="0">
-          Where
-        </mj-text>
+        <mj-text font-weight="bold" padding-bottom="0"> Where </mj-text>
 
         <mj-text text-transform="capitalize" padding-top="0">
           {{^isMobile}} Fizz Kidz {{ location }}
@@ -66,9 +62,7 @@
       </mj-column>
       <mj-column width="50%">
 
-        <mj-text font-weight="bold" padding-bottom="0">
-          When
-        </mj-text>
+        <mj-text font-weight="bold" padding-bottom="0"> When </mj-text>
 
         <mj-text padding-top="0">
           {{ startDate }}
@@ -80,9 +74,7 @@
       {{^isMobile}}
         <mj-column width="100%">
 
-          <mj-text font-weight="bold" padding-bottom="0">
-            Food package
-          </mj-text>
+          <mj-text font-weight="bold" padding-bottom="0"> Food package </mj-text>
 
           <mj-text padding-top="0">
             {{#includesFood}} Food included {{/includesFood}} {{^includesFood}} Self-catered {{/includesFood}}
@@ -92,12 +84,11 @@
       {{/isMobile}}
       <mj-column width="100%">
 
-        <mj-text font-weight="bold" padding-bottom="0">
-          Your Contact
-        </mj-text>
+        <mj-text font-weight="bold" padding-bottom="0"> Your Contact </mj-text>
 
         <mj-text padding-top="0">
-          From here, your main point of contact will be our wonderful {{ location }} Studio Manager, {{ managerName }}, who will help plan and run {{ childName }}'s fabulous party.
+          From here, your main point of contact will be our wonderful {{ location }} Studio Manager,
+          {{ managerName }}, who will help plan and run {{ childName }}'s fabulous party.
 
           <br />
           <br />
@@ -110,13 +101,12 @@
 
       <mj-column width="100%">
 
-        <mj-text font-weight="bold" padding-bottom="0">
-          Before the Party
-        </mj-text>
+        <mj-text font-weight="bold" padding-bottom="0"> Before the Party </mj-text>
 
         <mj-text>
-          About one week before the party, {{ managerName }} will send you a personalised online form where you can:
-          <ul style="margin-bottom:0;padding-bottom:0">
+          About one week before the party, {{ managerName }} will send you a personalised online form where
+          you can:
+          <ul style="margin-bottom: 0; padding-bottom: 0">
             <li>Confirm the final number of guests</li>
             <li>Choose your Fizz Kidz creations</li>
             <li>Add optional food pacakges</li>
@@ -127,7 +117,8 @@
           <mj-text font-weight="bold" padding-bottom="0">Ice-Cream Cakes + Take-Home Bags</mj-text>
 
           <mj-text>
-            You can order a custom ice-cream birthday cake and take-home lolly bags directly through us. If you choose to do this, the cake will be ready and waiting for you when you arrive at the party.
+            You can order a custom ice-cream birthday cake and take-home lolly bags directly through us. If you
+            choose to do this, the cake will be ready and waiting for you when you arrive at the party.
           </mj-text>
         {{/canOrderCake}}
         {{#canOrderCake}}
@@ -144,41 +135,54 @@
       {{^isMobile}}
         <mj-column width="100%">
 
-          <mj-text font-weight="bold" padding-bottom="0">
-            A Few Helpful Notes
-          </mj-text>
+          <mj-text font-weight="bold" padding-bottom="0"> A Few Helpful Notes </mj-text>
 
           <mj-text>
             Maximum numbers of children
-            <ul style="margin-bottom:0;padding-bottom:0;margin-top:0;padding-top:0;">
+            <ul style="margin-bottom: 0; padding-bottom: 0; margin-top: 0; padding-top: 0">
               {{#numberOfKidsAllowed}}
                 <li>{{.}}</li>
               {{/numberOfKidsAllowed}}
             </ul>
-            You are welcome to bring your own nut-free cake, just remember to bring paper plates and spoons as well.
+            You are welcome to bring your own nut-free cake, just remember to bring paper plates and spoons as
+            well.
           </mj-text>
 
         </mj-column>
       {{/isMobile}}
+      {{^useRsvpSystem}}
+        <mj-column width="100%">
+
+          <mj-text font-weight="bold" padding-bottom="0"> Invitations </mj-text>
+
+          <mj-text>Kidz parties are special, and your guests should know that too! Use our invitation generator to
+            create a personalised invitation to share with {{ childName }}'s friends.</mj-text>
+
+          <mj-button css-class="btn-block" background-color="#4BC5D9" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{ invitationsUrl }}" css-class="btn-block" border="1px #4BC5D9 solid">
+            Create my personalised invitation ↗️
+          </mj-button>
+
+        </mj-column>
+      {{/useRsvpSystem}}
+      {{#useRsvpSystem}}
+        <mj-column width="100%">
+
+          <mj-text font-weight="bold" padding-bottom="0">
+            Invitation & RSVP Tracking
+          </mj-text>
+
+          <mj-text>Fizz Kidz parties are special, and your guests should know that too! Use our invitation and RSVP
+            tracking tool to create a personalised invitation to share with {{childName}}'s friends.</mj-text>
+
+          <mj-button css-class="btn-block" background-color="#4BC5D9" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{ invitationsUrl }}" css-class="btn-block" border="1px #4BC5D9 solid">
+            Create my personalised invitation ↗️
+          </mj-button>
+
+        </mj-column>
+      {{/useRsvpSystem}}
       <mj-column width="100%">
 
-        <mj-text font-weight="bold" padding-bottom="0">
-          Invitations
-        </mj-text>
-
-        <mj-text>Kidz parties are special, and your guests should know that too! Use our invitation generator
-          to create a personalised invitation to share with {{ childName }}'s friends.</mj-text>
-
-        <mj-button css-class="btn-block" background-color="#4BC5D9" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{ invitationsUrl }}" css-class="btn-block" border="1px #4BC5D9 solid">
-          Create my personalised invitation ↗️
-        </mj-button>
-
-      </mj-column>
-      <mj-column width="100%">
-
-        <mj-text font-weight="bold" padding-bottom="0">
-          Cancellation Policy
-        </mj-text>
+        <mj-text font-weight="bold" padding-bottom="0"> Cancellation Policy </mj-text>
 
         <mj-text padding-top="0">
           While we would much prefer to not charge for a service that has not been received, please understand
@@ -197,14 +201,13 @@
       <mj-column width="100%">
         {{^isMobile}}
 
-          <mj-text text-transform="uppercase" font-weight="bold" padding-bottom="0">
-            Useful Links
-          </mj-text>
+          <mj-text text-transform="uppercase" font-weight="bold" padding-bottom="0"> Useful Links </mj-text>
 
           <mj-text padding-top="0">
             <ul>
               <li>
-                <a href="{{studioPhotoUrl}}">Here is a photo of the {{ location }} studio</a> so you can see the space.
+                <a href="{{studioPhotoUrl}}">Here is a photo of the {{ location }} studio</a> so you can see
+                the space.
               </li>
             </ul>
           </mj-text>

@@ -1,5 +1,4 @@
 import { Grid, Skeleton, Stack, Typography } from '@mui/material'
-import { useEffect, useState } from 'react'
 import { Toaster } from 'sonner'
 
 import type { FirestoreBooking, StandardEvent, WithId } from 'fizz-kidz'
@@ -17,20 +16,11 @@ import { usePartyBookings } from './parties/use-party-bookings'
 export const PartiesAndEvents = () => {
     const { selectedLocation } = useLocationFilter()
 
-    const [loading, setLoading] = useState(true)
-
     const bookings = usePartyBookings()
     const events = useEvents('standard')
 
     const { currentOrg } = useOrg()
-
-    useEffect(() => {
-        if (bookings.status === 'loading' || events.status === 'loading') {
-            setLoading(true)
-        } else {
-            setLoading(false)
-        }
-    }, [bookings.status, events.status, setLoading])
+    const loading = bookings.status === 'loading' || events.status === 'loading'
 
     return (
         <>

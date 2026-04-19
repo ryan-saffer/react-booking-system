@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from '@tanstack/react-query'
 import { getDownloadURL, ref } from 'firebase/storage'
 import { ExternalLink, Loader2, Menu } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -23,7 +23,6 @@ import { useTRPC } from '@utils/trpc'
 
 import { InvitationTemplates } from './constants'
 
-
 type Params = {
     id: string
 }
@@ -37,7 +36,7 @@ export const ViewInvitationPage = () => {
     const [loading, setLoading] = useState(true)
     const [invitationUrl, setInvitationUrl] = useState('')
 
-    const [useBottomNav] = useState(Math.random() > 0.5)
+    const [useBottomNav] = useState(() => Math.random() > 0.5)
 
     useEffect(() => {
         async function getUrl() {
@@ -180,14 +179,16 @@ type TForm = {
 }
 
 function PartyDetails({ viewUsed }: { viewUsed: 'sidebar' | 'drawer' | 'scroll' }) {
-    const trpc = useTRPC();
+    const trpc = useTRPC()
     const { id } = useParams<Params>()
 
     const [submitting, setSubmitting] = useState(false)
     const [openDialog, setOpenDialog] = useState(false)
 
     const form = useForm<TForm>({ defaultValues: { name: '', email: '' } })
-    const createDiscountCodeMutation = useMutation(trpc.holidayPrograms.createDiscountCodeFromInvitation.mutationOptions())
+    const createDiscountCodeMutation = useMutation(
+        trpc.holidayPrograms.createDiscountCodeFromInvitation.mutationOptions()
+    )
 
     const onSubmit = async (values: TForm) => {
         setSubmitting(true)

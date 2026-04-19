@@ -9,7 +9,6 @@ import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useOrg } from '@components/Session/use-org'
 import Loader from '@components/Shared/Loader'
 
-
 import { DeleteEmployeeButton } from './delete-employee-button'
 import EmployeeVerificationButton from './employee-verification-button'
 import { EmployeeWWCCButton } from './employee-wwcc-button'
@@ -38,22 +37,25 @@ const useEmployees = () => {
 
     const { currentOrg } = useOrg()
 
-    const [loading, setLoading] = useState(true)
-    const [employees, setEmployees] = useState<Employee[]>([])
+    const [employeesByOrg, setEmployeesByOrg] = useState<Record<string, Employee[]>>({})
+    const studioKey = currentOrg ?? '__unknown__'
+    const employees = employeesByOrg[studioKey]
+    const loading = employees === undefined
 
     useEffect(() => {
-        setLoading(true)
         const employeesQuery = query(collection(firebase.db, 'employees'), orderBy('created', 'desc'))
         const unsubscribe = onSnapshot(employeesQuery, (snap) => {
-            setEmployees(snap.docs.map((doc) => doc.data() as Employee).filter((it) => it.studio === currentOrg))
-            setLoading(false)
+            setEmployeesByOrg((prev) => ({
+                ...prev,
+                [studioKey]: snap.docs.map((doc) => doc.data() as Employee).filter((it) => it.studio === currentOrg),
+            }))
         })
 
         return unsubscribe
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentOrg])
+    }, [currentOrg, studioKey])
 
-    return { employees, loading }
+    return { employees: employees ?? [], loading }
 }
 
 const EmployeeTable = () => {

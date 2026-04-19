@@ -4,6 +4,7 @@ import type { Addition, BaseBooking } from 'fizz-kidz'
 import { ADDITIONS, CREATIONS, getCloudFunctionsDomain } from 'fizz-kidz'
 
 import { env } from '@/init'
+import { isUsingEmulator } from '@/utilities'
 
 export function getBookingCreations(booking: BaseBooking) {
     const result: string[] = []
@@ -38,14 +39,14 @@ export function isAddition(key: string): key is Addition {
 export function getPartyFormUrl(bookingId: string) {
     return `${getCloudFunctionsDomain(
         env,
-        process.env.FUNCTIONS_EMULATOR === 'true'
+        isUsingEmulator()
     )}/api/api/webhooks/party-form?id=${bookingId}`
 }
 
 export function getCakeFormUrl(bookingId: string, useEmulator?: boolean) {
     return `${getCloudFunctionsDomain(
         env,
-        useEmulator ?? process.env.FUNCTIONS_EMULATOR === 'true'
+        useEmulator ?? isUsingEmulator()
     )}/api/api/webhooks/cake-form?id=${bookingId}`
 }
 

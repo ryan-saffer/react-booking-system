@@ -53,6 +53,7 @@
         "clsx": "^2.1.0",
         "date-fns": "^2.30.0",
         "dateformat": "^3.0.3",
+        "embla-carousel-react": "^8.3.0",
         "firebase": "^10.6.0",
         "fizz-kidz": "file:../server/fizz-kidz",
         "googleapis": "^39.2.0",
@@ -86,7 +87,7 @@
         "@types/dateformat": "^3.0.1",
         "@types/luxon": "^2.3.2",
         "@types/mixpanel-browser": "^2.38.0",
-        "@types/node": "^22.16.0",
+        "@types/node": "^20.19.6",
         "@types/react": "19.2.7",
         "@types/react-dom": "19.2.3",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -109,16 +110,15 @@
         "prettier-plugin-tailwindcss": "^0.5.11",
         "tailwindcss": "^3.4.1",
         "tailwindcss-bg-patterns": "^0.3.0",
-        "typescript": "^5.5.2",
-        "vite": "^8.0.0-beta.5",
+        "typescript": "^5.6.3",
+        "vite": "^8.0.8",
         "vite-plugin-html": "^3.2.2",
-        "vitest": "^4.0.14"
+        "vitest": "^4.1.4"
     },
     "overrides": {
         "react-square-web-payments-sdk": {
             "react": "^19"
-        },
-        "vite": "^8.0.0-beta.5"
+        }
     },
     "importSort": {
         ".ts, .tsx, .js, .jsx": {

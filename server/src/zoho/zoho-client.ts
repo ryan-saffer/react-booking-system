@@ -4,6 +4,7 @@ import type { Booking, PartyLostReason, Studio, StudioOrTest } from 'fizz-kidz'
 import { capitalise, getApplicationDomain } from 'fizz-kidz'
 
 import { env } from '@/init'
+import { isUsingEmulator } from '@/utilities'
 import {
     PartyThemeDisplayValueMap,
     ReferenceDisplayValueMap,
@@ -289,6 +290,28 @@ export class ZohoClient {
         })
     }
 
+    addBirthdayPartyGuestContactWithChild(
+        props: WithBaseProps<{
+            type: Booking['type']
+            studio: Studio
+            childName: string
+            childBirthdayISO: string
+            optOutOfMarketing: boolean
+        }>
+    ) {
+        const { type, studio, childName, childBirthdayISO, ...baseProps } = props
+
+        return this.#addParentWithChild({
+            service: 'Birthday Party Guest',
+            Party_Type: type === 'studio' ? 'Studio' : type === 'mobile' ? 'Mobile' : '',
+            customer_type: 'B2C',
+            branch: capitalise(studio),
+            childName,
+            childBirthdayISO,
+            ...baseProps,
+        })
+    }
+
     async addHolidayProgramContact(
         props: WithBaseProps<{
             studio: StudioOrTest
@@ -559,7 +582,7 @@ export class ZohoClient {
                     })),
                     Actual_Party_Date: this.#toDateTimeISO(partyDateISO),
                     Booking_ID: bookingId,
-                    Booking_URL: `${getApplicationDomain(env)}/dashboard/bookings?id=${bookingId}`,
+                    Booking_URL: `${getApplicationDomain(env, isUsingEmulator())}/dashboard/bookings?id=${bookingId}`,
                 },
             ],
             duplicate_check_fields: ['Booking_ID'],

@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles'
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from '@tanstack/react-query'
 import { Card, Result } from 'antd'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { DateTime } from 'luxon'
@@ -13,10 +13,8 @@ import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import SkeletonRows from '@components/Shared/SkeletonRows'
 import { useTRPC } from '@utils/trpc'
 
-
 import { getEnrolment } from './ClassDetails.utils'
 import EnrolmentTable from './EnrolmentTable/EnrolmentTable'
-
 
 const PREFIX = 'AfterSchoolProgramCheckinClassDetails'
 
@@ -67,15 +65,14 @@ const Root = styled('div')({
 export type EnrolmentsMap = { [key: string]: AfterSchoolEnrolment }
 
 export const AfterSchoolProgramCheckinClassDetails = () => {
-    const trpc = useTRPC();
+    const trpc = useTRPC()
     const firebase = useFirebase()
     const { height } = useWindowDimensions()
 
     // a map will speed up finding the corresponding firestore booking from acuity appointment
-    const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [enrolmentsMap, setEnrolmentsMap] = useState<EnrolmentsMap>({})
-    const [appointments, setAppointments] = useState<AcuityTypes.Api.Appointment[]>([])
+    const [appointments, setAppointments] = useState<AcuityTypes.Api.Appointment[] | null>(null)
 
     const searchForAppointmentsMutation = useMutation(trpc.acuity.searchForAppointmentsMutation.mutationOptions())
 
@@ -84,25 +81,27 @@ export const AfterSchoolProgramCheckinClassDetails = () => {
     const calendarId = parseInt(searchParams.get('calendarId')!)
     const calendarName = decodeURIComponent(searchParams.get('calendarName')!)
     const classTime = decodeURIComponent(searchParams.get('classTime')!)
+    const loading = !error && appointments === null
 
     const updateAppointment = (newAppointment: AcuityTypes.Api.Appointment) => {
         setAppointments((appointments) =>
-            appointments.map((oldAppointment) => {
-                if (oldAppointment.id === newAppointment.id) {
-                    return newAppointment
-                } else {
-                    return oldAppointment
-                }
-            })
+            appointments
+                ? appointments.map((oldAppointment) => {
+                      if (oldAppointment.id === newAppointment.id) {
+                          return newAppointment
+                      } else {
+                          return oldAppointment
+                      }
+                  })
+                : appointments
         )
     }
 
     useEffect(() => {
-        setLoading(true)
         const _enrolmentsMap: { [key: string]: AfterSchoolEnrolment } = {}
         // needed to track within the scope of this render
         let _isFirstLoad = true
-        let _appointments = appointments
+        let _appointments: AcuityTypes.Api.Appointment[] = []
         const enrolmentsQuery = query(
             collection(firebase.db, 'afterSchoolEnrolments'),
             where('appointmentTypeId', '==', appointmentTypeId),
@@ -148,7 +147,6 @@ export const AfterSchoolProgramCheckinClassDetails = () => {
                 _appointments = filteredAppointments
 
                 setAppointments(filteredAppointments)
-                setLoading(false)
             }
         })
         return () => unsubscribe()
@@ -178,7 +176,7 @@ export const AfterSchoolProgramCheckinClassDetails = () => {
                         }
                         return (
                             <EnrolmentTable
-                                appointments={appointments}
+                                appointments={appointments ?? []}
                                 updateAppointment={updateAppointment}
                                 enrolmentsMap={enrolmentsMap}
                                 calendarName={calendarName}

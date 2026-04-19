@@ -1,4 +1,3 @@
-
 import { Button, Paper } from '@mui/material'
 import { Skeleton } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
@@ -8,11 +7,10 @@ import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { useQuery } from '@tanstack/react-query'
 import { DateTime } from 'luxon'
-import { useEffect, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { AcuityConstants, ObjectEntries } from 'fizz-kidz'
-import type { AcuityTypes } from 'fizz-kidz'
 
 import { useOrg } from '@components/Session/use-org'
 import { capitalise } from '@utils/stringUtilities'
@@ -90,7 +88,7 @@ export const HolidayProgramSelectionPage = () => {
     const [searchParams] = useSearchParams()
     const appointmentTypeId = parseInt(searchParams.get('id') || '0') as AcuityConstants.AppointmentTypeValue
 
-    const nowRef = useRef(Date.now())
+    const [minDate] = useState(() => Date.now())
 
     const navigate = useNavigate()
 
@@ -98,10 +96,9 @@ export const HolidayProgramSelectionPage = () => {
 
     const showLocationSelector = currentOrg === 'master'
 
-    const [filteredClasses, setFilteredClasses] = useState<AcuityTypes.Api.Class[]>([])
-    const [selectedCalendar, setSelectedCalendar] = useState<number | ''>(
-        currentOrg === 'master' ? '' : AcuityConstants.StoreCalendars[currentOrg!]
-    )
+    const [selectedCalendarOverride, setSelectedCalendarOverride] = useState<number | ''>('')
+    const selectedCalendar =
+        currentOrg === 'master' ? selectedCalendarOverride : AcuityConstants.StoreCalendars[currentOrg!]
     const [selectedClass, setSelectedClass] = useState<string>('')
 
     const {
@@ -115,27 +112,19 @@ export const HolidayProgramSelectionPage = () => {
                     ? [appointmentTypeId]
                     : [AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM],
             includeUnavailable: true,
-            minDate: nowRef.current,
+            minDate,
         })
     )
 
-    useEffect(() => {
-        if (currentOrg !== 'master' && isSuccess) {
-            setFilteredClasses(classes.filter((it) => it.calendarID === AcuityConstants.StoreCalendars[currentOrg!]))
-        }
-    }, [currentOrg, isSuccess, classes])
-
-    useEffect(() => {
-        setSelectedCalendar(currentOrg === 'master' ? '' : AcuityConstants.StoreCalendars[currentOrg!])
-    }, [currentOrg])
+    const filteredClasses = useMemo(
+        () => (isSuccess && selectedCalendar !== '' ? classes.filter((it) => it.calendarID === selectedCalendar) : []),
+        [classes, isSuccess, selectedCalendar]
+    )
 
     const handleCalendarChange = (event: SelectChangeEvent<number>) => {
         const calendar = event.target.value as number
-        setSelectedCalendar(calendar)
+        setSelectedCalendarOverride(calendar)
         setSelectedClass('')
-        if (isSuccess) {
-            setFilteredClasses(classes.filter((it) => it.calendarID === calendar))
-        }
     }
 
     const handleClassSelection = () => {
