@@ -2,7 +2,7 @@ import { Copy, Download, Mail, MessageCircleMore, PartyPopper, Sparkles } from '
 import { WhatsappShareButton } from 'react-share'
 import { toast } from 'sonner'
 
-import { getCloudFunctionsDomain } from 'fizz-kidz'
+import { getRsvpUrl } from 'fizz-kidz'
 
 import { WhatsappIcon } from '@drawables/icons/whatsapp'
 import { Button } from '@ui-components/button'
@@ -16,7 +16,7 @@ import { useInvitationImage } from '../hooks/use-invitation-image'
 export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; close: () => void }) {
     const invitation = useInvitation()
     const invitationText = `You're invited to ${invitation.childName}'s party!`
-    const inviteUrl = `${getCloudFunctionsDomain(import.meta.env.VITE_ENV, import.meta.env.DEV)}/webhooks/invitation/${invitation.bookingId}`
+    const inviteUrl = getRsvpUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, invitation.bookingId)
     const invitationImageUrl = useInvitationImage(invitation.id, false)
 
     function copy() {
