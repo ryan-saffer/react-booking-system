@@ -2,7 +2,6 @@ import { useMutation } from '@tanstack/react-query'
 import { TRPCClientError } from '@trpc/client'
 import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Sparkles, Wand2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Img } from 'react-image'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -363,6 +362,8 @@ function Step2({
 
 function Step3({ invitationId, nextStep, loading }: { invitationId: string; nextStep: () => void; loading: boolean }) {
     const invitationUrl = useInvitationImage(invitationId, true)
+    const [loadedPreviewUrl, setLoadedPreviewUrl] = useState('')
+    const isPreviewLoading = !invitationUrl || loadedPreviewUrl !== invitationUrl
 
     return (
         <div className="overflow-hidden rounded-2xl border border-white/70 bg-white/80 shadow-2xl backdrop-blur">
@@ -374,13 +375,17 @@ function Step3({ invitationId, nextStep, loading }: { invitationId: string; next
                 </p>
             </div>
             <div className="px-4 py-8 sm:px-8">
-                <div className="relative mx-auto max-w-3xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
-                    <Img
-                        src={invitationUrl}
-                        loader={<Loader className="my-12" />}
-                        className="h-full w-full"
-                        onContextMenu={() => false}
-                    />
+                <div className="relative mx-auto aspect-[7/10] max-w-3xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
+                    {isPreviewLoading && <Loader className="absolute inset-0 z-10" />}
+                    {invitationUrl && (
+                        <img
+                            src={invitationUrl}
+                            className={`h-full w-full transition-opacity duration-200 ${isPreviewLoading ? 'opacity-0' : 'opacity-100'}`}
+                            onLoad={() => setLoadedPreviewUrl(invitationUrl)}
+                            onError={() => setLoadedPreviewUrl(invitationUrl)}
+                            onContextMenu={() => false}
+                        />
+                    )}
                     <div className="absolute inset-0" />
                 </div>
                 <div className="mt-8 flex items-center justify-center">
