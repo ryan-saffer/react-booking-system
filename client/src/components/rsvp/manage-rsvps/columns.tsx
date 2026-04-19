@@ -27,16 +27,20 @@ const columnHelper = createColumnHelper<RsvpRow>()
 export function createColumns({
     updateRsvp,
     deleteRsvp,
+    isExpanded,
 }: {
     updateRsvp: UseRsvpTableProps['updateRsvp']
     deleteRsvp: UseRsvpTableProps['deleteRsvp']
+    isExpanded: (row: RsvpRow) => boolean
 }) {
     return [
         columnHelper.display({
             id: 'chevron',
             cell: ({ row }) => (
                 <ChevronRight
-                    className={cn('h-4 w-4 transition-transform duration-500', { 'rotate-90': row.getIsExpanded() })}
+                    className={cn('h-4 w-4 transition-transform duration-500', {
+                        'rotate-90': isExpanded(row.original),
+                    })}
                 />
             ),
             meta: {
@@ -91,7 +95,7 @@ export function createColumns({
             cell: ({ row }) => (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className={row.getIsExpanded() ? 'hover:bg-white/50' : ''}>
+                        <Button variant="ghost" className={isExpanded(row.original) ? 'hover:bg-white/50' : ''}>
                             <EllipsisVertical className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>

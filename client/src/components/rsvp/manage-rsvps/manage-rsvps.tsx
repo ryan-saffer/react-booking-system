@@ -19,6 +19,7 @@ import { useInvitation } from '../hooks/use-invitation'
 import { useRsvpTable } from '../hooks/use-rsvp-table'
 import { useRsvps } from '../hooks/use-rsvps'
 
+import type { RsvpRow } from './columns'
 import type { UseRsvpTableProps } from '../hooks/use-rsvp-table'
 import type { ReactNode } from 'react'
 
@@ -34,6 +35,15 @@ export function ManageRsvps() {
     const rsvps = useRsvps(invitation)
 
     const auth = useAuth()
+    const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({})
+
+    function getExpansionKey(row: Pick<RsvpRow, 'id' | 'childIdx'>) {
+        return `${row.id}-${row.childIdx}`
+    }
+
+    function isRowExpanded(row: Pick<RsvpRow, 'id' | 'childIdx'>) {
+        return !!expandedRows[getExpansionKey(row)]
+    }
 
     const table = useRsvpTable(
         rsvps.status === 'loaded'
@@ -41,8 +51,9 @@ export function ManageRsvps() {
                   rsvps: rsvps.result.rsvps,
                   updateRsvp: rsvps.result.updateRsvp,
                   deleteRsvp: rsvps.result.deleteRsvp,
+                  isExpanded: isRowExpanded,
               }
-            : emptyState
+            : { ...emptyState, isExpanded: () => false }
     )
 
     const [showShareDialog, setShowShareDialog] = useState(false)
@@ -191,63 +202,73 @@ export function ManageRsvps() {
                                     </TableHeader>
                                     <TableBody>
                                         {table.getRowModel().rows?.length ? (
-                                            table.getRowModel().rows.map((row) => (
-                                                <Fragment key={row.id}>
-                                                    <TableRow
-                                                        onClick={() => row.toggleExpanded(!row.getIsExpanded())}
-                                                        className="cursor-pointer transition hover:bg-[#F7F1FF]/60 data-[state=selected]:bg-[#F2E7FF]/70"
-                                                        data-state={row.getIsExpanded() && 'selected'}
-                                                    >
-                                                        {row.getVisibleCells().map((cell) => (
-                                                            <TableCell
-                                                                key={cell.id}
-                                                                className={cn(
-                                                                    'p-2 text-xs sm:p-3 sm:text-sm',
-                                                                    cell.column.columnDef.meta?.cellClassName
-                                                                )}
-                                                            >
-                                                                {flexRender(
-                                                                    cell.column.columnDef.cell,
-                                                                    cell.getContext()
-                                                                )}
-                                                            </TableCell>
-                                                        ))}
-                                                    </TableRow>
-                                                    {row.getIsExpanded() && (
-                                                        <>
-                                                            {row.original.hasAllergies && row.original.allergies && (
+                                            table.getRowModel().rows.map((row) => {
+                                                const expanded = isRowExpanded(row.original)
+
+                                                return (
+                                                    <Fragment key={row.id}>
+                                                        <TableRow
+                                                            onClick={() =>
+                                                                setExpandedRows((prev) => ({
+                                                                    ...prev,
+                                                                    [getExpansionKey(row.original)]: !expanded,
+                                                                }))
+                                                            }
+                                                            className="cursor-pointer transition hover:bg-[#F7F1FF]/60 data-[state=selected]:bg-[#F2E7FF]/70"
+                                                            data-state={expanded && 'selected'}
+                                                        >
+                                                            {row.getVisibleCells().map((cell) => (
+                                                                <TableCell
+                                                                    key={cell.id}
+                                                                    className={cn(
+                                                                        'p-2 text-xs sm:p-3 sm:text-sm',
+                                                                        cell.column.columnDef.meta?.cellClassName
+                                                                    )}
+                                                                >
+                                                                    {flexRender(
+                                                                        cell.column.columnDef.cell,
+                                                                        cell.getContext()
+                                                                    )}
+                                                                </TableCell>
+                                                            ))}
+                                                        </TableRow>
+                                                        {expanded && (
+                                                            <>
+                                                                {row.original.hasAllergies &&
+                                                                    row.original.allergies && (
+                                                                        <ExpandableContent
+                                                                            label="Allergies"
+                                                                            value={row.original.allergies}
+                                                                            colSpan={colSpan}
+                                                                        />
+                                                                    )}
                                                                 <ExpandableContent
-                                                                    label="Allergies"
-                                                                    value={row.original.allergies}
+                                                                    label="Parent Name"
+                                                                    value={row.original.parentName}
                                                                     colSpan={colSpan}
                                                                 />
-                                                            )}
-                                                            <ExpandableContent
-                                                                label="Parent Name"
-                                                                value={row.original.parentName}
-                                                                colSpan={colSpan}
-                                                            />
-                                                            <ExpandableContent
-                                                                label="Parent Phone"
-                                                                value={row.original.parentMobile}
-                                                                colSpan={colSpan}
-                                                            />
-                                                            <ExpandableContent
-                                                                label="Parent Email"
-                                                                value={row.original.parentEmail}
-                                                                colSpan={colSpan}
-                                                            />
-                                                            {row.original.message && (
                                                                 <ExpandableContent
-                                                                    label="Message"
-                                                                    value={row.original.message}
+                                                                    label="Parent Phone"
+                                                                    value={row.original.parentMobile}
                                                                     colSpan={colSpan}
                                                                 />
-                                                            )}
-                                                        </>
-                                                    )}
-                                                </Fragment>
-                                            ))
+                                                                <ExpandableContent
+                                                                    label="Parent Email"
+                                                                    value={row.original.parentEmail}
+                                                                    colSpan={colSpan}
+                                                                />
+                                                                {row.original.message && (
+                                                                    <ExpandableContent
+                                                                        label="Message"
+                                                                        value={row.original.message}
+                                                                        colSpan={colSpan}
+                                                                    />
+                                                                )}
+                                                            </>
+                                                        )}
+                                                    </Fragment>
+                                                )
+                                            })
                                         ) : (
                                             <TableRow>
                                                 <TableCell

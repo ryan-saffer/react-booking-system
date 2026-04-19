@@ -1,4 +1,4 @@
-import { getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
+import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useMemo } from 'react'
 
 import type { Rsvp, RsvpStatus } from 'fizz-kidz'
@@ -13,7 +13,12 @@ export type UseRsvpTableProps = {
     deleteRsvp: (id: string, childIdx: number) => Promise<void> | void
 }
 
-export function useRsvpTable({ rsvps, updateRsvp, deleteRsvp }: UseRsvpTableProps) {
+export function useRsvpTable({
+    rsvps,
+    updateRsvp,
+    deleteRsvp,
+    isExpanded = () => false,
+}: UseRsvpTableProps & { isExpanded?: (row: RsvpRow) => boolean }) {
     // this reduces each child into its own row, along with the parent details
     const data = useMemo(
         () =>
@@ -25,10 +30,9 @@ export function useRsvpTable({ rsvps, updateRsvp, deleteRsvp }: UseRsvpTableProp
     )
 
     const table = useReactTable<RsvpRow>({
-        columns: createColumns({ updateRsvp, deleteRsvp }),
+        columns: createColumns({ updateRsvp, deleteRsvp, isExpanded }),
         data,
         getCoreRowModel: getCoreRowModel(),
-        getExpandedRowModel: getExpandedRowModel(),
     })
 
     return table
