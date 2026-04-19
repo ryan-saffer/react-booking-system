@@ -394,7 +394,7 @@ export function RsvpForm({
                             </FormItem>
                         )}
                     />
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-center text-sm text-muted-foreground">
                         RSVP details are only visible to the party host and Fizz Kidz. Check out our{' '}
                         <a
                             className="font-medium text-[#9B3EEA] underline underline-offset-2 hover:text-[#8B2DE3]"
