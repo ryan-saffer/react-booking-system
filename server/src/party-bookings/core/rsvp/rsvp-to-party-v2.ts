@@ -19,20 +19,26 @@ export async function rsvpToParty(input: RsvpProps) {
 
     const invitation = await DatabaseClient.getInvitationV2(invitationId)
 
-    if (joinMailingList) {
-        try {
-            const zoho = new ZohoClient()
-            const [firstName, lastName] = input.parentName.split(' ')
-            zoho.addBirthdayPartyGuestContactV2({
-                firstName: firstName,
-                lastName: lastName || '',
+    try {
+        const zoho = new ZohoClient()
+        const [firstName, ...lastNameParts] = input.parentName.trim().split(/\s+/)
+        const lastName = lastNameParts.join(' ')
+
+        for (const child of input.children) {
+            await zoho.addBirthdayPartyGuestContactWithChild({
+                firstName,
+                lastName,
                 email: input.parentEmail,
+                mobile: input.parentMobile,
                 studio: invitation.studio,
                 type: invitation.$type,
+                childName: child.name,
+                childBirthdayISO: new Date(child.dob).toISOString(),
+                optOutOfMarketing: !joinMailingList,
             })
-        } catch (err) {
-            logError(`error adding contact to zoho during rsvp: ${input.parentEmail}`, err, { input })
         }
+    } catch (err) {
+        logError(`error adding RSVP contact to zoho: ${input.parentEmail}`, err, { input })
     }
 
     const mailClient = await MailClient.getInstance()

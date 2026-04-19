@@ -13,10 +13,9 @@ import type { InvitationsV2 } from 'fizz-kidz'
 import { getChildNumber } from '@components/after-school-program/enrolment-form/utils.booking-form'
 import { Button } from '@ui-components/button'
 import { Checkbox } from '@ui-components/checkbox'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@ui-components/form'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
-import { SelectContent, SelectForm, SelectItem, SelectValue } from '@ui-components/select'
 import { Separator } from '@ui-components/separator'
 import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
@@ -272,18 +271,28 @@ export function RsvpForm({
                                     name={`children.${idx}.rsvp` as const}
                                     render={({ field }) => (
                                         <FormItem>
-                                            <SelectForm
-                                                label={`Will ${watchedChild?.name || 'this child'} be able to attend?`}
-                                                onValueChange={field.onChange}
-                                                defaultValue={''}
-                                                disabled={isPending}
-                                            >
-                                                <SelectValue placeholder="Please select" />
-                                                <SelectContent>
-                                                    <SelectItem value="attending">Will attend</SelectItem>
-                                                    <SelectItem value="not-attending">Cannot attend</SelectItem>
-                                                </SelectContent>
-                                            </SelectForm>
+                                            <FormLabel>
+                                                Will {watchedChild?.name || 'this child'} be able to attend?
+                                            </FormLabel>
+                                            <div className="flex gap-2">
+                                                <Button
+                                                    type="button"
+                                                    variant={field.value === 'attending' ? 'darkPurple' : 'outline'}
+                                                    onClick={() => field.onChange('attending')}
+                                                    disabled={isPending}
+                                                >
+                                                    Attending
+                                                </Button>
+                                                <Button
+                                                    type="button"
+                                                    variant={field.value === 'not-attending' ? 'darkPurple' : 'outline'}
+                                                    onClick={() => field.onChange('not-attending')}
+                                                    disabled={isPending}
+                                                >
+                                                    Not Attending
+                                                </Button>
+                                            </div>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -293,25 +302,28 @@ export function RsvpForm({
                                         name={`children.${idx}.hasAllergies` as const}
                                         render={({ field }) => (
                                             <FormItem>
-                                                <SelectForm
-                                                    label={`Does ${watchedChild?.name || 'this child'} have any allergies?`}
-                                                    onValueChange={(value) => {
-                                                        if (value === 'yes') {
-                                                            field.onChange(true)
-                                                        }
-                                                        if (value === 'no') {
-                                                            field.onChange(false)
-                                                        }
-                                                    }}
-                                                    defaultValue={''}
-                                                    disabled={isPending}
-                                                >
-                                                    <SelectValue placeholder="Please select" />
-                                                    <SelectContent>
-                                                        <SelectItem value="yes">Yes</SelectItem>
-                                                        <SelectItem value="no">No</SelectItem>
-                                                    </SelectContent>
-                                                </SelectForm>
+                                                <FormLabel>
+                                                    Does {watchedChild?.name || 'this child'} have any allergies?
+                                                </FormLabel>
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        type="button"
+                                                        variant={field.value === true ? 'darkPurple' : 'outline'}
+                                                        onClick={() => field.onChange(true)}
+                                                        disabled={isPending}
+                                                    >
+                                                        Yes
+                                                    </Button>
+                                                    <Button
+                                                        type="button"
+                                                        variant={field.value === false ? 'darkPurple' : 'outline'}
+                                                        onClick={() => field.onChange(false)}
+                                                        disabled={isPending}
+                                                    >
+                                                        No
+                                                    </Button>
+                                                </div>
+                                                <FormMessage />
                                             </FormItem>
                                         )}
                                     />
@@ -326,9 +338,10 @@ export function RsvpForm({
                                                     Please enter {watchedChild?.name || 'the child'}'s allergies here
                                                 </FormLabel>
                                                 <FormDescription>
-                                                    This information is for the host's planning. Fizz Kidz doesn't
-                                                    monitor these RSVPs - your host will handle any allergy arrangements
-                                                    directly.
+                                                    This information is for the host's planning.
+                                                    <br />
+                                                    Fizz Kidz doesn't monitor these RSVPs. Your host will handle any
+                                                    allergy arrangements directly.
                                                 </FormDescription>
                                                 <FormControl>
                                                     <Textarea disabled={isPending} {...field} />

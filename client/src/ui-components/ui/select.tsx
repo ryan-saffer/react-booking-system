@@ -37,13 +37,21 @@ SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
 const SelectForm = React.forwardRef<
     React.ElementRef<typeof SelectPrimitive.Trigger>,
     React.ComponentPropsWithoutRef<typeof SelectPrimitive.Root> & { label: string }
->(({ children, label, ...props }, ref) => {
+>(({ children, label, onValueChange, ...props }, ref) => {
     const [isOpen, setIsOpen] = React.useState(false)
     const isTouchDevice = () => {
         return 'ontouchstart' in window || navigator.maxTouchPoints > 0
     }
     return (
-        <SelectPrimitive.Root open={isOpen} onOpenChange={setIsOpen} {...props}>
+        <SelectPrimitive.Root
+            open={isOpen}
+            onOpenChange={setIsOpen}
+            onValueChange={(value) => {
+                onValueChange?.(value)
+                setIsOpen(false)
+            }}
+            {...props}
+        >
             <FormLabel>{label}</FormLabel>
             <FormControl>
                 <SelectPrimitive.Trigger
