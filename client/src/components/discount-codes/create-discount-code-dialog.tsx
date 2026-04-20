@@ -24,7 +24,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@utils/tailwind'
 import { useTRPC } from '@utils/trpc'
 
-
 type NumberOrString<T> = {
     [P in keyof T]: T[P] extends number ? T[P] | string : T[P]
 }
@@ -130,6 +129,7 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent
+                                            className="z-[1302]"
                                             // https://github.com/shadcn-ui/ui/issues/2620#issuecomment-1918404840
                                             ref={(ref) => {
                                                 if (!ref) return
@@ -202,7 +202,10 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
                                                 </Button>
                                             </FormControl>
                                         </PopoverTrigger>
-                                        <PopoverContent className="twp w-auto overflow-hidden p-0" align="start">
+                                        <PopoverContent
+                                            className="twp z-[1302] w-auto overflow-hidden p-0"
+                                            align="start"
+                                        >
                                             <Calendar
                                                 mode="single"
                                                 selected={field.value}
