@@ -117,6 +117,7 @@ export const ContactFormLocationMap: Record<ContactFormLocationOption, Studio | 
     balwyn: 'balwyn',
     cheltenham: 'cheltenham',
     essendon: 'essendon',
+    geelong: 'geelong',
     kingsville: 'kingsville',
     malvern: 'malvern',
 }
@@ -125,6 +126,7 @@ export const PartyFormLocationMap: Record<ContactFormLocationOption, Studio | un
     balwyn: 'balwyn',
     cheltenham: 'cheltenham',
     essendon: 'essendon',
+    geelong: 'geelong',
     kingsville: 'kingsville',
     malvern: 'malvern',
     'at-home': undefined,
@@ -136,6 +138,7 @@ export const LocationDisplayValueMap: Record<ContactFormLocationOption, string> 
     balwyn: 'Balwyn Studio',
     cheltenham: 'Cheltenham Studio',
     essendon: 'Essendon Studio',
+    geelong: 'Geelong Studio',
     kingsville: 'Kingsville Studio',
     malvern: 'Malvern Studio',
     'at-home': 'At Home',
