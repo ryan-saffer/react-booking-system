@@ -119,7 +119,6 @@ export function RsvpForm({
             const hasAttending = values.children.some((child) => child.rsvp === 'attending')
             onComplete(hasAttending ? 'attending' : 'not-attending')
         } catch {
-            // TODO - track this error
             toast.error("There was a problem RSVP'ing. Please let the parent know directly if you are able to attend.")
         }
     }

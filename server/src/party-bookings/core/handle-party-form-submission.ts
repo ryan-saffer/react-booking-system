@@ -28,9 +28,7 @@ export async function handlePartyFormSubmission(responses: PaperformSubmission<P
     let mappedBooking: Partial<Booking> = {}
     try {
         mappedBooking = formMapper.mapToBooking(existingBooking.type, existingBooking.location)
-        if (responses.getFieldValue('party_or_cake_form') !== 'cake') {
-            // TODO: should be "=== 'party'", but waiting to phase out hardcoded form link.
-            // safe to change in March 2025
+        if (responses.getFieldValue('party_or_cake_form') === 'party') {
             mappedBooking.partyFormFilledIn = true
         }
     } catch (err) {

@@ -59,6 +59,15 @@ export function getManager(
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
             }
+        case 'geelong':
+            return {
+                name: 'TODO',
+                email: 'geelong@fizzkidz.com.au',
+                mobile: '0431 379 953',
+                subjectPronoun: 'she',
+                objectPronoun: 'her',
+                possesiveAdjective: 'her',
+            }
         case 'kingsville':
             return {
                 name: 'Kate',

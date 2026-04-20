@@ -1,6 +1,5 @@
 import type { Studio } from 'fizz-kidz'
 
-
 import { env } from '../init'
 import { withExponentialBackoff } from '../utilities'
 import { getOAuth2Client } from './google-oauth'
@@ -147,6 +146,10 @@ export class CalendarClient {
                         return env === 'prod'
                             ? 'fizzkidz.com.au_k1ubc2bi0ufvhoer4o9pakion0@group.calendar.google.com'
                             : 'c_3aae8htcpjgpmnrod7ujrqsccc@group.calendar.google.com'
+                    case 'geelong':
+                        return env === 'prod'
+                            ? 'c_2bf6b5afb28d1b0013e223f8fb7d8900dd03e66fdd5cef8cd25ea869e29f707b@group.calendar.google.com'
+                            : 'c_9116ad2e9ef63e43758620449f6f5319e91811008be410050aaecbe58d71687f@group.calendar.google.com'
                     case 'kingsville':
                         return env === 'prod'
                             ? 'c_c5ed845cf900830382f3da6a88f96f8a9f5c5af76e4ba6656fcf7dbf589c77fc@group.calendar.google.com'

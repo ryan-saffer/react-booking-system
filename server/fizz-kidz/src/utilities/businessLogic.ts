@@ -13,6 +13,8 @@ export function getStudioAddress(location: Studio) {
             return '273 Bay Rd, Cheltenham VIC 3192'
         case 'essendon':
             return '75 Raleigh St, Essendon VIC 3040'
+        case 'geelong':
+            return '352 Pakington St, Newtown VIC 3220'
         case 'kingsville':
             return '238 Somerville Rd, Kingsville, VIC 3012'
         case 'malvern':
@@ -112,6 +114,8 @@ export function getPictureOfStudioUrl(location: Studio) {
             return 'https://www.fizzkidz.com.au/images/studios/cheltenham.jpg'
         case 'essendon':
             return 'https://www.fizzkidz.com.au/images/studios/essendon.jpg'
+        case 'geelong':
+            return 'TODO'
         case 'kingsville':
             return 'https://www.fizzkidz.com.au/images/studios/kingsville.jpg'
         case 'malvern':
@@ -131,6 +135,8 @@ export function getReviewUrl(location: Studio) {
             return 'https://search.google.com/local/writereview?placeid=ChIJxb0bw3lv1moRwrl1Q_P-cHo'
         case 'essendon':
             return 'https://search.google.com/local/writereview?placeid=ChIJq_RqJMNd1moRksRMHNY2ExQ'
+        case 'geelong':
+            return 'TODO'
         case 'kingsville':
             return 'https://g.page/r/CRQItX8-YnBFEBM/review'
         case 'malvern':
