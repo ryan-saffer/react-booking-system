@@ -1,5 +1,7 @@
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
-import { Copy, Download, Mail, MessageCircleMore, PartyPopper, Sparkles } from 'lucide-react'
+import { useMutation } from '@tanstack/react-query'
+import { Copy, Download, Loader2, Mail, MessageCircleMore, PartyPopper, Sparkles } from 'lucide-react'
+import { useState } from 'react'
 import { WhatsappShareButton } from 'react-share'
 import { toast } from 'sonner'
 
@@ -9,15 +11,19 @@ import { WhatsappIcon } from '@drawables/icons/whatsapp'
 import { Button } from '@ui-components/button'
 import { Dialog, DialogContent, DialogTitle } from '@ui-components/dialog'
 import { Input } from '@ui-components/input'
+import { useTRPC } from '@utils/trpc'
 
 import { useInvitation } from '../hooks/use-invitation'
-import { useInvitationImage } from '../hooks/use-invitation-image'
 
 export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; close: () => void }) {
+    const trpc = useTRPC()
     const invitation = useInvitation()
+    const [isDownloading, setIsDownloading] = useState(false)
     const invitationText = `You're invited to ${invitation.childName}'s party!`
     const inviteUrl = getRsvpUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, invitation.bookingId)
-    const invitationImageUrl = useInvitationImage(invitation.id, false)
+    const { mutateAsync: getInvitationDownloadUrl } = useMutation(
+        trpc.parties.getInvitationDownloadUrl.mutationOptions()
+    )
 
     function copy() {
         navigator.clipboard.writeText(inviteUrl)
@@ -25,18 +31,25 @@ export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; clos
     }
 
     async function downloadInvitation() {
-        if (!invitationImageUrl) return
-        const result = await fetch(invitationImageUrl)
-        const blob = await result.blob()
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.style.display = 'none'
-        a.href = url
-        a.download = `${invitation.childName}'s Party Invitation.png`
-        document.body.appendChild(a)
-        a.click()
-        window.URL.revokeObjectURL(url)
-        a.remove()
+        setIsDownloading(true)
+        try {
+            const url = await getInvitationDownloadUrl({ invitationId: invitation.id })
+            const result = await fetch(url)
+            const blob = await result.blob()
+            const objectUrl = window.URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.style.display = 'none'
+            a.href = objectUrl
+            a.download = `${invitation.childName}'s Party Invitation.png`
+            document.body.appendChild(a)
+            a.click()
+            window.URL.revokeObjectURL(objectUrl)
+            a.remove()
+        } catch {
+            toast.error('There was an error downloading your invitation.')
+        } finally {
+            setIsDownloading(false)
+        }
     }
 
     return (
@@ -78,10 +91,14 @@ export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; clos
                                 variant="ghost"
                                 className="w-full sm:w-auto"
                                 onClick={downloadInvitation}
-                                disabled={!invitationImageUrl}
+                                disabled={isDownloading}
                             >
-                                <Download className="mr-2 h-4 w-4" />
-                                Download invite
+                                {isDownloading ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Download className="mr-2 h-4 w-4" />
+                                )}
+                                {isDownloading ? 'Downloading...' : 'Download invite'}
                             </Button>
                         </div>
                     </div>

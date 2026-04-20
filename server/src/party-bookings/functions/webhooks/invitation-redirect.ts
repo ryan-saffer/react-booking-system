@@ -23,12 +23,7 @@ invitationRedirect.get('/invitation/:id', async (req, res) => {
     const booking = await DatabaseClient.getPartyBooking(bookingId)
 
     if (booking.invitationId) {
-        res.redirect(
-            303,
-            `${getApplicationDomain(env, isUsingEmulator())}/invitation/v2/${
-                booking.invitationId
-            }`
-        )
+        res.redirect(303, `${getApplicationDomain(env, isUsingEmulator())}/invitation/v2/${booking.invitationId}`)
         return
     }
 

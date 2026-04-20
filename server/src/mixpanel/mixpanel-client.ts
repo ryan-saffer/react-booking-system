@@ -61,7 +61,35 @@ export type MixpanelEvent = {
         partyDate: Date
         invitation: InvitationOption
     }
+    'invitation-preview-generated-v2': {
+        distinct_id: string
+        bookingId: string
+        invitationId: string
+        partyDate: Date
+        invitation: InvitationsV2.InvitationOption
+        parentName: string
+        parentEmail: string
+    }
+    'invitation-download-requested-v2': {
+        distinct_id: string
+        bookingId: string
+        invitationId: string
+        partyDate: Date
+        invitation: InvitationsV2.InvitationOption
+        parentName: string
+        parentEmail: string
+    }
+    'invitation-edited-v2': {
+        distinct_id: string
+        bookingId: string
+        invitationId: string
+        partyDate: Date
+        invitation: InvitationsV2.InvitationOption
+        parentName: string
+        parentEmail: string
+    }
     'invitation-generated-v2': {
+        distinct_id: string
         bookingId: string
         invitationId: string
         partyDate: Date
@@ -70,6 +98,7 @@ export type MixpanelEvent = {
         parentEmail: string
     }
     'invitation-rsvp': {
+        distinct_id: string
         bookingId: string
         invitationId: string
         partyDate: Date
@@ -200,6 +229,9 @@ export type MixpanelEvent = {
 
 const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'invitation-generated': 'Invitation Generated',
+    'invitation-preview-generated-v2': 'Invitation Preview Generated [New]',
+    'invitation-download-requested-v2': 'Invitation Download Requested [New]',
+    'invitation-edited-v2': 'Invitation Edited [New]',
     'invitation-generated-v2': 'Invitation Generated [New]',
     'invitation-rsvp': 'Invitation RSVP',
     'invitation-coupon-signup': 'Invitation Coupon Code Signup',

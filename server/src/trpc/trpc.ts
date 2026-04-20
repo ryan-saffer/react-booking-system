@@ -32,7 +32,7 @@ export function createContext({ req }: trpcExpress.CreateExpressContextOptions) 
 const isAuthenticated = middleware(async ({ ctx, next }) => {
     try {
         const user = await getAuth().verifyIdToken(ctx.authToken || '')
-        return next({ ctx: { ...ctx, uid: user.uid } })
+        return next({ ctx: { ...ctx, uid: user.uid, email: user.email! } })
     } catch {
         throwTrpcError('UNAUTHORIZED', 'procedure requires authentication')
     }
