@@ -7,6 +7,8 @@ import { ObjectKeys } from 'fizz-kidz'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { MailClient } from '@/sendgrid/MailClient'
 
+import { getPasswordResetLink } from './get-password-reset-link'
+
 export async function addUserToStudio({
     firstname,
     lastname,
@@ -76,7 +78,7 @@ export async function addUserToStudio({
             })
 
             // send them a welcome to the platform and a password reset link
-            const resetLink = await auth.generatePasswordResetLink(email)
+            const resetLink = await getPasswordResetLink(email)
             const mailClient = await MailClient.getInstance()
             await mailClient.sendEmail('accountInvite', email, {
                 firstname,

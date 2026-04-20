@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { Loader2 } from 'lucide-react'
 import { CheckCircle } from 'lucide-react'
 import { useState } from 'react'
@@ -7,11 +8,11 @@ import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
-import useFirebase from '@components/Hooks/context/UseFirebase'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Input } from '@ui-components/input'
+import { useTRPC } from '@utils/trpc'
 
 import { SignInUpLayout } from './sign-up-layout'
 
@@ -20,7 +21,7 @@ const formSchema = z.object({
 })
 
 export function ResetPasswordPage() {
-    const firebase = useFirebase()
+    const trpc = useTRPC()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -29,16 +30,17 @@ export function ResetPasswordPage() {
         },
     })
 
+    const { mutateAsync: requestPasswordReset } = useMutation(trpc.auth.requestPasswordReset.mutationOptions())
     const [success, setSuccess] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             setLoading(true)
-            await firebase.resetPassword(values.email)
+            await requestPasswordReset({ email: values.email })
             setSuccess(true)
         } catch (err) {
-            toast.error('An error occured during password reset.')
+            toast.error('There was an error sending your reset email.')
         } finally {
             setLoading(false)
         }
@@ -58,8 +60,8 @@ export function ResetPasswordPage() {
                             <CheckCircle className="h-4 w-4" />
                             <AlertTitle className="text-sm">Email Sent</AlertTitle>
                             <AlertDescription className="text-xs">
-                                A password reset link has been sent to your email. Once you have reset your password,
-                                return to the{' '}
+                                If an account exists for that email address, a reset link is on the way. Once you have
+                                reset your password, return to the{' '}
                                 <Link to="../sign-in" className="font-semibold hover:underline">
                                     Sign In page.
                                 </Link>

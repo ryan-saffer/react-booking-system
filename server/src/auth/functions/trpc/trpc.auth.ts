@@ -3,10 +3,14 @@ import { FieldValue } from 'firebase-admin/firestore'
 import type { AuthUser, Role, StaffUser, StudioOrMaster } from 'fizz-kidz'
 
 import { addUserToStudio } from '@/auth/core/add-user-to-studio'
+import { requestPasswordReset } from '@/auth/core/request-password-reset'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
-import { router, authenticatedProcedure } from '@/trpc/trpc'
+import { authenticatedProcedure, publicProcedure, router } from '@/trpc/trpc'
 
 export const authRouter = router({
+    requestPasswordReset: publicProcedure
+        .input((input: unknown) => input as { email: string })
+        .mutation(({ input }) => requestPasswordReset(input.email)),
     createUser: authenticatedProcedure
         .input((input: unknown) => input as AuthUser)
         .mutation(({ input }) => DatabaseClient.createUser(input.uid, input)),
