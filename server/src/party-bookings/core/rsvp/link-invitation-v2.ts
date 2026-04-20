@@ -9,7 +9,7 @@ import { isUsingEmulator } from '@/utilities'
 import { deleteInvitationV2 } from './delete-invitation-v2'
 import { moveInvitation } from './move-invitation-v2'
 
-export async function linkInvitation(invitation: InvitationsV2.Invitation) {
+export async function linkInvitation(invitation: InvitationsV2.Invitation, distinctId: string) {
     invitation.date = new Date(invitation.date)
     invitation.rsvpDate = new Date(invitation.rsvpDate)
 
@@ -31,6 +31,17 @@ export async function linkInvitation(invitation: InvitationsV2.Invitation) {
 
             // then move the new invitation to the old ones location
             await moveInvitation(booking.invitationId, invitation)
+
+            const mixpanel = await MixpanelClient.getInstance()
+            await mixpanel.track('invitation-edited-v2', {
+                distinct_id: distinctId,
+                bookingId: invitation.bookingId,
+                invitationId: booking.invitationId,
+                partyDate: invitation.date,
+                invitation: invitation.invitation,
+                parentName: invitation.parentName,
+                parentEmail: booking.parentEmail,
+            })
 
             return { invitationId: booking.invitationId }
         } else {
@@ -58,6 +69,7 @@ export async function linkInvitation(invitation: InvitationsV2.Invitation) {
         // tracking - only track in the case its the first time its being linked to a booking
         const mixpanel = await MixpanelClient.getInstance()
         await mixpanel.track('invitation-generated-v2', {
+            distinct_id: distinctId,
             invitationId: invitation.id,
             partyDate: invitation.date,
             invitation: invitation.invitation,

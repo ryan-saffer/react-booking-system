@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { Download, Edit, Loader2, Sparkles, Wand2 } from 'lucide-react'
 import { useState } from 'react'
 import { Img } from 'react-image'
+import { toast } from 'sonner'
 
 import type { InvitationsV2 } from 'fizz-kidz'
 
@@ -30,9 +31,13 @@ export function EditInvitationDialog({
     const invitationUrl = useInvitationImage(invitation.id, false)
 
     const [isEditing, setIsEditing] = useState(false)
+    const [isDownloading, setIsDownloading] = useState(false)
 
     const { isPending, mutateAsync: generateAndLinkInvitation } = useMutation(
         trpc.parties.generateAndLinkInvitation.mutationOptions()
+    )
+    const { mutateAsync: getInvitationDownloadUrl } = useMutation(
+        trpc.parties.getInvitationDownloadUrl.mutationOptions()
     )
     const { mutateAsync: generateNewDesignUrl, isPending: isPendingNewUrl } = useMutation(
         trpc.parties.generateInvitationUrl.mutationOptions()
@@ -52,17 +57,25 @@ export function EditInvitationDialog({
     }
 
     async function downloadInvitation() {
-        const result = await fetch(invitationUrl)
-        const blob = await result.blob()
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.style.display = 'none'
-        a.href = url
-        a.download = `${invitation.childName}'s Party Invitation.png`
-        document.body.appendChild(a)
-        a.click()
-        window.URL.revokeObjectURL(url)
-        a.remove()
+        setIsDownloading(true)
+        try {
+            const url = await getInvitationDownloadUrl({ invitationId: invitation.id })
+            const result = await fetch(url)
+            const blob = await result.blob()
+            const objectUrl = window.URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.style.display = 'none'
+            a.href = objectUrl
+            a.download = `${invitation.childName}'s Party Invitation.png`
+            document.body.appendChild(a)
+            a.click()
+            window.URL.revokeObjectURL(objectUrl)
+            a.remove()
+        } catch {
+            toast.error('There was an error downloading your invitation.')
+        } finally {
+            setIsDownloading(false)
+        }
     }
 
     return (
@@ -116,9 +129,14 @@ export function EditInvitationDialog({
                                 variant="outline"
                                 className="w-full gap-2 rounded-xl border-slate-200 bg-white/80"
                                 onClick={downloadInvitation}
+                                disabled={isDownloading}
                             >
-                                <Download className="h-4 w-4" />
-                                Download
+                                {isDownloading ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Download className="h-4 w-4" />
+                                )}
+                                {isDownloading ? 'Downloading...' : 'Download'}
                             </Button>
                             <Button
                                 variant="outline"

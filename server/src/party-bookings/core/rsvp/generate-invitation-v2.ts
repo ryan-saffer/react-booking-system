@@ -8,6 +8,7 @@ import { generateRandomString } from 'fizz-kidz'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { StorageClient } from '@/firebase/StorageClient'
 import { projectId } from '@/init'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 
 import { InvitationImageGenerator } from './invitation-image-generator'
 
@@ -48,6 +49,19 @@ export async function generateInvitationV2(input: WithoutId<WithoutUid<Invitatio
         await storage.bucket(`${projectId}.appspot.com`).upload(LOCAL_PATH, {
             destination: FIREBASE_STORAGE_PATH,
         })
+
+        if (!booking.invitationId) {
+            const mixpanel = await MixpanelClient.getInstance()
+            await mixpanel.track('invitation-preview-generated-v2', {
+                distinct_id: booking.parentEmail,
+                bookingId: input.bookingId,
+                invitationId: id,
+                partyDate: input.date,
+                invitation: input.invitation,
+                parentName: input.parentName,
+                parentEmail: booking.parentEmail,
+            })
+        }
     } finally {
         if (tempDir) {
             await fsPromise.rm(tempDir, { recursive: true, force: true })
