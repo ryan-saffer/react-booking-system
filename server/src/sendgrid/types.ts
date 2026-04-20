@@ -418,6 +418,10 @@ export type Emails = {
         resetLink: string
     }
 
+    passwordReset: {
+        resetLink: string
+    }
+
     // WEBSITE FORMS
     websiteContactFormToCustomer: {
         name: string

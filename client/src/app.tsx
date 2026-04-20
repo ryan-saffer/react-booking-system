@@ -25,6 +25,11 @@ const SignUpPage = lazy(() =>
 const ResetPasswordPage = lazy(() =>
     import('./components/SignIn/reset-password-page.js').then((module) => ({ default: module.ResetPasswordPage }))
 )
+const ResetPasswordConfirmPage = lazy(() =>
+    import('./components/SignIn/reset-password-confirm-page.js').then((module) => ({
+        default: module.ResetPasswordConfirmPage,
+    }))
+)
 const Navigation = lazy(() =>
     import('./components/Navigation/navigation.js').then((module) => ({ default: module.Navigation }))
 )
@@ -81,14 +86,14 @@ const PreschoolProgramEnrolmentPage = lazy(() =>
     }))
 )
 const PreschoolProgramSessionSelectorPage = lazy(() =>
-    import(
-        './components/preschool-program/attendance/session-selector/preschool-program-session-selector-page.js'
-    ).then((module) => ({ default: module.PreschoolProgramSessionSelectorPage }))
+    import('./components/preschool-program/attendance/session-selector/preschool-program-session-selector-page.js').then(
+        (module) => ({ default: module.PreschoolProgramSessionSelectorPage })
+    )
 )
 const PreschoolProgramSessionAttendancePage = lazy(() =>
-    import(
-        './components/preschool-program/attendance/session-attendance/pages/preschool-program-session-attendance-page.js'
-    ).then((module) => ({ default: module.PreschoolProgramSessionAttendancePage }))
+    import('./components/preschool-program/attendance/session-attendance/pages/preschool-program-session-attendance-page.js').then(
+        (module) => ({ default: module.PreschoolProgramSessionAttendancePage })
+    )
 )
 const PreschoolProgramInvoicingPage = lazy(() =>
     import('./components/preschool-program/invoicing/pages/preschool-program-invoicing-page.js').then((module) => ({
@@ -244,6 +249,14 @@ const router = createBrowserRouter([
                         <SignedOut>
                             <ResetPasswordPage />
                         </SignedOut>
+                    </Suspense>
+                ),
+            },
+            {
+                path: 'reset-password/confirm',
+                Component: () => (
+                    <Suspense fallback={<Loader />}>
+                        <ResetPasswordConfirmPage />
                     </Suspense>
                 ),
             },
