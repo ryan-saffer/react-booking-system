@@ -3,15 +3,16 @@ import {
     type AuthCredential,
     GoogleAuthProvider,
     type Auth,
+    confirmPasswordReset,
     createUserWithEmailAndPassword,
     getAuth,
     linkWithPopup,
-    sendPasswordResetEmail,
     signInWithEmailAndPassword,
     signInWithCredential as signInWithCredentialFn,
     signInWithPopup,
     signOut,
     signInAnonymously,
+    verifyPasswordResetCode,
 } from 'firebase/auth'
 import { type Firestore, getFirestore } from 'firebase/firestore'
 import { connectFunctionsEmulator, type Functions, getFunctions } from 'firebase/functions'
@@ -71,7 +72,10 @@ class Firebase {
 
     signInWithCredential = (credential: AuthCredential) => signInWithCredentialFn(this.auth, credential)
 
-    resetPassword = (email: string) => sendPasswordResetEmail(this.auth, email)
+    verifyPasswordResetCode = (oobCode: string) => verifyPasswordResetCode(this.auth, oobCode)
+
+    confirmPasswordReset = (oobCode: string, newPassword: string) =>
+        confirmPasswordReset(this.auth, oobCode, newPassword)
 }
 
 export default Firebase

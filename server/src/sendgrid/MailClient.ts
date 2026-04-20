@@ -573,6 +573,20 @@ export class MailClient {
                     template: 'account_invite.mjml',
                     useMjml: true,
                 }
+            case 'passwordReset':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz Portal',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Reset your Fizz Kidz Portal password',
+                        replyTo: replyTo || 'people@fizzkidz.com.au',
+                    },
+                    template: 'password_reset.mjml',
+                    useMjml: true,
+                }
             case 'websiteContactFormToCustomer':
                 return {
                     emailInfo: {
