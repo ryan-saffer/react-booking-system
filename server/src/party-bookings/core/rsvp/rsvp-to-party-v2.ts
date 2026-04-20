@@ -86,6 +86,7 @@ export async function rsvpToParty(input: RsvpProps) {
     // tracking
     const mixpanel = await MixpanelClient.getInstance()
     await mixpanel.track('invitation-rsvp', {
+        distinct_id: input.parentEmail,
         bookingId: invitation.bookingId,
         invitationId: invitation.id,
         partyDate: invitation.date,

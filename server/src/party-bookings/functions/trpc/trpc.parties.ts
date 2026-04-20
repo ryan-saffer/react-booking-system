@@ -16,6 +16,7 @@ import { generateInvitation } from '@/party-bookings/core/generate-invitation'
 import { generateAndLinkInvitation } from '@/party-bookings/core/rsvp/edit-invitation-v2'
 import { generateInvitationUrl } from '@/party-bookings/core/rsvp/generate-invitation-url'
 import { generateInvitationV2 } from '@/party-bookings/core/rsvp/generate-invitation-v2'
+import { getInvitationDownloadUrl } from '@/party-bookings/core/rsvp/get-invitation-download-url-v2'
 import { linkInvitation } from '@/party-bookings/core/rsvp/link-invitation-v2'
 import { resetInvitation } from '@/party-bookings/core/rsvp/reset-invitation-v2'
 import { rsvpToParty } from '@/party-bookings/core/rsvp/rsvp-to-party-v2'
@@ -57,15 +58,18 @@ export const partiesRouter = router({
     generateInvitationUrl: authenticatedProcedure
         .input(z.object({ bookingId: z.string() }))
         .mutation(({ input }) => generateInvitationUrl(input.bookingId)),
+    getInvitationDownloadUrl: authenticatedProcedure
+        .input(z.object({ invitationId: z.string() }))
+        .mutation(({ input, ctx }) => getInvitationDownloadUrl({ ...input, distinctId: ctx.email })),
     generateInvitationV2: publicProcedure
         .input((input: unknown) => input as WithoutId<WithoutUid<InvitationsV2.Invitation>>)
         .mutation(({ input }) => generateInvitationV2(input)),
     linkInvitation: authenticatedProcedure
         .input((input: unknown) => input as WithoutUid<InvitationsV2.Invitation>)
-        .mutation(({ input, ctx }) => linkInvitation({ ...input, uid: ctx.uid })),
+        .mutation(({ input, ctx }) => linkInvitation({ ...input, uid: ctx.uid }, ctx.email)),
     generateAndLinkInvitation: authenticatedProcedure
         .input((input: unknown) => input as InvitationsV2.Invitation)
-        .mutation(({ input }) => generateAndLinkInvitation(input)),
+        .mutation(({ input, ctx }) => generateAndLinkInvitation({ ...input, uid: ctx.uid }, ctx.email)),
     resetInvitation: authenticatedProcedure
         .input((input: unknown) => input as { invitationId: string })
         .mutation(({ input }) => resetInvitation(input.invitationId)),

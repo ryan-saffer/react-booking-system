@@ -6,7 +6,7 @@ import { linkInvitation } from './link-invitation-v2'
 /**
  * Used for editing existing invitations. Generates a new one and replaces the existing one.
  */
-export async function generateAndLinkInvitation(invitation: InvitationsV2.Invitation) {
+export async function generateAndLinkInvitation(invitation: InvitationsV2.Invitation, distinctId: string) {
     const { invitationId } = await generateInvitationV2(invitation)
-    await linkInvitation({ ...invitation, id: invitationId })
+    await linkInvitation({ ...invitation, id: invitationId }, distinctId)
 }
