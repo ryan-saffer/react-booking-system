@@ -43,22 +43,27 @@ export async function rsvpToParty(input: RsvpProps) {
 
     const mailClient = await MailClient.getInstance()
     try {
-        mailClient.sendEmail('rsvpToParty', input.parentEmail, {
-            parentName: input.parentName,
-            children: input.children.map((child) => ({
-                childName: child.name,
-                isAttending: child.rsvp === 'attending',
-                allergies: child.allergies,
-            })),
-            attending: input.children.some((child) => child.rsvp === 'attending'),
-            hostName: invitation.parentName,
-            hostPhone: invitation.parentMobile,
-            date: invitation.date.toDateString(),
-            time: invitation.time,
-            isMobile: invitation.$type === 'mobile',
-            studio: capitalise(invitation.studio),
-            address: invitation.$type === 'mobile' ? invitation.address : getStudioAddress(invitation.studio),
-        })
+        mailClient.sendEmail(
+            'rsvpToParty',
+            input.parentEmail,
+            {
+                parentName: input.parentName,
+                children: input.children.map((child) => ({
+                    childName: child.name,
+                    isAttending: child.rsvp === 'attending',
+                    allergies: child.allergies,
+                })),
+                attending: input.children.some((child) => child.rsvp === 'attending'),
+                hostName: invitation.parentName,
+                hostPhone: invitation.parentMobile,
+                date: invitation.date.toDateString(),
+                time: invitation.time,
+                isMobile: invitation.$type === 'mobile',
+                studio: capitalise(invitation.studio),
+                address: invitation.$type === 'mobile' ? invitation.address : getStudioAddress(invitation.studio),
+            },
+            { bccBookings: false }
+        )
     } catch (err) {
         logError(`Error sending rsvp confirmation to parent '${input.parentEmail}'`, err, { input })
     }
@@ -67,17 +72,22 @@ export async function rsvpToParty(input: RsvpProps) {
     if (invitation.rsvpNotificationsEnabled) {
         const booking = await DatabaseClient.getPartyBooking(invitation.bookingId)
         try {
-            await mailClient.sendEmail('rsvpNotificationToHost', booking.parentEmail, {
-                parentName: invitation.parentName,
-                childrenNames: mergeChildrenNames(input.children),
-                birthdayChildName: invitation.childName,
-                children: input.children.map((child) => ({
-                    childName: child.name,
-                    isAttending: child.rsvp === 'attending',
-                    allergies: child.allergies,
-                })),
-                invitationUrl: getRsvpUrl(env, isUsingEmulator(), invitation.bookingId),
-            })
+            await mailClient.sendEmail(
+                'rsvpNotificationToHost',
+                booking.parentEmail,
+                {
+                    parentName: invitation.parentName,
+                    childrenNames: mergeChildrenNames(input.children),
+                    birthdayChildName: invitation.childName,
+                    children: input.children.map((child) => ({
+                        childName: child.name,
+                        isAttending: child.rsvp === 'attending',
+                        allergies: child.allergies,
+                    })),
+                    invitationUrl: getRsvpUrl(env, isUsingEmulator(), invitation.bookingId),
+                },
+                { bccBookings: false }
+            )
         } catch (err) {
             logError(`Error sending RSVP notification to host '${booking.parentEmail}'`, err, { input })
         }

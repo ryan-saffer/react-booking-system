@@ -61,10 +61,15 @@ export async function linkInvitation(invitation: InvitationsV2.Invitation, disti
 
         // if its the first time the invitation was linked to a booking, send an email to the host confirming
         const mailClient = await MailClient.getInstance()
-        await mailClient.sendEmail('invitationCreated', booking.parentEmail, {
-            parentName: invitation.parentName,
-            invitationLink: getRsvpUrl(env, isUsingEmulator(), invitation.bookingId),
-        })
+        await mailClient.sendEmail(
+            'invitationCreated',
+            booking.parentEmail,
+            {
+                parentName: invitation.parentName,
+                invitationLink: getRsvpUrl(env, isUsingEmulator(), invitation.bookingId),
+            },
+            { bccBookings: false }
+        )
 
         // tracking - only track in the case its the first time its being linked to a booking
         const mixpanel = await MixpanelClient.getInstance()
