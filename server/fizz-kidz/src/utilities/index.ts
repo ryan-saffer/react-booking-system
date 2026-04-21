@@ -45,6 +45,6 @@ export function isNotNull<T>(value: T | null): value is T {
 }
 
 export * from './businessLogic'
-export * from './manager-info'
+export * from './contact-info'
 export * from './stringUtilities'
 export * from './assert-never'

@@ -2,7 +2,13 @@ import { logger } from 'firebase-functions/v2'
 import { DateTime } from 'luxon'
 
 import type { Booking } from 'fizz-kidz'
-import { capitalise, getStudioAddress, getManager, getPartyEndDate } from 'fizz-kidz'
+import {
+    capitalise,
+    getPartyCustomerContactInfo,
+    getStudioAddress,
+    getPartyEndDate,
+    getStudioContactEmail,
+} from 'fizz-kidz'
 
 import { FirestoreRefs } from '@/firebase/FirestoreRefs'
 import { MailClient } from '@/sendgrid/MailClient'
@@ -46,7 +52,8 @@ async function sendForm(bookingId: string, booking: Booking) {
     const mailClient = await MailClient.getInstance()
 
     const prefilledFormUrl = getPartyFormUrl(bookingId)
-    const manager = getManager(booking.location)
+    const customerContact = getPartyCustomerContactInfo(booking.location)
+    const studioContactEmail = getStudioContactEmail(booking.location)
 
     return mailClient.sendEmail(
         'partyForm',
@@ -67,16 +74,18 @@ async function sendForm(bookingId: string, booking: Booking) {
             address: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
             location: capitalise(booking.location),
             prefilledFormUrl,
-            managerName: manager.name,
+            contactPhone: customerContact.phoneDisplay,
+            contactSignoff: customerContact.contactSignoff,
+            contactName: customerContact.contactName || '',
             isMobile: booking.type === 'mobile',
         },
         {
             from: {
                 name: 'Fizz Kidz',
-                email: manager.email,
+                email: studioContactEmail,
             },
             subject: `${booking.childName}'s party is coming up!`,
-            replyTo: manager.email,
+            replyTo: studioContactEmail,
         }
     )
 }

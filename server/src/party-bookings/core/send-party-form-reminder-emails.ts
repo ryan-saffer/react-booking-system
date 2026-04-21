@@ -1,7 +1,7 @@
 import { logger } from 'firebase-functions/v2'
 
 import type { Booking } from 'fizz-kidz'
-import { getManager } from 'fizz-kidz'
+import { getPartyCustomerContactInfo, getStudioContactEmail } from 'fizz-kidz'
 
 import { FirestoreRefs } from '@/firebase/FirestoreRefs'
 import { MailClient } from '@/sendgrid/MailClient'
@@ -49,13 +49,22 @@ async function sendFormReminder(bookingId: string, booking: Booking) {
     const mailClient = await MailClient.getInstance()
 
     const prefilledFormUrl = getPartyFormUrl(bookingId)
-    const manager = getManager(booking.location)
+    const customerContact = getPartyCustomerContactInfo(booking.location)
+    const studioContactEmail = getStudioContactEmail(booking.location)
 
-    return mailClient.sendEmail('partyFormReminder', booking.parentEmail, {
-        parentName: booking.parentFirstName,
-        childName: booking.childName,
-        managerName: manager.name,
-        managerMobile: manager.mobile,
-        prefilledFormUrl,
-    })
+    return mailClient.sendEmail(
+        'partyFormReminder',
+        booking.parentEmail,
+        {
+            parentName: booking.parentFirstName,
+            childName: booking.childName,
+            contactPhone: customerContact.phoneDisplay,
+            contactSignoff: customerContact.contactSignoff,
+            contactName: customerContact.contactName || '',
+            prefilledFormUrl,
+        },
+        {
+            replyTo: studioContactEmail,
+        }
+    )
 }

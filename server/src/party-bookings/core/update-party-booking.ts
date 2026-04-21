@@ -5,12 +5,13 @@ import {
     capitalise,
     getApplicationDomain,
     getStudioAddress,
-    getManager,
     getNumberOfKidsAllowed,
+    getPartyCustomerContactInfo,
     getPartyCreationCount,
     getPartyEndDate,
     getPictureOfStudioUrl,
     getRsvpUrl,
+    getStudioContactEmail,
 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -59,7 +60,8 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
 
     // if the party time has changed, send an email to the parent so its confirmed in writing
     if (!isSameTime || !isSameLength) {
-        const manager = getManager(booking.location, env)
+        const customerContact = getPartyCustomerContactInfo(booking.location)
+        const studioContactEmail = getStudioContactEmail(booking.location, env)
         const mailClient = await MailClient.getInstance()
         const bookingDateTime = DateTime.fromJSDate(booking.dateTime, {
             zone: 'Australia/Melbourne',
@@ -111,11 +113,9 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
                     location: capitalise(booking.location),
                     isMobile: booking.type === 'mobile',
                     creationCount: getPartyCreationCount(booking.type, booking.partyLength),
-                    managerName: manager.name,
-                    managerEmail: manager.email,
-                    managerMobile: manager.mobile,
-                    managerObjectPronoun: manager.objectPronoun,
-                    managerSubjectPronoun: capitalise(manager.subjectPronoun),
+                    contactEmail: customerContact.email,
+                    contactPhone: customerContact.phoneDisplay,
+                    contactName: customerContact.contactName || '',
                     numberOfKidsAllowed: getNumberOfKidsAllowed(booking.location),
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
                     invitationsUrl,
@@ -126,7 +126,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
                 },
                 {
                     subject: updatedBookingSubject,
-                    replyTo: manager.email,
+                    replyTo: studioContactEmail,
                 }
             )
             .catch((err) =>

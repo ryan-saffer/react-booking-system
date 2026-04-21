@@ -10,7 +10,7 @@ export function CancellationPolicy() {
             </p>
             <p>
                 Please note that <strong>Term Bookings are final,</strong> and if you need to amend your bookings for
-                these dates, we encourage you to reach out to our Bookings Manager on (03) 9059 8144 or email at
+                these dates, we encourage you to reach out to our team on (03) 9059 8144 or email at
                 bookings@fizzkidz.com.au.
             </p>
             <p>

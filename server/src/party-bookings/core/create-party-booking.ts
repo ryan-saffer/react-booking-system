@@ -6,12 +6,13 @@ import {
     capitalise,
     getApplicationDomain,
     getStudioAddress,
-    getManager,
     getNumberOfKidsAllowed,
+    getPartyCustomerContactInfo,
     getPartyCreationCount,
     getPartyEndDate,
     getPictureOfStudioUrl,
     getRsvpUrl,
+    getStudioContactEmail,
 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -121,7 +122,8 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
         ? getRsvpUrl(env, isUsingEmulator(), bookingId)
         : `${getApplicationDomain(env, isUsingEmulator())}/invitations?${params.join('&')}`
 
-    const manager = getManager(booking.location)
+    const customerContact = getPartyCustomerContactInfo(booking.location)
+    const studioContactEmail = getStudioContactEmail(booking.location)
 
     if (booking.sendConfirmationEmail) {
         const mailClient = await MailClient.getInstance()
@@ -148,11 +150,9 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
                     location: capitalise(booking.location),
                     isMobile: booking.type === 'mobile',
                     creationCount: getPartyCreationCount(booking.type, booking.partyLength),
-                    managerName: manager.name,
-                    managerEmail: manager.email,
-                    managerMobile: manager.mobile,
-                    managerObjectPronoun: manager.objectPronoun,
-                    managerSubjectPronoun: capitalise(manager.subjectPronoun),
+                    contactEmail: customerContact.email,
+                    contactPhone: customerContact.phoneDisplay,
+                    contactName: customerContact.contactName || '',
                     numberOfKidsAllowed: getNumberOfKidsAllowed(booking.location),
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
                     useRsvpSystem: booking.useRsvpSystem || false,
@@ -161,7 +161,7 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
                     canOrderCake: booking.type === 'studio',
                     cakeFormUrl,
                 },
-                { replyTo: manager.email }
+                { replyTo: studioContactEmail }
             )
         } catch (err) {
             logError('party booked successfully, but unable to send confirmation email', err, { _booking })
