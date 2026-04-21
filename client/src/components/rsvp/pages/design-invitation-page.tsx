@@ -83,7 +83,7 @@ export function DesignInvitationPage() {
             if (hasCreatedAccount && invitation) {
                 try {
                     const { invitationId } = await linkInvitation(invitation)
-                    navigate(`/invitation/v2/${invitationId}`)
+                    navigate(`/invite/${invitationId}`)
                 } catch (err: any) {
                     let message = 'There was an error linking your invitation to your booking.'
                     if (err instanceof TRPCClientError) {

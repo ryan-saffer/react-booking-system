@@ -28,13 +28,13 @@ export function useInvitationRouterState(): Omit<InvitationsV2.Invitation, 'id' 
         state?.time ?? null,
         state?.$type ?? null,
         state?.studio ?? null,
-        state?.$type === 'mobile' ? state?.address ?? null : null,
+        state?.$type === 'mobile' ? (state?.address ?? null) : null,
         state?.rsvpDate ?? null
     )
 
     useEffect(() => {
         if (!isValid) {
-            navigate('/invitation/v2')
+            navigate('/invite')
         }
     }, [isValid, navigate])
 

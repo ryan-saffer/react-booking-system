@@ -1,29 +1,39 @@
 import express from 'express'
 
-import { getApplicationDomain } from 'fizz-kidz'
+import { getInvitationShareUrl } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { env } from '@/init'
 import { generateInvitationUrl } from '@/party-bookings/core/rsvp/generate-invitation-url'
 import { isUsingEmulator } from '@/utilities'
 
-export const invitationRedirect = express.Router()
+export const invitationEntryRedirect = express.Router()
 
 /**
- * This is the url given for all invitations. The id is the booking id.
+ * Booking-based invitation entry route.
  *
- * If the booking has an invitation, it will redirect to it. This page internally decides whether to show 'manage rsvps' or 'view invitation' based on auth.
- * Otherwise, it will redirect to the page to create an invitation.
- *
- * This approach allows for a single shareable url for everyone.
+ * This is the long-term host/customer entry point and resolves a bookingId to either:
+ * - the canonical public invite URL when an invitation already exists, or
+ * - the invitation design flow when one has not been created yet.
  */
-invitationRedirect.get('/invitation/:id', async (req, res) => {
+invitationEntryRedirect.get('/invitation/:id', async (req, res) => {
     const bookingId = req.params.id
 
-    const booking = await DatabaseClient.getPartyBooking(bookingId)
+    if (!bookingId || bookingId === ':id') {
+        res.redirect(303, `https://www.fizzkidz.com.au/404`)
+        return
+    }
+
+    let booking
+    try {
+        booking = await DatabaseClient.getPartyBooking(bookingId)
+    } catch {
+        res.redirect(303, `https://www.fizzkidz.com.au/404`)
+        return
+    }
 
     if (booking.invitationId) {
-        res.redirect(303, `${getApplicationDomain(env, isUsingEmulator())}/invitation/v2/${booking.invitationId}`)
+        res.redirect(303, getInvitationShareUrl(env, isUsingEmulator(), booking.invitationId))
         return
     }
 

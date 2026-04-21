@@ -23,7 +23,7 @@ export function RsvpPage() {
     const [rsvpStatus, setRsvpStatus] = useState<'attending' | 'not-attending' | null>(null)
 
     if (!state) {
-        return <Navigate to={`/invitation/v2/${id}`} />
+        return <Navigate to={`/invite/${id}`} />
     }
 
     const { invitation } = state

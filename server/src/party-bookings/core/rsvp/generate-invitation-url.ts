@@ -35,7 +35,7 @@ export async function generateInvitationUrl(bookingId: string) {
         rsvpDate: DateTime.fromJSDate(booking.dateTime, { zone: 'Australia/Melbourne' }).minus({ days: 14 }).toISO(),
     }
 
-    let url = `${getApplicationDomain(env, isUsingEmulator())}/invitation/v2?`
+    let url = `${getApplicationDomain(env, isUsingEmulator())}/invite?`
 
     ObjectKeys(params).forEach((param) => (url += `${param}=${encodeURIComponent(params[param])}&`))
 

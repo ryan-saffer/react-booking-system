@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { WhatsappShareButton } from 'react-share'
 import { toast } from 'sonner'
 
-import { getRsvpUrl } from 'fizz-kidz'
+import { getInvitationShareUrl } from 'fizz-kidz'
 
 import { WhatsappIcon } from '@drawables/icons/whatsapp'
 import { Button } from '@ui-components/button'
@@ -20,7 +20,7 @@ export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; clos
     const invitation = useInvitation()
     const [isDownloading, setIsDownloading] = useState(false)
     const invitationText = `You're invited to ${invitation.childName}'s party!`
-    const inviteUrl = getRsvpUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, invitation.bookingId)
+    const inviteUrl = getInvitationShareUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, invitation.id)
     const { mutateAsync: getInvitationDownloadUrl } = useMutation(
         trpc.parties.getInvitationDownloadUrl.mutationOptions()
     )

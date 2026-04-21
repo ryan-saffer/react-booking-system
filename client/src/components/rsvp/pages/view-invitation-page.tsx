@@ -1,5 +1,4 @@
 import { doc, onSnapshot } from 'firebase/firestore'
-import { RotateCw } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -9,7 +8,6 @@ import { useAuth } from '@components/Hooks/context/useAuth'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useOrg } from '@components/Session/use-org'
 import Loader from '@components/Shared/Loader'
-import { Button } from '@ui-components/button'
 import { timestampConverter } from '@utils/firebase/converters'
 
 import { InvitationProvider } from '../hooks/invitation-provider'
@@ -73,22 +71,12 @@ export function ViewInvitationPage() {
                                 We couldn't load this invitation
                             </h1>
                             <p className="mt-3 text-sm text-slate-600">
-                                The link may be invalid or the invitation was removed. Try refreshing, or contact the
-                                party host for a fresh link.
+                                The link may be invalid or the invitation was removed. Contact the party host for a
+                                fresh link.
                             </p>
                             {invitation.error && (
                                 <p className="mt-2 text-xs text-slate-500">Error: {invitation.error}</p>
                             )}
-                            <div className="mt-6 flex flex-wrap justify-center gap-3">
-                                <Button
-                                    variant="outline"
-                                    className="rounded-xl border-slate-200"
-                                    onClick={() => window.location.reload()}
-                                >
-                                    Refresh
-                                    <RotateCw className="ml-2 h-4 w-4" />
-                                </Button>
-                            </div>
                         </div>
                     </div>
                 </div>

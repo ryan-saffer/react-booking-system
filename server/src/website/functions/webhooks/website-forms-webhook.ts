@@ -20,8 +20,44 @@ import { ZohoClient } from '@/zoho/zoho-client'
 
 export const websiteFormsWebhook = express.Router()
 
+function getRequestBodyForLogging(body: unknown) {
+    if (typeof body !== 'string') {
+        return body
+    }
+
+    try {
+        return JSON.parse(body)
+    } catch {
+        return {
+            rawBody: body,
+        }
+    }
+}
+
+async function runZohoTask({
+    description,
+    formId,
+    requestBody,
+    task,
+}: {
+    description: string
+    formId: keyof Form
+    requestBody: unknown
+    task: () => Promise<unknown>
+}) {
+    try {
+        await task()
+    } catch (err) {
+        logError(`Zoho sync failed for website form '${formId}' during ${description}`, err, {
+            formId,
+            requestBody,
+        })
+    }
+}
+
 websiteFormsWebhook.post('/website-forms', async (req, res) => {
     const formId = req.query.formId as keyof Form
+    const requestBody = getRequestBodyForLogging(req.body)
 
     const zohoClient = new ZohoClient()
     const mailClient = await MailClient.getInstance()
@@ -33,29 +69,43 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                 const formData = JSON.parse(req.body) as Form['party']
 
                 const [firstName, lastName] = formData.name.split(' ')
-                const contactId = await zohoClient.addBasicB2CContact({
-                    firstName,
-                    lastName: lastName || '',
-                    email: formData.email,
-                    studio: PartyFormLocationMap[formData.location],
-                    mobile: formData.contactNumber,
-                    optOutOfMarketing: false,
-                })
+                await runZohoTask({
+                    description: 'party enquiry sync',
+                    formId,
+                    requestBody,
+                    task: async () => {
+                        const contactId = await zohoClient.addBasicB2CContact({
+                            firstName,
+                            lastName: lastName || '',
+                            email: formData.email,
+                            studio: PartyFormLocationMap[formData.location],
+                            mobile: formData.contactNumber,
+                            optOutOfMarketing: false,
+                        })
 
-                await zohoClient.createBirthdayPartyDeal({
-                    firstName,
-                    lastName: lastName || '',
-                    email: formData.email,
-                    mobile: formData.contactNumber,
-                    contactId,
-                    preferredDateAndTime: formData.preferredDateAndTime,
-                    type:
-                        formData.location === 'at-home' ? 'mobile' : formData.location === 'other' ? 'other' : 'studio',
-                    studio: formData.location === 'at-home' || formData.location === 'other' ? '' : formData.location,
-                    suburb: formData.suburb,
-                    reference: formData.reference,
-                    partyTheme: formData.partyTheme,
-                    enquiry: formData.enquiry,
+                        await zohoClient.createBirthdayPartyDeal({
+                            firstName,
+                            lastName: lastName || '',
+                            email: formData.email,
+                            mobile: formData.contactNumber,
+                            contactId,
+                            preferredDateAndTime: formData.preferredDateAndTime,
+                            type:
+                                formData.location === 'at-home'
+                                    ? 'mobile'
+                                    : formData.location === 'other'
+                                      ? 'other'
+                                      : 'studio',
+                            studio:
+                                formData.location === 'at-home' || formData.location === 'other'
+                                    ? ''
+                                    : formData.location,
+                            suburb: formData.suburb,
+                            reference: formData.reference,
+                            partyTheme: formData.partyTheme,
+                            enquiry: formData.enquiry,
+                        })
+                    },
                 })
 
                 await mailClient.sendEmail(
@@ -123,68 +173,75 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
 
                 const service = formData.service
 
-                switch (true) {
-                    case service === 'other':
-                        break
-                    case service === 'party' && formData.partyTheme !== undefined: {
-                        const contactId = await zohoClient.addBasicB2CContact({
-                            firstName,
-                            lastName,
-                            email: formData.email,
-                            mobile: formData.contactNumber,
-                            optOutOfMarketing: false,
-                            ...(formData.location && { studio: ContactFormLocationMap[formData.location] }),
-                        })
-                        await zohoClient.createBirthdayPartyDeal({
-                            firstName,
-                            lastName: lastName || '',
-                            email: formData.email,
-                            mobile: formData.contactNumber,
-                            contactId,
-                            preferredDateAndTime: formData.preferredDateAndTime || '',
-                            type:
-                                formData.location === 'at-home'
-                                    ? 'mobile'
-                                    : formData.location === 'other'
-                                      ? 'other'
-                                      : 'studio',
-                            studio:
-                                formData.location === 'at-home' || formData.location === 'other'
-                                    ? ''
-                                    : formData.location || '',
-                            suburb: formData.suburb,
-                            reference: formData.reference,
-                            partyTheme: formData.partyTheme,
-                            enquiry: formData.enquiry,
-                        })
-                        break
-                    }
-                    case service === 'holiday-program' || service === 'after-school-program': {
-                        await zohoClient.addBasicB2CContact({
-                            firstName,
-                            lastName,
-                            email: formData.email,
-                            mobile: formData.contactNumber,
-                            optOutOfMarketing: false,
-                            ...(formData.location && { studio: ContactFormLocationMap[formData.location] }),
-                        })
-                        break
-                    }
-                    case service === 'activation' || service === 'incursion': {
-                        await zohoClient.addBasicB2BContact({
-                            firstName,
-                            lastName,
-                            email: formData.email,
-                            mobile: formData.contactNumber,
-                            service: service === 'activation' ? 'activation_event' : 'incursion',
-                        })
-                        break
-                    }
-                    default: {
-                        // we still want the user to see a success here, so only log the error
-                        logError(`Unrecognised service when submitting website 'contact' form: '${service}'`)
-                    }
-                }
+                await runZohoTask({
+                    description: 'contact form sync',
+                    formId,
+                    requestBody,
+                    task: async () => {
+                        switch (true) {
+                            case service === 'other':
+                                break
+                            case service === 'party' && formData.partyTheme !== undefined: {
+                                const contactId = await zohoClient.addBasicB2CContact({
+                                    firstName,
+                                    lastName,
+                                    email: formData.email,
+                                    mobile: formData.contactNumber,
+                                    optOutOfMarketing: false,
+                                    ...(formData.location && { studio: ContactFormLocationMap[formData.location] }),
+                                })
+                                await zohoClient.createBirthdayPartyDeal({
+                                    firstName,
+                                    lastName: lastName || '',
+                                    email: formData.email,
+                                    mobile: formData.contactNumber,
+                                    contactId,
+                                    preferredDateAndTime: formData.preferredDateAndTime || '',
+                                    type:
+                                        formData.location === 'at-home'
+                                            ? 'mobile'
+                                            : formData.location === 'other'
+                                              ? 'other'
+                                              : 'studio',
+                                    studio:
+                                        formData.location === 'at-home' || formData.location === 'other'
+                                            ? ''
+                                            : formData.location || '',
+                                    suburb: formData.suburb,
+                                    reference: formData.reference,
+                                    partyTheme: formData.partyTheme,
+                                    enquiry: formData.enquiry,
+                                })
+                                break
+                            }
+                            case service === 'holiday-program' || service === 'after-school-program': {
+                                await zohoClient.addBasicB2CContact({
+                                    firstName,
+                                    lastName,
+                                    email: formData.email,
+                                    mobile: formData.contactNumber,
+                                    optOutOfMarketing: false,
+                                    ...(formData.location && { studio: ContactFormLocationMap[formData.location] }),
+                                })
+                                break
+                            }
+                            case service === 'activation' || service === 'incursion': {
+                                await zohoClient.addBasicB2BContact({
+                                    firstName,
+                                    lastName,
+                                    email: formData.email,
+                                    mobile: formData.contactNumber,
+                                    service: service === 'activation' ? 'activation_event' : 'incursion',
+                                })
+                                break
+                            }
+                            default: {
+                                // we still want the user to see a success here, so only log the error
+                                logError(`Unrecognised service when submitting website 'contact' form: '${service}'`)
+                            }
+                        }
+                    },
+                })
 
                 await mailClient.sendEmail(
                     'websiteContactFormToCustomer',
@@ -249,12 +306,18 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                 const formData = JSON.parse(req.body) as Form['event']
 
                 const [firstName, lastName] = formData.name.split(' ')
-                await zohoClient.addBasicB2BContact({
-                    firstName,
-                    lastName,
-                    email: formData.email,
-                    service: 'activation_event',
-                    company: formData.company,
+                await runZohoTask({
+                    description: 'event enquiry sync',
+                    formId,
+                    requestBody,
+                    task: () =>
+                        zohoClient.addBasicB2BContact({
+                            firstName,
+                            lastName,
+                            email: formData.email,
+                            service: 'activation_event',
+                            company: formData.company,
+                        }),
                 })
 
                 await mailClient.sendEmail(
@@ -303,13 +366,19 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                 const formData = JSON.parse(req.body) as Form['incursion']
 
                 const [firstName, lastName] = formData.name.split(' ')
-                await zohoClient.addBasicB2BContact({
-                    firstName,
-                    lastName,
-                    email: formData.email,
-                    mobile: formData.contactNumber,
-                    service: 'incursion',
-                    company: formData.school,
+                await runZohoTask({
+                    description: 'incursion enquiry sync',
+                    formId,
+                    requestBody,
+                    task: () =>
+                        zohoClient.addBasicB2BContact({
+                            firstName,
+                            lastName,
+                            email: formData.email,
+                            mobile: formData.contactNumber,
+                            service: 'incursion',
+                            company: formData.school,
+                        }),
                 })
 
                 await mailClient.sendEmail(
@@ -409,11 +478,17 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
 
                 const [firstName, lastName] = formData.name.split(' ')
 
-                await zohoClient.addBasicB2CContact({
-                    firstName,
-                    lastName,
-                    email: formData.email,
-                    optOutOfMarketing: false,
+                await runZohoTask({
+                    description: 'mailing list sync',
+                    formId,
+                    requestBody,
+                    task: () =>
+                        zohoClient.addBasicB2CContact({
+                            firstName,
+                            lastName,
+                            email: formData.email,
+                            optOutOfMarketing: false,
+                        }),
                 })
 
                 await mixpanelClient.track('website-enquiry', {
@@ -428,11 +503,17 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                 const formData = req.body as Form['holidayProgramDiscount']
                 const [firstName, lastName] = formData.name.split(' ')
                 const data = await generateDiscountCode(firstName)
-                await zohoClient.addBasicB2CContact({
-                    firstName,
-                    lastName,
-                    email: formData.email,
-                    optOutOfMarketing: false,
+                await runZohoTask({
+                    description: 'holiday program discount sync',
+                    formId,
+                    requestBody,
+                    task: () =>
+                        zohoClient.addBasicB2CContact({
+                            firstName,
+                            lastName,
+                            email: formData.email,
+                            optOutOfMarketing: false,
+                        }),
                 })
                 await mixpanelClient.track('holiday-program-website-discount', {
                     name: formData.name,
@@ -498,7 +579,10 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
             }
         }
     } catch (err) {
-        logError(`Error running website form webhook with id: ${formId}`, err, req.body)
+        logError(`Error running website form webhook with id: ${formId}`, err, {
+            formId,
+            requestBody,
+        })
         res.status(500).send()
         return
     }

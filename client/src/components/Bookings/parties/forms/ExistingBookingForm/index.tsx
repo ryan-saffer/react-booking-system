@@ -32,7 +32,8 @@ import {
     TAKE_HOME_BAGS,
     Utilities,
     capitalise,
-    getRsvpUrl,
+    getInvitationEntryUrl,
+    getInvitationShareUrl,
 } from 'fizz-kidz'
 import type { FirestoreBooking, FormBooking, PartyLostReason, WithId } from 'fizz-kidz'
 
@@ -997,7 +998,13 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
 
                         action: async () => {
                             navigator.clipboard.writeText(
-                                getRsvpUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, booking.id)
+                                booking.invitationId
+                                    ? getInvitationShareUrl(
+                                          import.meta.env.VITE_ENV,
+                                          import.meta.env.DEV,
+                                          booking.invitationId
+                                      )
+                                    : getInvitationEntryUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, booking.id)
                             )
                             toast.success('Invitation link copied to clipboard')
                         },

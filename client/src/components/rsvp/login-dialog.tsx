@@ -141,7 +141,7 @@ export function LoginDialog({ open }: { open: boolean }) {
                             <Link
                                 to="/sign-in"
                                 state={{
-                                    afterLoginUrl: '/invitation/v2/choose',
+                                    afterLoginUrl: '/invite',
                                 }}
                             >
                                 Sign in
