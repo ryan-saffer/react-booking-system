@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 
 import type { Addition, BaseBooking } from 'fizz-kidz'
-import { ADDITIONS, CREATIONS, getCloudFunctionsDomain } from 'fizz-kidz'
+import { ADDITIONS, CREATIONS, getApplicationDomain } from 'fizz-kidz'
 
 import { env } from '@/init'
 import { isUsingEmulator } from '@/utilities'
@@ -37,17 +37,11 @@ export function isAddition(key: string): key is Addition {
 }
 
 export function getPartyFormUrl(bookingId: string) {
-    return `${getCloudFunctionsDomain(
-        env,
-        isUsingEmulator()
-    )}/api/api/webhooks/party-form?id=${bookingId}`
+    return `${getApplicationDomain(env, isUsingEmulator())}/api/webhooks/party-form?id=${bookingId}`
 }
 
 export function getCakeFormUrl(bookingId: string, useEmulator?: boolean) {
-    return `${getCloudFunctionsDomain(
-        env,
-        useEmulator ?? isUsingEmulator()
-    )}/api/api/webhooks/cake-form?id=${bookingId}`
+    return `${getApplicationDomain(env, useEmulator ?? isUsingEmulator())}/api/webhooks/cake-form?id=${bookingId}`
 }
 
 const DAYS_OF_THE_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as const

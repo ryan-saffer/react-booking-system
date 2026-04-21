@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto'
 import express from 'express'
 
 import {
-    getCloudFunctionsDomain,
+    getApplicationDomain,
     getSquareLocationId,
     mapCakeSizeToSquareVariation,
     mapCandleToSquareVariation,
@@ -105,13 +105,13 @@ partyFormRedirect.get('/party-form/payment-link', async (req, res) => {
     const takeHomeBags = responses.getFieldValue('take_home_bags')
     const products = responses.getFieldValue('products')
 
-    const host = getCloudFunctionsDomain(env, isUsingEmulator())
+    const host = getApplicationDomain(env, isUsingEmulator())
 
     const orderedCake = cake !== 'I will bring my own cake'
 
     if (!orderedCake && takeHomeBags.length === 0 && products.length === 0) {
         // should not be in checkout flow. redirect to form-complete.
-        res.redirect(303, `${host}/webhooks/party-form/form-complete?submissionId=${submissionId}`)
+        res.redirect(303, `${host}/api/webhooks/party-form/form-complete?submissionId=${submissionId}`)
         return
     }
 
@@ -133,7 +133,7 @@ partyFormRedirect.get('/party-form/payment-link', async (req, res) => {
                 allowTipping: false,
                 askForShippingAddress: false,
                 merchantSupportEmail: 'bookings@fizzkidz.com.au',
-                redirectUrl: `${host}/api/api/webhooks/party-form/form-complete?submissionId=${submissionId}`,
+                redirectUrl: `${host}/api/webhooks/party-form/form-complete?submissionId=${submissionId}`,
             },
             prePopulatedData: {
                 buyerEmail: booking.parentEmail,
