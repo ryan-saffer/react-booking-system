@@ -10,9 +10,21 @@
                 font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
             ></mj-text>
         </mj-attributes>
-        <mj-style inline="inline"> .text-link { color: #5e6ebf } </mj-style>
-        <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
-        <mj-style> .btn-block a { display: block !important; } </mj-style>
+        <mj-style inline="inline">
+            .text-link {
+                color: #5e6ebf;
+            }
+        </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+                color: #888888;
+            }
+        </mj-style>
+        <mj-style>
+            .btn-block a {
+                display: block !important;
+            }
+        </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
         <mj-section background-color="#4bc5d9" padding-bottom="0px">
@@ -33,7 +45,7 @@
                 <mj-column width="100%">
                     <mj-text color="#637381" font-size="16px"> Hi {{ contactName }}, </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        Lami here! We are very excited to run the Fizz Kidz {{ incursionName }} at {{ organisation }}.
+                        We are very excited to run the Fizz Kidz {{ incursionName }} at {{ organisation }}.
                     </mj-text>
                 </mj-column>
                 <mj-column width="100%">
@@ -70,14 +82,14 @@
                         Incursion Form ↗️
                     </mj-button>
                     <mj-text color="#637381" font-size="16px">
-                        If you have any questions, please feel free to email me at
-                        <a href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>. If you need anything on
-                        the day, please call our office on <a href="tel:0390598144">(03) 9059 8144.</a>
+                        If you have any questions in the lead-up, just reply to this email, email us at
+                        <a href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>, or call us on
+                        <a href="tel:0390598144">(03) 9059 8144.</a>
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
                         We can't wait for the science adventure to begin!
                     </mj-text>
-                    <mj-text color="#637381" font-size="16px"> Lami and the Fizz Kidz team. </mj-text>
+                    <mj-text color="#637381" font-size="16px"> The Fizz Kidz team. </mj-text>
                 </mj-column>
             </mj-section>
         </mj-wrapper>

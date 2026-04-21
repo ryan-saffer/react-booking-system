@@ -4,11 +4,12 @@ import type { Booking } from 'fizz-kidz'
 import {
     capitalise,
     getStudioAddress,
-    getManager,
     ObjectKeys,
     PRODUCTS,
     TAKE_HOME_BAGS,
     type PartyForm,
+    getPartyCustomerContactInfo,
+    getStudioContactEmail,
 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -50,11 +51,11 @@ export async function handlePartyFormSubmission(responses: PaperformSubmission<P
 
     // first check if the booking form has been filled in previously
     if (existingBooking.partyFormFilledIn) {
-        // form has been filled in before, notify manager of the change
+        // form has been filled in before, notify the studio inbox of the change
         try {
             await mailClient.sendEmail(
                 'partyFormFilledInAgain',
-                getManager(mappedBooking.location!, env).email,
+                getStudioContactEmail(mappedBooking.location!, env),
                 {
                     parentName: `${mappedBooking.parentFirstName} ${mappedBooking.parentLastName}`,
                     parentEmail: existingBooking.parentEmail,
@@ -126,13 +127,13 @@ export async function handlePartyFormSubmission(responses: PaperformSubmission<P
         }
     }
 
-    // this checks if they have changed their selected food package. if so, alert the manager.
+    // this checks if they have changed their selected food package. if so, alert the studio inbox.
     // this is different to the 'form filled in again' email, since this can trigger even on the first submission.
     if (existingBooking.type === 'studio' && existingBooking.includesFood !== mappedBooking.includesFood) {
         try {
             await mailClient.sendEmail(
                 'partyFormFoodPackageChanged',
-                getManager(mappedBooking.location!, env).email,
+                getStudioContactEmail(mappedBooking.location!, env),
                 {
                     parentName: `${mappedBooking.parentFirstName} ${mappedBooking.parentLastName}`,
                     parentEmail: existingBooking.parentEmail,
@@ -191,7 +192,7 @@ export async function handlePartyFormSubmission(responses: PaperformSubmission<P
         try {
             await mailClient.sendEmail(
                 'tooManyCreationsChosen',
-                getManager(fullBooking.location, env).email,
+                getStudioContactEmail(fullBooking.location, env),
                 {
                     parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
                     parentEmail: fullBooking.parentEmail,
@@ -221,13 +222,14 @@ export async function handlePartyFormSubmission(responses: PaperformSubmission<P
         }
     }
 
-    const manager = getManager(fullBooking.location, env)
+    const customerContact = getPartyCustomerContactInfo(fullBooking.location)
+    const studioContactEmail = getStudioContactEmail(fullBooking.location, env)
 
     if (fullBooking.questions) {
         try {
             await mailClient.sendEmail(
                 'partyFormQuestions',
-                manager.email,
+                studioContactEmail,
                 {
                     dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
                         zone: 'Australia/Melbourne',
@@ -266,7 +268,7 @@ export async function handlePartyFormSubmission(responses: PaperformSubmission<P
         try {
             await mailClient.sendEmail(
                 'partyPackNotification',
-                manager.email,
+                studioContactEmail,
                 {
                     parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
                     dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
@@ -300,7 +302,7 @@ export async function handlePartyFormSubmission(responses: PaperformSubmission<P
         try {
             await mailClient.sendEmail(
                 'takeHomeNotification',
-                manager.email,
+                studioContactEmail,
                 {
                     parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
                     dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
@@ -357,7 +359,7 @@ export async function handlePartyFormSubmission(responses: PaperformSubmission<P
                     cakeMessage: mappedBooking.cake.message,
                 },
                 {
-                    bcc: [manager.email],
+                    bcc: [studioContactEmail],
                 }
             )
         } catch (err) {
@@ -425,8 +427,9 @@ export async function handlePartyFormSubmission(responses: PaperformSubmission<P
                     additions,
                     isMobile: fullBooking.type === 'mobile',
                     hasQuestions: fullBooking.questions !== '' || fullBooking.questions !== undefined,
-                    managerName: manager.name,
-                    managerMobile: manager.mobile,
+                    contactPhone: customerContact.phoneDisplay,
+                    contactSignoff: customerContact.contactSignoff,
+                    contactName: customerContact.contactName || '',
                     includesFood: fullBooking.type === 'studio' && fullBooking.includesFood,
                     hasTakeHomeBags: takeHomeBags.length > 0 || products.length > 0,
                     takeHomeBags: [...takeHomeBags, ...products],
@@ -444,9 +447,9 @@ export async function handlePartyFormSubmission(responses: PaperformSubmission<P
                 {
                     from: {
                         name: 'Fizz Kidz',
-                        email: manager.email,
+                        email: studioContactEmail,
                     },
-                    replyTo: manager.email,
+                    replyTo: studioContactEmail,
                 }
             )
         } catch (err) {
@@ -460,8 +463,9 @@ export async function handlePartyFormSubmission(responses: PaperformSubmission<P
                     parentName: fullBooking.parentFirstName,
                     hasTakeHomeBags: takeHomeBags.length > 0 || products.length > 0,
                     takeHomeBags: [...takeHomeBags, ...products],
-                    managerName: manager.name,
-                    managerMobile: manager.mobile,
+                    contactPhone: customerContact.phoneDisplay,
+                    contactSignoff: customerContact.contactSignoff,
+                    contactName: customerContact.contactName || '',
                     ...(fullBooking.cake && {
                         cake: {
                             selection: fullBooking.cake.selection,

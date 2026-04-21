@@ -1,4 +1,4 @@
-import { getManager, type Booking } from 'fizz-kidz'
+import { getStudioContactEmail, type Booking } from 'fizz-kidz'
 
 import { timestampConverter } from '@/firebase/firestore-converters'
 import { FirestoreRefs } from '@/firebase/FirestoreRefs'
@@ -48,7 +48,7 @@ export async function sendCakeForms() {
                     prefilledFormUrl: getCakeFormUrl(doc.id),
                 },
                 {
-                    replyTo: getManager(booking.location).email,
+                    replyTo: getStudioContactEmail(booking.location),
                 }
             )
         })

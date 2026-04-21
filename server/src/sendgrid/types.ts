@@ -116,11 +116,9 @@ export type Emails = {
         location: string
         isMobile: boolean
         creationCount: string
-        managerName: string
-        managerMobile: string
-        managerEmail: string
-        managerSubjectPronoun: string
-        managerObjectPronoun: string
+        contactEmail: string
+        contactPhone: string
+        contactName?: string
         numberOfKidsAllowed: string[]
         studioPhotoUrl: string
         useRsvpSystem: boolean
@@ -146,15 +144,18 @@ export type Emails = {
         address: string
         location: string
         prefilledFormUrl: string
-        managerName: string
+        contactPhone: string
+        contactName?: string
+        contactSignoff: string
         isMobile: boolean
     }
 
     partyFormReminder: {
         parentName: string
         childName: string
-        managerName: string
-        managerMobile: string
+        contactPhone: string
+        contactName?: string
+        contactSignoff: string
         prefilledFormUrl: string
     }
 
@@ -254,8 +255,9 @@ export type Emails = {
         takeHomeBags: { name: string; quantity: string }[]
         isMobile: boolean
         hasQuestions: boolean
-        managerName: string
-        managerMobile: string
+        contactPhone: string
+        contactName?: string
+        contactSignoff: string
         includesFood: boolean
         cake?: {
             selection: string
@@ -272,8 +274,9 @@ export type Emails = {
         // for parent confirmation, merge take home bags and products
         hasTakeHomeBags: boolean
         takeHomeBags: { name: string; quantity: string }[]
-        managerName: string
-        managerMobile: string
+        contactPhone: string
+        contactName?: string
+        contactSignoff: string
         cake?: {
             selection: string
             size: string
