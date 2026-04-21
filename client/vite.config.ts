@@ -6,7 +6,6 @@ import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv, type Plugin } from 'vite'
 import { createHtmlPlugin } from 'vite-plugin-html'
 
-
 function resolveAppVersion(env: Record<string, string>) {
     const builtAt = new Date().toISOString()
 
@@ -52,6 +51,8 @@ function appVersionJsonPlugin(version: string, builtAt: string): Plugin {
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '')
     const { version, builtAt } = resolveAppVersion(env)
+    const functionsProjectId = env.VITE_ENV === 'prod' ? 'bookings-prod' : 'booking-system-6435d'
+    const functionsApiTarget = `http://127.0.0.1:5001/${functionsProjectId}/australia-southeast1/api`
 
     return {
         define: {
@@ -60,6 +61,12 @@ export default defineConfig(({ mode }) => {
         },
         server: {
             port: 3000,
+            proxy: {
+                '/api': {
+                    target: functionsApiTarget,
+                    changeOrigin: true,
+                },
+            },
         },
         resolve: {
             alias: {

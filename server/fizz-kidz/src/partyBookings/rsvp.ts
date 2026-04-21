@@ -1,4 +1,4 @@
-import { getCloudFunctionsDomain } from '../utilities'
+import { getApplicationDomain } from '../utilities'
 
 export type Rsvp = {
     id: string
@@ -20,5 +20,5 @@ type Child = {
 export type RsvpStatus = Rsvp['children'][number]['rsvp']
 
 export function getRsvpUrl(env: 'dev' | 'prod', useEmulator: boolean, bookingId: string) {
-    return `${getCloudFunctionsDomain(env, useEmulator)}/api/api/webhooks/invitation/${bookingId}`
+    return `${getApplicationDomain(env, useEmulator)}/api/webhooks/invitation/${bookingId}`
 }
