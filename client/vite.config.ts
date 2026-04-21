@@ -51,8 +51,7 @@ function appVersionJsonPlugin(version: string, builtAt: string): Plugin {
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '')
     const { version, builtAt } = resolveAppVersion(env)
-    const functionsProjectId = env.VITE_ENV === 'prod' ? 'bookings-prod' : 'booking-system-6435d'
-    const functionsApiTarget = `http://127.0.0.1:5001/${functionsProjectId}/australia-southeast1/api`
+    const functionsApiTarget = `http://127.0.0.1:5001/${env.VITE_FIREBASE_PROJECT_ID}/australia-southeast1/api`
 
     return {
         define: {

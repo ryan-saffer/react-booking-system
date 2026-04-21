@@ -5,13 +5,13 @@ import type { FirestoreBooking } from 'fizz-kidz'
 import {
     capitalise,
     getApplicationDomain,
+    getInvitationEntryUrl,
     getStudioAddress,
     getNumberOfKidsAllowed,
     getPartyCustomerContactInfo,
     getPartyCreationCount,
     getPartyEndDate,
     getPictureOfStudioUrl,
-    getRsvpUrl,
     getStudioContactEmail,
 } from 'fizz-kidz'
 
@@ -119,7 +119,7 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
     const cakeFormUrl = getCakeFormUrl(bookingId)
     // only use the new rsvp system if it was chosen during booking
     const invitationsUrl = booking.useRsvpSystem
-        ? getRsvpUrl(env, isUsingEmulator(), bookingId)
+        ? getInvitationEntryUrl(env, isUsingEmulator(), bookingId)
         : `${getApplicationDomain(env, isUsingEmulator())}/invitations?${params.join('&')}`
 
     const customerContact = getPartyCustomerContactInfo(booking.location)

@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import dateFormat from 'dateformat'
 import { UsersRound } from 'lucide-react'
 
-import { getRsvpUrl, type Booking, type FirestoreBooking, type WithId } from 'fizz-kidz'
+import { getInvitationShareUrl, type Booking, type FirestoreBooking, type WithId } from 'fizz-kidz'
 
 import { Button } from '@ui-components/button'
 
@@ -90,7 +90,11 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     window.open(
-                                        getRsvpUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, booking.id),
+                                        getInvitationShareUrl(
+                                            import.meta.env.VITE_ENV,
+                                            import.meta.env.DEV,
+                                            booking.invitationId!
+                                        ),
                                         '_blank'
                                     )
                                 }}
@@ -123,7 +127,11 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     window.open(
-                                        getRsvpUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, booking.id),
+                                        getInvitationShareUrl(
+                                            import.meta.env.VITE_ENV,
+                                            import.meta.env.DEV,
+                                            booking.invitationId!
+                                        ),
                                         '_blank'
                                     )
                                 }}

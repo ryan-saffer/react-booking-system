@@ -1,4 +1,4 @@
-import { getRsvpUrl, type InvitationsV2 } from 'fizz-kidz'
+import { getInvitationShareUrl, type InvitationsV2 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { env } from '@/init'
@@ -66,7 +66,7 @@ export async function linkInvitation(invitation: InvitationsV2.Invitation, disti
             booking.parentEmail,
             {
                 parentName: invitation.parentName,
-                invitationLink: getRsvpUrl(env, isUsingEmulator(), invitation.bookingId),
+                invitationLink: getInvitationShareUrl(env, isUsingEmulator(), invitation.id),
             },
             { bccBookings: false }
         )

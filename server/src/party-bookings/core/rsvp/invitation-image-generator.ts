@@ -6,7 +6,7 @@ import { DateTime } from 'luxon'
 import QRCode from 'qrcode'
 
 import type { InvitationsV2, WithoutUid } from 'fizz-kidz'
-import { ObjectKeys, getRsvpUrl, getStudioAddress } from 'fizz-kidz'
+import { ObjectKeys, getInvitationShareUrl, getStudioAddress } from 'fizz-kidz'
 
 import { env } from '@/init'
 import { isUsingEmulator } from '@/utilities'
@@ -56,7 +56,7 @@ export class InvitationImageGenerator {
             ctx.fillText(this.#getContent(key), x, y)
         })
 
-        const qrCodeBuffer = await QRCode.toBuffer(getRsvpUrl(env, isUsingEmulator(), this.#invitation.bookingId), {
+        const qrCodeBuffer = await QRCode.toBuffer(getInvitationShareUrl(env, isUsingEmulator(), this.#invitation.id), {
             width: 300,
             color: { dark: '000000', light: 'FFDC5D' },
             margin: 0,

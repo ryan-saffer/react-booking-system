@@ -8,7 +8,7 @@ import { esignaturesWebhook } from './esignatures.io/functions/esignatures.webho
 import { env } from './init'
 import { partyFormRedirect } from './paperforms/functions/webhooks/paperform-redirect'
 import { paperformWebhook } from './paperforms/functions/webhooks/paperform.webhook'
-import { invitationRedirect } from './party-bookings/functions/webhooks/invitation-redirect'
+import { invitationEntryRedirect } from './party-bookings/functions/webhooks/invitation-redirect'
 import { createContext } from './trpc/trpc'
 import { appRouter } from './trpc/trpc.app-router'
 import { getErrorCode, type AppErrorCode } from './trpc/trpc.errors'
@@ -75,7 +75,7 @@ webhooks.use('/webhooks', [
     paperformWebhook,
     partyFormRedirect,
     websiteFormsWebhook,
-    invitationRedirect,
+    invitationEntryRedirect,
 ])
 apiRouter.use(webhooks)
 

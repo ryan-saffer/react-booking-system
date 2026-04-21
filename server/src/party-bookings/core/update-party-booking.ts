@@ -4,13 +4,13 @@ import type { Booking } from 'fizz-kidz'
 import {
     capitalise,
     getApplicationDomain,
+    getInvitationEntryUrl,
     getStudioAddress,
     getNumberOfKidsAllowed,
     getPartyCustomerContactInfo,
     getPartyCreationCount,
     getPartyEndDate,
     getPictureOfStudioUrl,
-    getRsvpUrl,
     getStudioContactEmail,
 } from 'fizz-kidz'
 
@@ -91,7 +91,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
         ]
 
         const invitationsUrl = booking.useRsvpSystem
-            ? getRsvpUrl(env, isUsingEmulator(), bookingId)
+            ? getInvitationEntryUrl(env, isUsingEmulator(), bookingId)
             : `${getApplicationDomain(env, isUsingEmulator())}/invitations?${params.join('&')}`
 
         await mailClient

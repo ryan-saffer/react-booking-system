@@ -2,7 +2,7 @@ import '/fonts/LilitaOne-Regular.ttf'
 import '/fonts/Gotham-Light.otf'
 
 import { Suspense, lazy } from 'react'
-import { Navigate, RouterProvider, createBrowserRouter, useSearchParams } from 'react-router-dom'
+import { Navigate, RouterProvider, createBrowserRouter, useParams, useSearchParams } from 'react-router-dom'
 
 import { NotFound404 } from '@components/root/404.js'
 import { DashboardLayout } from '@components/root/dashboard-layout.js'
@@ -620,20 +620,7 @@ const router = createBrowserRouter([
                 ],
             },
             {
-                path: 'invitation',
-                children: [
-                    {
-                        path: ':id',
-                        Component: () => (
-                            <Suspense fallback={<Loader fullScreen />}>
-                                <ViewInvitationPage />
-                            </Suspense>
-                        ),
-                    },
-                ],
-            },
-            {
-                path: 'invitation/v2',
+                path: 'invite',
                 children: [
                     {
                         path: '',
@@ -666,6 +653,57 @@ const router = createBrowserRouter([
                                 <RsvpPage />
                             </Suspense>
                         ),
+                    },
+                ],
+            },
+            {
+                path: 'invitation',
+                children: [
+                    {
+                        path: ':id',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <ViewInvitationPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
+            },
+            // FIXME: Delete after 2026-06-06 once all legacy /invitation/v2 links have expired.
+            {
+                path: 'invitation/v2',
+                children: [
+                    {
+                        path: '',
+                        Component: () => (
+                            <Navigate to={{ pathname: '/invite', search: window.location.search }} replace />
+                        ),
+                    },
+                    {
+                        path: 'design',
+                        Component: () => <Navigate to="/invite/design" replace />,
+                    },
+                    {
+                        path: ':id',
+                        Component: function LegacyInvitationRedirect() {
+                            const { id } = useParams()
+                            const [searchParams] = useSearchParams()
+                            const redirectTo = searchParams.size
+                                ? `/invite/${id}?${searchParams.toString()}`
+                                : `/invite/${id}`
+                            return <Navigate to={redirectTo} replace />
+                        },
+                    },
+                    {
+                        path: ':id/rsvp',
+                        Component: function LegacyInvitationRsvpRedirect() {
+                            const { id } = useParams()
+                            const [searchParams] = useSearchParams()
+                            const redirectTo = searchParams.size
+                                ? `/invite/${id}/rsvp?${searchParams.toString()}`
+                                : `/invite/${id}/rsvp`
+                            return <Navigate to={redirectTo} replace />
+                        },
                     },
                 ],
             },

@@ -1,4 +1,4 @@
-import { capitalise, getRsvpUrl, getStudioAddress, type Rsvp, type WithoutId } from 'fizz-kidz'
+import { capitalise, getInvitationShareUrl, getStudioAddress, type Rsvp, type WithoutId } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { env } from '@/init'
@@ -84,7 +84,7 @@ export async function rsvpToParty(input: RsvpProps) {
                         isAttending: child.rsvp === 'attending',
                         allergies: child.allergies,
                     })),
-                    invitationUrl: getRsvpUrl(env, isUsingEmulator(), invitation.bookingId),
+                    invitationUrl: getInvitationShareUrl(env, isUsingEmulator(), invitation.id),
                 },
                 { bccBookings: false }
             )
