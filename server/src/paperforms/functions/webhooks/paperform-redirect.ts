@@ -30,6 +30,7 @@ import type { InventoryChange } from 'square/api'
 
 const SUCCESS_REDIRECT = 'https://fizzkidz.com.au/form-result?result=success'
 const ERROR_REDIRECT = 'https://fizzkidz.com.au/form-result?result=error'
+const NOT_FOUND_REDIRECT = 'https://www.fizzkidz.com.au/404'
 
 const PARTY_FORM_URL = 'https://4c6karmx.paperform.co'
 
@@ -46,10 +47,21 @@ export const partyFormRedirect = express.Router()
 partyFormRedirect.get('/party-form', async (req, res) => {
     const bookingId = req.query.id as string
 
-    const url = await appendQueryParamsToPaperform(bookingId, 'party')
+    try {
+        const url = await appendQueryParamsToPaperform(bookingId, 'party')
 
-    res.redirect(303, url)
-    return
+        res.redirect(303, url)
+        return
+    } catch (err) {
+        if (err instanceof Error && err.message.includes('Cannot find document')) {
+            res.redirect(303, NOT_FOUND_REDIRECT)
+            return
+        }
+
+        logError('Error redirecting to party form', err, { bookingId, requestUrl: req.url })
+        res.redirect(303, ERROR_REDIRECT)
+        return
+    }
 })
 
 /**
@@ -61,10 +73,21 @@ partyFormRedirect.get('/party-form', async (req, res) => {
 partyFormRedirect.get('/cake-form', async (req, res) => {
     const bookingId = req.query.id as string
 
-    const url = await appendQueryParamsToPaperform(bookingId, 'cake')
+    try {
+        const url = await appendQueryParamsToPaperform(bookingId, 'cake')
 
-    res.redirect(303, url)
-    return
+        res.redirect(303, url)
+        return
+    } catch (err) {
+        if (err instanceof Error && err.message.includes('Cannot find document')) {
+            res.redirect(303, NOT_FOUND_REDIRECT)
+            return
+        }
+
+        logError('Error redirecting to cake form', err, { bookingId, requestUrl: req.url })
+        res.redirect(303, ERROR_REDIRECT)
+        return
+    }
 })
 
 /**

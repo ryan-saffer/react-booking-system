@@ -128,7 +128,14 @@ export class ZohoClient {
 
         // Otherwise, throw the error body
         const errorBody = await result.json().catch(() => ({}))
-        throw errorBody
+        throw {
+            name: 'ZohoRequestError',
+            endpoint: props.endpoint,
+            method: props.method,
+            status: result.status,
+            errorBody,
+            errorBodyJson: JSON.stringify(errorBody),
+        }
     }
 
     #toDateTimeISO(date: string) {
