@@ -92,12 +92,15 @@
                         you can tell us how many children will be attending and pick your creations.
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        If you have any questions in the lead up to your childs party, please feel free email to me, or
-                        call me on {{ managerMobile }}.
+                        {{#contactName}} If anything changes before the party, or if you have any questions in the
+                        lead-up, please reply to this email or call {{ contactName }} on {{ contactPhone }}.
+                        {{/contactName}} {{^contactName}} If anything changes before the party, or if you have any
+                        questions in the lead-up, please reply to this email or call us on {{ contactPhone }}.
+                        {{/contactName}}
                     </mj-text>
                     <mj-text color="#637381" font-size="16px"> We look forward to seeing you then! </mj-text>
                     <mj-text color="#637381" font-size="16px"> Kind regards, </mj-text>
-                    <mj-text color="#637381" font-size="16px"> {{ managerName }} and the Fizz Kidz team </mj-text>
+                    <mj-text color="#637381" font-size="16px"> {{ contactSignoff }} </mj-text>
                 </mj-column>
             </mj-section>
         </mj-wrapper>

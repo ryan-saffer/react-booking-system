@@ -1,211 +1,236 @@
 <mjml>
-  <mj-head>
-    <mj-attributes>
-      <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
 
-      <mj-text font-weight="400" font-size="14px" color="#000000" line-height="24px" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
-    </mj-attributes>
-    <mj-style inline="inline"> .text-link { color: #5e6ebf } </mj-style>
-    <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
-  </mj-head>
-  <mj-body background-color="#E7E7E7" width="600px">
-    <mj-section background-color="#4bc5d9" padding-bottom="0px">
-      <mj-column width="100%">
+            <mj-text
+                font-weight="400"
+                font-size="14px"
+                color="#000000"
+                line-height="24px"
+                font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+            ></mj-text>
+        </mj-attributes>
+        <mj-style inline="inline">
+            .text-link {
+                color: #5e6ebf;
+            }
+        </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+                color: #888888;
+            }
+        </mj-style>
+    </mj-head>
+    <mj-body background-color="#E7E7E7" width="600px">
+        <mj-section background-color="#4bc5d9" padding-bottom="0px">
+            <mj-column width="100%">
+                <mj-spacer height="30px" />
 
-        <mj-spacer height="30px" />
+                <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
+                    Submission Received!
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#ffffff" padding-top="0">
+            <mj-column>
+                <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+            </mj-column>
+        </mj-section>
+        <mj-wrapper padding-top="0" padding-bottom="0">
+            <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
+                <mj-column width="100%">
+                    <mj-text>Hi {{ parentName }},</mj-text>
 
-        <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px"> Submission Received! </mj-text>
+                    <mj-text
+                        >Thank you for filling out the party details form. Below is a summary of what you have ordered:
+                    </mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    <mj-divider border-width="1px" border-style="solid" border-color="lightgrey" />
 
-      </mj-column>
-    </mj-section>
-    <mj-section background-color="#ffffff" padding-top="0">
-      <mj-column>
+                    <mj-text font-weight="bold" padding-bottom="0">Number Attending</mj-text>
 
-        <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+                    <mj-text text-transform="capitalize" padding-top="0">{{ numberOfChildren }}</mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    <mj-text font-weight="bold" padding-bottom="0">Chosen Creations</mj-text>
 
-      </mj-column>
-    </mj-section>
-    <mj-wrapper padding-top="0" padding-bottom="0">
-      <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
-        <mj-column width="100%">
+                    <mj-text padding-top="0">
+                        {{#creations}}
+                        ✨ {{.}}<br />
+                        {{/creations}}
+                    </mj-text>
+                </mj-column>
+                {{^isMobile}}
+                <mj-column width="100%">
+                    <mj-text font-weight="bold" padding-bottom="0">Food Package</mj-text>
 
-          <mj-text>Hi {{ parentName }},</mj-text>
+                    <mj-text padding-top="0"
+                        >{{#includesFood}} Food included {{/includesFood}} {{^includesFood}} Self-catered
+                        {{/includesFood}}
+                    </mj-text>
+                </mj-column>
+                {{/isMobile}} {{#hasAdditions}}
+                <mj-column width="100%">
+                    <mj-text font-weight="bold" padding-bottom="0">Additions</mj-text>
 
-          <mj-text>Thank you for filling out the party details form. Below is a summary of what you have ordered: </mj-text>
+                    <mj-text padding-top="0">
+                        {{#additions}}
+                        ✨ {{.}} <br />
+                        {{/additions}}
+                    </mj-text>
+                </mj-column>
+                {{/hasAdditions}} {{#hasTakeHomeBags}}
+                <mj-column width="100%">
+                    <mj-text font-weight="bold" padding-bottom="0">Take-Home Goodies</mj-text>
 
-        </mj-column>
-        <mj-column width="100%">
+                    <mj-text padding-top="0">
+                        <ul>
+                            {{#takeHomeBags}}
+                            <li>{{ name }} x {{ quantity }}</li>
+                            {{/takeHomeBags}}
+                        </ul>
+                    </mj-text>
+                </mj-column>
+                {{/hasTakeHomeBags}} {{#cake}}
+                <mj-column width="100%">
+                    <mj-text font-weight="bold" padding-bottom="0">Cake</mj-text>
 
-          <mj-divider border-width="1px" border-style="solid" border-color="lightgrey" />
+                    <mj-text padding-top="0"
+                        >{{ cake.selection }}, {{ cake.size }}. {{ cake.flavours }}. {{ cake.served }}.
+                        {{ cake.candles }}.</mj-text
+                    >
+                    {{ #cake.message }}
 
-          <mj-text font-weight="bold" padding-bottom="0">Number Attending</mj-text>
+                    <mj-text padding-top="0">Message: "{{ cake.message }}"</mj-text>
+                    {{ /cake.message }}
+                </mj-column>
+                {{/cake}}
+                <mj-column width="100%">
+                    <mj-divider border-width="1px" border-style="solid" border-color="lightgrey" />
 
-          <mj-text text-transform="capitalize" padding-top="0">{{ numberOfChildren }}</mj-text>
+                    <mj-text>
+                        If anything here doesn't look quite right, or if anything changes before the party, please just
+                        let us know.
+                    </mj-text>
+                </mj-column>
+                {{#isTyeDyeParty}}
+                <mj-column width="100%">
+                    <mj-text font-weight="bold" padding-bottom="0">Note about Tie Dye</mj-text>
 
-        </mj-column>
-        <mj-column width="100%">
+                    <mj-text padding-top="0">
+                        We use high quality, non-toxic tie dye. As the dye is of a high quality your kids will make
+                        amazing Tie Dye items during their upcoming party! That said, it will also unfortunately stain
+                        whatever material it lands on.
+                        {{#isMobile}}
+                        <u
+                            >Accidents can happen and we suggest that the kids either wear clothes they won't mind
+                            accidentally staining, or bring their own smock to wear for extra protection.</u
+                        >
+                        {{/isMobile}} {{^isMobile}} While the kids will be wearing smocks and gloves, accidents can
+                        happen and we suggest kids wear clothes they won't mind accidentally staining. {{/isMobile}}
+                    </mj-text>
+                </mj-column>
+                {{/isTyeDyeParty}} {{^isMobile}}
+                <mj-column width="100%">
+                    <mj-text font-weight="bold" padding-bottom="0">Payment</mj-text>
 
-          <mj-text font-weight="bold" padding-bottom="0">Chosen Creations</mj-text>
+                    <mj-text padding-top="0">
+                        Payment is made at the end of the party. Your party package includes up to 12 children, and any
+                        additional children are simply counted on the day and added to your final total.
+                    </mj-text>
 
-          <mj-text padding-top="0">
+                    <mj-text padding-top="0">
+                        Please note that Fizz Kidz is a cashless venue, so we do not accept cash payments.
+                    </mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    <mj-text font-weight="bold" padding-bottom="0">Birthday Cake</mj-text>
 
-            {{#creations}}
-              ✨ {{.}}<br />
-            {{/creations}}
+                    <mj-text padding-top="0">
+                        You are very welcome to bring your own nut-free birthday cake. If you do, please remember to
+                        also bring some paper plates, spoons and candles. We have all the utensils needed to cut and
+                        serve the cake and our team will take care of this for you so you can relax and enjoy the
+                        celebration.
+                    </mj-text>
 
-          </mj-text>
+                    <mj-text font-weight="bold" padding-bottom="0">Arrival Time</mj-text>
 
-        </mj-column>
-        {{^isMobile}}
-          <mj-column width="100%">
+                    <mj-text padding-top="0"
+                        >Please arrive 10 minutes before your party starts so we can welcome you and make sure
+                        everything is perfect before the guests arrive.</mj-text
+                    >
+                </mj-column>
+                {{/isMobile}} {{#isMobile}}
+                <mj-column width="100%">
+                    <mj-text font-weight="bold" padding-bottom="0">Payment</mj-text>
 
-            <mj-text font-weight="bold" padding-bottom="0">Food Package</mj-text>
+                    <mj-text padding-top="0">
+                        Our staff will count the number of children that attend the party, and we will send you an
+                        invoice shortly after. This way we only charge you for the number of children that attend the
+                        party. If you prefer to pay for the party in advance, please let us know and we can arrange for
+                        an invoice to be sent to you prior.
+                    </mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    <mj-text font-weight="bold" padding-bottom="0">Arrival Time</mj-text>
 
-            <mj-text padding-top="0">{{#includesFood}} Food included {{/includesFood}} {{^includesFood}} Self-catered {{/includesFood}} </mj-text>
+                    <mj-text padding-top="0"
+                        >On the day of your party, our fabulous party hosts will arrive 10 minutes before to set up and
+                        run the party.
+                    </mj-text>
 
-          </mj-column>
-        {{/isMobile}} {{#hasAdditions}}
-          <mj-column width="100%">
+                    <mj-text>
+                        We will bring everything we need to run a fizzing party, however we kindly ask you to have a
+                        table ready for the children to stand/sit around to make their creations. Our staff will also
+                        need access to water for our creations, and a power plug for music!
+                    </mj-text>
+                </mj-column>
+                {{/isMobile}}
+                <mj-column width="100%">
+                    {{#hasQuestions}}
 
-            <mj-text font-weight="bold" padding-bottom="0">Additions</mj-text>
+                    <mj-text font-weight="bold" padding-bottom="0">Your Questions</mj-text>
 
-            <mj-text padding-top="0">
-              {{#additions}}
-                ✨ {{.}} <br />
-              {{/additions}}
-            </mj-text>
+                    <mj-text padding-top="0"
+                        >We noticed you included a few questions in the form. We'll be in touch very soon to help with
+                        those.
+                    </mj-text>
+                    {{/hasQuestions}}
 
-          </mj-column>
-        {{/hasAdditions}} {{#hasTakeHomeBags}}
-          <mj-column width="100%">
+                    <mj-text
+                        >{{#contactName}}If anything changes before the party, or if you have any questions at all in
+                        the lead-up, please reply to this email or call {{ contactName }} on
+                        {{ contactPhone }} anytime.{{/contactName}} {{^contactName}}If anything changes before the
+                        party, or if you have any questions at all in the lead-up, please reply to this email or call us
+                        on {{ contactPhone }} anytime.
+                        {{/contactName}}
+                    </mj-text>
 
-            <mj-text font-weight="bold" padding-bottom="0">Take-Home Goodies</mj-text>
+                    <mj-text>We're really looking forward to celebrating with you! </mj-text>
 
-            <mj-text padding-top="0">
-              <ul>
-                {{#takeHomeBags}}
-                  <li>{{ name }} x {{ quantity }}</li>
-                {{/takeHomeBags}}
-              </ul>
-            </mj-text>
+                    <mj-text>Kind regards, </mj-text>
 
-          </mj-column>
-        {{/hasTakeHomeBags}} {{#cake}}
-          <mj-column width="100%">
-
-            <mj-text font-weight="bold" padding-bottom="0">Cake</mj-text>
-
-            <mj-text padding-top="0">{{ cake.selection }}, {{ cake.size }}. {{ cake.flavours }}. {{ cake.served }}. {{ cake.candles }}.</mj-text>
-            {{ #cake.message }}
-
-            <mj-text padding-top="0">Message: "{{ cake.message }}"</mj-text>
-            {{ /cake.message }}
-
-          </mj-column>
-        {{/cake}}
-        <mj-column width="100%">
-
-          <mj-divider border-width="1px" border-style="solid" border-color="lightgrey" />
-
-          <mj-text> If anything here doesn’t look quite right, or if anything changes before the party, please just let us know. </mj-text>
-
-        </mj-column>
-        {{#isTyeDyeParty}}
-          <mj-column width="100%">
-
-            <mj-text font-weight="bold" padding-bottom="0">Note about Tie Dye</mj-text>
-
-            <mj-text padding-top="0">
-              We use high quality, non-toxic tie dye. As the dye is of a high quality your kids will make amazing Tie Dye items during their upcoming party! That said, it will also unfortunately stain whatever material it lands on.
-              {{#isMobile}}
-                <u>Accidents can happen and we suggest that the kids either wear clothes they won't mind accidentally staining, or bring their own smock to wear for extra protection.</u>
-              {{/isMobile}} {{^isMobile}} While the kids will be wearing smocks and gloves, accidents can happen and we suggest kids wear clothes they won't mind accidentally staining. {{/isMobile}}
-            </mj-text>
-
-          </mj-column>
-        {{/isTyeDyeParty}} {{^isMobile}}
-          <mj-column width="100%">
-
-            <mj-text font-weight="bold" padding-bottom="0">Payment</mj-text>
-
-            <mj-text padding-top="0">
-              Payment is made at the end of the party. Your party package includes up to 12 children, and any additional children are simply counted on the day and added to your final total.
-            </mj-text>
-
-            <mj-text padding-top="0">
-              Please note that Fizz Kidz is a cashless venue, so we do not accept cash payments.
-            </mj-text>
-
-          </mj-column>
-          <mj-column width="100%">
-
-            <mj-text font-weight="bold" padding-bottom="0">Birthday Cake</mj-text>
-
-            <mj-text padding-top="0">
-              You are very welcome to bring your own nut-free birthday cake. If you do, please remember to also bring some paper plates, spoons and candles. We have all the utensils needed to cut and serve the cake and our team will take care of this for you so you can relax and enjoy the celebration.
-            </mj-text>
-
-            <mj-text font-weight="bold" padding-bottom="0">Arrival Time</mj-text>
-
-            <mj-text padding-top="0">Please arrive 10 minutes before your party starts so we can welcome you and make sure everything is perfect before the guests arrive.</mj-text>
-
-          </mj-column>
-        {{/isMobile}} {{#isMobile}}
-          <mj-column width="100%">
-
-            <mj-text font-weight="bold" padding-bottom="0">Payment</mj-text>
-
-            <mj-text padding-top="0">
-              Our staff will count the number of children that attend the party, and we will send you an invoice shortly after. This way we only charge you for the number of children that attend the party. If you prefer to pay for the party in advance, please let us know and we can arrange for an invoice to be sent to you prior.
-            </mj-text>
-
-          </mj-column>
-          <mj-column width="100%">
-
-            <mj-text font-weight="bold" padding-bottom="0">Arrival Time</mj-text>
-
-            <mj-text padding-top="0">On the day of your party, our fabulous party hosts will arrive 10 minutes before to set up and run the party.
-            </mj-text>
-
-            <mj-text>
-              We will bring everything we need to run a fizzing party, however we kindly ask you to have a table ready for the children to stand/sit around to make their creations. Our staff will also need access to water for our creations, and a power plug for music!
-            </mj-text>
-
-          </mj-column>
-        {{/isMobile}}
-        <mj-column width="100%">
-          {{#hasQuestions}}
-
-            <mj-text font-weight="bold" padding-bottom="0">Your Questions</mj-text>
-
-            <mj-text padding-top="0">We noticed you included a few questions in the form. We’ll be in touch very soon to help with those.
-            </mj-text>
-          {{/hasQuestions}}
-
-          <mj-text>In the meantime, if you have any questions at all in the lead up to the party, please feel free to email or call us anytime. </mj-text>
-
-          <mj-text>We’re really looking forward to celebrating with you!
-          </mj-text>
-
-          <mj-text>Kind regards, </mj-text>
-
-          <mj-text>{{ managerName }} and the Fizz Kidz team</mj-text>
-
-        </mj-column>
-      </mj-section>
-    </mj-wrapper>
-    <mj-wrapper full-width="full-width">
-      <mj-section padding-top="0">
-        <mj-group>
-          <mj-column width="100%" padding-right="0">
-
-            <mj-text font-size="11px" align="center" line-height="16px" font-weight="bold">
-              <a class="footer-link" href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
-            </mj-text>
-
-          </mj-column>
-        </mj-group>
-      </mj-section>
-    </mj-wrapper>
-  </mj-body>
+                    <mj-text>{{ contactSignoff }}</mj-text>
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+        <mj-wrapper full-width="full-width">
+            <mj-section padding-top="0">
+                <mj-group>
+                    <mj-column width="100%" padding-right="0">
+                        <mj-text font-size="11px" align="center" line-height="16px" font-weight="bold">
+                            <a class="footer-link" href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a
+                            >&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
+                                class="footer-link"
+                                href="https://www.fizzkidz.com.au"
+                                >www.fizzkidz.com.au</a
+                            >
+                        </mj-text>
+                    </mj-column>
+                </mj-group>
+            </mj-section>
+        </mj-wrapper>
+    </mj-body>
 </mjml>
