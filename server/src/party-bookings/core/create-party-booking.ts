@@ -172,6 +172,7 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
     const mixpanel = await MixpanelClient.getInstance()
     await mixpanel.track('birthday-party-booking', {
         distinct_id: booking.parentEmail,
+        bookingId,
         location: booking.location,
         length: booking.partyLength,
         includesFood: booking.includesFood,
