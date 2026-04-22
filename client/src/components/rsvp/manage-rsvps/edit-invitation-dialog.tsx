@@ -44,16 +44,21 @@ export function EditInvitationDialog({
     )
 
     async function onSubmit(values: InvitationsV2.Invitation) {
-        await generateAndLinkInvitation({
-            ...values,
-            bookingId: invitation.bookingId,
-            id: invitation.id,
-            uid: invitation.uid,
-            invitation: invitation.invitation,
-        })
-        setIsEditing(false)
-        close()
-        location.reload() // needed to refetch the image from storage
+        try {
+            await generateAndLinkInvitation({
+                ...values,
+                bookingId: invitation.bookingId,
+                id: invitation.id,
+                uid: invitation.uid,
+                invitation: invitation.invitation,
+            })
+            setIsEditing(false)
+            close()
+            location.reload() // needed to refetch the image from storage
+        } catch (err: any) {
+            console.error(err)
+            toast.error(err?.message || 'There was an error editing your invitation')
+        }
     }
 
     async function downloadInvitation() {
