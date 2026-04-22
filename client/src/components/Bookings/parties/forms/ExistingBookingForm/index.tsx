@@ -993,22 +993,30 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                             }
                         },
                     },
-                    {
-                        label: 'Get invitation link',
+                    ...(booking.useRsvpSystem
+                        ? [
+                              {
+                                  label: 'Get invitation link',
 
-                        action: async () => {
-                            navigator.clipboard.writeText(
-                                booking.invitationId
-                                    ? getInvitationShareUrl(
-                                          import.meta.env.VITE_ENV,
-                                          import.meta.env.DEV,
+                                  action: async () => {
+                                      navigator.clipboard.writeText(
                                           booking.invitationId
+                                              ? getInvitationShareUrl(
+                                                    import.meta.env.VITE_ENV,
+                                                    import.meta.env.DEV,
+                                                    booking.invitationId
+                                                )
+                                              : getInvitationEntryUrl(
+                                                    import.meta.env.VITE_ENV,
+                                                    import.meta.env.DEV,
+                                                    booking.id
+                                                )
                                       )
-                                    : getInvitationEntryUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, booking.id)
-                            )
-                            toast.success('Invitation link copied to clipboard')
-                        },
-                    },
+                                      toast.success('Invitation link copied to clipboard')
+                                  },
+                              },
+                          ]
+                        : []),
                 ]}
             />
         </Root>
