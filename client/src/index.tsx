@@ -4,7 +4,6 @@ import * as Sentry from '@sentry/react'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 
-
 import { App } from './app'
 
 Sentry.init({
@@ -13,6 +12,11 @@ Sentry.init({
     // Setting this option to true will send default PII data to Sentry.
     // For example, automatic IP address collection on events
     sendDefaultPii: true,
+    integrations: [
+        Sentry.captureConsoleIntegration({
+            levels: ['error'],
+        }),
+    ],
 })
 
 const root = createRoot(document.getElementById('root')!)
