@@ -145,6 +145,7 @@ export type MixpanelEvent = {
     }
     'birthday-party-booking': {
         distinct_id: string
+        bookingId: string
         location: Studio
         length: '1' | '1.5' | '2'
         includesFood: boolean
