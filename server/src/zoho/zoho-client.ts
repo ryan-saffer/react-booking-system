@@ -299,18 +299,16 @@ export class ZohoClient {
 
     addBirthdayPartyGuestContactWithChild(
         props: WithBaseProps<{
-            type: Booking['type']
             studio: Studio
             childName: string
             childBirthdayISO: string
             optOutOfMarketing: boolean
         }>
     ) {
-        const { type, studio, childName, childBirthdayISO, ...baseProps } = props
+        const { studio, childName, childBirthdayISO, ...baseProps } = props
 
         return this.#addParentWithChild({
             service: 'Birthday Party Guest',
-            Party_Type: type === 'studio' ? 'Studio' : type === 'mobile' ? 'Mobile' : '',
             customer_type: 'B2C',
             branch: capitalise(studio),
             childName,
