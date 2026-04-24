@@ -66,6 +66,10 @@ export default defineConfig({
               label: "Calendars",
               link: "tools/calendars",
             },
+            {
+              label: "Email Signature",
+              link: "tools/email-signature",
+            },
           ],
         },
       ],
