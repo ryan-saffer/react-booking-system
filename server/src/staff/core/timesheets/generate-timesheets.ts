@@ -6,7 +6,12 @@ import path from 'path'
 import { logger } from 'firebase-functions/v2'
 import { DateTime } from 'luxon'
 
-import { isFranchise, type FranchiseOrMaster, type GenerateTimesheetsParams } from 'fizz-kidz'
+import {
+    isFranchise,
+    type FranchiseOrMaster,
+    type GenerateTimesheetsParams,
+    type ShiftUnderMinimumShiftLength,
+} from 'fizz-kidz'
 
 import { StorageClient } from '@/firebase/StorageClient'
 import { projectId } from '@/init'
@@ -15,7 +20,13 @@ import { isUsingEmulator, throwTrpcError } from '@/utilities'
 import { XeroClient } from '@/xero/XeroClient'
 
 import { didTurn18DuringRange, getEmployeesWithBirthdayDuringRange } from '../staff-birthdays'
-import { createTimesheetRows, getWeeks, isYoungerThan18, SlingLocationsMap } from './timesheets.utils'
+import {
+    createTimesheetRows,
+    getShiftsUnderMinimumShiftLength,
+    getWeeks,
+    isYoungerThan18,
+    SlingLocationsMap,
+} from './timesheets.utils'
 
 import type { Rate } from './timesheets.types'
 import type { TimesheetRow } from './timesheets.utils'
@@ -102,6 +113,9 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
         // keeps track of users who are under 18, but worked for more than 30 hrs in a single week (in order to be paid super)
         const employeesUnder18Over30Hrs: string[] = []
 
+        // keeps track of shifts shorter than the payroll minimum by day
+        const shiftsUnderMinimumShiftLength: ShiftUnderMinimumShiftLength[] = []
+
         // calculate timesheets one week at a time
         for (const week of weeks) {
             // get all shifts for the time period
@@ -122,6 +136,15 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
             for (const slingUser of slingUsers) {
                 const usersTimesheets = timesheets.filter((it) => it.user.id === slingUser.id)
                 if (usersTimesheets.length === 0) continue
+
+                shiftsUnderMinimumShiftLength.push(
+                    ...getShiftsUnderMinimumShiftLength({
+                        firstName: slingUser.legalName,
+                        lastName: slingUser.lastname,
+                        usersTimesheets,
+                        timezone: slingUser.timezone,
+                    })
+                )
 
                 let xeroUser = xeroUsers?.find(
                     (user) =>
@@ -257,6 +280,7 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
                     })
                 ),
             employeesUnder18Over30Hrs: [...new Set(employeesUnder18Over30Hrs)],
+            shiftsUnderMinimumShiftLength,
         }
     } catch (err) {
         throwTrpcError('INTERNAL_SERVER_ERROR', 'error generating timesheets', err)
