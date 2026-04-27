@@ -20,13 +20,13 @@ import { deleteFromLegacy, groupEventsByContactEmail, migrateLegacyEvents } from
 import { addFoodPackageToAllParties } from './migrations/parties-self-catering'
 import { getSelfCateredPartiesByNotes } from './parties/get-self-catered-parties-by-notes'
 import { updatePartiesToOldPrices } from './parties/update-parties-to-old-prices'
+import { runRemovePreschoolProgramClassScript } from './preschool-program/remove-preschool-program-class'
 import { getEvents } from './reports/get-events'
 import { getHolidayPrograms } from './reports/get-holiday-programs'
 import { getParties } from './reports/get-parties'
 import { getPlayLabPrograms } from './reports/get-play-lab'
 
 import type { Order } from 'square/api'
-
 ;(async () => {
     const { script } = await prompts({
         type: 'select',
@@ -96,6 +96,11 @@ import type { Order } from 'square/api'
                 title: 'Get self catered parties by notes',
                 value: 'getSelfCateredPartiesByNotes',
             },
+            {
+                title: 'Remove Preschool Program class',
+                description: 'Cancel one class across enrolments and clean up Firestore appointment ids',
+                value: 'removePreschoolProgramClass',
+            },
         ],
     })
     if (script === 'legacyEventsGrouping') {
@@ -138,6 +143,9 @@ import type { Order } from 'square/api'
     }
     if (script === 'getSelfCateredPartiesByNotes') {
         await getSelfCateredPartiesByNotes()
+    }
+    if (script === 'removePreschoolProgramClass') {
+        await runRemovePreschoolProgramClassScript()
     }
     if (script === 'getParties') {
         const { startDate, endDate, location, type } = await prompts([
