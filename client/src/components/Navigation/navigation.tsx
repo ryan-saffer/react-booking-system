@@ -147,9 +147,9 @@ const adminItems: NavigationItem[] = [
         accentSoft: 'rgba(177, 69, 148, 0.14)',
     },
     {
-        title: 'School Zone Map',
-        description: 'Catchment reference for after school programs.',
-        to: 'after-school-program-map',
+        title: 'Territory Mapping',
+        description: 'Catchment reference for our franchises',
+        to: 'territory-mapping',
         imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=map&scale=70&backgroundColor=F6BA34',
         accent: '#f6ba34',
         accentSoft: 'rgba(246, 186, 52, 0.18)',

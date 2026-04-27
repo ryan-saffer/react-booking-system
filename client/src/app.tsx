@@ -172,9 +172,9 @@ const PlayLabSessionAttendancePage = lazy(() =>
         })
     )
 )
-const SchoolToStudioMapPage = lazy(() =>
-    import('./components/after-school-program/school-to-studio-map/school-to-studio-map-page.js').then((module) => ({
-        default: module.SchoolToStudioMapPage,
+const TerritoryMappingPage = lazy(() =>
+    import('./components/territory-mapping/territory-mapping-page.js').then((module) => ({
+        default: module.TerritoryMappingPage,
     }))
 )
 const CreateInvitationPageV2 = lazy(() =>
@@ -339,14 +339,14 @@ const router = createBrowserRouter([
                         ],
                     },
                     {
-                        path: 'after-school-program-map',
+                        path: 'territory-mapping',
                         children: [
                             {
                                 index: true,
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute permission="admin">
-                                            <SchoolToStudioMapPage />
+                                            <TerritoryMappingPage />
                                         </ProtectedRoute>
                                     </Suspense>
                                 ),
