@@ -31,7 +31,6 @@ export async function rsvpToParty(input: RsvpProps) {
                 email: input.parentEmail,
                 mobile: input.parentMobile,
                 studio: invitation.studio,
-                type: invitation.$type,
                 childName: child.name,
                 childBirthdayISO: new Date(child.dob).toISOString(),
                 optOutOfMarketing: !joinMailingList,
