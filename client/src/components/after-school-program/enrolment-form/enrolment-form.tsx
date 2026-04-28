@@ -76,6 +76,18 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
         return amount % 1 === 0 ? `$${amount}` : `$${amount.toFixed(2)}`
     }
 
+    function getBooleanSelectValue(value: boolean | undefined) {
+        if (value === true) {
+            return 'yes'
+        }
+
+        if (value === false) {
+            return 'no'
+        }
+
+        return undefined
+    }
+
     /**
      * Sync the required 'main' or 'waitingList' section with if the class is full.
      */
@@ -309,7 +321,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                         <SelectForm
                                             label="Child Grade"
                                             onValueChange={field.onChange}
-                                            defaultValue={field.value}
+                                            value={field.value ?? undefined}
                                         >
                                             <SelectValue placeholder="Select a grade" />
                                             <SelectContent>
@@ -340,7 +352,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                                     field.onChange(false)
                                                 }
                                             }}
-                                            defaultValue={''}
+                                            value={getBooleanSelectValue(field.value)}
                                         >
                                             <SelectValue placeholder="Please select" />
                                             <SelectContent>
@@ -369,6 +381,35 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                     )}
                                 />
                             )}
+                            {watchedChild?.hasAllergies && (
+                                <FormField
+                                    control={form.control}
+                                    name={`main.children.${idx}.isAnaphylactic` as const}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <SelectForm
+                                                label={`Is ${watchedChild?.firstName || 'this child'} anaphylactic?`}
+                                                onValueChange={(value) => {
+                                                    if (value === 'yes') {
+                                                        field.onChange(true)
+                                                    }
+                                                    if (value === 'no') {
+                                                        field.onChange(false)
+                                                    }
+                                                }}
+                                                value={getBooleanSelectValue(field.value)}
+                                            >
+                                                <SelectValue placeholder="Please select" />
+                                                <SelectContent>
+                                                    <SelectItem value="yes">Yes</SelectItem>
+                                                    <SelectItem value="no">No</SelectItem>
+                                                </SelectContent>
+                                            </SelectForm>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
                             {watchedChild?.isAnaphylactic && (
                                 <FormField
                                     control={form.control}
@@ -384,8 +425,6 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                                 <FileUploadInput
                                                     {...fieldProps}
                                                     onSuccess={(file) => {
-                                                        console.log('FILED CHANGED')
-                                                        console.log(file.name)
                                                         onChange(file)
                                                     }}
                                                     accept=".pdf"
@@ -411,7 +450,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                                     field.onChange(false)
                                                 }
                                             }}
-                                            defaultValue={''}
+                                            value={getBooleanSelectValue(field.value)}
                                         >
                                             <SelectValue placeholder="Please select" />
                                             <SelectContent>
@@ -423,6 +462,23 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                     </FormItem>
                                 )}
                             />
+                            {watchedChild?.needsSupport && (
+                                <FormField
+                                    control={form.control}
+                                    name={`main.children.${idx}.support` as const}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                How best can we support {watchedChild?.firstName || 'your child'}?
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Textarea {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
                             <FormField
                                 control={form.control}
                                 name={`main.children.${idx}.permissionToPhotograph` as const}
@@ -438,7 +494,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                                     field.onChange(false)
                                                 }
                                             }}
-                                            defaultValue={''}
+                                            value={getBooleanSelectValue(field.value)}
                                         >
                                             <SelectValue placeholder="Please select" />
                                             <SelectContent>
