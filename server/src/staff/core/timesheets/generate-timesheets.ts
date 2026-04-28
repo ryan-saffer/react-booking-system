@@ -20,13 +20,8 @@ import { isUsingEmulator, throwTrpcError } from '@/utilities'
 import { XeroClient } from '@/xero/XeroClient'
 
 import { didTurn18DuringRange, getEmployeesWithBirthdayDuringRange } from '../staff-birthdays'
-import {
-    createTimesheetRows,
-    getShiftsUnderMinimumShiftLength,
-    getWeeks,
-    isYoungerThan18,
-    SlingLocationsMap,
-} from './timesheets.utils'
+import { getShiftsUnderMinimumShiftLengthForTimesheets } from './minimum-shift-length-report'
+import { createTimesheetRows, getWeeks, isYoungerThan18, SlingLocationsMap } from './timesheets.utils'
 
 import type { Rate } from './timesheets.types'
 import type { TimesheetRow } from './timesheets.utils'
@@ -120,6 +115,13 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
         for (const week of weeks) {
             // get all shifts for the time period
             const allTimesheets = await slingClient.getTimesheets(week.start.toJSDate(), week.end.toJSDate())
+            shiftsUnderMinimumShiftLength.push(
+                ...getShiftsUnderMinimumShiftLengthForTimesheets({
+                    studio,
+                    slingUsers,
+                    allTimesheets,
+                })
+            )
             const timesheets = allTimesheets
                 .filter((it) => it.status === 'published')
                 .filter((it) => {
@@ -136,15 +138,6 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
             for (const slingUser of slingUsers) {
                 const usersTimesheets = timesheets.filter((it) => it.user.id === slingUser.id)
                 if (usersTimesheets.length === 0) continue
-
-                shiftsUnderMinimumShiftLength.push(
-                    ...getShiftsUnderMinimumShiftLength({
-                        firstName: slingUser.legalName,
-                        lastName: slingUser.lastname,
-                        usersTimesheets,
-                        timezone: slingUser.timezone,
-                    })
-                )
 
                 let xeroUser = xeroUsers?.find(
                     (user) =>

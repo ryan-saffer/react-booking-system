@@ -489,6 +489,20 @@ export class MailClient {
                     template: 'turning_18_next_month_reminder.html',
                     useMjml: false,
                 }
+            case 'minimumShiftLengthReport':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz Portal',
+                            email: 'people@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Minimum shift length report',
+                        replyTo: replyTo || 'people@fizzkidz.com.au',
+                    },
+                    template: 'minimum_shift_length_report.html',
+                    useMjml: false,
+                }
             case 'createDiscountCode':
                 return {
                     emailInfo: {
