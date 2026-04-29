@@ -10,9 +10,6 @@ import {
     mapProductToSquareVariation,
     mapServingMethodToSquareVariation,
     mapTakeHomeBagToSquareVariation,
-    ObjectKeys,
-    PRODUCTS,
-    TAKE_HOME_BAGS,
     type PartyForm,
     type ProductType,
     type TakeHomeBagType,
@@ -20,7 +17,9 @@ import {
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { env } from '@/init'
+import { buildHostedPaperformUrl } from '@/paperforms/core/hosted-paperform-url'
 import { PaperformClient, type PaperformSubmission } from '@/paperforms/core/paperform-client'
+import { getPartyFormEmbedConfig } from '@/paperforms/core/party-form-prefill'
 import { handlePartyFormSubmission } from '@/party-bookings/core/handle-party-form-submission'
 import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
 import { SquareClient } from '@/square/core/square-client'
@@ -32,25 +31,21 @@ const SUCCESS_REDIRECT = 'https://fizzkidz.com.au/form-result?result=success'
 const ERROR_REDIRECT = 'https://fizzkidz.com.au/form-result?result=error'
 const NOT_FOUND_REDIRECT = 'https://www.fizzkidz.com.au/404'
 
-const PARTY_FORM_URL = 'https://4c6karmx.paperform.co'
-
 export const partyFormRedirect = express.Router()
 
 /**
- * Redirect 'https://bookings.fizzkidz.com.au/party-form' to the current party form.
+ * BACKWARDS COMPAT ONLY
  *
- * This form is sent 2 weeks before the party. They are sent the 'cake-form' when they book.
- *
- * Doing this allows updating the form and customers who were already sent the link can still be sent to the latest form.
- * Previously I had to maintain multiple form handlers and it was messy.
+ * Currently customers get sent to 'https://bookings.fizzkidz.com.au/forms?form=party'
+ * Probably safe to delete by August 2026. Check cloud run networking to see if its getting hit ever.
  */
 partyFormRedirect.get('/party-form', async (req, res) => {
     const bookingId = req.query.id as string
 
     try {
-        const url = await appendQueryParamsToPaperform(bookingId, 'party')
+        await getPartyFormEmbedConfig(bookingId, 'party')
 
-        res.redirect(303, url)
+        res.redirect(303, buildHostedPaperformUrl('party', { id: bookingId }))
         return
     } catch (err) {
         if (err instanceof Error && err.message.includes('Cannot find document')) {
@@ -65,18 +60,18 @@ partyFormRedirect.get('/party-form', async (req, res) => {
 })
 
 /**
- * Redirect 'https://bookings.fizzkidz.com.au/cake-form' to the current cake and take home bags form.
+ * BACKWARDS COMPAT ONLY
  *
- * This form is available to be filled in from the moment they book.
- * The cake form is the same as the party form with visibility logic enabled based on the 'cake_or_party_form' hidden field.
+ * Currently customers get sent to 'https://bookings.fizzkidz.com.au/forms?form=cake'
+ * Probably safe to delete by August 2026. Check cloud run networking to see if its getting hit ever.
  */
 partyFormRedirect.get('/cake-form', async (req, res) => {
     const bookingId = req.query.id as string
 
     try {
-        const url = await appendQueryParamsToPaperform(bookingId, 'cake')
+        await getPartyFormEmbedConfig(bookingId, 'cake')
 
-        res.redirect(303, url)
+        res.redirect(303, buildHostedPaperformUrl('cake', { id: bookingId }))
         return
     } catch (err) {
         if (err instanceof Error && err.message.includes('Cannot find document')) {
@@ -328,57 +323,3 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
     res.redirect(303, SUCCESS_REDIRECT)
     return
 })
-
-/**
- * Adds required booking information as query params to the party form url.
- *
- * Both the party form and the cake form are actually the exact same paperform, with visibility logic based on the 'party_or_cake_form' hidden field.
- */
-async function appendQueryParamsToPaperform(bookingId: string, partyOrCakeForm: 'party' | 'cake') {
-    const booking = await DatabaseClient.getPartyBooking(bookingId)
-
-    let url = `${PARTY_FORM_URL}?location=${
-        booking.type === 'studio' ? booking.location : 'mobile'
-    }&id=${bookingId}&party_or_cake_form=${partyOrCakeForm}`
-
-    const cake = booking.cake
-        ? [
-              booking.cake.selection,
-              `Size: ${booking.cake.size}`,
-              `Flavours: ${booking.cake.flavours.join(', ')}`,
-              `How to serve: ${booking.cake.served}`,
-              `Candles: ${booking.cake.candles}`,
-              `Message: ${booking.cake.message || 'No message'}`,
-          ].join('\n')
-        : ''
-
-    const takeHomeBags = ObjectKeys(booking.takeHomeBags || {})
-        .map((key) => {
-            const amount = booking.takeHomeBags?.[key]
-            if (amount) return `${amount} ${TAKE_HOME_BAGS[key].displayValue}`
-        })
-        .join('\n')
-
-    const products = ObjectKeys(booking.products || {})
-        .map((key) => {
-            const amount = booking.products?.[key]
-            if (amount) return `${amount} ${PRODUCTS[key].displayValue}s`
-        })
-        .join('\n')
-
-    const encodedParams: { [key: string]: string } = {
-        parent_first_name: encodeURIComponent(booking.parentFirstName),
-        parent_last_name: encodeURIComponent(booking.parentLastName),
-        child_name: encodeURIComponent(booking.childName),
-        child_age: encodeURIComponent(booking.childAge),
-        food_package: booking.includesFood
-            ? encodeURIComponent('Include the food package')
-            : encodeURIComponent('I will self-cater the party'),
-        cake_purchased: encodeURIComponent(cake),
-        take_home_bags_purchased: encodeURIComponent([takeHomeBags, products].join('\n')),
-    }
-
-    Object.keys(encodedParams).forEach((key) => (url += `&${key}=${encodedParams[key]}`))
-
-    return url
-}

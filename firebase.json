@@ -10,6 +10,13 @@
         }
       },
       {
+        "source": "/forms{,/**}",
+        "function": {
+          "functionId": "api",
+          "region": "australia-southeast1"
+        }
+      },
+      {
         "source": "/invite/**",
         "destination": "/invitation.html"
       },

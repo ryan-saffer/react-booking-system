@@ -5,6 +5,7 @@ import type { IncursionEvent } from 'fizz-kidz'
 import { ModuleNameMap } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { buildHostedPaperformUrl } from '../../paperforms/core/hosted-paperform-url'
 import { MailClient } from '../../sendgrid/MailClient'
 
 export async function sendIncursionForms() {
@@ -63,12 +64,9 @@ export async function sendIncursionForms() {
 }
 
 function generateFormUrl(eventId: string, organisation: string, address: string) {
-    return (
-        'https://dtrdgb8b.paperform.co?id=' +
-        eventId +
-        '&organisation=' +
-        encodeURIComponent(organisation) +
-        '&address=' +
-        encodeURIComponent(address)
-    )
+    return buildHostedPaperformUrl('incursion', {
+        id: eventId,
+        organisation,
+        address,
+    })
 }

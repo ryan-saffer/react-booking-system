@@ -68,6 +68,7 @@ A monorepo co-locating client and server:
 Start the client dev server (hot reloading): `cd client && npm start`
 
 - This builds `server/fizz-kidz` (watch), runs TS checker (watch), and starts Vite dev server (e.g., `localhost:5173`).
+- Vite proxies both `/api` and `/forms` to the local Functions emulator. If you add another backend-owned browser route, update `client/vite.config.ts` (and the generated `vite.config.js`) so local development matches production routing.
 
 Other client scripts (`client/package.json`):
 
@@ -103,8 +104,10 @@ Deployed using Firebase.
   - Client app built to static assets (`client/dist/`).
   - Served by Firebase Hosting.
   - `firebase.json` defines hosting config (URL rewrites, `predeploy` script: `sh ./client/predeploy.sh`).
+  - Backend-owned browser paths must be explicitly rewritten here. Today that includes `/api/**` and `/forms/**`.
 - **Server (Firebase Functions):**
   - The Express-based `api` Firebase Function exposes `/api/trpc` for tRPC along with `/api/webhooks/*` endpoints.
+  - It also handles durable browser entrypoints under `/forms/**`, which then redirect to the current client implementation.
   - The client sends all tRPC requests to this single function URL (see `client/src/components/root/root.tsx` for tRPC client `fetch` logic).
   - Background jobs use the `background` Pub/Sub topic, handled centrally by `server/src/pubsub.ts`.
   - `firebase.json` specifies `server/` as functions source.
@@ -116,3 +119,12 @@ Deployed using Firebase.
     ```
 
 See `firebase.json`, `client/package.json`, `server/package.json` for detailed configurations.
+
+## Routing Contract
+
+- Use clean backend-owned URLs for long-lived external/customer-facing links when you want future frontend changes to stay backward compatible.
+- In this repo, `/forms/**` is the durable public form entrypoint and `/form` is the current client-side implementation behind it.
+- When adding another backend-owned browser route, update all three layers together:
+  - Express routing in `server/src/api.ts`
+  - Firebase Hosting rewrites in `firebase.json`
+  - Vite proxy config in `client/vite.config.ts` / `client/vite.config.js`
