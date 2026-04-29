@@ -44,7 +44,7 @@ export function getPartyCustomerContactInfo(location: Studio) {
 
 export function getStudioContactEmail(location: Studio, env: 'dev' | 'prod' = 'prod'): string {
     if (env === 'dev') {
-        return 'ryansaffer@gmail.com'
+        return 'ryan@fizzkidz.com.au'
     }
 
     switch (location) {

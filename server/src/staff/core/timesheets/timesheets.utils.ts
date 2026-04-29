@@ -1,6 +1,6 @@
 import { DateTime, Duration, Interval } from 'luxon'
 
-import { ObjectKeys, assertNever, type Studio } from 'fizz-kidz'
+import { ObjectKeys, assertNever, type ShiftUnderMinimumShiftLength, type Studio } from 'fizz-kidz'
 
 import type { Timesheet } from '@/sling/sling.types'
 
@@ -32,6 +32,41 @@ export function getWeeks(_start: DateTime, end: DateTime) {
  */
 export function isYoungerThan18(dob: DateTime) {
     return DateTime.now().diff(dob, 'years').years < 18
+}
+
+export function getShiftsUnderMinimumShiftLength({
+    firstName,
+    lastName,
+    usersTimesheets,
+    timezone,
+}: {
+    firstName: string
+    lastName: string
+    usersTimesheets: Timesheet[]
+    timezone: string
+}): ShiftUnderMinimumShiftLength[] {
+    return usersTimesheets.flatMap((timesheet) => {
+        const start = DateTime.fromISO(timesheet.dtstart, { zone: timezone })
+        const end = DateTime.fromISO(timesheet.dtend, { zone: timezone })
+        const position = SlingPositionMap[timesheet.position.id]
+        const shiftLengthInMinutes = Math.round(end.diff(start, 'minutes').minutes)
+        const minimumShiftLengthInMinutes = start.weekday === 7 ? 4 * 60 : 3 * 60
+
+        if (shiftLengthInMinutes >= minimumShiftLengthInMinutes) {
+            return []
+        }
+
+        return [
+            {
+                employeeName: `${firstName} ${lastName}`,
+                positionName: formatSlingPositionLabel(position),
+                shiftDate: start.toFormat('ccc dd/LL/yyyy'),
+                workedLength: formatShiftLength(shiftLengthInMinutes),
+                minimumLength: formatShiftLength(minimumShiftLengthInMinutes),
+                notes: timesheet.summary.trim(),
+            },
+        ]
+    })
 }
 
 /**
@@ -70,6 +105,7 @@ export function createTimesheetRows({
     let totalHours = 0
 
     usersTimesheets.map((timesheet) => {
+        console.log(timesheet)
         const position = SlingPositionMap[timesheet.position.id]
         const location = SlingLocationsMap[timesheet.location.id]
         const start = DateTime.fromISO(timesheet.dtstart, { zone: timezone })
@@ -233,6 +269,33 @@ export function createTimesheetRows({
     })
 
     return { rows, totalHours }
+}
+
+function formatShiftLength(totalMinutes: number) {
+    const hours = Math.floor(totalMinutes / 60)
+    const minutes = totalMinutes % 60
+
+    if (minutes === 0) {
+        return `${hours} ${hours === 1 ? 'hour' : 'hours'}`
+    }
+
+    if (hours === 0) {
+        return `${minutes} minutes`
+    }
+
+    return `${hours} ${hours === 1 ? 'hour' : 'hours'} ${minutes} minutes`
+}
+
+function formatSlingPositionLabel(position: SlingPosition | undefined) {
+    if (!position) {
+        return 'Unknown'
+    }
+
+    return position
+        .toLowerCase()
+        .split('_')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
 }
 
 function createOvertimeTimesheetRows(

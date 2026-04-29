@@ -88,7 +88,18 @@ export class MailClient {
     }
 
     private async _generateHtml(template: string, values: Record<string, unknown>, useMjml: boolean) {
-        const mjml = fs.readFileSync(path.resolve(__dirname, `sendgrid/mjml/${template}`), 'utf-8')
+        // if running script locally the path to the mjml files will be different vs when bundled for deployement.
+        const possiblePaths = [
+            path.resolve(__dirname, `mjml/${template}`),
+            path.resolve(__dirname, `sendgrid/mjml/${template}`),
+        ]
+        const templatePath = possiblePaths.find((it) => fs.existsSync(it))
+
+        if (!templatePath) {
+            throw new Error(`Could not find email template '${template}'`)
+        }
+
+        const mjml = fs.readFileSync(templatePath, 'utf-8')
         const output = Mustache.render(mjml, values)
         if (useMjml) {
             const mjml2html = await import('mjml')
@@ -487,6 +498,20 @@ export class MailClient {
                         replyTo: replyTo || 'people@fizzkidz.com.au',
                     },
                     template: 'turning_18_next_month_reminder.html',
+                    useMjml: false,
+                }
+            case 'minimumShiftLengthReport':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz Portal',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Minimum shift length report',
+                        replyTo: replyTo || 'noreply@fizzkidz.com.au',
+                    },
+                    template: 'minimum_shift_length_report.html',
                     useMjml: false,
                 }
             case 'createDiscountCode':

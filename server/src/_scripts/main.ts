@@ -8,6 +8,7 @@ import { AcuityConstants, AcuityUtilities, STUDIOS } from 'fizz-kidz'
 import { cleanUpStaleInvitations } from '@/party-bookings/core/rsvp/clean-up-stale-invitations'
 import { updateSlingWages } from '@/sling/update-sling-wages'
 import { SquareClient } from '@/square/core/square-client'
+import { sendMinimumShiftLengthReport } from '@/staff/core/send-minimum-shift-length-report'
 
 import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
 import { getAllUsers } from './auth/get-all-users'
@@ -40,6 +41,11 @@ import type { Order } from 'square/api'
             {
                 title: 'Clear stale invitations',
                 value: 'clearStaleInvitations',
+            },
+            {
+                title: 'Send minimum shift length report',
+                description: 'Sends real report emails to master and franchise recipients',
+                value: 'sendMinimumShiftLengthReport',
             },
             {
                 title: 'Run report on bookings',
@@ -264,6 +270,39 @@ import type { Order } from 'square/api'
     if (script === 'clearStaleInvitations') {
         const result = await cleanUpStaleInvitations()
         console.log(result)
+    }
+    if (script === 'sendMinimumShiftLengthReport') {
+        const defaultEndDate = DateTime.now().setZone('Australia/Melbourne').minus({ days: 1 }).startOf('day')
+        const defaultStartDate = defaultEndDate.minus({ days: 13 }).startOf('day')
+
+        const { startDate, endDate, confirmed } = await prompts([
+            {
+                type: 'date',
+                name: 'startDate',
+                message: 'Enter a start date',
+                initial: defaultStartDate.toJSDate(),
+            },
+            {
+                type: 'date',
+                name: 'endDate',
+                message: 'Enter an end date',
+                initial: defaultEndDate.toJSDate(),
+            },
+            {
+                type: 'confirm',
+                name: 'confirmed',
+                message:
+                    'This will send real emails to kym@fizzkidz.com.au, balwyn@fizzkidz.com.au, and kingsville@fizzkidz.com.au when those reports have shifts. Continue?',
+                initial: false,
+            },
+        ])
+
+        if (!confirmed) {
+            console.log('Cancelled minimum shift length report')
+            return
+        }
+
+        await sendMinimumShiftLengthReport({ startDate, endDate })
     }
     // get all holiday program bookings for a certain time period and calculate the total spent.
     // used for franchise ownership transfer, to know how many future bookings made.

@@ -1,12 +1,17 @@
 import { DownloadOutlined } from '@ant-design/icons'
 import { styled } from '@mui/material/styles'
 import { useMutation } from '@tanstack/react-query'
-import { Alert, Button, Card, Collapse, DatePicker, Divider, Layout, Typography, theme } from 'antd'
+import { Alert, Button, Card, Collapse, DatePicker, Divider, Layout, Table, Typography, theme } from 'antd'
 import dayjs from 'dayjs'
 import updateLocale from 'dayjs/plugin/updateLocale'
 import { useState } from 'react'
 
-import { isFranchise, type GenerateTimesheetsResponse, type Service } from 'fizz-kidz'
+import {
+    isFranchise,
+    type GenerateTimesheetsResponse,
+    type Service,
+    type ShiftUnderMinimumShiftLength,
+} from 'fizz-kidz'
 
 import { useOrg } from '@components/Session/use-org'
 import { useTRPC } from '@utils/trpc'
@@ -40,6 +45,45 @@ const { RangePicker } = DatePicker
 const { Title, Paragraph, Text, Link } = Typography
 const { Content } = Layout
 const { Panel } = Collapse
+
+const minimumShiftLengthColumns = [
+    {
+        title: 'Employee',
+        dataIndex: 'employeeName',
+        key: 'employeeName',
+        width: '18%',
+    },
+    {
+        title: 'Position',
+        dataIndex: 'positionName',
+        key: 'positionName',
+        width: '18%',
+    },
+    {
+        title: 'Shift date',
+        dataIndex: 'shiftDate',
+        key: 'shiftDate',
+        width: '14%',
+    },
+    {
+        title: 'Worked',
+        dataIndex: 'workedLength',
+        key: 'workedLength',
+        width: '12%',
+    },
+    {
+        title: 'Minimum',
+        dataIndex: 'minimumLength',
+        key: 'minimumLength',
+        width: '12%',
+    },
+    {
+        title: 'Notes',
+        dataIndex: 'notes',
+        key: 'notes',
+        width: '26%',
+    },
+]
 
 dayjs.extend(updateLocale)
 dayjs.updateLocale('en', { weekStart: 1 })
@@ -314,6 +358,29 @@ export const Payroll = () => {
                                 showIcon
                             />
                         )}
+                        <Divider orientation="horizontal">Under Minimum Shift Length</Divider>
+                        {timesheetsService.result.shiftsUnderMinimumShiftLength.length > 0 ? (
+                            <div className={`${classes.flexCol} ${classes['gap-16']}`}>
+                                <Alert
+                                    title="The following shifts are shorter than the minimum shift length and should be reviewed before importing the timesheets. Check the notes column for any valid reason recorded in Sling."
+                                    type="warning"
+                                    showIcon
+                                />
+                                <Table<ShiftUnderMinimumShiftLength>
+                                    columns={minimumShiftLengthColumns}
+                                    dataSource={timesheetsService.result.shiftsUnderMinimumShiftLength}
+                                    pagination={false}
+                                    rowKey={(shift) =>
+                                        `${shift.employeeName}-${shift.positionName}-${shift.shiftDate}-${shift.workedLength}-${shift.minimumLength}-${shift.notes}`
+                                    }
+                                    size="small"
+                                    style={{ width: '100%' }}
+                                    tableLayout="fixed"
+                                />
+                            </div>
+                        ) : (
+                            <Alert type="success" title="No shifts were under the minimum shift length." showIcon />
+                        )}
                         <Divider />
                         <Card title="Next Steps" size="small">
                             <ol className={classes.list}>
@@ -340,6 +407,7 @@ export const Payroll = () => {
                                     Include superannuation for all employees under 18 who worked more than 30 hours, as
                                     listed above.
                                 </li>
+                                <li>Review any shifts listed under the minimum shift length section above.</li>
                             </ol>
                         </Card>
                         <Divider />
