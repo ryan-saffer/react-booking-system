@@ -17,6 +17,9 @@ import { getWeeks } from './timesheets/timesheets.utils'
 
 const XERO_STUDIOS: FranchiseOrMaster[] = ['master', ...FRANCHISE_STUDIOS]
 const TIMEZONE = 'Australia/Melbourne'
+// Google Cloud Scheduler cannot run "every second Monday", so we trigger this job every Monday and
+// enforce the fortnightly cadence in code from this anchor date.
+const FIRST_FORTNIGHTLY_REPORT_DATE = DateTime.fromISO('2026-05-04', { zone: TIMEZONE }).startOf('day')
 
 export async function sendMinimumShiftLengthReport({
     startDate: customStartDate,
@@ -25,6 +28,17 @@ export async function sendMinimumShiftLengthReport({
     startDate?: Date
     endDate?: Date
 } = {}) {
+    // Keep manual/scripted runs (with explicit dates) available at any time.
+    // For scheduled runs without explicit dates, only continue on the fortnightly Monday pay cycle.
+    if (!customStartDate && !customEndDate) {
+        const reportDate = DateTime.now().setZone(TIMEZONE).startOf('day')
+        const daysSinceFirstReport = Math.trunc(reportDate.diff(FIRST_FORTNIGHTLY_REPORT_DATE, 'days').days)
+        const isMonday = reportDate.weekday === 1
+        const isFortnightlyMonday = daysSinceFirstReport >= 0 && daysSinceFirstReport % 14 === 0
+
+        if (!isMonday || !isFortnightlyMonday) return
+    }
+
     const endDate = customEndDate
         ? DateTime.fromJSDate(customEndDate).setZone(TIMEZONE).startOf('day')
         : DateTime.now().setZone(TIMEZONE).minus({ days: 1 }).startOf('day')

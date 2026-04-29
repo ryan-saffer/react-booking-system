@@ -54,7 +54,7 @@ export const pubsub = onMessagePublished('background', async (input: PubSubFunct
             await updateSlingWages()
             break
         case 'sendMinimumShiftLengthReport':
-            // every second Monday at 6:00am
+            // every Monday at 6:00am; the report checks whether it's the fortnightly pay-cycle Monday
             await sendMinimumShiftLengthReport()
             break
         case 'paperformSubmission':
