@@ -7,10 +7,12 @@ export function ErrorScreen({
     label,
     text,
     showRefresh = false,
+    showGoHome = true,
 }: {
     label: string
     text: string
     showRefresh?: boolean
+    showGoHome?: boolean
 }) {
     const navigate = useNavigate()
     return (
@@ -52,13 +54,15 @@ export function ErrorScreen({
                                 <RotateCw className="ml-2 h-4 w-4" />
                             </Button>
                         )}
-                        <Button
-                            onClick={() => navigate('/')}
-                            className="bg-[#B14594] text-white shadow-lg shadow-[#B14594]/30 transition hover:-translate-y-0.5 hover:bg-[#9a3c82]"
-                        >
-                            Go Home
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
+                        {showGoHome && (
+                            <Button
+                                onClick={() => navigate('/')}
+                                className="bg-[#B14594] text-white shadow-lg shadow-[#B14594]/30 transition hover:-translate-y-0.5 hover:bg-[#9a3c82]"
+                            >
+                                Go Home
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        )}
                     </div>
                 </div>
             </section>

@@ -91,7 +91,7 @@ const usefulLinks: NavigationItem[] = [
         accent: '#00c2e3',
         accentSoft: 'rgba(0, 194, 227, 0.16)',
         tag: 'External',
-        onClick: () => window.open('https://pyornlcz.paperform.co', '_blank'),
+        onClick: () => window.open('/forms/incident-reporting', '_blank'),
     },
     {
         title: 'Behaviour Management Plan',

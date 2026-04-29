@@ -6,7 +6,6 @@ import React from 'react'
 
 import type { Event } from 'fizz-kidz'
 
-
 import { ExistingEventForm } from './forms/existing-event-form'
 
 type Props = {
@@ -44,7 +43,7 @@ const EventPanel: React.FC<Props> = ({ event }) => {
                     <Button
                         className="mr-3"
                         variant="outlined"
-                        href={`https://b55fbq3h.paperform.co?9td8o=${event.organisation}`}
+                        href={`/forms/staff-feedback?9td8o=${encodeURIComponent(event.organisation)}`}
                         onClick={(e) => e.stopPropagation()}
                     >
                         Staff Feedback Form
