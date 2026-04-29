@@ -11,6 +11,7 @@ import { sendPartyForms } from './party-bookings/core/send-party-forms'
 import { updateSlingWages } from './sling/update-sling-wages'
 import { remindAboutTurning18NextMonth } from './staff/core/remind-about-turning-18-next-month'
 import { remindAboutWwcc } from './staff/core/remind-about-wwcc'
+import { sendMinimumShiftLengthReport } from './staff/core/send-minimum-shift-length-report'
 import { onMessagePublished, logError } from './utilities'
 
 export const pubsub = onMessagePublished('background', async (input: PubSubFunctions['background']) => {
@@ -51,6 +52,10 @@ export const pubsub = onMessagePublished('background', async (input: PubSubFunct
         case 'updateSlingWages':
             // 6:00am every Friday
             await updateSlingWages()
+            break
+        case 'sendMinimumShiftLengthReport':
+            // every second Monday at 6:00am
+            await sendMinimumShiftLengthReport()
             break
         case 'paperformSubmission':
             // triggered by paperform webhook

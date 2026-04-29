@@ -2,7 +2,6 @@ import { strictEqual, throws } from 'assert'
 
 import { DateTime } from 'luxon'
 
-
 import type { Timesheet } from '@/sling/sling.types'
 
 import {
@@ -10,6 +9,7 @@ import {
     SlingPositionToId,
     TimesheetRow,
     createTimesheetRows,
+    getShiftsUnderMinimumShiftLength,
     getPositionRate,
     getWeeks,
     hasBirthdayDuring,
@@ -91,6 +91,158 @@ describe('Timesheet suite', () => {
             strictEqual(result[1].end.toFormat(AUS_DATE_FORMAT), '18/06/2023')
             strictEqual(result[2].start.toFormat(AUS_DATE_FORMAT), '19/06/2023')
             strictEqual(result[2].end.toFormat(AUS_DATE_FORMAT), '19/06/2023')
+        })
+    })
+
+    describe('minimum shift length warnings', () => {
+        it('should flag monday to saturday shifts under three hours', () => {
+            const result = getShiftsUnderMinimumShiftLength({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                usersTimesheets: [
+                    {
+                        status: 'published',
+                        dtstart: '2026-04-27T09:00:00+10:00',
+                        dtend: '2026-04-27T11:30:00+10:00',
+                        user: { id: 1 },
+                        position: { id: SlingPositionToId[SlingPosition.PARTY_FACILITATOR] },
+                        location: { id: 1 },
+                        summary: 'School pickup delay',
+                    },
+                ],
+                timezone: 'Australia/Melbourne',
+            })
+
+            strictEqual(result.length, 1)
+            strictEqual(result[0].employeeName, 'Ryan Saffer')
+            strictEqual(result[0].positionName, 'Party Facilitator')
+            strictEqual(result[0].shiftDate, 'Mon 27/04/2026')
+            strictEqual(result[0].workedLength, '2 hours 30 minutes')
+            strictEqual(result[0].minimumLength, '3 hours')
+            strictEqual(result[0].notes, 'School pickup delay')
+        })
+
+        it('should flag sunday shifts under four hours', () => {
+            const result = getShiftsUnderMinimumShiftLength({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                usersTimesheets: [
+                    {
+                        status: 'published',
+                        dtstart: '2026-04-26T09:00:00+10:00',
+                        dtend: '2026-04-26T12:30:00+10:00',
+                        user: { id: 1 },
+                        position: { id: SlingPositionToId[SlingPosition.SUNDAY_PARTY_FACILITATOR] },
+                        location: { id: 1 },
+                        summary: '',
+                    },
+                ],
+                timezone: 'Australia/Melbourne',
+            })
+
+            strictEqual(result.length, 1)
+            strictEqual(result[0].employeeName, 'Ryan Saffer')
+            strictEqual(result[0].positionName, 'Sunday Party Facilitator')
+            strictEqual(result[0].shiftDate, 'Sun 26/04/2026')
+            strictEqual(result[0].workedLength, '3 hours 30 minutes')
+            strictEqual(result[0].minimumLength, '4 hours')
+            strictEqual(result[0].notes, '')
+        })
+
+        it('should not flag shifts that meet the minimum length', () => {
+            const result = getShiftsUnderMinimumShiftLength({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                usersTimesheets: [
+                    {
+                        status: 'published',
+                        dtstart: '2026-04-27T09:00:00+10:00',
+                        dtend: '2026-04-27T12:00:00+10:00',
+                        user: { id: 1 },
+                        position: { id: SlingPositionToId[SlingPosition.PARTY_FACILITATOR] },
+                        location: { id: 1 },
+                        summary: '',
+                    },
+                    {
+                        status: 'published',
+                        dtstart: '2026-04-26T09:00:00+10:00',
+                        dtend: '2026-04-26T13:00:00+10:00',
+                        user: { id: 1 },
+                        position: { id: SlingPositionToId[SlingPosition.SUNDAY_PARTY_FACILITATOR] },
+                        location: { id: 1 },
+                        summary: '',
+                    },
+                ],
+                timezone: 'Australia/Melbourne',
+            })
+
+            strictEqual(result.length, 0)
+        })
+
+        it('should fall back to unknown when a shift position cannot be mapped', () => {
+            const result = getShiftsUnderMinimumShiftLength({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                usersTimesheets: [
+                    {
+                        status: 'published',
+                        dtstart: '2026-04-27T09:00:00+10:00',
+                        dtend: '2026-04-27T10:00:00+10:00',
+                        user: { id: 1 },
+                        position: { id: -1 },
+                        location: { id: 1 },
+                        summary: '',
+                    },
+                ],
+                timezone: 'Australia/Melbourne',
+            })
+
+            strictEqual(result.length, 1)
+            strictEqual(result[0].positionName, 'Unknown')
+        })
+
+        it('should format worked length in minutes when the shift is under one hour', () => {
+            const result = getShiftsUnderMinimumShiftLength({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                usersTimesheets: [
+                    {
+                        status: 'published',
+                        dtstart: '2026-04-27T09:00:00+10:00',
+                        dtend: '2026-04-27T09:30:00+10:00',
+                        user: { id: 1 },
+                        position: { id: SlingPositionToId[SlingPosition.PARTY_FACILITATOR] },
+                        location: { id: 1 },
+                        summary: '',
+                    },
+                ],
+                timezone: 'Australia/Melbourne',
+            })
+
+            strictEqual(result.length, 1)
+            strictEqual(result[0].workedLength, '30 minutes')
+        })
+
+        it('should format worked length with a singular hour when needed', () => {
+            const result = getShiftsUnderMinimumShiftLength({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                usersTimesheets: [
+                    {
+                        status: 'published',
+                        dtstart: '2026-04-27T09:00:00+10:00',
+                        dtend: '2026-04-27T10:30:00+10:00',
+                        user: { id: 1 },
+                        position: { id: SlingPositionToId[SlingPosition.PARTY_FACILITATOR] },
+                        location: { id: 1 },
+                        summary: '',
+                    },
+                ],
+                timezone: 'Australia/Melbourne',
+            })
+
+            strictEqual(result.length, 1)
+            strictEqual(result[0].workedLength, '1 hour 30 minutes')
         })
     })
 
@@ -269,6 +421,44 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - HO')
         })
 
+        it('should map geelong on call weekday shifts under 18 to TODO', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: SlingPosition.ON_CALL_PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 10,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it('should map geelong on call weekday shifts over 18 to TODO', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: SlingPosition.ON_CALL_PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+
+            strictEqual(row.payItem, 'TODO')
+        })
+
         it('should map on call for all locations on sunday - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
@@ -441,6 +631,25 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Head Office')
+        })
+
+        it('should map geelong on call sunday shifts to TODO', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: SlingPosition.ON_CALL_PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+
+            strictEqual(row.payItem, 'TODO')
         })
 
         describe('Supervisor shifts', () => {
@@ -825,6 +1034,44 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'CALLEDIN - 16&17 COH - Mon to Sat - HO')
         })
 
+        it('should map geelong called in weekday shifts under 18 to TODO', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 10,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it('should map geelong called in weekday shifts over 18 to TODO', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+
+            strictEqual(row.payItem, 'TODO')
+        })
+
         it('should map called in holiday program facilitator for all locations mon-sat - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
@@ -1173,6 +1420,25 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Head Office')
         })
 
+        it('should map geelong called in sunday shifts to TODO', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+
+            strictEqual(row.payItem, 'TODO')
+        })
+
         it('should map called in holiday program facilitator for all locations sunday - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
@@ -1434,6 +1700,25 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'CGS COH - Mon to Sat - Head Office')
         })
 
+        it('should map geelong casual ordinary weekday shifts over 18 to TODO', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+
+            strictEqual(row.payItem, 'TODO')
+        })
+
         it('should map party faciliator for all locations mon-sat - under 18', () => {
             // balwyn
             let row = new TimesheetRow({
@@ -1519,6 +1804,25 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Head Office')
+        })
+
+        it('should map geelong casual ordinary weekday shifts under 18 to TODO', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 10,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+
+            strictEqual(row.payItem, 'TODO')
         })
 
         it('should map party faciliator for all locations sunday - over 18', () => {
@@ -1693,6 +1997,25 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CGS COH - Sunday - Head Office')
+        })
+
+        it('should map geelong casual ordinary sunday shifts to TODO', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+
+            strictEqual(row.payItem, 'TODO')
         })
 
         it('should map holiday program facilitator for all locations mon-sat - over 18', () => {
@@ -2913,6 +3236,44 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Head Office')
         })
 
+        it('should map geelong non casual ordinary hours to TODO on weekdays', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: false,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it('should map geelong non casual ordinary hours to TODO on sundays', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: false,
+                position: SlingPosition.SUNDAY_PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+
+            strictEqual(row.payItem, 'TODO')
+        })
+
         it('should map overtime first three hours - mon to sat', () => {
             // balwyn
             let row = new TimesheetRow({
@@ -3147,6 +3508,44 @@ describe('Timesheet suite', () => {
             })
         })
 
+        it('should map geelong overtime first three hours on weekdays to TODO', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: false,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it('should map geelong overtime first three hours on sundays to TODO', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: false,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+
+            strictEqual(row.payItem, 'TODO')
+        })
+
         it('should map overtime after three hours', () => {
             // balwyn
             let row = new TimesheetRow({
@@ -3262,6 +3661,25 @@ describe('Timesheet suite', () => {
                 const row = new TimesheetRow({ ...baseProps, location })
                 strictEqual(row.payItem, expected)
             })
+        })
+
+        it('should map geelong overtime after three hours to TODO', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: true,
+                isCasual: false,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'geelong',
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: true },
+            })
+
+            strictEqual(row.payItem, 'TODO')
         })
 
         it('should map casual ordinary hours for employees under 18 on a rate above $18 on mon-sat to over 18 mon-sat', () => {
