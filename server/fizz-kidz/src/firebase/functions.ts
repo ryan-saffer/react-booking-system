@@ -10,6 +10,7 @@ export interface PubSubFunctions {
         | { name: 'sendPartyFeedbackEmails' }
         | { name: 'remindAboutWwcc' }
         | { name: 'remindAboutTurning18NextMonth' }
+        | { name: 'sendMinimumShiftLengthReport' }
         | { name: 'updateSlingWages' }
         | { name: 'paperformSubmission'; form: 'incursion'; data: PaperFormResponse<IncursionForm> }
         | {

@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+    <head>
+        <base target="_top" />
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            th,
+            td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+
+            th {
+                background-color: #f5f5f5;
+            }
+        </style>
+    </head>
+
+    <body>
+        <p>
+            Below is a report of shifts that were under the minimum required length for the payroll period
+            <strong>{{periodLabel}}</strong>.
+        </p>
+
+        <h3>Next steps</h3>
+        <ol>
+            <li>Add a clear note to any valid short shift so the reason is visible during payroll processing.</li>
+            <li>Otherwise, update the shift in Sling so it meets that day's minimum shift length.</li>
+        </ol>
+
+        <h3>Minimum shift length</h3>
+        <ul>
+            <li><strong>Monday to Saturday:</strong> 3 hours</li>
+            <li><strong>Sunday:</strong> 4 hours</li>
+        </ul>
+
+        {{#studios}}
+        <h3>{{studio}}</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Position</th>
+                    <th>Shift date</th>
+                    <th>Worked</th>
+                    <th>Minimum</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#shifts}}
+                <tr>
+                    <td>{{employeeName}}</td>
+                    <td>{{positionName}}</td>
+                    <td>{{shiftDate}}</td>
+                    <td>{{workedLength}}</td>
+                    <td>{{minimumLength}}</td>
+                    <td>{{notes}}</td>
+                </tr>
+                {{/shifts}}
+            </tbody>
+        </table>
+        {{/studios}}
+    </body>
+</html>

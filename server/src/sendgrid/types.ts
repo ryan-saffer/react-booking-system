@@ -415,6 +415,20 @@ export type Emails = {
         month: string
         employees: string[]
     }
+    minimumShiftLengthReport: {
+        periodLabel: string
+        studios: {
+            studio: string
+            shifts: {
+                employeeName: string
+                positionName: string
+                shiftDate: string
+                workedLength: string
+                minimumLength: string
+                notes: string
+            }[]
+        }[]
+    }
 
     accountInvite: {
         firstname: string
