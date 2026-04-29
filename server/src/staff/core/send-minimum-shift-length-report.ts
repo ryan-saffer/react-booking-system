@@ -105,7 +105,7 @@ export async function sendMinimumShiftLengthReport({
                     bccBookings: false,
                     bcc: [
                         'ryan@fizzkidz.com.au',
-                        ...(env === 'prod' && report.studio !== 'Corporate Studios' ? ['kym@fizzkidz.com.au'] : []),
+                        ...(report.recipient !== 'kym@fizzkidz.com.au' ? ['kym@fizzkidz.com.au'] : []),
                     ],
                 }
             )
