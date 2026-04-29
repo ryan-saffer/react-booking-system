@@ -65,6 +65,10 @@ export default defineConfig(({ mode }) => {
                     target: functionsApiTarget,
                     changeOrigin: true,
                 },
+                '/forms': {
+                    target: functionsApiTarget,
+                    changeOrigin: true,
+                },
             },
         },
         resolve: {

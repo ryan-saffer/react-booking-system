@@ -5,7 +5,6 @@ import { Suspense, lazy } from 'react'
 import { Navigate, RouterProvider, createBrowserRouter, useParams, useSearchParams } from 'react-router-dom'
 
 import { NotFound404 } from '@components/root/404.js'
-import { DashboardLayout } from '@components/root/dashboard-layout.js'
 import { Root } from '@components/root/root.js'
 import { ProtectedRoute } from '@components/Session/protected-route.js'
 import { SignedIn } from '@components/Session/signed-in.js'
@@ -19,6 +18,7 @@ import Loader from '@components/Shared/Loader.js'
 const SignInPage = lazy(() =>
     import('./components/SignIn/sign-in-page.js').then((module) => ({ default: module.SignInPage }))
 )
+const Paperform = lazy(() => import('./components/paperform.js').then((module) => ({ default: module.Paperform })))
 const SignUpPage = lazy(() =>
     import('./components/SignIn/sign-up-page.js').then((module) => ({ default: module.SignUpPage }))
 )
@@ -261,10 +261,24 @@ const router = createBrowserRouter([
                 ),
             },
             {
+                path: 'form',
+                children: [
+                    {
+                        index: true,
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <Paperform />
+                            </Suspense>
+                        ),
+                    },
+                ],
+            },
+            {
                 path: 'dashboard',
                 lazy: async () => {
+                    const module = await import('./components/root/dashboard-layout.js')
                     return {
-                        Component: DashboardLayout,
+                        Component: module.DashboardLayout,
                     }
                 },
                 children: [

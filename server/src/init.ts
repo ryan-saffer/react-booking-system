@@ -11,6 +11,6 @@ const databaseURL =
 
 const credential = applicationDefault()
 
-initializeApp({ credential, databaseURL })
+initializeApp({ credential, databaseURL, projectId })
 
 setGlobalOptions({ region: 'australia-southeast1' })

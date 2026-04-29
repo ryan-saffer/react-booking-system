@@ -46,6 +46,11 @@ This guide orients you to the codebase and points to the authoritative README fi
 - Shared types/logic: add to `server/fizz-kidz` and export via its `src/index.ts`.
 - Server SDKs: instantiate lazily (e.g., Square/Acuity/Xero) to reduce cold starts.
 
+## Routing Notes
+- Customer-facing/server-owned browser paths must be kept in sync across three places: the Express app in `server/src/api.ts`, Firebase Hosting rewrites in `firebase.json`, and the Vite dev proxy in `client/vite.config.ts` / `client/vite.config.js`.
+- If you add a top-level path that should hit the backend before the SPA renders (for example `/forms/**`), add a Firebase Hosting rewrite for production and a Vite proxy entry for local development. Otherwise the route may work in one environment and silently fall through to the client in the other.
+- The current durable backend-owned form entrypoints live under `/forms/**`; the client `/form` route is an implementation detail behind that redirect layer.
+
 ## Verification Workflow
 - After making changes, always run verification in this order for the files or package touched: Prettier, then lint, then typecheck.
 - For client changes, prefer running the local client formatter directly so it uses the repo plugin setup (for example from `client/`: `./node_modules/.bin/prettier --write <files>`).
@@ -55,6 +60,7 @@ This guide orients you to the codebase and points to the authoritative README fi
 ## Common Tasks
 - Add a new API surface: create a feature folder in `server/src/<feature>/`, define or extend a tRPC router, and register it with `appRouter` so it flows through the `api` function.
 - Webhooks/PubSub: place routers/handlers under `server/src/<feature>/functions/`; webhooks are mounted from `server/src/api.ts`, while Pub/Sub tasks publish/listen on the shared `background` topic via `server/src/pubsub.ts`.
+- Add a server-owned frontend entrypoint: mount the Express route in `server/src/api.ts`, add the matching Hosting rewrite in `firebase.json`, and add a Vite proxy entry if the path should also work during `client/npm start`.
 - Scripts: check `scripts/` and its README for required env (e.g., `GOOGLE_APPLICATION_CREDENTIALS`).
 
 ## Troubleshooting Pointers

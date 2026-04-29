@@ -6,6 +6,7 @@ import { onRequest } from 'firebase-functions/v2/https'
 import { acuityWebhook } from './acuity/functions/acuity.webhook'
 import { esignaturesWebhook } from './esignatures.io/functions/esignatures.webhook'
 import { env } from './init'
+import { hostedPaperformRedirect } from './paperforms/functions/routes/hosted-paperform-redirect'
 import { partyFormRedirect } from './paperforms/functions/webhooks/paperform-redirect'
 import { paperformWebhook } from './paperforms/functions/webhooks/paperform.webhook'
 import { invitationEntryRedirect } from './party-bookings/functions/webhooks/invitation-redirect'
@@ -81,6 +82,9 @@ apiRouter.use(webhooks)
 
 // Mount all API routes under /api
 app.use('/api', apiRouter)
+
+// Public durable entrypoints for hosted Paperforms.
+app.use('/forms', hostedPaperformRedirect)
 
 export const api = onRequest(
     {

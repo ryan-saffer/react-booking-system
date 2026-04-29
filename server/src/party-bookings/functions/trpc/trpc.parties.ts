@@ -10,6 +10,7 @@ import type {
     WithoutUid,
 } from 'fizz-kidz'
 
+import { getPartyFormEmbedConfig } from '@/paperforms/core/party-form-prefill'
 import { createPartyBooking } from '@/party-bookings/core/create-party-booking'
 import { deletePartyBooking } from '@/party-bookings/core/delete-party-booking'
 import { generateInvitation } from '@/party-bookings/core/generate-invitation'
@@ -52,6 +53,9 @@ export const partiesRouter = router({
     getCakeFormUrl: authenticatedProcedure
         .input((input: unknown) => input as { bookingId: string })
         .mutation(({ input }) => getCakeFormUrl(input.bookingId)),
+    getPaperformEmbedConfig: publicProcedure
+        .input(z.object({ bookingId: z.string(), partyOrCakeForm: z.enum(['party', 'cake']) }))
+        .query(({ input }) => getPartyFormEmbedConfig(input.bookingId, input.partyOrCakeForm)),
     generateInvitation: publicProcedure
         .input((input: unknown) => input as GenerateInvitation)
         .mutation(({ input }) => generateInvitation(input)),

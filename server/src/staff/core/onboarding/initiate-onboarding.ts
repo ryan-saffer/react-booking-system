@@ -4,6 +4,7 @@ import { getStudioAddress } from 'fizz-kidz'
 import { ESignatureClient } from '@/esignatures.io/core/ESignaturesClient'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { FirestoreRefs } from '@/firebase/FirestoreRefs'
+import { buildHostedPaperformUrl } from '@/paperforms/core/hosted-paperform-url'
 import { MailClient } from '@/sendgrid/MailClient'
 import { throwTrpcError } from '@/utilities'
 
@@ -62,11 +63,14 @@ export async function initiateOnboarding(input: InitiateEmployeeProps) {
 
     await DatabaseClient.createEmployee(employee, { ref: employeeRef })
 
-    const FORM_URL = 'https://fizz-kidz-onboarding.paperform.co'
-
-    const formUrl = `${FORM_URL}?id=${employee.id}&firstName=${employee.firstName}&lastName=${
-        employee.lastName
-    }&email=${employee.email}&mobile=${employee.mobile}&contract=${encodeURIComponent(contractSignUrl)}`
+    const formUrl = buildHostedPaperformUrl('onboarding', {
+        id: employee.id,
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+        email: employee.email,
+        mobile: employee.mobile,
+        contract: contractSignUrl,
+    })
 
     const mailClient = await MailClient.getInstance()
     await mailClient.sendEmail(
