@@ -79,6 +79,7 @@ export const Paperform = () => {
         }
 
         node.setAttribute('data-paperform-id', paperformId)
+        node.setAttribute('spinner', '1')
         if (prefill) {
             node.setAttribute('prefill', prefill)
         } else {
