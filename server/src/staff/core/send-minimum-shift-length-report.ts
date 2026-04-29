@@ -101,8 +101,12 @@ export async function sendMinimumShiftLengthReport({
                     studios: [{ studio: report.studio, shifts: report.shifts }],
                 },
                 {
-                    subject: `Minimum shift length report - ${report.studio}`,
+                    subject: `Payroll report - Non-compliant shifts - ${report.studio}`,
                     bccBookings: false,
+                    bcc: [
+                        'ryan@fizzkidz.com.au',
+                        ...(env === 'prod' && report.studio !== 'Corporate Studios' ? ['kym@fizzkidz.com.au'] : []),
+                    ],
                 }
             )
         )
