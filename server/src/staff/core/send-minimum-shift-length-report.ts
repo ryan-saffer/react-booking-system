@@ -103,10 +103,8 @@ export async function sendMinimumShiftLengthReport({
                 {
                     subject: `Payroll report - Non-compliant shifts - ${report.studio}`,
                     bccBookings: false,
-                    bcc: [
-                        'ryan@fizzkidz.com.au',
-                        ...(report.recipient !== 'kym@fizzkidz.com.au' ? ['kym@fizzkidz.com.au'] : []),
-                    ],
+                    cc: [...(report.recipient !== 'kym@fizzkidz.com.au' ? ['kym@fizzkidz.com.au'] : [])],
+                    bcc: ['ryan@fizzkidz.com.au'],
                 }
             )
         )

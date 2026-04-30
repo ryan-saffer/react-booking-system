@@ -26,6 +26,7 @@ type Options = {
     subject?: string
     replyTo?: string
     bcc?: string[]
+    cc?: string[]
 }
 
 export class MailClient {
@@ -61,7 +62,7 @@ export class MailClient {
     }
 
     async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T], _options: Options = {}) {
-        const defaultOptions = { bccBookings: true, bcc: [] } satisfies Options
+        const defaultOptions = { bccBookings: true, bcc: [], cc: [] } satisfies Options
         let options = { ...defaultOptions, ..._options }
 
         // if the email is being sent to bookings@fizz, and `bccBookings` is set to true, it will fail.
@@ -82,6 +83,7 @@ export class MailClient {
                 ...(options.bccBookings ? ['bookings@fizzkidz.com.au'] : []),
                 '8gvzc6g7_w0e8cp7c@mails1.zohocrm.com.au', // zoho crm bcc dropbox
             ]
+            emailInfo.cc = [...(emailInfo.cc || []), ...options.cc]
         }
 
         await this.#sgMail.send({ ...emailInfo, html })
@@ -129,6 +131,7 @@ export class MailClient {
             subject: string
             replyTo: string
             bcc?: string[]
+            cc?: string[]
         }
         template: string
         useMjml: boolean
