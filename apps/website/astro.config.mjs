@@ -24,10 +24,13 @@ export default defineConfig({
     scienceparties: "/birthday-parties/science-parties/",
     slimeparties: "/birthday-parties/slime-parties/",
     safariparties: "/birthday-parties/jungle-safari-parties/",
-    "safari-parties": "/birthday-parties/jungle-safari-parties/",
+    "birthday-parties/safari-parties":
+      "/birthday-parties/jungle-safari-parties/",
     "unicorn-parties": "/birthday-parties/unicorn-parties/",
     tiedyeparties: "/birthday-parties/tie-dye-parties/",
     "taylor-swift-party": "/birthday-parties/taylor-swift-parties/",
+    "birthday-parties/k-pop-demon-hunters-parties":
+      "/birthday-parties/k-pop-power-parties/",
     "mobile-parties": "/birthday-parties/at-home-parties/",
     "in-studio-after-school-programs": "/after-school-programs/",
     "in-studio-after-school-science-program/":
