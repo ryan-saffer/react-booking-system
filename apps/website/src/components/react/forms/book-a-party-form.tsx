@@ -274,8 +274,8 @@ function BookAPartyForm() {
                 <SelectContent>
                   <SelectItem value="glam">Glam Party</SelectItem>
                   <SelectItem value="fluid-bears">Fluid Bears Party</SelectItem>
-                  <SelectItem value="kpop">Kpop Demon Hunters Party</SelectItem>
-                  <SelectItem value="safari">Safari Party</SelectItem>
+                  <SelectItem value="kpop">Kpop Power Party</SelectItem>
+                  <SelectItem value="safari">Jungle Safari Party</SelectItem>
                   <SelectItem value="science">Science Party</SelectItem>
                   <SelectItem value="slime">Slime Party</SelectItem>
                   <SelectItem value="swiftie">Swiftie Party</SelectItem>

@@ -58,8 +58,8 @@ export const menu = [
         isNew: false,
       },
       {
-        title: "K-Pop Demon Hunters Parties",
-        path: "/birthday-parties/k-pop-demon-hunters-parties",
+        title: "K-Pop Power Parties",
+        path: "/birthday-parties/k-pop-power-parties",
         type: "link",
         isNew: true,
       },
@@ -76,8 +76,8 @@ export const menu = [
         isNew: true,
       },
       {
-        title: "Safari Parties",
-        path: "/birthday-parties/safari-parties/",
+        title: "Jungle Safari Parties",
+        path: "/birthday-parties/jungle-safari-parties/",
         type: "link",
         isNew: false,
       },

@@ -10,15 +10,16 @@ import StarhexWands from "@/components/creations/starhex-wands.astro";
 import SquishyPockets from "@/components/creations/squishy-pockets.astro";
 import HendrixGlitterShine from "@/components/creations/hendrix-glitter-shine.astro";
 import GoldenSlime from "@/components/creations/golden-slime.astro";
-import StarlayClips from "@/components/creations/star-slay-clips.astro";
 import MoonBeamBracelets from "@/components/creations/moon-beam-bracelets.astro";
+import HeroPowerChargers from "@/components/creations/hero-power-chargers.astro";
+import CharmKeyrings from "@/components/creations/charm-keyrings.astro";
 ---
 
 <Layout
-  title="Book a K-Pop Demon Hunters Birthday Party in Melbourne | Fizz Kidz"
-  description="A fun, easy and stress free K-Pop Demon Hunters Birthday Party"
+  title="Book a K-Pop Birthday Party in Melbourne | Fizz Kidz"
+  description="A fun, easy and stress free K-Pop Birthday Party"
 >
-  <PartyLayout partyPackage="K-Pop Demon Hunters">
+  <PartyLayout partyPackage="K-Pop Power">
     <PageIntro
       slot="intro"
       subtitle="The ultimate K-Pop party experience!"
@@ -29,14 +30,14 @@ import MoonBeamBracelets from "@/components/creations/moon-beam-bracelets.astro"
       actionButtonPath="/birthday-parties/book-a-party/#book"
       color="purple"
     >
-      <span slot="title">Kids K-Pop Demon Hunters Parties</span>
+      <span slot="title">Kids K-Pop Power Parties</span>
       <span slot="content">
         Step into a world of magic and music where K-Pop energy meets fantasy
         adventure!
       </span>
     </PageIntro>
     <Creations
-      partyPackage="K-Pop Demon Hunters"
+      partyPackage="K-Pop Power"
       image={kpop}
       imageAlt="Fairy Party Package"
     >
@@ -44,8 +45,9 @@ import MoonBeamBracelets from "@/components/creations/moon-beam-bracelets.astro"
       <SquishyPockets slot="2" flippable={false} />
       <HendrixGlitterShine slot="3" flippable={false} />
       <GoldenSlime slot="4" flippable={false} />
-      <StarlayClips slot="5" flippable={false} />
+      <HeroPowerChargers slot="5" flippable={false} />
       <MoonBeamBracelets slot="6" flippable={false} />
+      <CharmKeyrings slot="7" flippable={false} />
     </Creations>
   </PartyLayout>
 </Layout>
