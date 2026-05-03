@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 import { isFranchise, type FranchiseOrMaster, type ShiftUnderMinimumShiftLength } from 'fizz-kidz'
 
 import type { Timesheet, User } from '@/sling/sling.types'
@@ -41,5 +43,16 @@ export function getShiftsUnderMinimumShiftLengthForTimesheets({
         )
     }
 
-    return shiftsUnderMinimumShiftLength
+    return shiftsUnderMinimumShiftLength.sort(sortShifts)
+}
+
+function sortShifts(a: ShiftUnderMinimumShiftLength, b: ShiftUnderMinimumShiftLength) {
+    const dateDiff = getShiftDate(a).toMillis() - getShiftDate(b).toMillis()
+    if (dateDiff !== 0) return dateDiff
+
+    return `${a.employeeName}-${a.positionName}`.localeCompare(`${b.employeeName}-${b.positionName}`)
+}
+
+function getShiftDate(shift: ShiftUnderMinimumShiftLength) {
+    return DateTime.fromFormat(shift.shiftDate, 'ccc dd/LL/yyyy')
 }

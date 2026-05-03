@@ -17,6 +17,7 @@ import { getWeeks } from './timesheets/timesheets.utils'
 
 const XERO_STUDIOS: FranchiseOrMaster[] = ['master', ...FRANCHISE_STUDIOS]
 const TIMEZONE = 'Australia/Melbourne'
+const PAYROLL_QUERY_TIMEZONE = 'utc'
 // Google Cloud Scheduler cannot run "every second Monday", so we trigger this job every Monday and
 // enforce the fortnightly cadence in code from this anchor date.
 const FIRST_FORTNIGHTLY_REPORT_DATE = DateTime.fromISO('2026-05-04', { zone: TIMEZONE }).startOf('day')
@@ -40,10 +41,10 @@ export async function sendMinimumShiftLengthReport({
     }
 
     const endDate = customEndDate
-        ? DateTime.fromJSDate(customEndDate).setZone(TIMEZONE).startOf('day')
-        : DateTime.now().setZone(TIMEZONE).minus({ days: 1 }).startOf('day')
+        ? getPayrollQueryDate(DateTime.fromJSDate(customEndDate).setZone(TIMEZONE))
+        : getPayrollQueryDate(DateTime.now().setZone(TIMEZONE).minus({ days: 1 }))
     const startDate = customStartDate
-        ? DateTime.fromJSDate(customStartDate).setZone(TIMEZONE).startOf('day')
+        ? getPayrollQueryDate(DateTime.fromJSDate(customStartDate).setZone(TIMEZONE))
         : endDate.minus({ days: 13 }).startOf('day')
 
     if (startDate > endDate) {
@@ -58,10 +59,7 @@ export async function sendMinimumShiftLengthReport({
         XERO_STUDIOS.map(async (studio) => {
             const shifts: ShiftUnderMinimumShiftLength[] = []
             for (const week of weeks) {
-                const allTimesheets = await slingClient.getTimesheets(
-                    week.start.startOf('day').toJSDate(),
-                    week.end.endOf('day').toJSDate()
-                )
+                const allTimesheets = await slingClient.getTimesheets(week.start.toJSDate(), week.end.toJSDate())
                 shifts.push(
                     ...getShiftsUnderMinimumShiftLengthForTimesheets({
                         studio,
@@ -109,4 +107,15 @@ export async function sendMinimumShiftLengthReport({
             )
         )
     )
+}
+
+function getPayrollQueryDate(date: DateTime) {
+    return DateTime.fromObject(
+        {
+            year: date.year,
+            month: date.month,
+            day: date.day,
+        },
+        { zone: PAYROLL_QUERY_TIMEZONE }
+    ).startOf('day')
 }
