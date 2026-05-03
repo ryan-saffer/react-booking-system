@@ -1,7 +1,7 @@
 ---
 import FlipCreation from "../flip-creation.astro";
 
-import creation from "@/assets/images/creations/tie-dye-scrunchies.png";
+import creation from "@/assets/images/creations/glitter-hair-shimmer.png";
 type Props = {
   flippable?: boolean;
 };
@@ -9,9 +9,10 @@ type Props = {
 const { flippable = true } = Astro.props;
 ---
 
+<!-- Exact same as glitter hair gel, just different text -->
 <FlipCreation
   flippable={flippable}
   image={creation}
-  text={["Tie Dye Scrunchies"]}
-  color="pink"
+  text={["Fairy Hair Shimmer"]}
+  color="blue"
 />

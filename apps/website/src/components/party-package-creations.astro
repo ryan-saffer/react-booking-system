@@ -11,6 +11,7 @@ type Props = {
   caption?: string;
   hideLeftImage?: boolean;
   blackBackground?: boolean;
+  useDefaultSlot?: boolean;
 };
 
 const {
@@ -20,6 +21,7 @@ const {
   caption = "",
   hideLeftImage = false,
   blackBackground = false,
+  useDefaultSlot = false,
 } = Astro.props;
 ---
 
@@ -74,18 +76,50 @@ const {
           },
         )}
       >
-        <div><slot name="1" /></div>
-        <div><slot name="2" /></div>
-        <div><slot name="3" /></div>
-        <div><slot name="4" /></div>
-        <div><slot name="5" /></div>
-        <div><slot name="6" /></div>
-        <div><slot name="7" /></div>
-        <div><slot name="8" /></div>
-        <div><slot name="9" /></div>
-        <div><slot name="10" /></div>
-        <div><slot name="11" /></div>
-        <div><slot name="12" /></div>
+        {
+          useDefaultSlot ? (
+            <slot />
+          ) : (
+            <>
+              <div>
+                <slot name="1" />
+              </div>
+              <div>
+                <slot name="2" />
+              </div>
+              <div>
+                <slot name="3" />
+              </div>
+              <div>
+                <slot name="4" />
+              </div>
+              <div>
+                <slot name="5" />
+              </div>
+              <div>
+                <slot name="6" />
+              </div>
+              <div>
+                <slot name="7" />
+              </div>
+              <div>
+                <slot name="8" />
+              </div>
+              <div>
+                <slot name="9" />
+              </div>
+              <div>
+                <slot name="10" />
+              </div>
+              <div>
+                <slot name="11" />
+              </div>
+              <div>
+                <slot name="12" />
+              </div>
+            </>
+          )
+        }
       </div>
       <div class="flex justify-center lg:hidden">
         <PrimaryButton

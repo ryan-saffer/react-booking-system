@@ -5,10 +5,7 @@ import PartyLayout from "@/layout/party-layout.astro";
 
 import tieDye from "@/assets/images/pages/parties/tie-dye-party.jpg";
 import tieDyePackage from "@/assets/images/pages/parties/packages/tie-dye.png";
-
-import Creations from "@/components/party-package-creations.astro";
-import TieDyePillow from "@/components/creations/tie-dye-pillow.astro";
-import TieDyeToteBags from "@/components/creations/tie-dye-tote-bags.astro";
+import TieDyeCreations from "@/components/creation-packages/tie-dye-creations.astro";
 ---
 
 <Layout
@@ -32,13 +29,10 @@ import TieDyeToteBags from "@/components/creations/tie-dye-tote-bags.astro";
         home to enjoy!
       </span>
     </PageIntro>
-    <Creations
-      partyPackage="Tie Dye"
+    <TieDyeCreations
+      variant="party"
       image={tieDyePackage}
       imageAlt="Tie Dye Party Package"
-    >
-      <TieDyeToteBags flippable={false} slot="1" />
-      <TieDyePillow flippable={false} slot="2" />
-    </Creations>
+    />
   </PartyLayout>
 </Layout>

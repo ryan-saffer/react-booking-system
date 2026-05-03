@@ -3,73 +3,16 @@ import PageIntro from "@/components/page-intro.astro";
 import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
 import Layout from "@/layout/Layout.astro";
 import hero from "@/assets/images/pages/parties/creations/hero.jpg";
-import GlitterFacePaint from "@/components/creations/glitter-face-paint.astro";
-import RainbowBathBombs from "@/components/creations/rainbow-bath-bombs.astro";
-import RainbowBathSalts from "@/components/creations/rainbow-bath-salts.astro";
-import TieDyeRainbowBathSalts from "@/components/creations/tie-dye-rainbow-bath-salts.astro";
-import SparklingLipBalm from "@/components/creations/sparkling-lip-balm.astro";
-import UnicornSoap from "@/components/creations/unicorn-soap.astro";
-import CreationsSummary from "@/components/creations-summary.astro";
-import BubblingVolcanoes from "@/components/creations/bubbling-volcanoes.astro";
-import BugsInBathBombs from "@/components/creations/bugs-in-bath-bombs.astro";
-import FizzyBathBombsGreen from "@/components/creations/fizzy-bath-bombs-green.astro";
-import MonsterSlimePurple from "@/components/creations/monster-slime-purple.astro";
-import SandSlime from "@/components/creations/sand-slime.astro";
-import RainbowSlime from "@/components/creations/rainbow-slime.astro";
-import AnimalSoap from "@/components/creations/animal-soap.astro";
-import AnimalsInSoap from "@/components/creations/animals-in-soap.astro";
-import MonsterSlimeGreen from "@/components/creations/monster-slime-green.astro";
-import UnicornBathBombs from "@/components/creations/unicorn-bath-bombs.astro";
-import TieDyePillow from "@/components/creations/tie-dye-pillow.astro";
-import TieDyeSoap from "@/components/creations/tie-dye-soap.astro";
-import TieDyeSocks from "@/components/creations/tie-dye-socks.astro";
-import TieDyeToteBags from "@/components/creations/tie-dye-tote-bags.astro";
-import TsBathBombs from "@/components/creations/ts-bath-bombs.astro";
-import TsBracelets from "@/components/creations/ts-bracelets.astro";
-import TsButterflySoap from "@/components/creations/ts-butterfly-soap.astro";
-import TsFacePaint from "@/components/creations/ts-face-paint.astro";
-import TsGoldSlime from "@/components/creations/ts-gold-slime.astro";
-import TsLipBalm from "@/components/creations/ts-lip-balm.astro";
-import TsMidnightsSlime from "@/components/creations/ts-midnights-slime.astro";
-import TsRainbowBathBombs from "@/components/creations/ts-rainbow-bath-bombs.astro";
-import DinosaurFossils from "@/components/creations/dinosaur-fossils.astro";
-import FairySlime from "@/components/creations/fairy-slime.astro";
-import GlitterHairGel from "@/components/creations/glitter-hair-gel.astro";
-import GlitterSoap from "@/components/creations/glitter-soap.astro";
-import UnicornBathCrumble from "@/components/creations/unicorn-bath-crumble.astro";
-import BirthdayCakeSlime from "@/components/creations/birthday-cake-slime.astro";
-import CandySlime from "@/components/creations/candy-slime.astro";
-import DinosaurBathBombs from "@/components/creations/dinosaur-bath-bombs.astro";
-import FairyBathBombs from "@/components/creations/fairy-bath-bombs.astro";
-import FairyBracelets from "@/components/creations/fairy-bracelets.astro";
-import FairyHairGel from "@/components/creations/fairy-hair-gel.astro";
-import FairyLipBalm from "@/components/creations/fairy-lip-balm.astro";
-import FairyWands from "@/components/creations/fairy-wands.astro";
-import FluffySlimeBlue from "@/components/creations/fluffy-slime-blue.astro";
-import FluidBears1 from "@/components/creations/fluid-bears-1.astro";
-import FluidBears2 from "@/components/creations/fluid-bears-2.astro";
-import FluidBears3 from "@/components/creations/fluid-bears-3.astro";
-import FluidBears4 from "@/components/creations/fluid-bears-4.astro";
-import FluidBears5 from "@/components/creations/fluid-bears-5.astro";
-import FluidBears6 from "@/components/creations/fluid-bears-6.astro";
-import FrozenSparkleSlimeGreen from "@/components/creations/frozen-sparkle-slime-green.astro";
-import JellySoap from "@/components/creations/jelly-soap.astro";
-import MarshmallowSlime from "@/components/creations/marshmallow-slime.astro";
-import MonsterBrains from "@/components/creations/monster-brains.astro";
-import NutellaSlime from "@/components/creations/nutella-slime.astro";
-import PixieGlitter from "@/components/creations/pixie-glitter.astro";
-import SpidermanSlime from "@/components/creations/spiderman-slime.astro";
-import SwiftieSlime from "@/components/creations/swiftie-slime.astro";
-import TieDyeScrunchies from "@/components/creations/tie-dye-scrunchies.astro";
-import TsScrunchies from "@/components/creations/ts-scrunchies.astro";
-import UnicornCloudSlime from "@/components/creations/unicorn-cloud-slime.astro";
-import StarhexWands from "@/components/creations/starhex-wands.astro";
-import SquishyPockets from "@/components/creations/squishy-pockets.astro";
-import HendrixGlitterShine from "@/components/creations/hendrix-glitter-shine.astro";
-import GoldenSlime from "@/components/creations/golden-slime.astro";
-import StarSlayClips from "@/components/creations/star-slay-clips.astro";
-import MoonBeamBracelets from "@/components/creations/moon-beam-bracelets.astro";
-import DinosaurSoap from '@/components/creations/dinosaur-soap.astro'
+import KPopPowerCreations from "@/components/creation-packages/k-pop-power-creations.astro";
+import GlamCreations from "@/components/creation-packages/glam-creations.astro";
+import ScienceCreations from "@/components/creation-packages/science-creations.astro";
+import SlimeCreations from "@/components/creation-packages/slime-creations.astro";
+import FairyCreations from "@/components/creation-packages/fairy-creations.astro";
+import FluidBearsCreations from "@/components/creation-packages/fluid-bears-creations.astro";
+import JungleSafariCreations from "@/components/creation-packages/jungle-safari-creations.astro";
+import UnicornCreations from "@/components/creation-packages/unicorn-creations.astro";
+import TieDyeCreations from "@/components/creation-packages/tie-dye-creations.astro";
+import TaylorSwiftCreations from "@/components/creation-packages/taylor-swift-creations.astro";
 ---
 
 <Layout
@@ -100,107 +43,16 @@ import DinosaurSoap from '@/components/creations/dinosaur-soap.astro'
       <span slot="title">Fizz Kidz Creations</span>
     </PageIntro>
     <section class="mt-12 md:mt-40">
-      <CreationsSummary title="Kpop Demon Hunters Creations" color="#F24DA2">
-        <StarhexWands slot="1" flippable={false} />
-        <SquishyPockets slot="2" flippable={false} />
-        <HendrixGlitterShine slot="3" flippable={false} />
-        <GoldenSlime slot="4" flippable={false} />
-        <StarSlayClips slot="5" flippable={false} />
-        <MoonBeamBracelets slot="6" flippable={false} />
-      </CreationsSummary>
-      <CreationsSummary title="Glam Creations" color="#F24DA2">
-        <FairySlime slot="1" flippable={false} />
-        <GlitterFacePaint slot="2" flippable={false} />
-        <RainbowBathSalts slot="3" flippable={false} />
-        <GlitterSoap slot="4" flippable={false} />
-        <SparklingLipBalm slot="5" flippable={false} />
-        <UnicornSoap slot="6" flippable={false} />
-        <RainbowBathBombs slot="7" flippable={false} />
-        <UnicornBathCrumble slot="8" flippable={false} />
-        <GlitterHairGel slot="9" flippable={false} />
-      </CreationsSummary>
-      <CreationsSummary title="Science Creations" color="#43D4F3">
-        <JellySoap slot="1" flippable={false} />
-        <DinosaurBathBombs slot="2" flippable={false} />
-        <FluffySlimeBlue slot="3" flippable={false} />
-        <BugsInBathBombs slot="4" flippable={false} />
-        <BubblingVolcanoes slot="5" flippable={false} />
-        <DinosaurFossils slot="6" flippable={false} />
-        <MonsterBrains slot="7" flippable={false} />
-        <DinosaurSoap slot="8" flippable={false} />
-        <MonsterSlimeGreen slot="9" flippable={false} />
-      </CreationsSummary>
-      <CreationsSummary title="Slime Creations" color="#9044E2">
-        <FairySlime slot="1" flippable={false} />
-        <BirthdayCakeSlime slot="2" flippable={false} />
-        <MonsterSlimeGreen slot="3" flippable={false} />
-        <CandySlime slot="4" flippable={false} />
-        <UnicornCloudSlime slot="5" flippable={false} />
-        <FluffySlimeBlue slot="6" flippable={false} />
-        <SpidermanSlime slot="7" flippable={false} />
-        <NutellaSlime slot="8" flippable={false} />
-        <MarshmallowSlime slot="9" flippable={false} />
-        <SwiftieSlime slot="10" flippable={false} />
-        <RainbowSlime slot="11" flippable={false} />
-        <FrozenSparkleSlimeGreen slot="12" flippable={false} />
-      </CreationsSummary>
-      <CreationsSummary title="Fairy Creations" color="#4ED85F">
-        <FairySlime slot="1" flippable={false} />
-        <PixieGlitter slot="2" flippable={false} />
-        <FairyBracelets slot="3" flippable={false} />
-        <FairyLipBalm slot="4" flippable={false} />
-        <FairyWands slot="5" flippable={false} />
-        <UnicornSoap slot="6" flippable={false} />
-        <FairyBathBombs slot="7" flippable={false} />
-        <MarshmallowSlime slot="8" flippable={false} />
-        <FairyHairGel slot="9" flippable={false} />
-      </CreationsSummary>
-      <CreationsSummary title="Fluid Bear Creations" color="#4ED85F">
-        <FluidBears1 slot="1" flippable={false} />
-        <FluidBears2 slot="2" flippable={false} />
-        <FluidBears3 slot="3" flippable={false} />
-        <FluidBears4 slot="4" flippable={false} />
-        <FluidBears5 slot="5" flippable={false} />
-        <FluidBears6 slot="6" flippable={false} />
-      </CreationsSummary>
-      <CreationsSummary title="Safari Creations" color="#4ED85F">
-        <AnimalSoap slot="1" flippable={false} />
-        <MonsterSlimePurple slot="2" flippable={false} />
-        <SandSlime slot="3" flippable={false} />
-        <BugsInBathBombs slot="4" flippable={false} />
-        <AnimalsInSoap slot="5" flippable={false} />
-        <MonsterSlimeGreen slot="6" flippable={false} />
-        <DinosaurFossils slot="7" flippable={false} />
-        <FizzyBathBombsGreen slot="8" flippable={false} />
-        <BubblingVolcanoes slot="9" flippable={false} />
-      </CreationsSummary>
-      <CreationsSummary title="Unicorn Creations" color="#F24DA2">
-        <FairyWands slot="1" flippable={false} />
-        <SparklingLipBalm slot="2" flippable={false} />
-        <UnicornBathCrumble slot="3" flippable={false} />
-        <UnicornSoap slot="4" flippable={false} />
-        <UnicornBathBombs slot="5" flippable={false} />
-        <UnicornCloudSlime slot="6" flippable={false} />
-      </CreationsSummary>
-      <CreationsSummary title="Tie Dye Creations" color="#F7BB35">
-        <TieDyeToteBags flippable={false} slot="1" />
-        <TieDyeSocks flippable={false} slot="2" />
-        <TieDyePillow flippable={false} slot="3" />
-        <TieDyeSoap flippable={false} slot="4" />
-        <TieDyeScrunchies flippable={false} slot="5" />
-        <TieDyeRainbowBathSalts flippable={false} slot="6" />
-      </CreationsSummary>
-      <CreationsSummary title="Taylor Swift Creations" color="#9044E2">
-        <TsBathBombs slot="1" flippable={false} />
-        <TsScrunchies slot="2" flippable={false} />
-        <TsButterflySoap slot="3" flippable={false} />
-        <TsBracelets slot="4" flippable={false} />
-        <TsRainbowBathBombs slot="5" flippable={false} />
-        <TsGoldSlime slot="6" flippable={false} />
-        <TsMidnightsSlime slot="7" flippable={false} />
-        <TsLipBalm slot="8" flippable={false} />
-        <TsFacePaint slot="9" flippable={false} />
-      </CreationsSummary>
+      <KPopPowerCreations />
+      <GlamCreations />
+      <ScienceCreations />
+      <SlimeCreations />
+      <FairyCreations />
+      <FluidBearsCreations />
+      <JungleSafariCreations />
+      <UnicornCreations />
+      <TieDyeCreations />
+      <TaylorSwiftCreations />
     </section>
   </main>
 </Layout>

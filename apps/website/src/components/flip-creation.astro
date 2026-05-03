@@ -10,7 +10,7 @@ import { cn } from "./react/lib/utils";
 
 type Props = {
   image: ImageMetadata;
-  color: "pink" | "yellow" | "green" | "purple" | "blue" | "white";
+  color: "pink" | "yellow" | "green" | "purple" | "blue" | "white" | "red";
   text?: string[];
   flippable?: boolean;
 };
@@ -29,7 +29,9 @@ const blob =
         ? purpleBlob
         : color === "blue"
           ? blueBlob
-          : yellowBlob;
+          : color === "red"
+            ? blueBlob
+            : yellowBlob;
 
 const hex =
   color === "pink"
@@ -42,7 +44,9 @@ const hex =
           ? "#47D2F5"
           : color === "yellow"
             ? "#F6BA33"
-            : "#FFFFFF";
+            : color === "red"
+              ? "#FF3130"
+              : "#FFFFFF";
 ---
 
 <style>
@@ -95,7 +99,7 @@ const hex =
             class="text-center font-lilita text-2xl"
             style={{ color: hex }}
             set:html={textHtml}
-          ></p>
+          />
         )
       }
     </div>
@@ -117,7 +121,7 @@ const hex =
           <p
             class="absolute max-w-[130px] text-wrap text-center font-lilita text-2xl font-semibold text-white"
             set:html={textHtml}
-          ></p>
+          />
         </div>
       )
     }

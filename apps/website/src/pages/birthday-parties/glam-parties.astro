@@ -6,16 +6,7 @@ import PartyLayout from "@/layout/party-layout.astro";
 import glamParties from "@/assets/images/pages/parties/glam-parties.jpg";
 
 import glitz from "@/assets/images/pages/parties/packages/glitz-and-glam.png";
-import GlitterFacePaint from "@/components/creations/glitter-face-paint.astro";
-import RainbowBathSalts from "@/components/creations/rainbow-bath-salts.astro";
-import Creations from "@/components/party-package-creations.astro";
-import UnicornSoap from "@/components/creations/unicorn-soap.astro";
-import RainbowBathBombs from "@/components/creations/rainbow-bath-bombs.astro";
-import SparklingLipBalm from "@/components/creations/sparkling-lip-balm.astro";
-import FairySlime from "@/components/creations/fairy-slime.astro";
-import UnicornBathCrumble from "@/components/creations/unicorn-bath-crumble.astro";
-import GlitterHairGel from "@/components/creations/glitter-hair-gel.astro";
-import TsBracelets from "@/components/creations/ts-bracelets.astro";
+import GlamCreations from "@/components/creation-packages/glam-creations.astro";
 ---
 
 <Layout
@@ -39,16 +30,10 @@ import TsBracelets from "@/components/creations/ts-bracelets.astro";
         with you after the party!
       </span>
     </PageIntro>
-    <Creations partyPackage="Glam" image={glitz} imageAlt="Three girls smiling">
-      <SparklingLipBalm slot="1" flippable={false} />
-      <GlitterFacePaint slot="2" flippable={false} />
-      <RainbowBathSalts slot="3" flippable={false} />
-      <TsBracelets slot="4" flippable={false} />
-      <FairySlime slot="5" flippable={false} />
-      <UnicornSoap slot="6" flippable={false} />
-      <RainbowBathBombs slot="7" flippable={false} />
-      <UnicornBathCrumble slot="8" flippable={false} />
-      <GlitterHairGel slot="9" flippable={false} />
-    </Creations>
+    <GlamCreations
+      variant="party"
+      image={glitz}
+      imageAlt="Three girls smiling"
+    />
   </PartyLayout>
 </Layout>
