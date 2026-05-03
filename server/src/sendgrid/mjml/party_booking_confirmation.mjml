@@ -222,7 +222,7 @@
             <mj-column width="100%">
                 {{^isMobile}}
 
-                <mj-text text-transform="uppercase" font-weight="bold" padding-bottom="0"> Useful Links </mj-text>
+                <mj-text font-weight="bold" padding-bottom="0"> Useful Links </mj-text>
 
                 <mj-text padding-top="0">
                     <ul>
