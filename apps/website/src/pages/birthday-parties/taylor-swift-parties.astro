@@ -5,17 +5,7 @@ import PartyLayout from "@/layout/party-layout.astro";
 
 import taylorSwiftParty from "@/assets/images/pages/parties/taylor-swift-party.jpg";
 import taylorSwiftPackage from "@/assets/images/pages/parties/packages/swiftie.png";
-import Creations from "@/components/party-package-creations.astro";
-import TsBathBombs from "@/components/creations/ts-bath-bombs.astro";
-import TsBracelets from "@/components/creations/ts-bracelets.astro";
-import TsFacePaint from "@/components/creations/ts-face-paint.astro";
-import TsLipBalm from "@/components/creations/ts-lip-balm.astro";
-import TsMidnightsSlime from "@/components/creations/ts-midnights-slime.astro";
-import TsRainbowBathBombs from "@/components/creations/ts-rainbow-bath-bombs.astro";
-import GlitterFaceShimmer from "@/components/creations/glitter-face-shimmer.astro";
-import SparklingLipBalm from "@/components/creations/sparkling-lip-balm.astro";
-import GlowCrowns from "@/components/creations/glow-crowns.astro";
-import CharmKeyrings from "@/components/creations/charm-keyrings.astro";
+import TaylorSwiftCreations from "@/components/creation-packages/taylor-swift-creations.astro";
 ---
 
 <Layout
@@ -39,21 +29,10 @@ import CharmKeyrings from "@/components/creations/charm-keyrings.astro";
         home with you after the party!</span
       >
     </PageIntro>
-    <Creations
-      partyPackage="Taylor Swift"
+    <TaylorSwiftCreations
+      variant="party"
       image={taylorSwiftPackage}
       imageAlt="Taylor Swift Party Package"
-    >
-      <TsBathBombs slot="1" flippable={false} />
-      <TsBracelets slot="2" flippable={false} />
-      <TsRainbowBathBombs slot="3" flippable={false} />
-      <TsMidnightsSlime slot="4" flippable={false} />
-      <TsLipBalm slot="5" flippable={false} />
-      <TsFacePaint slot="6" flippable={false} />
-      <GlitterFaceShimmer slot="7" flippable={false} />
-      <SparklingLipBalm slot="8" flippable={false} />
-      <GlowCrowns slot="9" flippable={false} />
-      <CharmKeyrings slot="10" flippable={false} />
-    </Creations>
+    />
   </PartyLayout>
 </Layout>

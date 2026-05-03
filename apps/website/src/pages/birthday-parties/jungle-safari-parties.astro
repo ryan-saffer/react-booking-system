@@ -4,16 +4,8 @@ import Layout from "@/layout/Layout.astro";
 import PartyLayout from "@/layout/party-layout.astro";
 
 import jungleSafariParty from "@/assets/images/pages/parties/safari-party.jpg";
-import Creations from "@/components/party-package-creations.astro";
 import bubblingVocanoes from "@/assets/images/creations/bubbling-volcanoes.png";
-import MonsterSlimePurple from "@/components/creations/monster-slime-purple.astro";
-import BugsInBathBombs from "@/components/creations/bugs-in-bath-bombs.astro";
-import MonsterSlimeGreen from "@/components/creations/monster-slime-green.astro";
-import FizzyBathBombsGreen from "@/components/creations/fizzy-bath-bombs-green.astro";
-import BubblingVolcanoes from "@/components/creations/bubbling-volcanoes.astro";
-import MonsterBrains from "@/components/creations/monster-brains.astro";
-import FirePotions from "@/components/creations/fire-potions.astro";
-import SnakePotions from "@/components/creations/snake-potions.astro";
+import JungleSafariCreations from "@/components/creation-packages/jungle-safari-creations.astro";
 ---
 
 <Layout
@@ -36,19 +28,10 @@ import SnakePotions from "@/components/creations/snake-potions.astro";
         Join the safari adventure and make your own jungle creations!
       </span>
     </PageIntro>
-    <Creations
-      partyPackage="Jungle Safari"
+    <JungleSafariCreations
+      variant="party"
       image={bubblingVocanoes}
       imageAlt="Jungle Safari Party Package"
-    >
-      <MonsterSlimePurple slot="1" flippable={false} />
-      <MonsterBrains slot="2" flippable={false} />
-      <BugsInBathBombs slot="3" flippable={false} />
-      <MonsterSlimeGreen slot="4" flippable={false} />
-      <FizzyBathBombsGreen slot="5" flippable={false} />
-      <BubblingVolcanoes slot="6" flippable={false} />
-      <FirePotions slot="7" flippable={false} />
-      <SnakePotions slot="8" flippable={false} />
-    </Creations>
+    />
   </PartyLayout>
 </Layout>

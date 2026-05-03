@@ -5,14 +5,7 @@ import PartyLayout from "@/layout/party-layout.astro";
 
 import kpopparty from "@/assets/images/pages/parties/k-pop-demon-hunters-party.png";
 import kpop from "@/assets/images/pages/parties/packages/k-pop-demon-hunters.png";
-import Creations from "@/components/party-package-creations.astro";
-import StarhexWands from "@/components/creations/starhex-wands.astro";
-import SquishyPockets from "@/components/creations/squishy-pockets.astro";
-import HendrixGlitterShine from "@/components/creations/hendrix-glitter-shine.astro";
-import GoldenSlime from "@/components/creations/golden-slime.astro";
-import MoonBeamBracelets from "@/components/creations/moon-beam-bracelets.astro";
-import HeroPowerChargers from "@/components/creations/hero-power-chargers.astro";
-import CharmKeyrings from "@/components/creations/charm-keyrings.astro";
+import KPopPowerCreations from "@/components/creation-packages/k-pop-power-creations.astro";
 ---
 
 <Layout
@@ -36,18 +29,10 @@ import CharmKeyrings from "@/components/creations/charm-keyrings.astro";
         adventure!
       </span>
     </PageIntro>
-    <Creations
-      partyPackage="K-Pop Power"
+    <KPopPowerCreations
+      variant="party"
       image={kpop}
       imageAlt="Fairy Party Package"
-    >
-      <StarhexWands slot="1" flippable={false} />
-      <SquishyPockets slot="2" flippable={false} />
-      <HendrixGlitterShine slot="3" flippable={false} />
-      <GoldenSlime slot="4" flippable={false} />
-      <HeroPowerChargers slot="5" flippable={false} />
-      <MoonBeamBracelets slot="6" flippable={false} />
-      <CharmKeyrings slot="7" flippable={false} />
-    </Creations>
+    />
   </PartyLayout>
 </Layout>

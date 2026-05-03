@@ -5,14 +5,7 @@ import PartyLayout from "@/layout/party-layout.astro";
 
 import unicornParty from "@/assets/images/pages/parties/unicorn-party.jpg";
 import unicorn from "@/assets/images/pages/parties/packages/unicorn.png";
-import Creations from "@/components/party-package-creations.astro";
-import UnicornSoap from "@/components/creations/unicorn-soap.astro";
-import UnicornBathBombs from "@/components/creations/unicorn-bath-bombs.astro";
-import UnicornCloudSlime from "@/components/creations/unicorn-cloud-slime.astro";
-import FairyWands from "@/components/creations/fairy-wands.astro";
-import UnicornLipBalm from "@/components/creations/unicorn-lip-balm.astro";
-import UnicornBathCrumble from "@/components/creations/unicorn-bath-crumble.astro";
-import GlowCrowns from "@/components/creations/glow-crowns.astro";
+import UnicornCreations from "@/components/creation-packages/unicorn-creations.astro";
 ---
 
 <Layout
@@ -35,18 +28,10 @@ import GlowCrowns from "@/components/creations/glow-crowns.astro";
         Here we love everything sparkles, glitter and magic!
       </span>
     </PageIntro>
-    <Creations
-      partyPackage="Unicorn"
+    <UnicornCreations
+      variant="party"
       image={unicorn}
       imageAlt="Unicorn Party Package"
-    >
-      <FairyWands slot="1" flippable={false} />
-      <UnicornLipBalm slot="2" flippable={false} />
-      <UnicornBathCrumble slot="3" flippable={false} />
-      <UnicornSoap slot="4" flippable={false} />
-      <UnicornBathBombs slot="5" flippable={false} />
-      <UnicornCloudSlime slot="6" flippable={false} />
-      <GlowCrowns slot="7" flippable={false} />
-    </Creations>
+    />
   </PartyLayout>
 </Layout>

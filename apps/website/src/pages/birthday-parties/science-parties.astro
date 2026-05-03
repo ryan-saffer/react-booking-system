@@ -5,16 +5,7 @@ import PartyLayout from "@/layout/party-layout.astro";
 
 import scienceParty from "@/assets/images/pages/parties/science-party.jpg";
 import science from "@/assets/images/pages/parties/packages/science.png";
-import Creations from "@/components/party-package-creations.astro";
-import BubblingVolcanoes from "@/components/creations/bubbling-volcanoes.astro";
-import BugsInBathBombs from "@/components/creations/bugs-in-bath-bombs.astro";
-import MonsterSlimeGreen from "@/components/creations/monster-slime-green.astro";
-import JellySoap from "@/components/creations/jelly-soap.astro";
-import DinosaurBathBombs from "@/components/creations/dinosaur-bath-bombs.astro";
-import FluffySlimeBlue from "@/components/creations/fluffy-slime-blue.astro";
-import MonsterBrains from "@/components/creations/monster-brains.astro";
-import SnakePotions from "@/components/creations/snake-potions.astro";
-import FirePotions from "@/components/creations/fire-potions.astro";
+import ScienceCreations from "@/components/creation-packages/science-creations.astro";
 ---
 
 <Layout
@@ -38,20 +29,10 @@ import FirePotions from "@/components/creations/fire-potions.astro";
         fizzing fantastic!
       </span>
     </PageIntro>
-    <Creations
-      partyPackage="Science"
+    <ScienceCreations
+      variant="party"
       image={science}
       imageAlt="Science Party Package"
-    >
-      <JellySoap slot="1" flippable={false} />
-      <MonsterBrains slot="2" flippable={false} />
-      <FluffySlimeBlue slot="3" flippable={false} />
-      <BugsInBathBombs slot="4" flippable={false} />
-      <BubblingVolcanoes slot="5" flippable={false} />
-      <DinosaurBathBombs slot="6" flippable={false} />
-      <FirePotions slot="7" flippable={false} />
-      <MonsterSlimeGreen slot="8" flippable={false} />
-      <SnakePotions slot="9" flippable={false} />
-    </Creations>
+    />
   </PartyLayout>
 </Layout>

@@ -4,14 +4,8 @@ import Layout from "@/layout/Layout.astro";
 import PartyLayout from "@/layout/party-layout.astro";
 
 import fluidBears from "@/assets/images/pages/parties/fluid-bears-party.png";
-import Creations from "@/components/party-package-creations.astro";
 import fluidBearsPackage from "@/assets/images/pages/parties/packages/fluid-bears-white.png";
-import FluidBears1 from "@/components/creations/fluid-bears-1.astro";
-import FluidBears2 from "@/components/creations/fluid-bears-2.astro";
-import FluidBears3 from "@/components/creations/fluid-bears-3.astro";
-import FluidBears4 from "@/components/creations/fluid-bears-4.astro";
-import FluidBears5 from "@/components/creations/fluid-bears-5.astro";
-import FluidBears6 from "@/components/creations/fluid-bears-6.astro";
+import FluidBearsCreations from "@/components/creation-packages/fluid-bears-creations.astro";
 ---
 
 <Layout
@@ -35,19 +29,10 @@ import FluidBears6 from "@/components/creations/fluid-bears-6.astro";
         for a one-of-a-kind masterpiece that's yours to take home!</span
       >
     </PageIntro>
-    <Creations
-      partyPackage="Fluid Bears"
-      caption="Drizzle, Drop ad Paint your Bear your way!"
+    <FluidBearsCreations
+      variant="party"
       image={fluidBearsPackage}
       imageAlt="Jungle Safari Party Package"
-      blackBackground
-    >
-      <FluidBears1 slot="1" flippable={false} />
-      <FluidBears2 slot="2" flippable={false} />
-      <FluidBears3 slot="3" flippable={false} />
-      <FluidBears4 slot="4" flippable={false} />
-      <FluidBears5 slot="5" flippable={false} />
-      <FluidBears6 slot="6" flippable={false} />
-    </Creations>
+    />
   </PartyLayout>
 </Layout>
