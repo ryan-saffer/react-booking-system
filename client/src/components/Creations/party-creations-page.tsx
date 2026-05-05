@@ -1,18 +1,29 @@
 import { useQuery } from '@tanstack/react-query'
+import Fuse from 'fuse.js'
+import { useDeferredValue, useState } from 'react'
 import Markdown from 'react-markdown'
 
-import type { CreationInstructions } from 'fizz-kidz'
+import type { CreationInstructionGroup, CreationInstructions } from 'fizz-kidz'
 
 import Loader from '@components/Shared/Loader'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@ui-components/accordion'
+import { Input } from '@ui-components/input'
 import { useTRPC } from '@utils/trpc'
 
 import { markdownComponents } from './markdown-components'
 
+type SearchableCreation = {
+    packageIndex: number
+    creationIndex: number
+    name: string
+}
 
 export const PartyCreationsPage = () => {
     const trpc = useTRPC()
     const { data, isPending, isSuccess } = useQuery(trpc.creations.getBirthdayPartyCreations.queryOptions())
+    const [searchTerm, setSearchTerm] = useState('')
+    const deferredSearchTerm = useDeferredValue(searchTerm)
+    const searchQuery = deferredSearchTerm.trim()
 
     const renderAccordion = (creations: CreationInstructions[]) => {
         return (
@@ -34,6 +45,37 @@ export const PartyCreationsPage = () => {
         )
     }
 
+    const getVisiblePackages = (packages: CreationInstructionGroup[]) => {
+        if (!searchQuery) return packages
+
+        const searchableCreations = packages.flatMap((partyPackage, packageIndex) =>
+            partyPackage.creations.map((creation, creationIndex) => ({
+                packageIndex,
+                creationIndex,
+                name: creation.name,
+            }))
+        )
+        const fuse = new Fuse<SearchableCreation>(searchableCreations, {
+            keys: ['name'],
+            threshold: 0.35,
+            ignoreLocation: true,
+        })
+        const matchedCreationKeys = new Set(
+            fuse.search(searchQuery).map(({ item }) => `${item.packageIndex}:${item.creationIndex}`)
+        )
+
+        return packages
+            .map((partyPackage, packageIndex) => ({
+                ...partyPackage,
+                creations: partyPackage.creations.filter((_, creationIndex) =>
+                    matchedCreationKeys.has(`${packageIndex}:${creationIndex}`)
+                ),
+            }))
+            .filter((partyPackage) => partyPackage.creations.length > 0)
+    }
+
+    const visiblePackages = isSuccess ? getVisiblePackages(data) : []
+
     return (
         <div className="twp min-h-full bg-slate-50 px-4 py-6 sm:px-6 sm:py-8">
             <div className="mx-auto flex max-w-5xl flex-col gap-6">
@@ -48,8 +90,35 @@ export const PartyCreationsPage = () => {
 
                 {isSuccess && (
                     <>
-                        {renderAccordion(data.top)}
-                        {renderAccordion(data.bottom)}
+                        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+                            <label
+                                htmlFor="creation-search"
+                                className="mb-2 block text-sm font-semibold text-slate-900"
+                            >
+                                Search creations
+                            </label>
+                            <Input
+                                id="creation-search"
+                                type="search"
+                                value={searchTerm}
+                                onChange={(event) => setSearchTerm(event.target.value)}
+                                placeholder="Search by creation name..."
+                                className="bg-white"
+                            />
+                        </div>
+                        <div className="flex flex-col gap-6">
+                            {visiblePackages.map((partyPackage) => (
+                                <section key={partyPackage.name} className="flex flex-col gap-3">
+                                    <h2 className="lilita m-0 text-2xl text-slate-900">{partyPackage.name}</h2>
+                                    {renderAccordion(partyPackage.creations)}
+                                </section>
+                            ))}
+                            {visiblePackages.length === 0 && (
+                                <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center text-sm text-slate-600">
+                                    No creations match your search.
+                                </div>
+                            )}
+                        </div>
                     </>
                 )}
             </div>

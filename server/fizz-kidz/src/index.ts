@@ -8,6 +8,7 @@ export {
     CREATION_PACKAGE_DISPLAY_NAMES,
     CREATION_PACKAGES,
     CREATIONS,
+    CreationInstructionGroup,
     CreationInstructions,
 } from './partyBookings/creations'
 export { TAKE_HOME_BAGS, TakeHomeBagType } from './partyBookings/take-home-bags'

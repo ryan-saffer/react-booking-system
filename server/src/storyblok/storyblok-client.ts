@@ -1,4 +1,4 @@
-import type { CreationInstructions } from 'fizz-kidz'
+import type { CreationInstructionGroup, CreationInstructions } from 'fizz-kidz'
 
 import { env } from '../init'
 
@@ -78,31 +78,26 @@ export class StoryblokClient {
             }))
     }
 
-    async getBirthdayPartyCreations(): Promise<{ top: CreationInstructions[]; bottom: CreationInstructions[] }> {
+    async getBirthdayPartyCreations(): Promise<CreationInstructionGroup[]> {
         const { data } = await this.#storyblok.get('cdn/stories', {
-            starts_with: 'creation_instructions/birthday_party_creations',
+            starts_with: 'creation_instructions/birthday_party_creations/packages',
             version: env === 'prod' ? 'published' : 'draft',
             per_page: 100,
             cv: Date.now(),
+            resolve_relations: 'party_package.creations',
         })
 
         return data.stories
-            .sort((a: any, b: any) => (a.content.creation_name < b.content.creation_name ? -1 : 1))
-            .reduce(
-                (acc: { top: CreationInstructions[]; bottom: CreationInstructions[] }, curr: any) => {
-                    const creation = {
-                        name: curr.content.creation_name,
-                        markdown: curr.content.markdown,
-                    }
-                    if (curr.content.show_on_top) {
-                        acc.top.push(creation)
-                    } else {
-                        acc.bottom.push(creation)
-                    }
-                    return acc
-                },
-                { top: [], bottom: [] }
-            )
+            .sort((a: any, b: any) => (a.name < b.name ? -1 : 1))
+            .map((partyPackage: any) => ({
+                name: partyPackage.name,
+                creations: (partyPackage.content.creations || [])
+                    .filter((creation: any) => creation?.content?.component === 'creation_instructions')
+                    .map((creation: any) => ({
+                        name: creation.content.creation_name,
+                        markdown: creation.content.markdown,
+                    })),
+            }))
     }
 
     async getHolidayProgramCreations(): Promise<CreationInstructions[]> {

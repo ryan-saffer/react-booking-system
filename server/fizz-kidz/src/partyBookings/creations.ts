@@ -224,3 +224,8 @@ export type CreationInstructions = {
     name: string
     markdown: string
 }
+
+export type CreationInstructionGroup = {
+    name: string
+    creations: CreationInstructions[]
+}
