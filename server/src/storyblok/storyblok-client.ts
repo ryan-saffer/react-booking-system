@@ -87,17 +87,16 @@ export class StoryblokClient {
             resolve_relations: 'party_package.creations',
         })
 
-        return data.stories
-            .sort((a: any, b: any) => (a.name < b.name ? -1 : 1))
-            .map((partyPackage: any) => ({
-                name: partyPackage.name,
-                creations: (partyPackage.content.creations || [])
-                    .filter((creation: any) => creation?.content?.component === 'creation_instructions')
-                    .map((creation: any) => ({
-                        name: creation.content.creation_name,
-                        markdown: creation.content.markdown,
-                    })),
-            }))
+        return data.stories.map((partyPackage: any) => ({
+            name: partyPackage.name,
+            colour: partyPackage.content.colour,
+            creations: (partyPackage.content.creations || [])
+                .filter((creation: any) => creation?.content?.component === 'creation_instructions')
+                .map((creation: any) => ({
+                    name: creation.content.creation_name,
+                    markdown: creation.content.markdown,
+                })),
+        }))
     }
 
     async getHolidayProgramCreations(): Promise<CreationInstructions[]> {
