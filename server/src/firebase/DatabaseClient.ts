@@ -116,6 +116,18 @@ class Client {
         return this.#updateDocument(FirestoreRefs.partyBooking(bookingId), booking)
     }
 
+    async getPartyBookingsForCapacityReport(input: { startDate: Date; endDate: Date; studio: StudioOrMaster }) {
+        const partiesRef = await FirestoreRefs.partyBookings()
+        let partiesQuery = partiesRef.where('dateTime', '>=', input.startDate).where('dateTime', '<', input.endDate)
+
+        if (input.studio !== 'master') {
+            partiesQuery = partiesQuery.where('location', '==', input.studio)
+        }
+
+        const snap = await partiesQuery.get()
+        return snap.docs.map((doc) => doc.data()).filter((booking) => booking.type === 'studio')
+    }
+
     async deletePartyBooking(bookingId: string) {
         // check for rsvps, and delete the collection if they exist
         const rsvpsRef = await FirestoreRefs.rsvps(bookingId)

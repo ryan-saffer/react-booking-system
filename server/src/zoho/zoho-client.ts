@@ -36,6 +36,30 @@ type Service =
 
 const CHILD_MODULE_NAME = 'Child'
 
+type ZohoRequestError = {
+    name?: string
+    status?: number
+    errorBody?: {
+        data?: {
+            code?: string
+            details?: {
+                api_name?: string
+            }
+        }[]
+    }
+}
+
+function isDuplicateChildLinkingError(err: unknown) {
+    const zohoError = err as ZohoRequestError
+    return (
+        zohoError.name === 'ZohoRequestError' &&
+        zohoError.status === 400 &&
+        zohoError.errorBody?.data?.some(
+            ({ code, details }) => code === 'DUPLICATE_LINKING_DATA' && details?.api_name === 'Children'
+        )
+    )
+}
+
 export class ZohoClient {
     // Current valid access token
     #accessToken: string | null = null
@@ -582,9 +606,6 @@ export class ZohoClient {
                     Party_Type: type === 'studio' ? 'Fizz Kidz Studio' : type === 'mobile' ? 'At-Home' : 'Other',
                     Branch: capitalise(studio),
                     Address: address,
-                    Children: childIds.map((childId) => ({
-                        Children: { id: childId },
-                    })),
                     Actual_Party_Date: this.#toDateTimeISO(partyDateISO),
                     Booking_ID: bookingId,
                     Booking_URL: `${getApplicationDomain(env, isUsingEmulator())}/dashboard/bookings?id=${bookingId}`,
@@ -594,10 +615,41 @@ export class ZohoClient {
         })
 
         if (result?.data?.[0]?.code === 'SUCCESS') {
-            return result.data[0].details.id as string
+            const zohoDealId = result.data[0].details.id as string
+            await this.#linkChildrenToBirthdayPartyDeal(zohoDealId, [...new Set(childIds)])
+            return zohoDealId
         } else {
             throw new Error(`${result.data[0].code} - ${result.data[0].message}`)
         }
+    }
+
+    async #linkChildrenToBirthdayPartyDeal(dealId: string, childIds: string[]) {
+        await Promise.all(
+            childIds.map(async (childId) => {
+                try {
+                    await this.#request({
+                        endpoint: 'Deals',
+                        method: 'PUT',
+                        data: [
+                            {
+                                id: dealId,
+                                Children: [
+                                    {
+                                        Children: { id: childId },
+                                    },
+                                ],
+                            },
+                        ],
+                    })
+                } catch (err) {
+                    if (isDuplicateChildLinkingError(err)) {
+                        return
+                    }
+
+                    throw err
+                }
+            })
+        )
     }
 
     updatePartyDetailEventDate(zohoDealId: string, partyDateISO: string) {
