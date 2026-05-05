@@ -177,6 +177,9 @@ const TerritoryMappingPage = lazy(() =>
         default: module.TerritoryMappingPage,
     }))
 )
+const ReportsPage = lazy(() =>
+    import('./components/reports/reports-page.js').then((module) => ({ default: module.ReportsPage }))
+)
 const CreateInvitationPageV2 = lazy(() =>
     import('./components/rsvp/pages/create-invitation-page.js').then((module) => ({
         default: module.CreateInvitationPage,
@@ -366,6 +369,16 @@ const router = createBrowserRouter([
                                 ),
                             },
                         ],
+                    },
+                    {
+                        path: 'reports',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <ProtectedRoute permission="admin" franchiseOrMaster>
+                                    <ReportsPage />
+                                </ProtectedRoute>
+                            </Suspense>
+                        ),
                     },
                     {
                         path: 'holiday-program',

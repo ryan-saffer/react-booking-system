@@ -126,7 +126,7 @@ const adminItems: NavigationItem[] = [
         title: 'Payroll',
         description: 'Generate timesheets ready for payroll.',
         to: 'payroll',
-        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=cashCoin&scale=70&backgroundColor=4BC5D9&translateY=5',
+        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=cashCoin&scale=70&backgroundColor=4BC5D9',
         accent: '#00c2e3',
         accentSoft: 'rgba(0, 194, 227, 0.16)',
     },
@@ -145,6 +145,14 @@ const adminItems: NavigationItem[] = [
         imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=ticketPerforated&scale=70&backgroundColor=B14594',
         accent: '#b14594',
         accentSoft: 'rgba(177, 69, 148, 0.14)',
+    },
+    {
+        title: 'Reports',
+        description: 'Run operational reports for the selected studio.',
+        to: 'reports',
+        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=magic&scale=69&backgroundColor=E91171',
+        accent: '#ff4f9c',
+        accentSoft: 'rgba(255, 79, 156, 0.14)',
     },
     {
         title: 'Territory Mapping',

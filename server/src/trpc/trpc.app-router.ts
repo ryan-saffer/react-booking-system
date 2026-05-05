@@ -7,6 +7,7 @@ import { holidayProgramsRouter } from '@/holiday-programs/functions/trpc/trpc.ho
 import { partiesRouter } from '@/party-bookings/functions/trpc/trpc.parties'
 import { playLabRouter } from '@/play-lab/functions/trpc/trpc.play-lab'
 import { preschoolProgramRouter } from '@/preschool-program/functions/trpc/trpc.preschool-program'
+import { reportsRouter } from '@/reports/functions/trpc/trpc.reports'
 import { staffRouter } from '@/staff/functions/trpc/trpc.staffRouter'
 
 import { router } from './trpc'
@@ -22,6 +23,7 @@ export const appRouter = router({
     auth: authRouter,
     playLab: playLabRouter,
     creations: creationsRouter,
+    reports: reportsRouter,
 })
 
 export type AppRouter = typeof appRouter
