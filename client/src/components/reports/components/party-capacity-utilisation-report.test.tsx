@@ -16,6 +16,13 @@ vi.mock('@components/Session/use-org', () => ({
     useOrg: () => ({ currentOrg }),
 }))
 
+vi.mock('@utils/studioUtils', () => ({
+    getOrgName: (org: string) => {
+        if (org === 'master') return 'Corporate Studios'
+        return `${org.charAt(0).toUpperCase()}${org.slice(1)} Studio`
+    },
+}))
+
 vi.mock('@utils/trpc', () => ({
     useTRPC: () => ({
         reports: {
