@@ -102,6 +102,7 @@ export async function rsvpToParty(input: RsvpProps) {
         parentName: input.parentName,
         parentEmail: input.parentEmail,
         numberOfChildren: input.children.length,
+        joinMailingList: input.joinMailingList,
     })
 }
 

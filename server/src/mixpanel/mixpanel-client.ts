@@ -105,6 +105,7 @@ export type MixpanelEvent = {
         parentName: string
         parentEmail: string
         numberOfChildren: number
+        joinMailingList: boolean
     }
     'invitation-coupon-signup': {
         distinct_id: string
