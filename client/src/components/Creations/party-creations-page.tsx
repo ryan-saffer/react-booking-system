@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import Fuse from 'fuse.js'
+import { X } from 'lucide-react'
 import { useDeferredValue, useState } from 'react'
 import Markdown from 'react-markdown'
 
@@ -7,6 +8,7 @@ import type { CreationInstructionGroup, CreationInstructions } from 'fizz-kidz'
 
 import Loader from '@components/Shared/Loader'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@ui-components/accordion'
+import { Button } from '@ui-components/button'
 import { Input } from '@ui-components/input'
 import { useTRPC } from '@utils/trpc'
 
@@ -97,14 +99,28 @@ export const PartyCreationsPage = () => {
                             >
                                 Search creations
                             </label>
-                            <Input
-                                id="creation-search"
-                                type="search"
-                                value={searchTerm}
-                                onChange={(event) => setSearchTerm(event.target.value)}
-                                placeholder="Search by creation name..."
-                                className="bg-white"
-                            />
+                            <div className="relative">
+                                <Input
+                                    id="creation-search"
+                                    type="text"
+                                    value={searchTerm}
+                                    onChange={(event) => setSearchTerm(event.target.value)}
+                                    placeholder="Search by creation name..."
+                                    className="bg-white pr-11"
+                                />
+                                {searchTerm && (
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="absolute right-1.5 top-1/2 min-h-7 w-7 -translate-y-1/2 rounded-md text-slate-500 hover:text-slate-900"
+                                        onClick={() => setSearchTerm('')}
+                                        aria-label="Clear creation search"
+                                    >
+                                        <X className="size-4" />
+                                    </Button>
+                                )}
+                            </div>
                         </div>
                         <div className="flex flex-col gap-6">
                             {visiblePackages.map((partyPackage) => (
