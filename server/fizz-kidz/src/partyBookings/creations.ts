@@ -225,7 +225,12 @@ export type CreationInstructions = {
     markdown: string
 }
 
+export const PARTY_PACKAGE_COLOURS = ['pink', 'blue', 'yellow', 'green', 'purple'] as const
+
+export type PartyPackageColour = (typeof PARTY_PACKAGE_COLOURS)[number]
+
 export type CreationInstructionGroup = {
     name: string
+    colour?: PartyPackageColour
     creations: CreationInstructions[]
 }
