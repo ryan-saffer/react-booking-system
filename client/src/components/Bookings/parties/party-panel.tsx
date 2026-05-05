@@ -14,6 +14,8 @@ import { Button } from '@ui-components/button'
 
 import { ExistingBookingForm } from './forms/ExistingBookingForm'
 
+import type { KeyboardEvent, MouseEvent } from 'react'
+
 const PREFIX = 'BookingPanel'
 
 const classes = {
@@ -67,6 +69,14 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 }))
 
 const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
+    const handleOpenInvitation = (e: MouseEvent | KeyboardEvent) => {
+        e.stopPropagation()
+        window.open(
+            getInvitationShareUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, booking.invitationId!),
+            '_blank'
+        )
+    }
+
     return (
         <StyledAccordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -83,24 +93,20 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                             </Typography>
                         </div>
                         {booking.invitationId && (
-                            <Button
-                                className="twp hidden sm:inline-flex"
-                                variant="darkPurple"
-                                size="sm"
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    window.open(
-                                        getInvitationShareUrl(
-                                            import.meta.env.VITE_ENV,
-                                            import.meta.env.DEV,
-                                            booking.invitationId!
-                                        ),
-                                        '_blank'
-                                    )
-                                }}
-                            >
-                                <UsersRound className="mr-2 h-4 w-4" />
-                                View RSVP's
+                            <Button asChild className="twp hidden sm:inline-flex" variant="darkPurple" size="sm">
+                                <span
+                                    role="link"
+                                    tabIndex={0}
+                                    onClick={handleOpenInvitation}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            handleOpenInvitation(e)
+                                        }
+                                    }}
+                                >
+                                    <UsersRound className="mr-2 h-4 w-4" />
+                                    View RSVP's
+                                </span>
                             </Button>
                         )}
                     </div>

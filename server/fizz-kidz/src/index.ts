@@ -1,7 +1,15 @@
 //#region Bookings
 export { ADDITIONS, PROD_ADDITIONS, Addition } from './partyBookings/additions'
 export { CakeFlavours } from './partyBookings/CakeFlavours'
-export { Creation, CREATIONS, CreationInstructions } from './partyBookings/creations'
+export {
+    ACTIVE_CREATIONS,
+    ActiveCreation,
+    Creation,
+    CREATION_PACKAGE_DISPLAY_NAMES,
+    CREATION_PACKAGES,
+    CREATIONS,
+    CreationInstructions,
+} from './partyBookings/creations'
 export { TAKE_HOME_BAGS, TakeHomeBagType } from './partyBookings/take-home-bags'
 export { PRODUCTS, ProductType } from './partyBookings/products'
 export * from './core/studio'
