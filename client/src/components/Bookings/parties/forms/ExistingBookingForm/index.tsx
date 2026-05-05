@@ -9,6 +9,7 @@ import {
     FormHelperText,
     Grid,
     InputLabel,
+    ListSubheader,
     MenuItem,
     Select,
     TextField,
@@ -22,6 +23,9 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
 import {
+    ACTIVE_CREATIONS,
+    CREATION_PACKAGE_DISPLAY_NAMES,
+    CREATION_PACKAGES,
     CREATIONS,
     FormBookingFields,
     ObjectKeys,
@@ -143,39 +147,45 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
         }
     }
 
-    const getCreationMenuItems = useCallback(() => {
-        // Sort the creation by their display value
-        // this is particularly difficult, so first invert the CREATIONS object
-        // see https://stackoverflow.com/a/23013726/7870403
-        const invertedCreationDisplayValues = Object.entries(CREATIONS).reduce<Record<string, string>>((acc, curr) => {
-            const [key, value] = curr
-            acc[value] = key
-            return acc
-        }, {})
+    const getCreationMenuItems = useCallback((selectedCreation: string | undefined) => {
+        type CreationPackage = keyof typeof CREATION_PACKAGES
+        const creationPackageEntries = Object.entries(CREATION_PACKAGES) as [
+            CreationPackage,
+            (typeof CREATION_PACKAGES)[CreationPackage],
+        ][]
 
-        // then sort it by key
-        const creationDisplayValues = Object.keys(invertedCreationDisplayValues)
-        creationDisplayValues.sort()
+        const activeCreationMenuItems = creationPackageEntries.flatMap(([packageKey, creations]) => [
+            <ListSubheader key={packageKey}>{CREATION_PACKAGE_DISPLAY_NAMES[packageKey]}</ListSubheader>,
+            ...Object.entries(creations)
+                .sort(([, a], [, b]) => a.localeCompare(b))
+                .map(([creation, displayValue]) => (
+                    <MenuItem key={`${packageKey}-${creation}`} value={creation}>
+                        {displayValue}
+                    </MenuItem>
+                )),
+        ])
 
-        // then add each creation back into a new object one by one, now that it is sorted
-        const sortedCreations: { [key: string]: any } = {}
-        creationDisplayValues.forEach((value) => {
-            const creation = invertedCreationDisplayValues[value]
-            sortedCreations[creation] = value
-        })
+        const legacyCreationMenuItems: React.ReactNode[] = []
 
-        // and finally return them as menu items
-        const creationMenuItems = Object.keys(sortedCreations).map((creation) => (
-            <MenuItem key={creation} value={creation}>
-                {sortedCreations[creation]}
-            </MenuItem>
-        ))
+        if (
+            selectedCreation &&
+            Utilities.isObjKey(selectedCreation, CREATIONS) &&
+            !Utilities.isObjKey(selectedCreation, ACTIVE_CREATIONS)
+        ) {
+            legacyCreationMenuItems.push(
+                <ListSubheader key="previously-selected">Previously Selected</ListSubheader>,
+                <MenuItem key={selectedCreation} value={selectedCreation}>
+                    {CREATIONS[selectedCreation]}
+                </MenuItem>
+            )
+        }
 
         return [
             <MenuItem key={''} value={''}>
                 <em>None</em>
             </MenuItem>,
-            ...creationMenuItems,
+            ...legacyCreationMenuItems,
+            ...activeCreationMenuItems,
         ]
     }, [])
 
@@ -547,7 +557,7 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                                 error={formValues[FormBookingFields.creation1].error}
                                 onChange={handleFormChange}
                             >
-                                {getCreationMenuItems()}
+                                {getCreationMenuItems(formValues[FormBookingFields.creation1].value)}
                             </Select>
                         </FormControl>
                     </Grid>
@@ -570,7 +580,7 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                                 error={formValues[FormBookingFields.creation2].error}
                                 onChange={handleFormChange}
                             >
-                                {getCreationMenuItems()}
+                                {getCreationMenuItems(formValues[FormBookingFields.creation2].value)}
                             </Select>
                         </FormControl>
                     </Grid>
@@ -593,7 +603,7 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                                 error={formValues[FormBookingFields.creation3].error}
                                 onChange={handleFormChange}
                             >
-                                {getCreationMenuItems()}
+                                {getCreationMenuItems(formValues[FormBookingFields.creation3].value)}
                             </Select>
                         </FormControl>
                     </Grid>
