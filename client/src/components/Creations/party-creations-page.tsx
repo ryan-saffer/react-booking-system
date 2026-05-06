@@ -101,7 +101,7 @@ export const PartyCreationsPage = () => {
                         <h1 className="lilita m-0 bg-gradient-to-r from-[#ff4f9c] via-[#f6ba34] to-[#00c2e3] bg-clip-text text-3xl leading-tight text-transparent sm:text-5xl">
                             Creation instructions
                         </h1>
-                        <p className="m-0 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
+                        <p className="m-0 text-sm leading-relaxed text-slate-700 sm:text-base">
                             Search by creation, then open a card to see ingredients, steps, and Fizz tips for each party
                             package.
                         </p>
