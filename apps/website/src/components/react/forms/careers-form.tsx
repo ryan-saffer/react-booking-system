@@ -50,7 +50,14 @@ const formSchema = z
         message: "Please select which role you are applying for",
       }),
     location: z
-      .enum(["balwyn", "cheltenham", "essendon", "kingsville", "malvern"])
+      .enum([
+        "balwyn",
+        "cheltenham",
+        "essendon",
+        "geelong",
+        "kingsville",
+        "malvern",
+      ])
       .optional(),
     wwcc: z.enum(["yes", "no"]),
     driversLicense: z.enum(["yes", "no"]),
@@ -240,6 +247,7 @@ function CareersForm() {
                       <SelectItem value="balwyn">Balwyn</SelectItem>
                       <SelectItem value="cheltenham">Cheltenham</SelectItem>
                       <SelectItem value="essendon">Essendon</SelectItem>
+                      <SelectItem value="geelong">Geelong</SelectItem>
                       <SelectItem value="kingsville">Kingsville</SelectItem>
                       <SelectItem value="malvern">Malvern</SelectItem>
                     </SelectContent>

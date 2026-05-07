@@ -190,6 +190,12 @@ export const menu = [
       },
       {
         type: "link",
+        path: "/locations/geelong",
+        title: "Geelong",
+        isNew: true,
+      },
+      {
+        type: "link",
         path: "/locations/kingsville",
         title: "Kingsville",
         isNew: false,

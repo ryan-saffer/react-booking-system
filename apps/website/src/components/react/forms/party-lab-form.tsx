@@ -44,7 +44,14 @@ const formSchema = z.object({
     .string()
     .min(10, "Contact number must be at least 10 digits long"),
   location: z
-    .enum(["balwyn", "cheltenham", "essendon", "kingsville", "malvern"])
+    .enum([
+      "balwyn",
+      "cheltenham",
+      "essendon",
+      "geelong",
+      "kingsville",
+      "malvern",
+    ])
     .optional()
     .refine((it) => !!it, "Please select a location"),
   session: z
@@ -190,6 +197,7 @@ function PartyLabForm() {
                   <SelectItem value="balwyn">Balwyn</SelectItem>
                   <SelectItem value="cheltenham">Cheltenham</SelectItem>
                   <SelectItem value="essendon">Essendon</SelectItem>
+                  <SelectItem value="geelong">Geelong</SelectItem>
                   <SelectItem value="kingsville">Kingsville</SelectItem>
                   <SelectItem value="malvern">Malvern</SelectItem>
                 </SelectContent>

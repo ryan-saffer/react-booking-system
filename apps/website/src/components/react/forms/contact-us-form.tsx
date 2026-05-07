@@ -53,6 +53,7 @@ const formSchema = z
         "balwyn",
         "cheltenham",
         "essendon",
+        "geelong",
         "kingsville",
         "malvern",
         "at-home",
@@ -280,6 +281,7 @@ function ContactUsForm() {
                     <SelectItem value="balwyn">Balwyn</SelectItem>
                     <SelectItem value="cheltenham">Cheltenham</SelectItem>
                     <SelectItem value="essendon">Essendon</SelectItem>
+                    <SelectItem value="geelong">Geelong</SelectItem>
                     <SelectItem value="kingsville">Kingsville</SelectItem>
                     <SelectItem value="malvern">Malvern</SelectItem>
                     <SelectItem value="at-home">At Home</SelectItem>
