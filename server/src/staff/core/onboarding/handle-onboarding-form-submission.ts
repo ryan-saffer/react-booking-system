@@ -13,6 +13,7 @@ const STAFF_FOLDER_ID_BY_BUSINESS = {
     master: '1c4ZkdG6bKMKv2mi5Dxvku3c__ue3y5HL',
     balwyn: '1hU2qgD3WDDvTmdB3z8QsOwU2eGi3wtqx',
     kingsville: '1aHludRI1qiTd-GiAUPlZT6VHBYG5mGJ9',
+    werribee: '1ThzXPYvJpdnNf64WdqB_X-wAlHpdc-jj',
 } as const satisfies Record<FranchiseOrMaster, string>
 
 // const STAFF_ORDINARY_HOURS_RATE_ID =

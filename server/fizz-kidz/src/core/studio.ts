@@ -1,5 +1,5 @@
 export const MASTER_STUDIOS = ['cheltenham', 'essendon', 'geelong', 'malvern'] as const
-export const FRANCHISE_STUDIOS = ['balwyn', 'kingsville'] as const
+export const FRANCHISE_STUDIOS = ['balwyn', 'kingsville', 'werribee'] as const
 export const STUDIOS = [...MASTER_STUDIOS, ...FRANCHISE_STUDIOS].sort((a, b) => (a < b ? -1 : 1))
 
 export type Studio = (typeof STUDIOS)[number]

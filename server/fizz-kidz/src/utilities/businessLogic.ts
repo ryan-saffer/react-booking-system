@@ -19,6 +19,8 @@ export function getStudioAddress(location: Studio) {
             return '238 Somerville Rd, Kingsville, VIC 3012'
         case 'malvern':
             return '20 Glenferrie Rd, Malvern VIC 3144'
+        case 'werribee':
+            return 'Shop T5, Harpley Town Center, Ison Rd, Werribee VIC 3030'
         default: {
             const exhaustiveCheck: never = location
             throw new Error(`cannot get address of unknown location: '${exhaustiveCheck}'`)
@@ -104,11 +106,15 @@ export function getPictureOfStudioUrl(location: Studio) {
         case 'essendon':
             return 'https://www.fizzkidz.com.au/images/studios/essendon.jpg'
         case 'geelong':
-            return 'TODO'
+            // TODO: Update image
+            return 'https://www.fizzkidz.com.au/images/studios/kingsville.jpg'
         case 'kingsville':
             return 'https://www.fizzkidz.com.au/images/studios/kingsville.jpg'
         case 'malvern':
             return 'https://www.fizzkidz.com.au/images/studios/malvern.jpg'
+        case 'werribee':
+            // TODO: Update image
+            return 'https://www.fizzkidz.com.au/images/studios/kingsville.jpg'
         default: {
             const exhaustiveCheck: never = location
             throw new Error(`Unhandled location: '${exhaustiveCheck}`)
@@ -125,11 +131,13 @@ export function getReviewUrl(location: Studio) {
         case 'essendon':
             return 'https://search.google.com/local/writereview?placeid=ChIJq_RqJMNd1moRksRMHNY2ExQ'
         case 'geelong':
-            return 'TODO'
+            return 'https://g.page/r/CZAxGZYQhETOEBM/review'
         case 'kingsville':
             return 'https://g.page/r/CRQItX8-YnBFEBM/review'
         case 'malvern':
             return 'https://search.google.com/local/writereview?placeid=ChIJ92NJJx5q1moRdDSJo_X3BRo'
+        case 'werribee':
+            return 'TODO'
         default: {
             const exhaustiveCheck: never = location
             throw new Error(`Unhandled location in getReviewUrl: '${exhaustiveCheck}'`)

@@ -13,11 +13,13 @@ export function getSquareLocationId(studio: StudioOrTest) {
         case 'essendon':
             return '6P5FX9MG3SBJ6'
         case 'geelong':
-            return 'TODO'
-        case 'malvern':
-            return 'NSS38M5PEET6N'
+            return 'LDXM8AXH06N41'
         case 'kingsville':
             return 'L380VTEX8KAVT'
+        case 'malvern':
+            return 'NSS38M5PEET6N'
+        case 'werribee':
+            return 'L5Z6AWAMMZY4V'
         default: {
             assertNever(studio)
             throw new Error(`Unhandled location in getSquareLocationId(): '${studio}'`)

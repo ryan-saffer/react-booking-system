@@ -158,6 +158,10 @@ export class CalendarClient {
                         return env === 'prod'
                             ? 'fizzkidz.com.au_j13ot3jarb1p9k70c302249j4g@group.calendar.google.com'
                             : 'fizzkidz.com.au_knove8gbjklh2cm5di6qfs0bs0@group.calendar.google.com'
+                    case 'werribee':
+                        return env === 'prod'
+                            ? 'c_214f5397b69dd964d242c92f69d60ce578dfdfe1b1b6adaa083ef13b5b043f0d@group.calendar.google.com'
+                            : 'c_2930db9efd915b900c16076db46be4c91354fa873f4333caeef1db3f3e8e7fb2@group.calendar.google.com'
                     default: {
                         const exhaustiveCheck: never = eventType.location
                         throw new Error(`Unknown location found while getting calendar id: '${exhaustiveCheck}'`)

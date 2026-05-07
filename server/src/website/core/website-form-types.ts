@@ -120,6 +120,7 @@ export const ContactFormLocationMap: Record<ContactFormLocationOption, Studio | 
     geelong: 'geelong',
     kingsville: 'kingsville',
     malvern: 'malvern',
+    werribee: 'werribee',
 }
 
 export const PartyFormLocationMap: Record<ContactFormLocationOption, Studio | undefined> = {
@@ -129,6 +130,7 @@ export const PartyFormLocationMap: Record<ContactFormLocationOption, Studio | un
     geelong: 'geelong',
     kingsville: 'kingsville',
     malvern: 'malvern',
+    werribee: 'werribee',
     'at-home': undefined,
     other: undefined,
 }
@@ -141,6 +143,7 @@ export const LocationDisplayValueMap: Record<ContactFormLocationOption, string> 
     geelong: 'Geelong Studio',
     kingsville: 'Kingsville Studio',
     malvern: 'Malvern Studio',
+    werribee: 'Werribee Studio',
     'at-home': 'At Home',
 }
 
