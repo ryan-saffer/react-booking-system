@@ -105,7 +105,6 @@ export function createTimesheetRows({
     let totalHours = 0
 
     usersTimesheets.map((timesheet) => {
-        console.log(timesheet)
         const position = SlingPositionMap[timesheet.position.id]
         const location = SlingLocationsMap[timesheet.location.id]
         const start = DateTime.fromISO(timesheet.dtstart, { zone: timezone })
@@ -593,7 +592,11 @@ export class TimesheetRow {
                                   ? 'CGS 16&17yo COH - Mon to Sat - Essendon'
                                   : 'NON-CGS 16&17yo COH - Mon to Sat - Essendon'
                         case 'geelong':
-                            return 'TODO'
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Geelong'
+                                : this._isCOGSShift()
+                                  ? 'CGS 16&17yo COH - Mon to Sat - Geelong'
+                                  : 'NON-CGS 16&17yo COH - Mon to Sat - Geelong'
                         case 'kingsville':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Kingsville'
@@ -638,7 +641,11 @@ export class TimesheetRow {
                                   ? 'CGS COH - Mon to Sat - Essendon'
                                   : 'NON-CGS COH - Mon to Sat - Essendon'
                         case 'geelong':
-                            return 'TODO'
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR COH - Mon to Sat - Geelong'
+                                : this._isCOGSShift()
+                                  ? 'CGS COH - Mon to Sat - Geelong'
+                                  : 'NON-CGS COH - Mon to Sat - Geelong'
                         case 'kingsville':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Kingsville'
@@ -684,7 +691,11 @@ export class TimesheetRow {
                               ? 'CGS COH - Sunday - Essendon'
                               : 'NON-CGS COH - Sunday - Essendon'
                     case 'geelong':
-                        return 'TODO'
+                        return isSupervisorShift(this.position)
+                            ? 'SUPERVISOR COH - Sunday - Geelong'
+                            : this._isCOGSShift()
+                              ? 'CGS COH - Sunday - Geelong'
+                              : 'NON-CGS COH - Sunday - Geelong'
                     case 'kingsville':
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Kingsville'
@@ -720,7 +731,7 @@ export class TimesheetRow {
                     case 'essendon':
                         return 'PT/FT Ordinary Hours - Mon to Sat - Essendon'
                     case 'geelong':
-                        return 'TODO'
+                        return 'PT/FT Ordinary Hours - Mon to Sat - Geelong'
                     case 'kingsville':
                         return 'PT/FT Ordinary Hours - Mon to Sat - Kingsville'
                     case 'malvern':
@@ -741,7 +752,7 @@ export class TimesheetRow {
                     case 'essendon':
                         return 'PT/FT Ordinary Hours - Sunday - Essendon'
                     case 'geelong':
-                        return 'TODO'
+                        return 'PT/FT Ordinary Hours - Sunday - Geelong'
                     case 'kingsville':
                         return 'PT/FT Ordinary Hours - Sunday - Kingsville'
                     case 'malvern':
@@ -769,7 +780,7 @@ export class TimesheetRow {
                     case 'essendon':
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
                     case 'geelong':
-                        return 'TODO'
+                        return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Geelong'
                     case 'kingsville':
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Kings'
                     case 'malvern':
@@ -790,7 +801,7 @@ export class TimesheetRow {
                     case 'essendon':
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen'
                     case 'geelong':
-                        return 'TODO'
+                        return 'ON CALL - Cas Ord Hrs - Mon to Sat - Geelong'
                     case 'kingsville':
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Kingsville'
                     case 'malvern':
@@ -812,7 +823,7 @@ export class TimesheetRow {
                 case 'essendon':
                     return 'ON CALL - Cas Ord Hrs - Sunday - Essend'
                 case 'geelong':
-                    return 'TODO'
+                    return 'ON CALL - Cas Ord Hrs - Sunday - Geelong'
                 case 'kingsville':
                     return 'ON CALL - Cas Ord Hrs - Sunday - Kingsville'
                 case 'malvern':
@@ -839,7 +850,7 @@ export class TimesheetRow {
                     case 'essendon':
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen'
                     case 'geelong':
-                        return 'TODO'
+                        return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Geel'
                     case 'kingsville':
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Kings'
                     case 'malvern':
@@ -860,7 +871,7 @@ export class TimesheetRow {
                     case 'essendon':
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Essen'
                     case 'geelong':
-                        return 'TODO'
+                        return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Geelong'
                     case 'kingsville':
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Kingsville'
                     case 'malvern':
@@ -882,7 +893,7 @@ export class TimesheetRow {
                 case 'essendon':
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Essend'
                 case 'geelong':
-                    return 'TODO'
+                    return 'CALLEDIN - Cas Ord Hrs - Sun - Geelong'
                 case 'kingsville':
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Kingsville'
                 case 'malvern':
@@ -919,7 +930,11 @@ export class TimesheetRow {
                           ? 'CGS OT - First 3 Hrs - Mon to Sat - Essendon'
                           : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Essendon'
                 case 'geelong':
-                    return 'TODO'
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Geelong'
+                        : this._isCOGSShift()
+                          ? 'CGS OT - First 3 Hrs - Mon to Sat - Geelong'
+                          : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Geelong'
                 case 'kingsville':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kings'
@@ -964,7 +979,11 @@ export class TimesheetRow {
                           ? 'CGS OT - First 3 Hrs - Sunday - Essendon'
                           : 'NON-CGS OT - First 3 Hrs - Sunday - Essendon'
                 case 'geelong':
-                    return 'TODO'
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Geelong'
+                        : this._isCOGSShift()
+                          ? 'CGS OT - First 3 Hrs - Sunday - Geelong'
+                          : 'NON-CGS OT - First 3 Hrs - Sunday - Geelong'
                 case 'kingsville':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Kingsville'
@@ -1012,7 +1031,11 @@ export class TimesheetRow {
                       ? 'CGS OT - After 3 Hrs - Essendon'
                       : 'NON-CGS OT - After 3 Hrs - Essendon'
             case 'geelong':
-                return 'TODO'
+                return isSupervisorShift(this.position)
+                    ? 'SUPERVISOR OT - After 3 Hrs - Geelong'
+                    : this._isCOGSShift()
+                      ? 'CGS OT - After 3 Hrs - Geelong'
+                      : 'NON-CGS OT - After 3 Hrs - Geelong'
             case 'kingsville':
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Kingsville'
@@ -1644,60 +1667,61 @@ type COGSCasualOrdinaryMonSat =
     | 'CGS COH - Mon to Sat - Balwyn'
     | 'CGS COH - Mon to Sat - Cheltenham'
     | 'CGS COH - Mon to Sat - Essendon'
+    | 'CGS COH - Mon to Sat - Geelong'
     | 'CGS COH - Mon to Sat - Kingsville'
     | 'CGS COH - Mon to Sat - Malvern'
     | 'CGS COH - Mon to Sat - Head Office'
-    | 'TODO'
 
 type NonCOGSCasualOrdinaryMonSat =
     | 'NON-CGS COH - Mon to Sat - Balwyn'
     | 'NON-CGS COH - Mon to Sat - Cheltenham'
     | 'NON-CGS COH - Mon to Sat - Essendon'
+    | 'NON-CGS COH - Mon to Sat - Geelong'
     | 'NON-CGS COH - Mon to Sat - Kingsville'
     | 'NON-CGS COH - Mon to Sat - Malvern'
     | 'NON-CGS COH - Mon to Sat - Head Office'
-    | 'TODO'
 
 type SupervisorCasualOrdinaryMonSat =
     | 'SUPERVISOR COH - Mon to Sat - Balwyn'
     | 'SUPERVISOR COH - Mon to Sat - Cheltenham'
     | 'SUPERVISOR COH - Mon to Sat - Essendon'
+    | 'SUPERVISOR COH - Mon to Sat - Geelong'
     | 'SUPERVISOR COH - Mon to Sat - Kingsville'
     | 'SUPERVISOR COH - Mon to Sat - Malvern'
     | 'SUPERVISOR COH - Mon to Sat - Head Office'
-    | 'TODO'
 
 type COGSCasualOrdinarySunday =
     | 'CGS COH - Sunday - Balwyn'
     | 'CGS COH - Sunday - Cheltenham'
     | 'CGS COH - Sunday - Essendon'
+    | 'CGS COH - Sunday - Geelong'
     | 'CGS COH - Sunday - Kingsville'
     | 'CGS COH - Sunday - Malvern'
     | 'CGS COH - Sunday - Head Office'
-    | 'TODO'
 
 type NonCOGSCasualOrdinarySunday =
     | 'NON-CGS COH - Sunday - Balwyn'
     | 'NON-CGS COH - Sunday - Cheltenham'
     | 'NON-CGS COH - Sunday - Essendon'
+    | 'NON-CGS COH - Sunday - Geelong'
     | 'NON-CGS COH - Sunday - Kingsville'
     | 'NON-CGS COH - Sunday - Malvern'
     | 'NON-CGS COH - Sunday - Head Office'
-    | 'TODO'
 
 type SupervisorCasualOrdinarySunday =
     | 'SUPERVISOR COH - Sunday - Balwyn'
     | 'SUPERVISOR COH - Sunday - Cheltenham'
     | 'SUPERVISOR COH - Sunday - Essendon'
+    | 'SUPERVISOR COH - Sunday - Geelong'
     | 'SUPERVISOR COH - Sunday - Kingsville'
     | 'SUPERVISOR COH - Sunday - Malvern'
     | 'SUPERVISOR COH - Sunday - Head Office'
-    | 'TODO'
 
 type PTFTOrdinaryMonSat =
     | 'PT/FT Ordinary Hours - Mon to Sat - Balwyn'
     | 'PT/FT Ordinary Hours - Mon to Sat - Chelt'
     | 'PT/FT Ordinary Hours - Mon to Sat - Essendon'
+    | 'PT/FT Ordinary Hours - Mon to Sat - Geelong'
     | 'PT/FT Ordinary Hours - Mon to Sat - Kingsville'
     | 'PT/FT Ordinary Hours - Mon to Sat - Malvern'
     | 'PT/FT Ordinary Hours - Mon to Sat - Head Office'
@@ -1706,6 +1730,7 @@ type PTFTOrdinaryHoursSunday =
     | 'PT/FT Ordinary Hours - Sunday - Balwyn'
     | 'PT/FT Ordinary Hours - Sunday - Chelt'
     | 'PT/FT Ordinary Hours - Sunday - Essendon'
+    | 'PT/FT Ordinary Hours - Sunday - Geelong'
     | 'PT/FT Ordinary Hours - Sunday - Kingsville'
     | 'PT/FT Ordinary Hours - Sunday - Malvern'
     | 'PT/FT Ordinary Hours - Sunday - Head Office'
@@ -1714,163 +1739,163 @@ type OnCallCasualOrdinaryMonSat =
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn'
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Chelt'
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen'
+    | 'ON CALL - Cas Ord Hrs - Mon to Sat - Geelong'
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Kingsville'
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv'
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Head Office'
-    | 'TODO'
 
 type OnCallCasualOrdinarySunday =
     | 'ON CALL - Cas Ord Hrs - Sunday - Balwyn'
     | 'ON CALL - Cas Ord Hrs - Sunday - Chelt'
     | 'ON CALL - Cas Ord Hrs - Sunday - Essend'
+    | 'ON CALL - Cas Ord Hrs - Sunday - Geelong'
     | 'ON CALL - Cas Ord Hrs - Sunday - Kingsville'
     | 'ON CALL - Cas Ord Hrs - Sunday - Malvern'
     | 'ON CALL - Cas Ord Hrs - Sunday - Head Office'
-    | 'TODO'
 
 type CalledInCasualOrdinaryMonSat =
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn'
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Chelt'
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Essen'
+    | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Geelong'
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Kingsville'
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Malvern'
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Head Office'
-    | 'TODO'
 
 type CalledInCasualOrdinarySunday =
     | 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn'
     | 'CALLEDIN - Cas Ord Hrs - Sun - Chelt'
     | 'CALLEDIN - Cas Ord Hrs - Sun - Essend'
+    | 'CALLEDIN - Cas Ord Hrs - Sun - Geelong'
     | 'CALLEDIN - Cas Ord Hrs - Sun - Kingsville'
     | 'CALLEDIN - Cas Ord Hrs - Sun - Malvern'
     | 'CALLEDIN - Cas Ord Hrs - Sun - Head Office'
-    | 'TODO'
 
 type COGSUnder18CasualOrdinaryMonSat =
     | 'CGS 16&17yo COH - Mon to Sat - Balwyn'
     | 'CGS 16&17yo COH - Mon to Sat - Cheltenham'
     | 'CGS 16&17yo COH - Mon to Sat - Essendon'
+    | 'CGS 16&17yo COH - Mon to Sat - Geelong'
     | 'CGS 16&17yo COH - Mon to Sat - Kingsville'
     | 'CGS 16&17yo COH - Mon to Sat - Malvern'
     | 'CGS 16&17yo COH - Mon to Sat - Head Office'
-    | 'TODO'
 
 type NonCOGSUnder18CasualOrdinaryMonSat =
     | 'NON-CGS 16&17yo COH - Mon to Sat - Balwyn'
     | 'NON-CGS 16&17yo COH - Mon to Sat - Cheltenham'
     | 'NON-CGS 16&17yo COH - Mon to Sat - Essendon'
+    | 'NON-CGS 16&17yo COH - Mon to Sat - Geelong'
     | 'NON-CGS 16&17yo COH - Mon to Sat - Kingsville'
     | 'NON-CGS 16&17yo COH - Mon to Sat - Malvern'
     | 'NON-CGS 16&17yo COH - Mon to Sat - Head Office'
-    | 'TODO'
 
 type SupervisorUnder18CasualOrdinaryMonSat =
     | 'SUPERVISOR 16&17yo COH - Mon to Sat - Balwyn'
     | 'SUPERVISOR 16&17yo COH - Mon to Sat - Cheltenham'
     | 'SUPERVISOR 16&17yo COH - Mon to Sat - Essendon'
+    | 'SUPERVISOR 16&17yo COH - Mon to Sat - Geelong'
     | 'SUPERVISOR 16&17yo COH - Mon to Sat - Kingsville'
     | 'SUPERVISOR 16&17yo COH - Mon to Sat - Malvern'
     | 'SUPERVISOR 16&17yo COH - Mon to Sat - Head Office'
-    | 'TODO'
 
 type Under18OnCallCasualOrdinaryMonSat =
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Chelt'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
+    | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Geelong'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Kings'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - HO'
-    | 'TODO'
 
 type Under18CalledInOrdinaryMonSat =
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen'
+    | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Geel'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Kings'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malv'
     | 'CALLEDIN - 16&17 COH - Mon to Sat - HO'
-    | 'TODO'
 
 type COGSOvertimeFirstThreeHoursMonSat =
     | 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
     | 'CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
     | 'CGS OT - First 3 Hrs - Mon to Sat - Essendon'
+    | 'CGS OT - First 3 Hrs - Mon to Sat - Geelong'
     | 'CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
     | 'CGS OT - First 3 Hrs - Mon to Sat - Malvern'
     | 'CGS OT - First 3 Hrs - Mon to Sat - Head Office'
-    | 'TODO'
 
 type NonCOGSOvertimeFirstThreeHoursMonSat =
     | 'NON-CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
     | 'NON-CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
     | 'NON-CGS OT - First 3 Hrs - Mon to Sat - Essendon'
+    | 'NON-CGS OT - First 3 Hrs - Mon to Sat - Geelong'
     | 'NON-CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
     | 'NON-CGS OT - First 3 Hrs - Mon to Sat - Malvern'
     | 'NON-CGS OT - First 3 Hrs - Mon to Sat - HO'
-    | 'TODO'
 
 type SupervisorOvertimeFirstThreeHoursMonSat =
     | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Balwyn'
     | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Chelt'
     | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essend'
+    | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Geelong'
     | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kings'
     | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Malvern'
     | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - HO'
-    | 'TODO'
 
 type COGSOvertimeFirstThreeHoursSunday =
     | 'CGS OT - First 3 Hrs - Sunday - Balwyn'
     | 'CGS OT - First 3 Hrs - Sunday - Cheltenham'
     | 'CGS OT - First 3 Hrs - Sunday - Essendon'
+    | 'CGS OT - First 3 Hrs - Sunday - Geelong'
     | 'CGS OT - First 3 Hrs - Sunday - Kingsville'
     | 'CGS OT - First 3 Hrs - Sunday - Malvern'
     | 'CGS OT - First 3 Hrs - Sunday - Head Office'
-    | 'TODO'
 
 type NonCOGSOvertimeFirstThreeHoursSunday =
     | 'NON-CGS OT - First 3 Hrs - Sunday - Balwyn'
     | 'NON-CGS OT - First 3 Hrs - Sunday - Cheltenham'
     | 'NON-CGS OT - First 3 Hrs - Sunday - Essendon'
+    | 'NON-CGS OT - First 3 Hrs - Sunday - Geelong'
     | 'NON-CGS OT - First 3 Hrs - Sunday - Kingsville'
     | 'NON-CGS OT - First 3 Hrs - Sunday - Malvern'
     | 'NON-CGS OT - First 3 Hrs - Sunday - Head Office'
-    | 'TODO'
 
 type SupervisorOvertimeFirstThreeHoursSunday =
     | 'SUPERVISOR OT - First 3 Hrs - Sunday - Balwyn'
     | 'SUPERVISOR OT - First 3 Hrs - Sunday - Cheltenham'
     | 'SUPERVISOR OT - First 3 Hrs - Sunday - Essendon'
+    | 'SUPERVISOR OT - First 3 Hrs - Sunday - Geelong'
     | 'SUPERVISOR OT - First 3 Hrs - Sunday - Kingsville'
     | 'SUPERVISOR OT - First 3 Hrs - Sunday - Malvern'
     | 'SUPERVISOR OT - First 3 Hrs - Sunday - Head Office'
-    | 'TODO'
 
 type COGSOvertimeAfterThreeHours =
     | 'CGS OT - After 3 Hrs - Balwyn'
     | 'CGS OT - After 3 Hrs - Cheltenham'
     | 'CGS OT - After 3 Hrs - Essendon'
+    | 'CGS OT - After 3 Hrs - Geelong'
     | 'CGS OT - After 3 Hrs - Kingsville'
     | 'CGS OT - After 3 Hrs - Malvern'
     | 'CGS OT - After 3 Hrs - Head Office'
-    | 'TODO'
 
 type NonCOGSOvertimeAfterThreeHours =
     | 'NON-CGS OT - After 3 Hrs - Balwyn'
     | 'NON-CGS OT - After 3 Hrs - Cheltenham'
     | 'NON-CGS OT - After 3 Hrs - Essendon'
+    | 'NON-CGS OT - After 3 Hrs - Geelong'
     | 'NON-CGS OT - After 3 Hrs - Kingsville'
     | 'NON-CGS OT - After 3 Hrs - Malvern'
     | 'NON-CGS OT - After 3 Hrs - Head Office'
-    | 'TODO'
 
 type SupervisorOvertimeAfterThreeHours =
     | 'SUPERVISOR OT - After 3 Hrs - Balwyn'
     | 'SUPERVISOR OT - After 3 Hrs - Cheltenham'
     | 'SUPERVISOR OT - After 3 Hrs - Essendon'
+    | 'SUPERVISOR OT - After 3 Hrs - Geelong'
     | 'SUPERVISOR OT - After 3 Hrs - Kingsville'
     | 'SUPERVISOR OT - After 3 Hrs - Malvern'
     | 'SUPERVISOR OT - After 3 Hrs - Head Office'
-    | 'TODO'
 
 // Ordinary
 type CasualOrdinaryMonSat = COGSCasualOrdinaryMonSat | NonCOGSCasualOrdinaryMonSat | SupervisorCasualOrdinaryMonSat
