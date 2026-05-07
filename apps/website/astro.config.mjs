@@ -16,6 +16,7 @@ export default defineConfig({
     sitemap(),
   ],
   redirects: {
+    "play-lab": "preschool-program",
     // TEMPORARY WHILE WE NO LONGER OFFER IN STUDIO SCIENCE
     "after-school-programs": "/in-schools/after-school-programs",
     // FROM OLD WEBSITE
