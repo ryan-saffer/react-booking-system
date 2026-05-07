@@ -421,7 +421,7 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - HO')
         })
 
-        it('should map geelong on call weekday shifts under 18 to TODO', () => {
+        it('should map geelong on call weekday shifts under 18', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -437,10 +437,10 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Geelong')
         })
 
-        it('should map geelong on call weekday shifts over 18 to TODO', () => {
+        it('should map geelong on call weekday shifts over 18', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -456,7 +456,7 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Geelong')
         })
 
         it('should map on call for all locations on sunday - over 18', () => {
@@ -633,7 +633,7 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Head Office')
         })
 
-        it('should map geelong on call sunday shifts to TODO', () => {
+        it('should map geelong on call sunday shifts', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -649,7 +649,7 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Geelong')
         })
 
         describe('Supervisor shifts', () => {
@@ -683,6 +683,15 @@ describe('Timesheet suite', () => {
                     firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essend',
                     firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Essendon',
                     afterThree: 'SUPERVISOR OT - After 3 Hrs - Essendon',
+                },
+                {
+                    location: 'geelong',
+                    under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Geelong',
+                    monSat: 'SUPERVISOR COH - Mon to Sat - Geelong',
+                    sunday: 'SUPERVISOR COH - Sunday - Geelong',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Geelong',
+                    firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Geelong',
+                    afterThree: 'SUPERVISOR OT - After 3 Hrs - Geelong',
                 },
                 {
                     location: 'kingsville',
@@ -1034,7 +1043,7 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'CALLEDIN - 16&17 COH - Mon to Sat - HO')
         })
 
-        it('should map geelong called in weekday shifts under 18 to TODO', () => {
+        it('should map geelong called in weekday shifts under 18', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -1050,10 +1059,10 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Geel')
         })
 
-        it('should map geelong called in weekday shifts over 18 to TODO', () => {
+        it('should map geelong called in weekday shifts over 18', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -1069,7 +1078,7 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Geelong')
         })
 
         it('should map called in holiday program facilitator for all locations mon-sat - over 18', () => {
@@ -1420,7 +1429,7 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Head Office')
         })
 
-        it('should map geelong called in sunday shifts to TODO', () => {
+        it('should map geelong called in sunday shifts', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -1436,7 +1445,7 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Geelong')
         })
 
         it('should map called in holiday program facilitator for all locations sunday - over 18', () => {
@@ -1700,7 +1709,7 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'CGS COH - Mon to Sat - Head Office')
         })
 
-        it('should map geelong casual ordinary weekday shifts over 18 to TODO', () => {
+        it('should map geelong casual ordinary weekday shifts over 18', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -1716,7 +1725,7 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Geelong')
         })
 
         it('should map party faciliator for all locations mon-sat - under 18', () => {
@@ -1806,7 +1815,7 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Head Office')
         })
 
-        it('should map geelong casual ordinary weekday shifts under 18 to TODO', () => {
+        it('should map geelong casual ordinary weekday shifts under 18', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -1822,7 +1831,7 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Geelong')
         })
 
         it('should map party faciliator for all locations sunday - over 18', () => {
@@ -1999,7 +2008,7 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'CGS COH - Sunday - Head Office')
         })
 
-        it('should map geelong casual ordinary sunday shifts to TODO', () => {
+        it('should map geelong casual ordinary sunday shifts', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -2015,7 +2024,7 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Geelong')
         })
 
         it('should map holiday program facilitator for all locations mon-sat - over 18', () => {
@@ -3236,7 +3245,7 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Head Office')
         })
 
-        it('should map geelong non casual ordinary hours to TODO on weekdays', () => {
+        it('should map geelong non casual ordinary hours on weekdays', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -3252,10 +3261,10 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Geelong')
         })
 
-        it('should map geelong non casual ordinary hours to TODO on sundays', () => {
+        it('should map geelong non casual ordinary hours on sundays', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -3271,7 +3280,7 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Geelong')
         })
 
         it('should map overtime first three hours - mon to sat', () => {
@@ -3508,7 +3517,7 @@ describe('Timesheet suite', () => {
             })
         })
 
-        it('should map geelong overtime first three hours on weekdays to TODO', () => {
+        it('should map geelong overtime first three hours on weekdays', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -3524,10 +3533,10 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Geelong')
         })
 
-        it('should map geelong overtime first three hours on sundays to TODO', () => {
+        it('should map geelong overtime first three hours on sundays', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -3543,7 +3552,7 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'CGS OT - First 3 Hrs - Sunday - Geelong')
         })
 
         it('should map overtime after three hours', () => {
@@ -3663,7 +3672,7 @@ describe('Timesheet suite', () => {
             })
         })
 
-        it('should map geelong overtime after three hours to TODO', () => {
+        it('should map geelong overtime after three hours', () => {
             const row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
@@ -3679,7 +3688,7 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
 
-            strictEqual(row.payItem, 'TODO')
+            strictEqual(row.payItem, 'CGS OT - After 3 Hrs - Geelong')
         })
 
         it('should map casual ordinary hours for employees under 18 on a rate above $18 on mon-sat to over 18 mon-sat', () => {

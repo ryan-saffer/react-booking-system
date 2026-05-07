@@ -7,5 +7,6 @@ export const StoreCalendars: Record<Studio, number> = {
     geelong: 13969680,
     kingsville: 11622419,
     malvern: 3163508,
+    werribee: 14046878,
 }
 export const TestCalendarId = 3657946

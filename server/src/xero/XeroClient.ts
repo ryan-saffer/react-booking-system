@@ -3,7 +3,6 @@ import type { FranchiseOrMaster, StudioOrMaster } from 'fizz-kidz'
 import type { ClientStatus } from '../utilities/types'
 import type { XeroClient as TXeroClient } from 'xero-node'
 
-
 const ENV_MAP: Record<FranchiseOrMaster, { clientId: string; clientSecret: string }> = {
     master: {
         clientId: process.env.MASTER_XERO_CLIENT_ID!,
@@ -16,6 +15,10 @@ const ENV_MAP: Record<FranchiseOrMaster, { clientId: string; clientSecret: strin
     kingsville: {
         clientId: process.env.KINGSVILLE_XERO_CLIENT_ID,
         clientSecret: process.env.KINGSVILLE_XERO_CLIENT_SECRET,
+    },
+    werribee: {
+        clientId: 'TODO',
+        clientSecret: 'TODO',
     },
 }
 

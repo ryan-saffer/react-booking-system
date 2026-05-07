@@ -29,6 +29,13 @@ export function getPartyCustomerContactInfo(location: Studio) {
                 contactName: 'Kate',
                 contactSignoff: 'Kate and the Fizz Kidz team',
             }
+        case 'werribee':
+            return {
+                email: 'werribee@fizzkidz.com.au',
+                phoneDisplay: genericContact.mainPhoneDisplay,
+                contactName: 'Paris',
+                contactSignoff: 'Paris and the Fizz Kidz team',
+            }
         case 'master':
             return {
                 email: genericContact.email,
@@ -60,6 +67,8 @@ export function getStudioContactEmail(location: Studio, env: 'dev' | 'prod' = 'p
             return 'kingsville@fizzkidz.com.au'
         case 'malvern':
             return 'malvern@fizzkidz.com.au'
+        case 'werribee':
+            return 'werribee@fizzkidz.com.au'
         default: {
             const exhaustiveCheck: never = location
             throw new Error(`Unknown location: ${exhaustiveCheck}`)
