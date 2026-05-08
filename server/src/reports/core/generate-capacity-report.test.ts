@@ -1,6 +1,6 @@
 import { deepStrictEqual, rejects, strictEqual } from 'assert'
 
-import type { FirestoreBooking, StudioOrMaster } from 'fizz-kidz'
+import { STUDIOS, type FirestoreBooking, type StudioOrMaster } from 'fizz-kidz'
 
 import { mockDatabaseClient, resetDatabaseClientMock } from '@/test/mocks/database-client.mock'
 
@@ -63,7 +63,7 @@ describe('generateCapacityReport', () => {
             studio: 'master',
         })
 
-        strictEqual(result.results.length, 6)
+        strictEqual(result.results.length, STUDIOS.length)
         deepStrictEqual(
             result.results.filter((studioResult) => studioResult.bookedSlots > 0),
             [
