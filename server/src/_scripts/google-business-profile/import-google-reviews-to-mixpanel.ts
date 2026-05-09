@@ -234,21 +234,21 @@ function mapReviewToFirestoreReview(
 
     return {
         id: getReviewDocumentId(review.name),
-        studio: getGoogleBusinessProfileStudioFromLocationId(locationId),
+        studio: getGoogleBusinessProfileStudioFromLocationId(locationId) ?? null,
         locationId,
         locationName: location.name,
-        locationTitle: location.title,
+        locationTitle: location.title ?? null,
         reviewName: review.name,
-        reviewId: review.reviewId,
-        reviewerDisplayName: review.reviewer?.displayName,
-        reviewerIsAnonymous: review.reviewer?.isAnonymous,
-        starRating: review.starRating,
-        starRatingValue: mapGoogleStarRatingToNumber(review.starRating),
-        comment: review.comment,
-        createTime: review.createTime,
-        updateTime: review.updateTime,
+        reviewId: review.reviewId ?? null,
+        reviewerDisplayName: review.reviewer?.displayName ?? null,
+        reviewerIsAnonymous: review.reviewer?.isAnonymous ?? null,
+        starRating: review.starRating ?? null,
+        starRatingValue: mapGoogleStarRatingToNumber(review.starRating) ?? null,
+        comment: review.comment ?? null,
+        createTime: review.createTime ?? null,
+        updateTime: review.updateTime ?? null,
         hasReply: !!review.reviewReply,
-        replyUpdateTime: review.reviewReply?.updateTime,
+        replyUpdateTime: review.reviewReply?.updateTime ?? null,
     }
 }
 

@@ -51,8 +51,8 @@ function mapReview(review: GoogleBusinessProfileReview): PublicGoogleReview {
         writtenYear: getYear(review.createTime ?? review.updateTime),
         writtenDate: getMonthYear(review.createTime ?? review.updateTime),
         rating: review.starRatingValue ?? 5,
-        location: review.locationTitle,
-        reviewUrl: getGoogleBusinessProfileMapsUrlForStudio(studio),
+        location: review.locationTitle ?? undefined,
+        reviewUrl: getGoogleBusinessProfileMapsUrlForStudio(studio ?? undefined),
         source: 'Google',
     }
 }
@@ -73,7 +73,7 @@ function getStudioQueryParam(input: unknown): Studio | undefined {
     return isStudio(studio) ? studio : undefined
 }
 
-function getYear(input: string | undefined) {
+function getYear(input: string | null | undefined) {
     if (!input) return new Date().getFullYear().toString()
 
     const date = new Date(input)
@@ -82,7 +82,7 @@ function getYear(input: string | undefined) {
     return date.getFullYear().toString()
 }
 
-function getMonthYear(input: string | undefined) {
+function getMonthYear(input: string | null | undefined) {
     if (!input) return new Date().getFullYear().toString()
 
     const date = new Date(input)
