@@ -10,6 +10,7 @@ import slime from "@/assets/images/pages/locations/kingsville/slime.jpg";
 import { getImage, Image } from "astro:assets";
 import CardWithImage from "@/components/card-with-image.astro";
 import ImageCarousel from "@/components/react/image-carousel";
+import GoogleReviews from "@/components/google-reviews.astro";
 import blueWave from "@/assets/images/pages/locations/blue-wave.svg";
 import Values from "@/components/values.astro";
 import FaqAccordion from "@/components/react/faq-accordion";
@@ -178,6 +179,12 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
           { image: carousel4, alt: "Alt" },
           { image: carousel5, alt: "Alt" },
         ]}
+      />
+    </section>
+    <section>
+      <GoogleReviews
+        title="Hear what our parents have to say!"
+        location="geelong"
       />
     </section>
   </div>

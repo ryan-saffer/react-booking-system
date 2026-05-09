@@ -10,7 +10,7 @@ import slime from "@/assets/images/pages/locations/kingsville/slime.jpg";
 import { getImage, Image } from "astro:assets";
 import CardWithImage from "@/components/card-with-image.astro";
 import ImageCarousel from "@/components/react/image-carousel";
-// import Reviews from "@/components/reviews.astro";
+import GoogleReviews from "@/components/google-reviews.astro";
 import blueWave from "@/assets/images/pages/locations/blue-wave.svg";
 import Values from "@/components/values.astro";
 import FaqAccordion from "@/components/react/faq-accordion";
@@ -191,37 +191,12 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
         ]}
       />
     </section>
-    <!-- <section>
-      <Reviews
+    <section>
+      <GoogleReviews
         title="Hear what our parents have to say!"
-        reviews={[
-          {
-            review:
-              "My 7 year old daughters had an awesome birthday party at Fizz Kidz. Brendan and Lilly were excellent hosts - engaging, helpful and the kids thought they were very funny. I self catered but they still helped set up and serve the food. The party guests all loved taking home their sparkly slime and lip balm. Highly recommend.",
-            writtenBy: "Julia",
-            writtenYear: "February 2025",
-          },
-          {
-            review:
-              "When I asked my daughter, turning 7 this year, what party she wanted she immediately said Fizz Kids. She had her 6 year old part at the Malvern venue and clearly it made an impression! We were happy to book it again so that is saying something. This year we went to Cheltenham and if I was to pick a venue it would probably be this one simply because it is so light and airy and spacious plus parking is so easy (logistics matters, people!). That said we would also happily go back to Malvern. We have now had two parties at Fizz Kids and can confidently say it has been a great experience both times. The venues are set up perfectly, the hosts are so great with kids and keeping things fun and interesting and the activities are perfect. Our hosts (Ben and I think Lilly? Sorry if I go the name wrong!) were fantastic and immediately started interacting with Charlie when we arrived 10 minutes early. They also adapted so quickly to her needs (yelling happy birthday upset her as she's sensitive to noise at the moment so Ben quickly changed it to the best whisper of Happy Birthday). They are also so flexible and great communicators throughout the booking and lead up. You only get charged for the kids that go and we had a few extras on the day without any problems at all. I would not be surprised if my daughter asks for it again for her 8th birthday and we would happily oblige.",
-            writtenBy: "Sara",
-            writtenYear: "November 2024",
-          },
-          {
-            review:
-              "We didn't know what to expect. It was amazing. The team is fantastic with kids. Getting them involved and excited. Everyone loved it",
-            writtenBy: "Hala",
-            writtenYear: "November 2024",
-          },
-          {
-            review:
-              "The kids had a great time there. There were 2 hosts who were fully focused on keeping the kids entertained and helping them out with the activities. They were on time, well organised and managed the kids well. A good stress free venue kids parties !",
-            writtenBy: "Abhi",
-            writtenYear: "October 2024",
-          },
-        ]}
+        location="kingsville"
       />
-    </section> -->
+    </section>
   </div>
   <Image
     src={blueWave}

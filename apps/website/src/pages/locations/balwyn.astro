@@ -10,7 +10,7 @@ import slime from "@/assets/images/pages/locations/kingsville/slime.jpg";
 import { getImage, Image } from "astro:assets";
 import CardWithImage from "@/components/card-with-image.astro";
 import ImageCarousel from "@/components/react/image-carousel";
-import Reviews from "@/components/reviews.astro";
+import GoogleReviews from "@/components/google-reviews.astro";
 import blueWave from "@/assets/images/pages/locations/blue-wave.svg";
 import Values from "@/components/values.astro";
 import FaqAccordion from "@/components/react/faq-accordion";
@@ -185,34 +185,9 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
       />
     </section>
     <section>
-      <Reviews
+      <GoogleReviews
         title="Hear what our parents have to say!"
-        reviews={[
-          {
-            review:
-              "My daughter had the most amazing 6th birthday party today at Fizz Kids, Balwyn. Bronwyn + Angie were both so great with the kids & kept them entertained for the full 1.5 hours. Bronwyn was also absolutely amazing with our requests around allergies & I can’t thank-you enough for this! We felt so relaxed & at ease knowing Bronwyn had it all under control. Would definitely recommend Fizz Kids Balwyn for kids parties! 10/10 (My only constructive feedback would be to have a cake-stand available for parties to use or to pop it in the email to say you’ll need to bring your own).",
-            writtenBy: "Tegan",
-            writtenYear: "March 2025",
-          },
-          {
-            review:
-              "Fizz Kids make organising a party a dream. They are flexible in the lead up and the hosts were amazing on the day. Angie, Harry and Lauren kept 26(!) kids entertained making tie dye socks and spiderman slime and were energetic and adaptable to their needs. A huge thanks from us!",
-            writtenBy: "Lucy",
-            writtenYear: "March 2025",
-          },
-          {
-            review:
-              "We are so lucky to have my son's birthday part in fizz kids! Harry and Lesi are so enthusiasm, energetic. They make the party so fun! I do recommend here for all my friends.",
-            writtenBy: "Fiona",
-            writtenYear: "December 2024",
-          },
-          {
-            review:
-              "My daughter had the best time. We booked a 2 hour party and the kids made slime and some bath bombs. They had the best time. The staff were so warm and welcoming and accommodating. It was truly a very special experience.",
-            writtenBy: "Dilini",
-            writtenYear: "November 2024",
-          },
-        ]}
+        location="balwyn"
       />
     </section>
   </div>

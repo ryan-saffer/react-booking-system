@@ -10,7 +10,7 @@ import slime from "@/assets/images/pages/locations/kingsville/slime.jpg";
 import { getImage, Image } from "astro:assets";
 import CardWithImage from "@/components/card-with-image.astro";
 import ImageCarousel from "@/components/react/image-carousel";
-import Reviews from "@/components/reviews.astro";
+import GoogleReviews from "@/components/google-reviews.astro";
 import blueWave from "@/assets/images/pages/locations/blue-wave.svg";
 import Values from "@/components/values.astro";
 import FaqAccordion from "@/components/react/faq-accordion";
@@ -191,34 +191,9 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
       />
     </section>
     <section>
-      <Reviews
+      <GoogleReviews
         title="Hear what our parents have to say!"
-        reviews={[
-          {
-            review:
-              "So impressed with Fizz Kids, my daughter absolutely loved her birthday party and the staff at Fizz Kids made her day so fun and special. The activities provided are great, the kids loved the tie dye pillowcase covers, and it was such a hassle free process the whole way through. Will definitely be booking my next kid’s birthday party with them!",
-            writtenBy: "Claire",
-            writtenYear: "February 2025",
-          },
-          {
-            review:
-              "We recently hosted our daughter's 3rd and 5th birthdays at Fizz Kidz Malvern. There were 24 kids and they had the most amazing time. The Fizz Kidz team were so lovely, kind and full of exciting birthday energy! For the parent and myself it was a treat to either kiss and go or watch from a far as the kids enjoyed themselves 😊",
-            writtenBy: "Hayley",
-            writtenYear: "December 2024",
-          },
-          {
-            review:
-              "We had a wonderful birthday party for our 6 year old yesterday. Everything was so well organized and easy. The two lovely hosts were so great with the kids, funny and engaging- everyone had a great time! Thanks again for such an easy afternoon.",
-            writtenBy: "Selena",
-            writtenYear: "December 2024",
-          },
-          {
-            review:
-              "We had an amazing time at the party! My daughter and her friends had a blast. After the birthday party, all the parents told me their kids had so much fun. The instructors were super professional and friendly, making us feel welcome as soon as we walked in. The program was also very well organized. I highly recommend this place!",
-            writtenBy: "Ej",
-            writtenYear: "December 2024",
-          },
-        ]}
+        location="malvern"
       />
     </section>
   </div>

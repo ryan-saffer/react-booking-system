@@ -10,7 +10,7 @@ import slime from "@/assets/images/pages/locations/kingsville/slime.jpg";
 import { getImage, Image } from "astro:assets";
 import CardWithImage from "@/components/card-with-image.astro";
 import ImageCarousel from "@/components/react/image-carousel";
-import Reviews from "@/components/reviews.astro";
+import GoogleReviews from "@/components/google-reviews.astro";
 import blueWave from "@/assets/images/pages/locations/blue-wave.svg";
 import Values from "@/components/values.astro";
 import FaqAccordion from "@/components/react/faq-accordion";
@@ -191,34 +191,9 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
       />
     </section>
     <section>
-      <Reviews
+      <GoogleReviews
         title="Hear what our parents have to say!"
-        reviews={[
-          {
-            review:
-              "Was an absolute hit amongst kids (and parents)! Love the space and love that it only holds 1 booking at a time! The hosts were fantastic and super helpful! Received lots of raves about the place so you guys must be doing something right! Thankyou so much again 💓",
-            writtenBy: "Lisa-Marie",
-            writtenYear: "March 2025",
-          },
-          {
-            review:
-              "What a fun party!? Charlie and Tara are absolute black belts in child wrangling, and the kids had the most fun! They loved making the slime and tie dye scrunchies and the added breaks of dance and freeze were just perfectly timed! We will be back!",
-            writtenBy: "Jessica",
-            writtenYear: "February 2025",
-          },
-          {
-            review:
-              "We had an absolutely fantastic experience at Fizz kids Essendon! From start to finish, everything was so well organized and fun. The staff were incredibly friendly and attentive, ensuring every detail was taken care of. The games were engaging, and the staff kept everyone laughing and having a blast. I would highly recommend this venue for any parent looking to throw an unforgettable birthday party",
-            writtenBy: "Emma",
-            writtenYear: "February 2025",
-          },
-          {
-            review:
-              "I had my sons 6th birthday at fizz kids this Saturday and Eliza and Harry were amazing. They were great at keeping the kids engaged and super helpful with any questions I had. I highly recommend fizz kids if your looking for your next kids party 🥳 🎉",
-            writtenBy: "Courtney",
-            writtenYear: "January 2025",
-          },
-        ]}
+        location="essendon"
       />
     </section>
   </div>
