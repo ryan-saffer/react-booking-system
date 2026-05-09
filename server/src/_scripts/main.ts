@@ -13,6 +13,7 @@ import { sendMinimumShiftLengthReport } from '@/staff/core/send-minimum-shift-le
 import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
 import { getAllUsers } from './auth/get-all-users'
 import { deleteEvents } from './events/delete-events'
+import { importGoogleReviewsToMixpanel } from './google-business-profile/import-google-reviews-to-mixpanel'
 import {
     migrateScienceEnrolments,
     migration_addChildSupportToAllExistingEnrolments,
@@ -107,6 +108,11 @@ import type { Order } from 'square/api'
                 description: 'Cancel one class across enrolments and clean up Firestore appointment ids',
                 value: 'removePreschoolProgramClass',
             },
+            {
+                title: 'Import Google reviews to Mixpanel',
+                description: 'Imports historical Google Business Profile reviews as Mixpanel events',
+                value: 'importGoogleReviewsToMixpanel',
+            },
         ],
     })
     if (script === 'legacyEventsGrouping') {
@@ -152,6 +158,9 @@ import type { Order } from 'square/api'
     }
     if (script === 'removePreschoolProgramClass') {
         await runRemovePreschoolProgramClassScript()
+    }
+    if (script === 'importGoogleReviewsToMixpanel') {
+        await importGoogleReviewsToMixpanel()
     }
     if (script === 'getParties') {
         const { startDate, endDate, location, type } = await prompts([
