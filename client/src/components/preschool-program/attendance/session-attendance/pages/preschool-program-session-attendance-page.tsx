@@ -131,18 +131,16 @@ export function PreschoolProgramSessionAttendancePage() {
                             <col className="w-[2rem]" />
                             <col className="w-1/4" />
                             <col className="hidden w-1/4 sm:table-cell" />
-                            <col className="hidden w-1/4 sm:table-cell" />
-                            <col className="w-[12rem]" />
+                            <col className="w-[7rem] sm:w-1/4" />
+                            <col className="w-[5.5rem] sm:w-[12rem]" />
                         </colgroup>
                         <TableHeader>
                             <TableRow>
                                 <TableHead />
                                 <TableHead className="max-w-40 text-nowrap">Child Name</TableHead>
                                 <TableHead className="hidden w-1/4 text-nowrap sm:table-cell">Age</TableHead>
-                                <TableHead className="hidden w-1/4 text-nowrap text-center sm:table-cell">
-                                    Tags
-                                </TableHead>
-                                <TableHead className="text-nowrap text-center">Action</TableHead>
+                                <TableHead className="w-[7rem] text-nowrap text-center sm:w-1/4">Tags</TableHead>
+                                <TableHead className="w-[5.5rem] text-nowrap text-right sm:w-[12rem]">Action</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -155,7 +153,7 @@ export function PreschoolProgramSessionAttendancePage() {
                                         <>
                                             <Accordion.Trigger asChild>
                                                 <TableRow
-                                                    className="h-16 hover:cursor-pointer [&[data-state=open]>td#arrow>svg]:rotate-90 [&_td]:px-4"
+                                                    className="h-16 hover:cursor-pointer [&[data-state=open]>td#arrow>svg]:rotate-90 [&_td]:px-2 sm:[&_td]:px-4"
                                                     onClick={() =>
                                                         setOpenItems((prev) => ({ ...prev, [id]: !prev[id] }))
                                                     }
