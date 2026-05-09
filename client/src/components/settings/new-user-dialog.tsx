@@ -25,7 +25,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { getOrgName } from '@utils/studioUtils'
 import { useTRPC } from '@utils/trpc'
 
-
 const formSchema = z.object({
     firstname: z.string().min(1, { message: 'First name cannot be empty.' }),
     lastname: z.string().min(1, { message: 'Last name cannot be empty.' }),
@@ -133,10 +132,10 @@ export function NewUserDialog({ open, close }: { open: boolean; close: () => voi
                                         <FormLabel>Role</FormLabel>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue defaultValue="Select role" />
+                                                <SelectValue placeholder="Select role" />
                                             </SelectTrigger>
                                         </FormControl>
-                                        <SelectContent>
+                                        <SelectContent className="z-[1202]">
                                             {ROLES.map((role) => (
                                                 <SelectItem key={role} value={role}>
                                                     {getRoleDisplayValue(role)}
