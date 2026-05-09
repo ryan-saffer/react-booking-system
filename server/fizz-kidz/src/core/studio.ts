@@ -9,6 +9,10 @@ export type StudioOrMaster = Studio | 'master'
 export type FranchiseOrMaster = FranchiseStudio | 'master'
 export type StudioOrTest = Studio | 'test'
 
+export function isStudio(studio: string): studio is Studio {
+    return (STUDIOS as readonly string[]).includes(studio)
+}
+
 export function isFranchise(studio: StudioOrMaster): studio is FranchiseStudio {
     return FRANCHISE_STUDIOS.includes(studio as any)
 }

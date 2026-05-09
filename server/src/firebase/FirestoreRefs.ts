@@ -11,6 +11,7 @@ import type {
     Rsvp,
     PreschoolProgramEnrolment,
     ZohoAccessToken,
+    GoogleBusinessProfileReview,
 } from 'fizz-kidz'
 
 import { FirestoreClient } from './FirestoreClient'
@@ -157,5 +158,15 @@ export class FirestoreRefs {
 
     static async partyFormSubmissionProcessingDoc(submissionId: string) {
         return (await this.partyFormSubmissionProcessing()).doc(submissionId)
+    }
+
+    static async googleBusinessProfileReviews() {
+        return (await FirestoreClient.getInstance()).collection(
+            'googleBusinessProfileReviews'
+        ) as Collection<GoogleBusinessProfileReview>
+    }
+
+    static async googleBusinessProfileReview(id: string) {
+        return (await this.googleBusinessProfileReviews()).doc(id)
     }
 }

@@ -5,6 +5,7 @@ import { onRequest } from 'firebase-functions/v2/https'
 
 import { acuityWebhook } from './acuity/functions/acuity.webhook'
 import { esignaturesWebhook } from './esignatures.io/functions/esignatures.webhook'
+import { googleReviewsRoute } from './google-business-profile/functions/routes/google-reviews'
 import { env } from './init'
 import { hostedPaperformRedirect } from './paperforms/functions/routes/hosted-paperform-redirect'
 import { partyFormRedirect } from './paperforms/functions/webhooks/paperform-redirect'
@@ -29,6 +30,7 @@ const ERRORS_TO_IGNORE: AppErrorCode[] = [
 ]
 
 // TRPC
+
 apiRouter.use(
     '/trpc',
     trpcExpress.createExpressMiddleware({
@@ -68,6 +70,9 @@ webhooks.use((req, _, next) => {
     }
     next()
 })
+
+// ------ PUBLIC API ENDPOINTS -------
+apiRouter.use(googleReviewsRoute)
 
 // Mount all webhooks under /webhooks
 webhooks.use('/webhooks', [

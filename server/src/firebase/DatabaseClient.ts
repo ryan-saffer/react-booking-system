@@ -16,6 +16,8 @@ import type {
     AuthUser,
     InvitationsV2,
     Rsvp,
+    GoogleBusinessProfileReview,
+    Studio,
 } from 'fizz-kidz'
 
 import { midnight } from '@/utilities'
@@ -471,6 +473,75 @@ class Client {
         const ref = await FirestoreRefs.paymentIdempotencyKey(key)
         return ref.create({ createdAt: FieldValue.serverTimestamp() })
     }
+
+    async upsertGoogleBusinessProfileReviews(reviews: GoogleBusinessProfileReview[]) {
+        const firestore = await FirestoreClient.getInstance()
+        const reviewsRef = await FirestoreRefs.googleBusinessProfileReviews()
+
+        for (let i = 0; i < reviews.length; i += 500) {
+            const batch = firestore.batch()
+            const chunk = reviews.slice(i, i + 500)
+
+            chunk.forEach((review) => {
+                batch.set(reviewsRef.doc(review.id), review, { merge: true })
+            })
+
+            await batch.commit()
+        }
+    }
+
+    async getGoogleBusinessProfileReviews(input: { limit: number; studio?: Studio; locationId?: string }) {
+        const reviewsRef = await FirestoreRefs.googleBusinessProfileReviews()
+        const queryLimit = input.limit * 5
+
+        if (!input.studio) {
+            const snapshot = await reviewsRef.orderBy('createTime', 'desc').limit(queryLimit).get()
+            return snapshot.docs.map((doc) => doc.data())
+        }
+
+        const snapshots = await Promise.all([
+            reviewsRef.where('studio', '==', input.studio).orderBy('createTime', 'desc').limit(queryLimit).get(),
+            input.locationId
+                ? reviewsRef
+                      .where('locationId', '==', input.locationId)
+                      .orderBy('createTime', 'desc')
+                      .limit(queryLimit)
+                      .get()
+                : undefined,
+            input.locationId
+                ? reviewsRef
+                      .where('locationName', '==', `locations/${input.locationId}`)
+                      .orderBy('createTime', 'desc')
+                      .limit(queryLimit)
+                      .get()
+                : undefined,
+            input.locationId
+                ? reviewsRef
+                      .where('locationName', '==', `accounts/112832034698683075484/locations/${input.locationId}`)
+                      .orderBy('createTime', 'desc')
+                      .limit(queryLimit)
+                      .get()
+                : undefined,
+        ])
+
+        const reviewsById = new Map<string, GoogleBusinessProfileReview>()
+
+        snapshots.forEach((snapshot) => {
+            snapshot?.docs.forEach((doc) => reviewsById.set(doc.id, doc.data()))
+        })
+
+        return [...reviewsById.values()]
+            .sort((a, b) => getGoogleReviewTime(b) - getGoogleReviewTime(a))
+            .slice(0, queryLimit)
+    }
+}
+
+function getGoogleReviewTime(review: GoogleBusinessProfileReview) {
+    const time = review.createTime ?? review.updateTime
+    if (!time) return 0
+
+    const timestamp = new Date(time).getTime()
+    return Number.isNaN(timestamp) ? 0 : timestamp
 }
 
 const DatabaseClient = new Client()

@@ -130,6 +130,24 @@ export type MixpanelEvent = {
         referenceOther?: string
         partyTheme?: string
     }
+    'google-business-profile-review': {
+        distinct_id: string
+        notificationType: 'NEW_REVIEW' | 'UPDATED_REVIEW'
+        locationName: string
+        locationTitle?: string
+        studio?: Studio
+        reviewName: string
+        reviewId?: string
+        reviewerDisplayName?: string
+        reviewerIsAnonymous?: boolean
+        starRating?: string
+        starRatingValue?: number
+        comment?: string
+        createTime?: string
+        updateTime?: string
+        hasReply: boolean
+        replyUpdateTime?: string
+    }
     'holiday-program-checkout-reached': {
         distinct_id: string
     }
@@ -239,6 +257,7 @@ const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'invitation-coupon-signup': 'Invitation Coupon Code Signup',
     'holiday-program-website-discount': 'Website Holiday Program Discount Generated',
     'website-enquiry': 'Website Enquiry',
+    'google-business-profile-review': 'Google Review',
     'holiday-program-checkout-reached': 'Holiday Program Checkout Reached',
     'holiday-program-booking': 'Holiday Program Booking',
     'birthday-party-booking': 'Birthday Party Booking',
