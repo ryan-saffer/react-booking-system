@@ -159,15 +159,14 @@ export function ChildRow({
                 )}
             </TableCell>
             <TableCell className="hidden w-1/4 p-2 sm:table-cell">{childAge}</TableCell>
-            <TableCell className="hidden w-1/4 p-2 text-center sm:table-cell">
-                <div className="flex justify-center gap-2">
-                    <Badge>Term Enrolment</Badge>
+            <TableCell className="w-[7rem] p-2 text-center sm:w-1/4">
+                <div className="flex flex-wrap justify-center gap-1 sm:gap-2">
                     {enrolment.child.allergies ? <Badge variant="destructive">Allergies</Badge> : null}
                     {isNotAttending ? <Badge variant="secondary">Not Attending</Badge> : null}
                 </div>
             </TableCell>
-            <TableCell className="p-2 text-center">
-                <div className="flex justify-center gap-2">
+            <TableCell className="w-[5.5rem] p-2 text-right sm:w-[12rem]">
+                <div className="flex justify-end gap-2">
                     {isPending ? (
                         <Loader2 className="animate-spin" />
                     ) : (
