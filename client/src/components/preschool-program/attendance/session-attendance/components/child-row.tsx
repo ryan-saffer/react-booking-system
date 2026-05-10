@@ -163,6 +163,7 @@ export function ChildRow({
                 <div className="flex flex-wrap justify-center gap-1 sm:gap-2">
                     {enrolment.child.allergies ? <Badge variant="destructive">Allergies</Badge> : null}
                     {isNotAttending ? <Badge variant="secondary">Not Attending</Badge> : null}
+                    {enrolment.child.additionalInfo ? <Badge variant="success">Additional Info</Badge> : null}
                 </div>
             </TableCell>
             <TableCell className="w-[5.5rem] p-2 text-right sm:w-[12rem]">
