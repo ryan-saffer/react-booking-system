@@ -91,7 +91,7 @@ const TAYLOR_SWIFT_CREATIONS = {
     glitterFaceShimmer: 'Glitter Face Shimmer',
     sparklingLipBalm: 'Sparkling Lip Balm',
     glowCrowns: 'Glow Crowns',
-    charmKeyrings: 'Charm keyrings',
+    charmKeyrings: 'Charm Keyrings',
 } as const
 
 const K_POP_POWER_CREATIONS = {
