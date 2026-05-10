@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { differenceInYears } from 'date-fns'
-import { ArrowLeft, ChevronDown, ExternalLink, Loader2 } from 'lucide-react'
+import { ArrowLeft, ChevronDown, ExternalLink, Loader2, StickyNote } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import type { InvoiceStatusMap, PreschoolProgramEnrolment } from 'fizz-kidz'
 
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
+import { Badge } from '@ui-components/badge'
 import { Button } from '@ui-components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@ui-components/card'
 import { Checkbox } from '@ui-components/checkbox'
@@ -16,6 +17,7 @@ import { Skeleton } from '@ui-components/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { useTRPC } from '@utils/trpc'
 
+import { EnrolmentNotesDialog } from './enrolment-notes-dialog'
 import { InvoiceStatusBadge } from './invoice-status-badge'
 import { SendInvoicesDialog } from './send-invoices-dialog'
 import { UnenrollEnrolmentsDialog } from './unenroll-enrolments-dialog'
@@ -33,6 +35,7 @@ export function PreschoolProgramInvoicesTable() {
     const [selectedIds, setSelectedIds] = useState<string[]>([])
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [isUnenrollDialogOpen, setIsUnenrollDialogOpen] = useState(false)
+    const [notesEnrolmentId, setNotesEnrolmentId] = useState<string | undefined>()
 
     const appointmentTypeId = parseInt(searchParams.get('appointmentTypeId') || '')
     const programName = decodeURIComponent(searchParams.get('programName') || '')
@@ -94,10 +97,25 @@ export function PreschoolProgramInvoicesTable() {
             },
         })
     )
+    const updateEnrolmentMutation = useMutation(
+        trpc.preschoolProgram.updateEnrolment.mutationOptions({
+            onSuccess: (updatedEnrolment) => {
+                queryClient.setQueryData(
+                    trpc.preschoolProgram.listEnrolments.queryKey({ appointmentTypeId }),
+                    (existing) =>
+                        existing?.map((enrolment) =>
+                            enrolment.id === updatedEnrolment.id ? updatedEnrolment : enrolment
+                        )
+                )
+            },
+        })
+    )
 
-    const actionsLoading = sendInvoicesMutation.isPending || unenrollMutation.isPending
+    const actionsLoading =
+        sendInvoicesMutation.isPending || unenrollMutation.isPending || updateEnrolmentMutation.isPending
 
     const allSelected = enrolments.length > 0 && selectedIds.length === enrolments.length
+    const notesEnrolment = enrolments.find((enrolment) => enrolment.id === notesEnrolmentId)
 
     function toggleAllRows(checked: boolean) {
         setSelectedIds(checked ? enrolments.map((enrolment) => enrolment.id) : [])
@@ -137,6 +155,19 @@ export function PreschoolProgramInvoicesTable() {
             toast.success('Enrolments removed from the term.')
         } catch (error) {
             const message = error instanceof Error ? error.message : 'There was an error unenrolling from the term.'
+            toast.error(message)
+        }
+    }
+
+    async function handleSaveNotes(notes: string) {
+        if (!notesEnrolmentId) return
+
+        try {
+            await updateEnrolmentMutation.mutateAsync({ id: notesEnrolmentId, notes })
+            setNotesEnrolmentId(undefined)
+            toast.success('Notes saved.')
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'There was an error saving notes.'
             toast.error(message)
         }
     }
@@ -254,6 +285,7 @@ export function PreschoolProgramInvoicesTable() {
                                     <TableHead>Age</TableHead>
                                     <TableHead>Weeks</TableHead>
                                     <TableHead>Status</TableHead>
+                                    <TableHead>Notes</TableHead>
                                     <TableHead className="text-right">Links</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -308,6 +340,27 @@ export function PreschoolProgramInvoicesTable() {
                                                     <InvoiceStatusBadge status={status} />
                                                 )}
                                             </TableCell>
+                                            <TableCell onClick={(event) => event.stopPropagation()}>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="max-w-52 justify-start gap-2 px-2"
+                                                    onClick={() => setNotesEnrolmentId(enrolment.id)}
+                                                    disabled={actionsLoading}
+                                                >
+                                                    <StickyNote className="h-4 w-4 shrink-0" />
+                                                    {enrolment.notes ? (
+                                                        <span className="truncate text-left">{enrolment.notes}</span>
+                                                    ) : (
+                                                        <span className="text-slate-500">Add note</span>
+                                                    )}
+                                                </Button>
+                                                {enrolment.notes ? (
+                                                    <Badge variant="outline" className="mt-1 block max-w-52 truncate">
+                                                        Internal note
+                                                    </Badge>
+                                                ) : null}
+                                            </TableCell>
                                             <TableCell className="text-right">
                                                 {hasInvoiceLinks ? (
                                                     <div className="flex justify-end gap-2">
@@ -361,6 +414,24 @@ export function PreschoolProgramInvoicesTable() {
                 loading={unenrollMutation.isPending}
                 count={selectedIds.length}
                 onConfirm={handleUnenroll}
+            />
+            <EnrolmentNotesDialog
+                key={notesEnrolmentId}
+                open={!!notesEnrolmentId}
+                onOpenChange={(open) => {
+                    if (!open) setNotesEnrolmentId(undefined)
+                }}
+                loading={updateEnrolmentMutation.isPending}
+                enrolment={
+                    notesEnrolment
+                        ? {
+                              childName: `${notesEnrolment.child.firstName} ${notesEnrolment.child.lastName}`,
+                              parentName: `${notesEnrolment.parent.firstName} ${notesEnrolment.parent.lastName}`,
+                              notes: notesEnrolment.notes,
+                          }
+                        : undefined
+                }
+                onSave={handleSaveNotes}
             />
         </div>
     )
