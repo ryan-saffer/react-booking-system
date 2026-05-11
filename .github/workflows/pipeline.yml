@@ -49,22 +49,28 @@ jobs:
             server/fizz-kidz/package-lock.json
 
       - name: Create server .env from SERVER_ENV_FILE
+        env:
+          SERVER_ENV_FILE: ${{ vars.SERVER_ENV_FILE }}
         run: |
           if [ "${{ github.ref_name }}" = 'main' ]; then
-            printf '%s' "${{ vars.SERVER_ENV_FILE }}" > server/.env.prod
-            echo "Wrote server/.env.prod"
+            printf '%s' "$SERVER_ENV_FILE" > server/.env.prod
+            printf '%s' "$SERVER_ENV_FILE" > server/.env.bookings-prod
+            echo "Wrote server prod env files"
           else
-            printf '%s' "${{ vars.SERVER_ENV_FILE }}" > server/.env
-            echo "Wrote server/.env"
+            printf '%s' "$SERVER_ENV_FILE" > server/.env
+            printf '%s' "$SERVER_ENV_FILE" > server/.env.booking-system-6435d
+            echo "Wrote server dev env files"
           fi
 
       - name: Create client .env from CLIENT_ENV_FILE
+        env:
+          CLIENT_ENV_FILE: ${{ vars.CLIENT_ENV_FILE }}
         run: |
           if [ "${{ github.ref_name }}" = 'main' ]; then
-            printf '%s' "${{ vars.CLIENT_ENV_FILE }}" > client/.env.prod
+            printf '%s' "$CLIENT_ENV_FILE" > client/.env.prod
             echo "Wrote client/.env.prod"
           else
-            printf '%s' "${{ vars.CLIENT_ENV_FILE }}" > client/.env
+            printf '%s' "$CLIENT_ENV_FILE" > client/.env
             echo "Wrote client/.env"
           fi
 
