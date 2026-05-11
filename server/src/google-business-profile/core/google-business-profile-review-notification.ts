@@ -10,9 +10,9 @@ import {
 } from './google-business-profile-studios'
 
 export type GoogleBusinessProfileReviewNotification = {
-    notificationType: 'NEW_REVIEW' | 'UPDATED_REVIEW'
-    locationName: string
-    reviewName: string
+    type: 'NEW_REVIEW' | 'UPDATED_REVIEW'
+    location: string
+    review: string
 }
 
 type GoogleBusinessProfileApiReview = {
@@ -41,30 +41,30 @@ export function isGoogleBusinessProfileReviewNotification(
     const notification = input as Partial<GoogleBusinessProfileReviewNotification>
 
     return (
-        (notification.notificationType === 'NEW_REVIEW' || notification.notificationType === 'UPDATED_REVIEW') &&
-        typeof notification.locationName === 'string' &&
-        typeof notification.reviewName === 'string'
+        (notification.type === 'NEW_REVIEW' || notification.type === 'UPDATED_REVIEW') &&
+        typeof notification.location === 'string' &&
+        typeof notification.review === 'string'
     )
 }
 
 export async function handleGoogleBusinessProfileReviewNotification(
     notification: GoogleBusinessProfileReviewNotification
 ) {
-    const review = await getGoogleBusinessProfileReview(notification.reviewName)
-    const locationTitle = await getGoogleBusinessProfileLocationTitle(notification.locationName)
-    const locationId = getGoogleBusinessProfileLocationId(notification.locationName)
+    const review = await getGoogleBusinessProfileReview(notification.review)
+    const locationTitle = await getGoogleBusinessProfileLocationTitle(notification.location)
+    const locationId = getGoogleBusinessProfileLocationId(notification.location)
     const studio = getGoogleBusinessProfileStudioFromLocationId(locationId)
-    await upsertGoogleBusinessProfileReview(review, notification.locationName, locationId, locationTitle, studio)
+    await upsertGoogleBusinessProfileReview(review, notification.location, locationId, locationTitle, studio)
 
     const mixpanel = await MixpanelClient.getInstance()
 
     await mixpanel.track('google-business-profile-review', {
-        distinct_id: review.reviewer?.displayName ?? review.reviewId ?? notification.reviewName,
-        notificationType: notification.notificationType,
-        locationName: notification.locationName,
+        distinct_id: review.reviewer?.displayName ?? review.reviewId ?? notification.review,
+        notificationType: notification.type,
+        locationName: notification.location,
         locationTitle,
         studio,
-        reviewName: notification.reviewName,
+        reviewName: notification.review,
         reviewId: review.reviewId,
         reviewerDisplayName: review.reviewer?.displayName,
         reviewerIsAnonymous: review.reviewer?.isAnonymous,
