@@ -278,7 +278,7 @@ export class MailClient {
                     template: 'incursion_form.mjml',
                     useMjml: true,
                 }
-            case 'incursionFormCompleted': {
+            case 'incursionFormCompletedToCustomer': {
                 return {
                     emailInfo: {
                         to,
@@ -290,6 +290,21 @@ export class MailClient {
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'incursion_form_completed.mjml',
+                    useMjml: true,
+                }
+            }
+            case 'incursionFormCompletedToFizz': {
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Incursion Form Completed',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Incursion Form Completed',
+                        replyTo: replyTo || 'noreply@fizzkidz.com.au',
+                    },
+                    template: 'incursion_form_completed_notification.mjml',
                     useMjml: true,
                 }
             }

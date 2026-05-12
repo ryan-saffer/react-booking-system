@@ -385,7 +385,7 @@ export type Emails = {
         formUrl: string
     }
 
-    incursionFormCompleted: {
+    incursionFormCompletedToCustomer: {
         contactName: string
         slots: string[]
         numberOfChildren: string
@@ -394,6 +394,29 @@ export type Emails = {
         expectedLearning: string
         teacherInformation: string
         additionalInformation: string
+    }
+
+    incursionFormCompletedToFizz: {
+        contactName: string
+        contactEmail: string
+        contactNumber: string
+        organisation: string
+        address: string
+        studio: string
+        eventName: string
+        module: string
+        incursion: string
+        price: string
+        slots: string[]
+        notes: string
+        invoiceUrl?: string
+        numberOfChildren: string
+        location: string
+        parking: string
+        expectedLearning: string
+        teacherInformation: string
+        additionalInformation: string
+        hearAboutUs: string
     }
 
     // ONBOARDING

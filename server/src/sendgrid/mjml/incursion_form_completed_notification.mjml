@@ -1,0 +1,145 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+            <mj-text font-size="14px" color="#334155" line-height="21px"></mj-text>
+        </mj-attributes>
+    </mj-head>
+    <mj-body background-color="#f1f5f9" width="640px">
+        <mj-section background-color="#4bc5d9" padding="24px 28px">
+            <mj-column>
+                <mj-text color="#ffffff" font-size="24px" font-weight="700" line-height="30px" padding="0">
+                    Incursion Form Completed
+                </mj-text>
+                <mj-text color="#eafcff" font-size="15px" padding="8px 0 0">
+                    {{ organisation }} has submitted their pre-incursion details.
+                </mj-text>
+            </mj-column>
+        </mj-section>
+
+        <mj-section background-color="#ffffff" padding="24px 28px 8px">
+            <mj-column>
+                <mj-text color="#0f172a" font-size="18px" font-weight="700" padding="0 0 12px">
+                    Booking Context
+                </mj-text>
+                <mj-table color="#334155" font-size="14px" line-height="20px">
+                    <tr>
+                        <td style="width: 34%; padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">Event</td>
+                        <td style="padding: 7px 0">{{ eventName }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">Organisation</td>
+                        <td style="padding: 7px 0">{{ organisation }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">Address</td>
+                        <td style="padding: 7px 0">{{ address }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">Contact</td>
+                        <td style="padding: 7px 0">
+                            {{ contactName }}<br />{{ contactEmail }}<br />{{ contactNumber }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">Studio</td>
+                        <td style="padding: 7px 0">{{ studio }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">Program</td>
+                        <td style="padding: 7px 0">{{ incursion }} - {{ module }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">Price</td>
+                        <td style="padding: 7px 0">{{ price }}</td>
+                    </tr>
+                    {{#invoiceUrl}}
+                    <tr>
+                        <td style="padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">Invoice</td>
+                        <td style="padding: 7px 0">
+                            <a href="{{ invoiceUrl }}">{{ invoiceUrl }}</a>
+                        </td>
+                    </tr>
+                    {{/invoiceUrl}}
+                </mj-table>
+            </mj-column>
+        </mj-section>
+
+        <mj-section background-color="#ffffff" padding="0 28px 8px">
+            <mj-column>
+                <mj-text
+                    color="#64748b"
+                    font-size="13px"
+                    font-weight="700"
+                    text-transform="uppercase"
+                    padding="8px 0 4px"
+                >
+                    Slots
+                </mj-text>
+                <mj-raw>
+                    <ul style="margin: 0 0 8px; padding-left: 20px; color: #334155; font-size: 14px; line-height:
+                    21px;">
+                    {{#slots}}
+                    <li>{{ . }}</li>
+                    {{/slots}}
+                    </ul>
+                </mj-raw>
+                {{#notes}}
+                <mj-text
+                    color="#64748b"
+                    font-size="13px"
+                    font-weight="700"
+                    text-transform="uppercase"
+                    padding="8px 0 4px"
+                >
+                    Booking Notes
+                </mj-text>
+                <mj-text padding="0 0 12px">{{ notes }}</mj-text>
+                {{/notes}}
+            </mj-column>
+        </mj-section>
+
+        <mj-section background-color="#ffffff" padding="12px 28px 24px">
+            <mj-column>
+                <mj-divider border-width="1px" border-style="solid" border-color="#e2e8f0" padding="0 0 20px" />
+                <mj-text color="#0f172a" font-size="18px" font-weight="700" padding="0 0 12px">
+                    Form Responses
+                </mj-text>
+                <mj-table color="#334155" font-size="14px" line-height="20px">
+                    <tr>
+                        <td style="width: 34%; padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">
+                            Number of children
+                        </td>
+                        <td style="padding: 7px 0">{{ numberOfChildren }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">Location of incursion</td>
+                        <td style="padding: 7px 0">{{ location }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">Parking</td>
+                        <td style="padding: 7px 0">{{ parking }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">
+                            Curriculum / expected learning
+                        </td>
+                        <td style="padding: 7px 0">{{ expectedLearning }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">Teacher present?</td>
+                        <td style="padding: 7px 0">{{ teacherInformation }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">Anything else?</td>
+                        <td style="padding: 7px 0">{{ additionalInformation }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 7px 10px 7px 0; color: #64748b; font-weight: 700">Heard about us</td>
+                        <td style="padding: 7px 0">{{ hearAboutUs }}</td>
+                    </tr>
+                </mj-table>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

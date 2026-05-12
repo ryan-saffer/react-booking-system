@@ -1,7 +1,7 @@
 import { logger } from 'firebase-functions/v2'
 
 import type { InvitationOption, InvitationsV2 } from 'fizz-kidz'
-import { type Studio, type StudioOrTest } from 'fizz-kidz'
+import { type ScienceModule, type Studio, type StudioOrTest } from 'fizz-kidz'
 
 import type { ClientStatus } from '../utilities/types'
 import type {
@@ -191,6 +191,19 @@ export type MixpanelEvent = {
         takeHomeItems: { name: string; quantity: string }[]
         partyOrCakeForm: 'party' | 'cake'
     }
+    'incursion-form-completed': {
+        distinct_id: string
+        eventId: string
+        organisation: string
+        studio: Studio
+        module: ScienceModule
+        incursion: string
+        numberOfChildren: string
+        numberOfSlots: number
+        firstSlotStartTime: Date
+        teacherInformation: string
+        hearAboutUs: string
+    }
     'after-school-program-enrolment': {
         distinct_id: string
         type: 'science' | 'art'
@@ -262,6 +275,7 @@ const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'holiday-program-booking': 'Holiday Program Booking',
     'birthday-party-booking': 'Birthday Party Booking',
     'birthday-party-form-completed': 'Birthday Party Form Completed',
+    'incursion-form-completed': 'Incursion Form Completed',
     'after-school-program-enrolment': 'After School Program Enrolment',
     'after-school-program-unenrolment': 'After School Program Unenrolment',
     'preschool-program-enrolment': 'Preschool Program Enrolment',

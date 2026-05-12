@@ -1,10 +1,18 @@
 import { DateTime } from 'luxon'
 
 import type { IncursionEvent, IncursionForm, PaperFormResponse } from 'fizz-kidz'
-import { getQuestionValue } from 'fizz-kidz'
+import {
+    getQuestionValue,
+    getStudioContactEmail,
+    isFranchise,
+    ModuleIncursionMap,
+    ModuleNameMap,
+    Utilities,
+} from 'fizz-kidz'
 
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { MailClient } from '../../sendgrid/MailClient'
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
+import { MailClient } from '@/sendgrid/MailClient'
 
 export async function handleIncursionFormSubmission(response: PaperFormResponse<IncursionForm>) {
     const eventId = getQuestionValue(response, 'id')
@@ -46,14 +54,11 @@ export async function handleIncursionFormSubmission(response: PaperFormResponse<
     const slots = await DatabaseClient.getEventSlots<'incursion'>(eventId)
 
     const mailClient = await MailClient.getInstance()
-    await mailClient.sendEmail('incursionFormCompleted', firstSlot.contactEmail, {
+    const formattedSlots = slots.map(formatSlot)
+
+    await mailClient.sendEmail('incursionFormCompletedToCustomer', firstSlot.contactEmail, {
         contactName: firstSlot.contactName,
-        slots: slots.map(
-            (slot) =>
-                `${DateTime.fromJSDate(slot.startTime, { zone: 'Australia/Melbourne' }).toFormat(
-                    'cccc, LLL dd, t'
-                )} - ${DateTime.fromJSDate(slot.endTime, { zone: 'Australia/Melbourne' }).toFormat('t')}`
-        ),
+        slots: formattedSlots,
         numberOfChildren,
         location,
         parking,
@@ -61,4 +66,58 @@ export async function handleIncursionFormSubmission(response: PaperFormResponse<
         teacherInformation,
         additionalInformation,
     })
+
+    await mailClient.sendEmail(
+        'incursionFormCompletedToFizz',
+        getStudioContactEmail(firstSlot.studio),
+        {
+            contactName: firstSlot.contactName,
+            contactEmail: firstSlot.contactEmail,
+            contactNumber: firstSlot.contactNumber,
+            organisation,
+            address,
+            studio: Utilities.capitalise(firstSlot.studio),
+            eventName: firstSlot.eventName,
+            module: ModuleNameMap[firstSlot.module],
+            incursion: ModuleIncursionMap[firstSlot.module],
+            price: firstSlot.price,
+            slots: formattedSlots,
+            notes: firstSlot.notes,
+            invoiceUrl: firstSlot.invoiceUrl,
+            numberOfChildren,
+            location,
+            parking,
+            expectedLearning,
+            teacherInformation,
+            additionalInformation,
+            hearAboutUs,
+        },
+        {
+            bccBookings: false,
+            subject: `Incursion form completed - ${organisation}`,
+            replyTo: firstSlot.contactEmail,
+            cc: [...(!isFranchise(firstSlot.studio) ? ['kym@fizzkidz.com.au'] : [])],
+        }
+    )
+
+    const mixpanel = await MixpanelClient.getInstance()
+    await mixpanel.track('incursion-form-completed', {
+        distinct_id: firstSlot.contactEmail,
+        eventId,
+        organisation,
+        studio: firstSlot.studio,
+        module: firstSlot.module,
+        incursion: ModuleIncursionMap[firstSlot.module],
+        numberOfChildren,
+        numberOfSlots: slots.length,
+        firstSlotStartTime: firstSlot.startTime,
+        teacherInformation,
+        hearAboutUs,
+    })
+}
+
+function formatSlot(slot: IncursionEvent) {
+    return `${DateTime.fromJSDate(slot.startTime, { zone: 'Australia/Melbourne' }).toFormat(
+        'cccc, LLL dd, t'
+    )} - ${DateTime.fromJSDate(slot.endTime, { zone: 'Australia/Melbourne' }).toFormat('t')}`
 }
