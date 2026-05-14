@@ -50,7 +50,6 @@ export function getEmployeesTurning18InMonth({
     const end = targetMonth.endOf('month')
 
     return employees
-        .filter((employee) => employee.taxDeclaration?.employmentBasis === EmploymentBasis.CASUAL)
         .map((employee) => parseEmployeeBirthday(employee, studio))
         .filter(isNotNull)
         .filter(({ dob }) => didTurn18DuringRange(dob, start, end))
