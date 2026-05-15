@@ -1087,6 +1087,174 @@ export class TimesheetRow {
 }
 
 /**
+ * Per-day laundry allowance constants.
+ *
+ * Rules (matching the historical `wages-backpay-reports` analysis):
+ *   - Eligible employee-day rate: $1.32.
+ *   - Weekly cap: $6.62 per Mon-Sun week per employee.
+ *   - A day with multiple eligible shifts still only counts once.
+ *   - A day with at least one eligible shift counts even if the employee also
+ *     worked ineligible shifts that day.
+ *
+ * The cap is on the dollar amount, not the day count. 5 eligible days pays
+ * $6.60 (under the $6.62 cap) and a 6th full-day row would push the total to
+ * $7.92 (over). To respect the cap exactly we emit:
+ *   - up to 5 rows of 1 unit ($1.32 each), then
+ *   - one top-up row with fractional units worth exactly the remaining $0.02
+ *     when 6 or more eligible days are worked.
+ */
+export const LAUNDRY_DAILY_RATE = 1.32
+export const LAUNDRY_WEEKLY_CAP = 6.62
+export const LAUNDRY_FULL_DAYS_PER_WEEK = 5
+
+/**
+ * A row representing the laundry allowance for a single eligible day.
+ *
+ * Shaped to be CSV-writable alongside `TimesheetRow` (shares
+ * `firstName` / `lastname` / `payItem` / `activity` / `date` / `hours` /
+ * `summary` fields).
+ */
+export class LaundryAllowanceRow {
+    firstName: string
+    lastname: string
+    date: DateTime
+    hours: number
+    payItem: LaundryAllowancePayItem
+    activity: XeroTrackingActivity
+    summary: string
+
+    constructor({
+        firstName,
+        lastName,
+        date,
+        hours,
+        location,
+        activity,
+        summary,
+    }: {
+        firstName: string
+        lastName: string
+        date: DateTime
+        hours: number
+        location: SlingLocation
+        activity: XeroTrackingActivity
+        summary: string
+    }) {
+        this.firstName = firstName
+        this.lastname = lastName
+        this.date = date
+        this.hours = hours
+        this.payItem = getLaundryAllowancePayItem(location)
+        this.activity = activity
+        this.summary = summary
+    }
+}
+
+/**
+ * Returns laundry allowance rows for the given week.
+ *
+ * An "eligible day" is any calendar day (in the user's timezone) on which the
+ * employee worked at least one `isLaundryEligibleShift` shift.
+ *
+ * Rows are emitted as follows (each row inherits the location + activity of
+ * the earliest-starting eligible shift on its associated day):
+ *   - up to `LAUNDRY_FULL_DAYS_PER_WEEK` full-day rows at 1 unit each
+ *     ($1.32 per row), then
+ *   - if the employee worked more eligible days than that, a single top-up
+ *     row with fractional units worth exactly the remaining $0.02 needed to
+ *     hit the $6.62 weekly cap. The top-up row uses the 6th eligible day for
+ *     its date / location / activity.
+ *
+ * Days beyond the 6th do not generate additional rows - the cap has already
+ * been paid out.
+ */
+export function createLaundryAllowanceRows({
+    firstName,
+    lastName,
+    usersTimesheets,
+    timezone,
+}: {
+    firstName: string
+    lastName: string
+    usersTimesheets: Timesheet[]
+    timezone: string
+}): LaundryAllowanceRow[] {
+    // Group eligible shifts by calendar day, keeping the earliest shift per day
+    // to drive location + activity for the resulting row.
+    const eligibleShiftsByDay = new Map<
+        string,
+        { date: DateTime; firstShiftStart: DateTime; location: SlingLocation; activity: XeroTrackingActivity }
+    >()
+
+    for (const timesheet of usersTimesheets) {
+        const position = SlingPositionMap[timesheet.position.id]
+        if (!position || !isLaundryEligibleShift(position)) continue
+
+        const location = SlingLocationsMap[timesheet.location.id]
+        if (!location) continue
+
+        const start = DateTime.fromISO(timesheet.dtstart, { zone: timezone })
+        const dayKey = start.toISODate() // YYYY-MM-DD in the user's timezone
+        if (!dayKey) continue
+
+        const existing = eligibleShiftsByDay.get(dayKey)
+        if (!existing || start < existing.firstShiftStart) {
+            eligibleShiftsByDay.set(dayKey, {
+                date: start.startOf('day'),
+                firstShiftStart: start,
+                location,
+                activity: SlingPositionToActivityMap[position],
+            })
+        }
+    }
+
+    // Sort days chronologically so the weekly cap deterministically keeps the
+    // earliest eligible days when capping.
+    const sortedDays = [...eligibleShiftsByDay.values()].sort(
+        (a, b) => a.firstShiftStart.toMillis() - b.firstShiftStart.toMillis()
+    )
+
+    const fullDays = sortedDays.slice(0, LAUNDRY_FULL_DAYS_PER_WEEK)
+    const rows = fullDays.map(
+        ({ date, location, activity }) =>
+            new LaundryAllowanceRow({
+                firstName,
+                lastName,
+                date,
+                hours: 1,
+                location,
+                activity,
+                summary: 'Laundry allowance',
+            })
+    )
+
+    // If the employee worked more eligible days than the full-day allotment,
+    // add a single top-up row to reach exactly the weekly cap.
+    const topUpSourceDay = sortedDays[LAUNDRY_FULL_DAYS_PER_WEEK]
+    if (topUpSourceDay) {
+        const remainingDollars = LAUNDRY_WEEKLY_CAP - fullDays.length * LAUNDRY_DAILY_RATE
+        // Round to 4dp - Xero unit precision. With 5 full days this resolves to
+        // 0.0152 units * $1.32 = $0.020064, which rounds to the required $0.02.
+        const topUpUnits = Number((remainingDollars / LAUNDRY_DAILY_RATE).toFixed(4))
+        if (topUpUnits > 0) {
+            rows.push(
+                new LaundryAllowanceRow({
+                    firstName,
+                    lastName,
+                    date: topUpSourceDay.date,
+                    hours: topUpUnits,
+                    location: topUpSourceDay.location,
+                    activity: topUpSourceDay.activity,
+                    summary: 'Laundry allowance (weekly cap top-up)',
+                })
+            )
+        }
+    }
+
+    return rows
+}
+
+/**
  * Tells you if a birthday falls between two dates.
  *
  * @param dob the date of birth
@@ -1165,6 +1333,103 @@ export function getPositionRate({ positionId, rate, dob }: { positionId: number;
     } else {
         // sunday
         return f(rate * 1.75)
+    }
+}
+
+/**
+ * Returns true if working a shift in this position makes the employee eligible
+ * for the daily laundry allowance.
+ *
+ * Eligibility = the position requires wearing a Fizz Kidz uniform.
+ *
+ * Source of truth for the rules is the historical backpay analysis in the
+ * `wages-backpay-reports` repo (`input data/positions.csv`).
+ *
+ * Excluded shift types (and why):
+ *   - Supervisor:  does not run programs / not in costume (e.g. doing the shop run).
+ *   - On Call:     not actually working unless called in.
+ *   - PIC:         on-call equivalent.
+ *   - Training:    no uniform required.
+ *   - Miscellaneous: catch-all (e.g. covering customer service); no uniform.
+ *   - Superhero:   already paid above award so allowance is absorbed (we don't
+ *     model superhero as a separate position - it's a manual Xero pay item).
+ *
+ * NOTE: CALLED_IN_* positions are still treated as eligible here because the
+ *       facilitator still works the shift in uniform. These positions are
+ *       slated for removal from the codebase entirely (they no longer exist in
+ *       Sling) but until that cleanup happens we keep them laundry-eligible.
+ */
+export function isLaundryEligibleShift(position: SlingPosition) {
+    switch (position) {
+        // Mon - Sat facilitator shifts
+        case SlingPosition.PARTY_FACILITATOR:
+        case SlingPosition.MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.PLAY_LAB_FACILITATOR:
+        case SlingPosition.EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.INCURSIONS:
+        case SlingPosition.SUNDAY_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_AFTER_SCHOOL_FACILITATOR:
+        case SlingPosition.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_INCURSIONS:
+        case SlingPosition.CALLED_IN_PARTY_FACILITATOR:
+        case SlingPosition.CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.CALLED_IN_PLAY_LAB_FACILITATOR:
+        case SlingPosition.CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.CALLED_IN_INCURSIONS:
+        case SlingPosition.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_CALLED_IN_INCURSIONS:
+            return true
+        case SlingPosition.ON_CALL_PARTY_FACILITATOR:
+        case SlingPosition.ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.ON_CALL_PLAY_LAB_FACILITATOR:
+        case SlingPosition.ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.ON_CALL_INCURSIONS:
+        case SlingPosition.SUNDAY_ON_CALL_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_ON_CALL_INCURSIONS:
+        case SlingPosition.PIC:
+        case SlingPosition.SUNDAY_PIC:
+        case SlingPosition.SUPERVISOR_PARTY:
+        case SlingPosition.SUNDAY_SUPERVISOR_PARTY:
+        case SlingPosition.SUPERVISOR_MOBILE_PARTY:
+        case SlingPosition.SUNDAY_SUPERVISOR_MOBILE_PARTY:
+        case SlingPosition.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case SlingPosition.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case SlingPosition.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUPERVISOR_HOLIDAY_PROGRAM:
+        case SlingPosition.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
+        case SlingPosition.SUPERVISOR_INCURSIONS:
+        case SlingPosition.SUNDAY_SUPERVISOR_INCURSIONS:
+        case SlingPosition.SUPERVISOR_PLAY_LAB:
+        case SlingPosition.SUNDAY_SUPERVISOR_PLAY_LAB:
+        case SlingPosition.TRAINING:
+        case SlingPosition.SUNDAY_TRAINING:
+        case SlingPosition.MISCELLANEOUS:
+        case SlingPosition.SUNDAY_MISCELLANEOUS:
+            return false
+        default: {
+            assertNever(position)
+            throw new Error(`Unhandled position while determining isLaundryEligibleShift(): '${position}'`)
+        }
     }
 }
 
@@ -1690,6 +1955,21 @@ const SlingPositionToActivityMap: Record<SlingPosition, XeroTrackingActivity> = 
     [SlingPosition.SUNDAY_SUPERVISOR_PLAY_LAB]: 'Play Lab',
 }
 
+const LaundryAllowancePayItemMap: Record<SlingLocation, LaundryAllowancePayItem> = {
+    balwyn: 'Laundry Allowance - Balwyn',
+    cheltenham: 'Laundry Allowance - Cheltenham',
+    essendon: 'Laundry Allowance - Essendon',
+    geelong: 'Laundry Allowance - Geelong',
+    kingsville: 'Laundry Allowance - Kingsville',
+    malvern: 'Laundry Allowance - Malvern',
+    werribee: 'TODO',
+    'head-office': 'Laundry Allowance - Head Office',
+}
+
+export function getLaundryAllowancePayItem(location: SlingLocation): LaundryAllowancePayItem {
+    return LaundryAllowancePayItemMap[location]
+}
+
 export const NON_CASUAL_EMPLOYEE_GROUP_ID = 25291777
 
 type COGSCasualOrdinaryMonSat =
@@ -1952,6 +2232,17 @@ type SupervisorOvertimeAfterThreeHours =
     | 'SUPERVISOR OT - After 3 Hrs - Head Office'
     | 'TODO'
 
+export type LaundryAllowancePayItem =
+    | 'Laundry Allowance - Balwyn'
+    | 'Laundry Allowance - Cheltenham'
+    | 'Laundry Allowance - Essendon'
+    | 'Laundry Allowance - Geelong'
+    | 'Laundry Allowance - Kingsville'
+    | 'Laundry Allowance - Malvern'
+    | 'Laundry Allowance - Werribee'
+    | 'Laundry Allowance - Head Office'
+    | 'TODO'
+
 // Ordinary
 type CasualOrdinaryMonSat = COGSCasualOrdinaryMonSat | NonCOGSCasualOrdinaryMonSat | SupervisorCasualOrdinaryMonSat
 
@@ -1992,4 +2283,4 @@ type OvertimeAfterThreeHours =
 type OvertimePayItem = OvertimeFirstThreeHours | OvertimeAfterThreeHours
 
 // Result
-type PayItem = OrdinaryPayItem | OnCallPayItem | CalledInPayItem | OvertimePayItem
+type PayItem = OrdinaryPayItem | OnCallPayItem | CalledInPayItem | OvertimePayItem | LaundryAllowancePayItem

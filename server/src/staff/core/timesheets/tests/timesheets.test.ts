@@ -9,14 +9,22 @@ import {
     SlingPositionToId,
     TimesheetRow,
     createTimesheetRows,
+    createLaundryAllowanceRows,
+    getLaundryAllowancePayItem,
     getShiftsUnderMinimumShiftLength,
     getPositionRate,
     getWeeks,
     hasBirthdayDuring,
     isCalledInShift,
+    isLaundryEligibleShift,
     isOnCallShift,
     isSundayShift,
     isSupervisorShift,
+    LaundryAllowanceRow,
+    LAUNDRY_DAILY_RATE,
+    LAUNDRY_FULL_DAYS_PER_WEEK,
+    LAUNDRY_WEEKLY_CAP,
+    SlingLocationToId,
     type SlingLocation,
 } from '../timesheets.utils'
 
@@ -6392,6 +6400,742 @@ describe('Timesheet suite', () => {
 
             // then
             strictEqual(result, false)
+        })
+    })
+
+    describe('Geelong NON-CGS pay items', () => {
+        const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
+        const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
+        const baseRow = {
+            firstName: 'Ryan',
+            lastName: 'Saffer',
+            hasBirthdayDuringPayrun: false,
+            isCasual: true,
+            hours: 8,
+            summary: '',
+            location: 'geelong' as SlingLocation,
+        }
+
+        it('maps non-COGS casual Mon-Sat under 18 with low rate to NON-CGS 16&17yo COH - Mon to Sat - Geelong', () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: youngerThan18,
+                date: monday,
+                position: SlingPosition.MISCELLANEOUS,
+                rate: 14,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Geelong')
+        })
+
+        it('maps non-COGS casual Mon-Sat 18+ to NON-CGS COH - Mon to Sat - Geelong', () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: monday,
+                position: SlingPosition.MISCELLANEOUS,
+                rate: 'not required',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Geelong')
+        })
+
+        it('maps non-COGS casual Sunday to NON-CGS COH - Sunday - Geelong', () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: sunday,
+                position: SlingPosition.SUNDAY_MISCELLANEOUS,
+                rate: 'not required',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Geelong')
+        })
+
+        it('maps non-COGS overtime first-3-hours Mon-Sat to NON-CGS OT - First 3 Hrs - Mon to Sat - Geelong', () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: monday,
+                position: SlingPosition.MISCELLANEOUS,
+                rate: 'not required',
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Mon to Sat - Geelong')
+        })
+
+        it('maps non-COGS overtime first-3-hours Sunday to NON-CGS OT - First 3 Hrs - Sunday - Geelong', () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: sunday,
+                position: SlingPosition.SUNDAY_MISCELLANEOUS,
+                rate: 'not required',
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Sunday - Geelong')
+        })
+
+        it('maps non-COGS overtime after-3-hours to NON-CGS OT - After 3 Hrs - Geelong', () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: monday,
+                position: SlingPosition.MISCELLANEOUS,
+                rate: 'not required',
+                overtime: { firstThreeHours: false, afterThreeHours: true },
+            })
+            strictEqual(row.payItem, 'NON-CGS OT - After 3 Hrs - Geelong')
+        })
+    })
+
+    describe('Werribee TODO pay items', () => {
+        const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
+        const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
+        const baseRow = {
+            firstName: 'Ryan',
+            lastName: 'Saffer',
+            hasBirthdayDuringPayrun: false,
+            isCasual: true,
+            hours: 8,
+            summary: '',
+            location: 'werribee' as SlingLocation,
+        }
+
+        it("returns 'TODO' for on-call shifts on Sunday at werribee", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: sunday,
+                position: SlingPosition.ON_CALL_PARTY_FACILITATOR,
+                rate: 'not required',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it("returns 'TODO' for called-in shifts on Mon-Sat at werribee when under 18 with low rate", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: youngerThan18,
+                date: monday,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                rate: 14,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it("returns 'TODO' for called-in shifts on Mon-Sat at werribee when 18+", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: monday,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                rate: 'not required',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it("returns 'TODO' for called-in shifts on Sunday at werribee", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: sunday,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                rate: 'not required',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it("returns 'TODO' for overtime first-3-hours on Mon-Sat at werribee", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: monday,
+                position: SlingPosition.PARTY_FACILITATOR,
+                rate: 'not required',
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it("returns 'TODO' for overtime first-3-hours on Sunday at werribee", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: sunday,
+                position: SlingPosition.SUNDAY_PARTY_FACILITATOR,
+                rate: 'not required',
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it("returns 'TODO' for overtime after-3-hours at werribee", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: monday,
+                position: SlingPosition.PARTY_FACILITATOR,
+                rate: 'not required',
+                overtime: { firstThreeHours: false, afterThreeHours: true },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it("returns 'TODO' for ordinary casual Mon-Sat at werribee when under 18 with low rate", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: youngerThan18,
+                date: monday,
+                position: SlingPosition.PARTY_FACILITATOR,
+                rate: 14,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it("returns 'TODO' for ordinary casual Mon-Sat at werribee when 18+", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: monday,
+                position: SlingPosition.PARTY_FACILITATOR,
+                rate: 'not required',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it("returns 'TODO' for ordinary casual Sunday at werribee", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: sunday,
+                position: SlingPosition.SUNDAY_PARTY_FACILITATOR,
+                rate: 'not required',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it("returns 'TODO' for ordinary PT/FT Mon-Sat at werribee", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                isCasual: false,
+                dob: olderThan18,
+                date: monday,
+                position: SlingPosition.PARTY_FACILITATOR,
+                rate: 'not required',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it("returns 'TODO' for ordinary PT/FT Sunday at werribee", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                isCasual: false,
+                dob: olderThan18,
+                date: sunday,
+                position: SlingPosition.SUNDAY_PARTY_FACILITATOR,
+                rate: 'not required',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it("returns 'TODO' for on-call Mon-Sat at werribee when under 18 with low rate", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: youngerThan18,
+                date: monday,
+                position: SlingPosition.ON_CALL_PARTY_FACILITATOR,
+                rate: 14,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+
+        it("returns 'TODO' for on-call Mon-Sat at werribee when 18+", () => {
+            const row = new TimesheetRow({
+                ...baseRow,
+                dob: olderThan18,
+                date: monday,
+                position: SlingPosition.ON_CALL_PARTY_FACILITATOR,
+                rate: 'not required',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO')
+        })
+    })
+
+    describe('Laundry allowance', () => {
+        const FIRST_NAME = 'Ryan'
+        const LAST_NAME = 'Saffer'
+        const TZ = 'Australia/Melbourne'
+
+        // Helper to keep the fixtures terse. Defaults to balwyn + party
+        // facilitator (an eligible shift) so each test only specifies what it
+        // wants to vary.
+        const shift = (overrides: {
+            dtstart: string
+            dtend?: string
+            locationId?: number
+            positionId?: number
+            userId?: number
+            summary?: string
+        }): Timesheet => ({
+            dtstart: overrides.dtstart,
+            dtend: overrides.dtend ?? overrides.dtstart,
+            location: { id: overrides.locationId ?? SlingLocationToId.balwyn },
+            position: { id: overrides.positionId ?? SlingPositionToId[SlingPosition.PARTY_FACILITATOR] },
+            user: { id: overrides.userId ?? 1 },
+            status: 'published',
+            summary: overrides.summary ?? '',
+        })
+
+        const run = (timesheets: Timesheet[]) =>
+            createLaundryAllowanceRows({
+                firstName: FIRST_NAME,
+                lastName: LAST_NAME,
+                usersTimesheets: timesheets,
+                timezone: TZ,
+            })
+
+        describe('isLaundryEligibleShift', () => {
+            // Every position the function knows about, with its expected
+            // eligibility. If a new position is added to the enum without a
+            // case in the switch, this object's typing will catch the omission
+            // *and* `default` will throw at runtime.
+            const expectations: Record<SlingPosition, boolean> = {
+                // Mon - Sat facilitator shifts (eligible)
+                [SlingPosition.PARTY_FACILITATOR]: true,
+                [SlingPosition.MOBILE_PARTY_FACILITATOR]: true,
+                [SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR]: true,
+                [SlingPosition.HOLIDAY_PROGRAM_FACILITATOR]: true,
+                [SlingPosition.PLAY_LAB_FACILITATOR]: true,
+                [SlingPosition.EVENTS_AND_ACTIVATIONS]: true,
+                [SlingPosition.INCURSIONS]: true,
+                // Sunday facilitator shifts (eligible)
+                [SlingPosition.SUNDAY_PARTY_FACILITATOR]: true,
+                [SlingPosition.SUNDAY_MOBILE_PARTY_FACILITATOR]: true,
+                [SlingPosition.SUNDAY_AFTER_SCHOOL_FACILITATOR]: true,
+                [SlingPosition.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR]: true,
+                [SlingPosition.SUNDAY_PLAY_LAB_FACILITATOR]: true,
+                [SlingPosition.SUNDAY_EVENTS_AND_ACTIVATIONS]: true,
+                [SlingPosition.SUNDAY_INCURSIONS]: true,
+                // Called-in facilitator shifts (eligible; slated for removal)
+                [SlingPosition.CALLED_IN_PARTY_FACILITATOR]: true,
+                [SlingPosition.CALLED_IN_MOBILE_PARTY_FACILITATOR]: true,
+                [SlingPosition.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: true,
+                [SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: true,
+                [SlingPosition.CALLED_IN_PLAY_LAB_FACILITATOR]: true,
+                [SlingPosition.CALLED_IN_EVENTS_AND_ACTIVATIONS]: true,
+                [SlingPosition.CALLED_IN_INCURSIONS]: true,
+                [SlingPosition.SUNDAY_CALLED_IN_PARTY_FACILITATOR]: true,
+                [SlingPosition.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR]: true,
+                [SlingPosition.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: true,
+                [SlingPosition.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: true,
+                [SlingPosition.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR]: true,
+                [SlingPosition.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS]: true,
+                [SlingPosition.SUNDAY_CALLED_IN_INCURSIONS]: true,
+                // On call (ineligible)
+                [SlingPosition.ON_CALL_PARTY_FACILITATOR]: false,
+                [SlingPosition.ON_CALL_MOBILE_PARTY_FACILITATOR]: false,
+                [SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: false,
+                [SlingPosition.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: false,
+                [SlingPosition.ON_CALL_PLAY_LAB_FACILITATOR]: false,
+                [SlingPosition.ON_CALL_EVENTS_AND_ACTIVATIONS]: false,
+                [SlingPosition.ON_CALL_INCURSIONS]: false,
+                [SlingPosition.SUNDAY_ON_CALL_PARTY_FACILITATOR]: false,
+                [SlingPosition.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR]: false,
+                [SlingPosition.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: false,
+                [SlingPosition.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: false,
+                [SlingPosition.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR]: false,
+                [SlingPosition.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS]: false,
+                [SlingPosition.SUNDAY_ON_CALL_INCURSIONS]: false,
+                [SlingPosition.PIC]: false,
+                [SlingPosition.SUNDAY_PIC]: false,
+                // Supervisor (ineligible)
+                [SlingPosition.SUPERVISOR_PARTY]: false,
+                [SlingPosition.SUNDAY_SUPERVISOR_PARTY]: false,
+                [SlingPosition.SUPERVISOR_MOBILE_PARTY]: false,
+                [SlingPosition.SUNDAY_SUPERVISOR_MOBILE_PARTY]: false,
+                [SlingPosition.SUPERVISOR_AFTER_SCHOOL_PROGRAM]: false,
+                [SlingPosition.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM]: false,
+                [SlingPosition.SUPERVISOR_EVENTS_AND_ACTIVATIONS]: false,
+                [SlingPosition.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS]: false,
+                [SlingPosition.SUPERVISOR_HOLIDAY_PROGRAM]: false,
+                [SlingPosition.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM]: false,
+                [SlingPosition.SUPERVISOR_INCURSIONS]: false,
+                [SlingPosition.SUNDAY_SUPERVISOR_INCURSIONS]: false,
+                [SlingPosition.SUPERVISOR_PLAY_LAB]: false,
+                [SlingPosition.SUNDAY_SUPERVISOR_PLAY_LAB]: false,
+                // Training / Miscellaneous (ineligible)
+                [SlingPosition.TRAINING]: false,
+                [SlingPosition.SUNDAY_TRAINING]: false,
+                [SlingPosition.MISCELLANEOUS]: false,
+                [SlingPosition.SUNDAY_MISCELLANEOUS]: false,
+            }
+
+            // Sanity check: every enum member must be present in `expectations`
+            // so this suite stays exhaustive as positions are added.
+            it('covers every SlingPosition value', () => {
+                const enumValues = Object.values(SlingPosition)
+                const expected = Object.keys(expectations)
+                strictEqual(enumValues.length, expected.length)
+                for (const value of enumValues) {
+                    strictEqual(
+                        Object.prototype.hasOwnProperty.call(expectations, value),
+                        true,
+                        `missing expectation for ${value}`
+                    )
+                }
+            })
+
+            for (const [position, expected] of Object.entries(expectations) as Array<[SlingPosition, boolean]>) {
+                it(`${expected ? 'includes' : 'excludes'} ${position}`, () => {
+                    strictEqual(isLaundryEligibleShift(position), expected)
+                })
+            }
+
+            it('throws on unrecognised position', () => {
+                const invalid = 'NOT_A_REAL_POSITION' as SlingPosition
+                throws(
+                    () => isLaundryEligibleShift(invalid),
+                    /Unhandled position while determining isLaundryEligibleShift/
+                )
+            })
+        })
+
+        describe('getLaundryAllowancePayItem', () => {
+            const cases: Array<[SlingLocation, string]> = [
+                ['balwyn', 'Laundry Allowance - Balwyn'],
+                ['cheltenham', 'Laundry Allowance - Cheltenham'],
+                ['essendon', 'Laundry Allowance - Essendon'],
+                ['geelong', 'Laundry Allowance - Geelong'],
+                ['kingsville', 'Laundry Allowance - Kingsville'],
+                ['malvern', 'Laundry Allowance - Malvern'],
+                ['head-office', 'Laundry Allowance - Head Office'],
+            ]
+
+            for (const [location, payItem] of cases) {
+                it(`maps ${location} to '${payItem}'`, () => {
+                    strictEqual(getLaundryAllowancePayItem(location), payItem)
+                })
+            }
+
+            it("returns 'TODO' for werribee until the pay item is configured", () => {
+                strictEqual(getLaundryAllowancePayItem('werribee'), 'TODO')
+            })
+        })
+
+        describe('LaundryAllowanceRow', () => {
+            it('exposes the CSV-writable shape used by the timesheets writer', () => {
+                const date = DateTime.fromObject({ year: 2024, month: 6, day: 3 }, { zone: TZ })
+                const row = new LaundryAllowanceRow({
+                    firstName: 'Ryan',
+                    lastName: 'Saffer',
+                    date,
+                    hours: 1,
+                    location: 'balwyn',
+                    activity: 'Parties',
+                    summary: 'Laundry allowance',
+                })
+                strictEqual(row.firstName, 'Ryan')
+                strictEqual(row.lastname, 'Saffer')
+                strictEqual(row.date, date)
+                strictEqual(row.hours, 1)
+                strictEqual(row.payItem, 'Laundry Allowance - Balwyn')
+                strictEqual(row.activity, 'Parties')
+                strictEqual(row.summary, 'Laundry allowance')
+            })
+
+            it('preserves fractional hours for top-up rows', () => {
+                const row = new LaundryAllowanceRow({
+                    firstName: FIRST_NAME,
+                    lastName: LAST_NAME,
+                    date: DateTime.fromObject({ year: 2024, month: 6, day: 8 }, { zone: TZ }),
+                    hours: 0.0152,
+                    location: 'cheltenham',
+                    activity: 'No Activity',
+                    summary: 'Laundry allowance (weekly cap top-up)',
+                })
+                strictEqual(row.hours, 0.0152)
+                strictEqual(row.payItem, 'Laundry Allowance - Cheltenham')
+            })
+        })
+
+        describe('constants', () => {
+            it('match the award amounts and full-day allotment', () => {
+                strictEqual(LAUNDRY_DAILY_RATE, 1.32)
+                strictEqual(LAUNDRY_WEEKLY_CAP, 6.62)
+                strictEqual(LAUNDRY_FULL_DAYS_PER_WEEK, 5)
+            })
+        })
+
+        describe('createLaundryAllowanceRows', () => {
+            it('returns no rows when the user has no timesheets', () => {
+                const rows = run([])
+                strictEqual(rows.length, 0)
+            })
+
+            it('returns no rows when every shift is ineligible', () => {
+                const rows = run([
+                    shift({
+                        dtstart: '2024-06-03T10:00:00+10:00',
+                        dtend: '2024-06-03T14:00:00+10:00',
+                        positionId: SlingPositionToId[SlingPosition.SUPERVISOR_PARTY],
+                    }),
+                    shift({
+                        dtstart: '2024-06-04T10:00:00+10:00',
+                        dtend: '2024-06-04T14:00:00+10:00',
+                        positionId: SlingPositionToId[SlingPosition.ON_CALL_PARTY_FACILITATOR],
+                    }),
+                    shift({
+                        dtstart: '2024-06-05T10:00:00+10:00',
+                        dtend: '2024-06-05T14:00:00+10:00',
+                        positionId: SlingPositionToId[SlingPosition.TRAINING],
+                    }),
+                ])
+                strictEqual(rows.length, 0)
+            })
+
+            it('skips shifts whose position id is unknown', () => {
+                const rows = run([
+                    shift({
+                        dtstart: '2024-06-03T10:00:00+10:00',
+                        dtend: '2024-06-03T14:00:00+10:00',
+                        positionId: 99999999, // not in SlingPositionMap
+                    }),
+                ])
+                strictEqual(rows.length, 0)
+            })
+
+            it('skips shifts whose location id is unknown', () => {
+                const rows = run([
+                    shift({
+                        dtstart: '2024-06-03T10:00:00+10:00',
+                        dtend: '2024-06-03T14:00:00+10:00',
+                        locationId: 99999999, // not in SlingLocationsMap
+                    }),
+                ])
+                strictEqual(rows.length, 0)
+            })
+
+            it('skips shifts with an unparseable dtstart', () => {
+                const rows = run([
+                    shift({
+                        dtstart: 'not-a-date',
+                        dtend: 'not-a-date',
+                    }),
+                ])
+                strictEqual(rows.length, 0)
+            })
+
+            it('emits one row per eligible day with hours=1 and inherits the shifts activity/location', () => {
+                const rows = run([
+                    shift({
+                        dtstart: '2024-06-03T10:00:00+10:00',
+                        dtend: '2024-06-03T14:00:00+10:00',
+                        positionId: SlingPositionToId[SlingPosition.HOLIDAY_PROGRAM_FACILITATOR],
+                        locationId: SlingLocationToId.cheltenham,
+                    }),
+                ])
+                strictEqual(rows.length, 1)
+                strictEqual(rows[0].hours, 1)
+                strictEqual(rows[0].firstName, FIRST_NAME)
+                strictEqual(rows[0].lastname, LAST_NAME)
+                strictEqual(rows[0].payItem, 'Laundry Allowance - Cheltenham')
+                strictEqual(rows[0].activity, 'Holiday Programs')
+                strictEqual(rows[0].date.toISODate(), '2024-06-03')
+                strictEqual(rows[0].summary, 'Laundry allowance')
+            })
+
+            it('counts a day with multiple eligible shifts only once and uses the earliest shift for activity/location', () => {
+                const rows = run([
+                    // later in the day - holiday program at cheltenham
+                    shift({
+                        dtstart: '2024-06-03T14:00:00+10:00',
+                        dtend: '2024-06-03T18:00:00+10:00',
+                        positionId: SlingPositionToId[SlingPosition.HOLIDAY_PROGRAM_FACILITATOR],
+                        locationId: SlingLocationToId.cheltenham,
+                    }),
+                    // earliest - party at balwyn
+                    shift({
+                        dtstart: '2024-06-03T09:00:00+10:00',
+                        dtend: '2024-06-03T11:00:00+10:00',
+                        positionId: SlingPositionToId[SlingPosition.PARTY_FACILITATOR],
+                        locationId: SlingLocationToId.balwyn,
+                    }),
+                    // mid-day - same shift type already exists for the day
+                    shift({
+                        dtstart: '2024-06-03T11:30:00+10:00',
+                        dtend: '2024-06-03T13:30:00+10:00',
+                        positionId: SlingPositionToId[SlingPosition.PARTY_FACILITATOR],
+                        locationId: SlingLocationToId.balwyn,
+                    }),
+                ])
+                strictEqual(rows.length, 1)
+                strictEqual(rows[0].payItem, 'Laundry Allowance - Balwyn')
+                strictEqual(rows[0].activity, 'Parties')
+            })
+
+            it('still counts a day as eligible when ineligible shifts share that day', () => {
+                const rows = run([
+                    // ineligible
+                    shift({
+                        dtstart: '2024-06-03T08:00:00+10:00',
+                        dtend: '2024-06-03T09:00:00+10:00',
+                        positionId: SlingPositionToId[SlingPosition.SUPERVISOR_PARTY],
+                    }),
+                    // eligible
+                    shift({
+                        dtstart: '2024-06-03T12:00:00+10:00',
+                        dtend: '2024-06-03T16:00:00+10:00',
+                        positionId: SlingPositionToId[SlingPosition.PARTY_FACILITATOR],
+                    }),
+                ])
+                strictEqual(rows.length, 1)
+                strictEqual(rows[0].hours, 1)
+                strictEqual(rows[0].activity, 'Parties')
+            })
+
+            it('emits rows for 5 eligible days with no top-up row', () => {
+                const days = ['2024-06-03', '2024-06-04', '2024-06-05', '2024-06-06', '2024-06-07']
+                const rows = run(
+                    days.map((day) =>
+                        shift({
+                            dtstart: `${day}T10:00:00+10:00`,
+                            dtend: `${day}T14:00:00+10:00`,
+                        })
+                    )
+                )
+                strictEqual(rows.length, 5)
+                for (let i = 0; i < days.length; i++) {
+                    strictEqual(rows[i].date.toISODate(), days[i])
+                    strictEqual(rows[i].hours, 1)
+                    strictEqual(rows[i].summary, 'Laundry allowance')
+                }
+                const total = rows.reduce((sum, row) => sum + row.hours * LAUNDRY_DAILY_RATE, 0)
+                // 5 * 1.32 = 6.60
+                strictEqual(Number(total.toFixed(2)), 6.6)
+            })
+
+            it('caps a week of 6 eligible days at the dollar cap with a fractional top-up row', () => {
+                const days = ['2024-06-03', '2024-06-04', '2024-06-05', '2024-06-06', '2024-06-07', '2024-06-08']
+                const rows = run(
+                    days.map((day, idx) =>
+                        shift({
+                            dtstart: `${day}T10:00:00+10:00`,
+                            dtend: `${day}T14:00:00+10:00`,
+                            // give the 6th day a distinct location/activity to
+                            // prove the top-up row inherits from that day.
+                            positionId:
+                                idx === 5
+                                    ? SlingPositionToId[SlingPosition.HOLIDAY_PROGRAM_FACILITATOR]
+                                    : SlingPositionToId[SlingPosition.PARTY_FACILITATOR],
+                            locationId: idx === 5 ? SlingLocationToId.cheltenham : SlingLocationToId.balwyn,
+                        })
+                    )
+                )
+
+                strictEqual(rows.length, 6)
+
+                // First 5 rows are the full-day rows.
+                for (let i = 0; i < 5; i++) {
+                    strictEqual(rows[i].hours, 1)
+                    strictEqual(rows[i].payItem, 'Laundry Allowance - Balwyn')
+                    strictEqual(rows[i].activity, 'Parties')
+                    strictEqual(rows[i].summary, 'Laundry allowance')
+                    strictEqual(rows[i].date.toISODate(), days[i])
+                }
+
+                // 6th row is the top-up.
+                const topUp = rows[5]
+                strictEqual(topUp.hours, 0.0152) // (6.62 - 6.60) / 1.32, rounded to 4dp
+                strictEqual(topUp.payItem, 'Laundry Allowance - Cheltenham')
+                strictEqual(topUp.activity, 'Holiday Programs')
+                strictEqual(topUp.summary, 'Laundry allowance (weekly cap top-up)')
+                strictEqual(topUp.date.toISODate(), '2024-06-08')
+
+                // Total payout (Xero rounds units * rate to 2dp).
+                const total = rows.reduce((sum, row) => sum + row.hours * LAUNDRY_DAILY_RATE, 0)
+                strictEqual(Number(total.toFixed(2)), LAUNDRY_WEEKLY_CAP)
+            })
+
+            it('does not emit any further rows for the 7th eligible day onwards', () => {
+                const days = [
+                    '2024-06-03',
+                    '2024-06-04',
+                    '2024-06-05',
+                    '2024-06-06',
+                    '2024-06-07',
+                    '2024-06-08',
+                    '2024-06-09',
+                ]
+                const rows = run(
+                    days.map((day) =>
+                        shift({
+                            dtstart: `${day}T10:00:00+10:00`,
+                            dtend: `${day}T14:00:00+10:00`,
+                        })
+                    )
+                )
+                // Still only 6 rows (5 full + 1 top-up).
+                strictEqual(rows.length, 6)
+                // None of the rows reference the 7th day.
+                strictEqual(
+                    rows.some((row) => row.date.toISODate() === '2024-06-09'),
+                    false
+                )
+            })
+
+            it('emits rows in chronological order regardless of the input order', () => {
+                // Input order is intentionally jumbled.
+                const rows = run([
+                    shift({
+                        dtstart: '2024-06-07T10:00:00+10:00',
+                        dtend: '2024-06-07T14:00:00+10:00',
+                    }),
+                    shift({
+                        dtstart: '2024-06-03T10:00:00+10:00',
+                        dtend: '2024-06-03T14:00:00+10:00',
+                    }),
+                    shift({
+                        dtstart: '2024-06-05T10:00:00+10:00',
+                        dtend: '2024-06-05T14:00:00+10:00',
+                    }),
+                ])
+                strictEqual(rows.length, 3)
+                strictEqual(rows[0].date.toISODate(), '2024-06-03')
+                strictEqual(rows[1].date.toISODate(), '2024-06-05')
+                strictEqual(rows[2].date.toISODate(), '2024-06-07')
+            })
+
+            it('groups by calendar day in the user timezone', () => {
+                // Two shifts on the same Melbourne calendar day even though
+                // their UTC timestamps cross midnight.
+                const rows = run([
+                    // 2024-06-03 23:30 AEST -> still 2024-06-03 local
+                    shift({
+                        dtstart: '2024-06-03T23:30:00+10:00',
+                        dtend: '2024-06-03T23:59:00+10:00',
+                    }),
+                    // 2024-06-03 21:00 UTC == 2024-06-04 07:00 AEST -> 2024-06-04 local
+                    shift({
+                        dtstart: '2024-06-03T21:00:00Z',
+                        dtend: '2024-06-03T22:00:00Z',
+                    }),
+                ])
+                strictEqual(rows.length, 2)
+                strictEqual(rows[0].date.toISODate(), '2024-06-03')
+                strictEqual(rows[1].date.toISODate(), '2024-06-04')
+            })
         })
     })
 })

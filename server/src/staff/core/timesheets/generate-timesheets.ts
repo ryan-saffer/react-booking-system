@@ -21,10 +21,16 @@ import { XeroClient } from '@/xero/XeroClient'
 
 import { didTurn18DuringRange, getEmployeesWithBirthdayDuringRange } from '../staff-birthdays'
 import { getShiftsUnderMinimumShiftLengthForTimesheets } from './minimum-shift-length-report'
-import { createTimesheetRows, getWeeks, isYoungerThan18, SlingLocationsMap } from './timesheets.utils'
+import {
+    createTimesheetRows,
+    getWeeks,
+    isYoungerThan18,
+    SlingLocationsMap,
+    createLaundryAllowanceRows,
+} from './timesheets.utils'
 
 import type { Rate } from './timesheets.types'
-import type { TimesheetRow } from './timesheets.utils'
+import type { LaundryAllowanceRow, TimesheetRow } from './timesheets.utils'
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
 const OVERTIME_START = 38
@@ -98,7 +104,7 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
         const employeesWithBirthdayWhoWorkedSet = new Set<string>()
 
         // to keep track of all rows
-        let rows: TimesheetRow[] = []
+        let rows: Array<TimesheetRow | LaundryAllowanceRow> = []
 
         // keeps track of users who couldnt be found in xero
         const skippedUsers: string[] = []
@@ -202,7 +208,17 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
                     employeesUnder18Over30Hrs.push(`${xeroUser.firstName} ${xeroUser.lastName}`)
                 }
 
-                rows = [...rows, ...employeesRows]
+                // laundry allowance: one row per eligible day in this week
+                // (capped at the weekly maximum). Eligibility is determined by
+                // shift position; see `isLaundryEligibleShift`.
+                const laundryRows = createLaundryAllowanceRows({
+                    firstName: xeroUser.firstName!,
+                    lastName: xeroUser.lastName!,
+                    usersTimesheets,
+                    timezone: slingUser.timezone,
+                })
+
+                rows = [...rows, ...employeesRows, ...laundryRows]
             }
         }
 

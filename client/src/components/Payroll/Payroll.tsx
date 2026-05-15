@@ -25,6 +25,13 @@ const classes = {
     flexCol: `${PREFIX}-flexCol`,
     list: `${PREFIX}-list`,
     'gap-16': `${PREFIX}-gap-16`,
+    introCard: `${PREFIX}-introCard`,
+    introHero: `${PREFIX}-introHero`,
+    introEyebrow: `${PREFIX}-introEyebrow`,
+    introGrid: `${PREFIX}-introGrid`,
+    introFeature: `${PREFIX}-introFeature`,
+    ruleCollapse: `${PREFIX}-ruleCollapse`,
+    payrollControls: `${PREFIX}-payrollControls`,
 }
 
 const StyledLayout = styled(Layout)({
@@ -37,6 +44,54 @@ const StyledLayout = styled(Layout)({
     [`& .${classes.list}`]: {
         '& li': {
             marginBottom: 8,
+        },
+    },
+    [`& .${classes.introCard}`]: {
+        overflow: 'hidden',
+        border: '1px solid rgba(22, 119, 255, 0.16)',
+        boxShadow: '0 18px 45px rgba(15, 23, 42, 0.08)',
+    },
+    [`& .${classes.introHero}`]: {
+        margin: '-24px -24px 24px',
+        padding: 24,
+        background: 'linear-gradient(135deg, rgba(22,119,255,0.12), rgba(19,194,194,0.10) 48%, rgba(250,173,20,0.12))',
+    },
+    [`& .${classes.introEyebrow}`]: {
+        display: 'block',
+        marginBottom: 8,
+        color: '#1677ff',
+        fontSize: 12,
+        fontWeight: 700,
+        letterSpacing: 1,
+        textTransform: 'uppercase',
+    },
+    [`& .${classes.introGrid}`]: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+        gap: 16,
+        marginBottom: 16,
+    },
+    [`& .${classes.introFeature}`]: {
+        height: '100%',
+        background: '#fafafa',
+        borderColor: '#f0f0f0',
+    },
+    [`& .${classes.ruleCollapse}`]: {
+        background: '#fff',
+        borderColor: '#f0f0f0',
+    },
+    [`& .${classes.payrollControls}`]: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        gap: 16,
+    },
+    '@media (max-width: 768px)': {
+        [`& .${classes.introGrid}`]: {
+            gridTemplateColumns: '1fr',
+        },
+        [`& .${classes.payrollControls}`]: {
+            flexDirection: 'column',
+            alignItems: 'stretch',
         },
     },
 })
@@ -135,38 +190,74 @@ export const Payroll = () => {
     return (
         <StyledLayout style={{ background: 'rgb(240, 242, 245)', height: '100%', minHeight: 'calc(100vh - 64px)' }}>
             <Content style={{ background: colorBgContainer, padding: 32, margin: 32 }}>
-                <Title style={{ marginTop: 0 }}>Payroll</Title>
-                <Paragraph>
-                    This tool is a way to generate timesheets for{' '}
-                    <Link href="https://login.xero.com/identity/user/login">Xero</Link> based on the published roster in{' '}
-                    <Link href="https://app.getsling.com/">Sling</Link>.
-                </Paragraph>
-                <Paragraph>
-                    It will use the shifts location and position, as well as factor in the staffs age and overtime, to
-                    calculate how many hours each employee worked at which pay item.
-                </Paragraph>
-                <Paragraph>Overtime is calculated in the following way:</Paragraph>
-                <ul>
-                    <li>Any hours worked above 10 hours in a day.</li>
-                    <li>
-                        Any hours worked above 38 hours in a single week.
-                        <br />
-                        <br />
-                        <em>
-                            <strong>Note:</strong>
-                            <br />
-                            If an employees first three hours of overtime are on a Sunday, their pay item will be their
-                            Sunday rates. <br /> This is because the first three hours of overtime multiplier (1.5x) is
-                            less than their Sunday multiplier (1.75x).
-                        </em>
-                    </li>
-                </ul>
-                <Paragraph>
-                    The tool will generate a csv file, ready for import into{' '}
-                    <Link href="https://app.upsheets.com/login">UpSheets.</Link>
-                </Paragraph>
+                <Card className={classes.introCard} variant="outlined">
+                    <div className={classes.introHero}>
+                        <Text className={classes.introEyebrow}>Payroll export</Text>
+                        <Title style={{ marginTop: 0, marginBottom: 8 }}>Generate Xero timesheets from Sling</Title>
+                        <Paragraph style={{ marginBottom: 0, fontSize: 16 }}>
+                            Build a CSV for <Link href="https://app.upsheets.com/login">UpSheets</Link> using the
+                            published roster in <Link href="https://app.getsling.com/">Sling</Link>.<br /> The export
+                            maps each shift to the correct Xero pay item, tracking activity, overtime, age-based rates
+                            and allowances.
+                        </Paragraph>
+                    </div>
+
+                    <div className={classes.introGrid}>
+                        <Card className={classes.introFeature} size="small" variant="outlined">
+                            <Text strong>Shift mapping</Text>
+                            <Paragraph style={{ marginBottom: 0 }}>
+                                Uses each shift's location and position to choose the Xero pay item and tracking
+                                activity.
+                            </Paragraph>
+                        </Card>
+                        <Card className={classes.introFeature} size="small" variant="outlined">
+                            <Text strong>Payroll checks</Text>
+                            <Paragraph style={{ marginBottom: 0 }}>
+                                Flags missing Xero employees, birthday rate changes, under-18 super and short shifts.
+                            </Paragraph>
+                        </Card>
+                        <Card className={classes.introFeature} size="small" variant="outlined">
+                            <Text strong>Ready to import</Text>
+                            <Paragraph style={{ marginBottom: 0 }}>
+                                Downloads a CSV ready to upload into UpSheets and then import into Xero.
+                            </Paragraph>
+                        </Card>
+                    </div>
+
+                    <Collapse className={classes.ruleCollapse} size="small">
+                        <Panel header={<Text strong>How overtime is calculated</Text>} key="overtime">
+                            <ul className={classes.list}>
+                                <li>Any hours worked above 10 hours in a day.</li>
+                                <li>Any hours worked above 38 hours in a single week.</li>
+                            </ul>
+                            <Alert
+                                type="info"
+                                showIcon
+                                message="Sunday overtime"
+                                description="If an employee's first three hours of overtime are on a Sunday, the export keeps those hours on their Sunday pay item because the Sunday multiplier is higher than the first overtime multiplier."
+                            />
+                        </Panel>
+                        <Panel header={<Text strong>How laundry allowance is calculated</Text>} key="laundry">
+                            <Paragraph>
+                                A laundry allowance row is added for each eligible day, with quantity{' '}
+                                <Text code>1</Text>. Separate daily rows keep the allowance tracked against the correct
+                                Xero activity instead of bundling the whole week into one row.
+                            </Paragraph>
+                            <Paragraph>
+                                If an employee works multiple eligible shifts in one day, the allowance row uses the
+                                activity from their first shift that day.
+                            </Paragraph>
+                            <Paragraph style={{ marginBottom: 0 }}>
+                                The weekly cap is <Text strong>$6.62</Text>. Five days pays <Text strong>$6.60</Text>,
+                                so a 6th or 7th eligible day only adds <Text strong>$0.02</Text>. The export handles
+                                this with a final row of quantity <Text code>0.0152</Text>, because{' '}
+                                <Text code>$1.32 x 0.0152 = $0.020064</Text>, which Xero rounds to $0.02.
+                            </Paragraph>
+                        </Panel>
+                    </Collapse>
+                </Card>
                 <Divider />
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div className={classes.payrollControls}>
                     <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
                         <Text strong>Payroll period:</Text>
                         <RangePicker onChange={onChange} format="DD/MM/YYYY" />
