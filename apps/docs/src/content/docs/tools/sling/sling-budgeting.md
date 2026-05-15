@@ -16,7 +16,7 @@ Even with fresh wage data, Sling’s estimate will not always match the final pa
 
 - New starters do not receive a wage in Sling until after their first payroll is processed, so their shifts show $0 until the next Friday sync.
 - Birthdays inside the pay period raise the base rate inside Xero from that date onward; Sling may show the lower rate until the weekly sync runs.
-- Travel allowances and other extras are added in Xero payroll only - they never appear in Sling’s budgeting view.
+- Travel allowances, laundry allowances, and other extras are added in Xero payroll only - they never appear in Sling’s budgeting view.
 - Sling does not calculate overtime penalties, so large week totals can underestimate the final pay.
 
 ## Overtime thresholds in Sling

@@ -48,6 +48,37 @@ Use this reference when you need a modifier on a Facilitator or Supervisor shift
 | <span style="white-space:nowrap">`[Superhero]`</span> | Pays 150% of the base rate.                             | A team member jumps in at the last minute and genuinely saves the day.            |
 | <span style="white-space:nowrap">`[Sunday]`</span>    | No rate change - label supports Sling budgeting only.   | The shift falls on a Sunday; payroll still calculates penalties by calendar date. |
 
+## Laundry allowance
+
+Payroll automatically adds a laundry allowance for staff who work eligible uniformed shifts. Managers do not need to add a separate shift or note in Sling.
+
+### Eligible shifts
+
+The allowance applies to hands-on facilitator shifts where staff wear the Fizz Kidz uniform, including standard, Sunday, and called-in variants for:
+
+- Party Facilitator
+- Mobile Party Facilitator
+- Holiday Program Facilitator
+- Events and Activations
+- After School Program Facilitator
+- Incursions
+- Play Lab Facilitator
+
+It does not apply to `[On Call]`, PIC, Supervisor, Training, Miscellaneous, or `[Superhero]` shifts.
+
+### How the export creates rows
+
+- The export adds one laundry allowance row for each eligible day worked, with quantity `1` at `$1.32`.
+- Rows are created per day, rather than one combined weekly row, so each allowance can be tracked against the correct Xero activity.
+- If someone works multiple eligible shifts on the same day, payroll uses the activity from their first eligible shift that day.
+- If someone works eligible shifts in more than one location on the same day, payroll also uses the location from their first eligible shift that day.
+
+### Weekly cap
+
+The allowance is capped at `$6.62` per employee per week.
+
+Five eligible days pays `$6.60` (`5 x $1.32`). If the employee works a 6th or 7th eligible day, payroll adds only the remaining `$0.02` needed to reach the cap. The export does this by adding one extra laundry allowance row with quantity `0.0152`, because `$1.32 x 0.0152 = $0.020064`, which Xero rounds to `$0.02`.
+
 ## Overtime thresholds in Sling
 
 Sling flags overtime once someone hits 38 hours in a single week. Use the warning as a cue to redistribute hours so most staff stay below the limit.
