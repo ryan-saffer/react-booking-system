@@ -117,4 +117,49 @@ describe('minimum shift length report', () => {
         strictEqual(result[0].workedLength, '2 hours 30 minutes')
         strictEqual(result[0].notes, 'Timezone-sensitive shift')
     })
+
+    it('sorts shifts on the same date alphabetically by employee name and position', () => {
+        const result = getShiftsUnderMinimumShiftLengthForTimesheets({
+            studio: 'master',
+            slingUsers: [
+                createSlingUser({ id: 1, legalName: 'Taylor', lastname: 'Jones' }),
+                createSlingUser({ id: 2, legalName: 'Alex', lastname: 'Brown' }),
+            ],
+            allTimesheets: [
+                createTimesheet({ user: { id: 1 }, summary: 'Taylor shift' }),
+                createTimesheet({ user: { id: 2 }, summary: 'Alex shift' }),
+            ],
+        })
+
+        strictEqual(result.length, 2)
+        deepStrictEqual(
+            result.map((shift) => shift.employeeName),
+            ['Alex Brown', 'Taylor Jones']
+        )
+    })
+
+    it('sorts shifts on different dates chronologically regardless of input order', () => {
+        const result = getShiftsUnderMinimumShiftLengthForTimesheets({
+            studio: 'master',
+            slingUsers: [createSlingUser()],
+            allTimesheets: [
+                createTimesheet({
+                    dtstart: '2026-04-28T09:00:00+10:00',
+                    dtend: '2026-04-28T11:30:00+10:00',
+                    summary: 'Later shift',
+                }),
+                createTimesheet({
+                    dtstart: '2026-04-27T09:00:00+10:00',
+                    dtend: '2026-04-27T11:30:00+10:00',
+                    summary: 'Earlier shift',
+                }),
+            ],
+        })
+
+        strictEqual(result.length, 2)
+        deepStrictEqual(
+            result.map((shift) => shift.shiftDate),
+            ['Mon 27/04/2026', 'Tue 28/04/2026']
+        )
+    })
 })

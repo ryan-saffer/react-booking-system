@@ -264,6 +264,24 @@ describe('Staff birthdays', () => {
                         studio: 'kingsville',
                         birthday: '2026-05-31',
                     },
+                    {
+                        employeeId: 'full-time',
+                        fullName: 'Frankie Fulltime',
+                        studio: 'kingsville',
+                        birthday: '2026-05-20',
+                    },
+                    {
+                        employeeId: 'part-time',
+                        fullName: 'Pat Parttime',
+                        studio: 'kingsville',
+                        birthday: '2026-05-21',
+                    },
+                    {
+                        employeeId: 'missing-basis',
+                        fullName: 'Morgan NoBasis',
+                        studio: 'kingsville',
+                        birthday: '2026-05-22',
+                    },
                 ]
             )
         })
