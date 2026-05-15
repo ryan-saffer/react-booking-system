@@ -9,6 +9,7 @@ import {
     getEighteenthBirthday,
     getEmployeesTurning18InMonth,
     getEmployeesWithBirthdayDuringRange,
+    isCasualEmployee,
 } from './staff-birthdays'
 
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
@@ -86,25 +87,28 @@ describe('Staff birthdays', () => {
                     firstName: 'Ava',
                     lastName: 'Jones',
                     dateOfBirth: '2008-12-28',
+                    taxDeclaration: undefined,
                 }),
                 createEmployee({
                     employeeID: 'employee-2',
                     firstName: 'Noah',
                     lastName: 'Brown',
                     dateOfBirth: '2010-01-02',
+                    taxDeclaration: undefined,
                 }),
                 createEmployee({
                     employeeID: 'employee-3',
                     firstName: 'Mia',
                     lastName: 'Green',
                     dateOfBirth: '2009-01-10',
+                    taxDeclaration: undefined,
                 }),
                 createEmployee({
                     employeeID: 'employee-4',
                     firstName: 'Parker',
                     lastName: 'Fulltime',
                     dateOfBirth: '2008-12-29',
-                    taxDeclaration: { employmentBasis: EmploymentBasis.FULLTIME },
+                    taxDeclaration: undefined,
                 }),
             ]
 
@@ -115,7 +119,7 @@ describe('Staff birthdays', () => {
                 end: DateTime.fromISO('2026-01-03T23:59:59.999Z'),
             })
 
-            strictEqual(result.length, 2)
+            strictEqual(result.length, 3)
             deepStrictEqual(
                 result.map((employee) => ({
                     employeeId: employee.employeeId,
@@ -136,11 +140,17 @@ describe('Staff birthdays', () => {
                         studio: 'balwyn',
                         dob: '2010-01-02',
                     },
+                    {
+                        employeeId: 'employee-4',
+                        fullName: 'Parker Fulltime',
+                        studio: 'balwyn',
+                        dob: '2008-12-29',
+                    },
                 ]
             )
         })
 
-        it('should filter out employees that cannot be parsed before checking birthdays', () => {
+        it('should not filter by employment basis because the Xero list response omits it', () => {
             const result = getEmployeesWithBirthdayDuringRange({
                 employees: [
                     createEmployee({
@@ -182,10 +192,21 @@ describe('Staff birthdays', () => {
                 end: DateTime.fromISO('2026-05-31T23:59:59.999Z'),
             })
 
-            strictEqual(result.length, 1)
-            strictEqual(result[0].employeeId, 'valid-employee')
-            strictEqual(result[0].fullName, 'Valid Person')
-            strictEqual(result[0].studio, 'master')
+            deepStrictEqual(
+                result.map((employee) => employee.employeeId),
+                ['valid-employee', 'part-time-employee', 'missing-basis']
+            )
+        })
+    })
+
+    describe('isCasualEmployee', () => {
+        it('should return true only for employees whose full Xero record is casual', () => {
+            strictEqual(isCasualEmployee(createEmployee()), true)
+            strictEqual(
+                isCasualEmployee(createEmployee({ taxDeclaration: { employmentBasis: EmploymentBasis.PARTTIME } })),
+                false
+            )
+            strictEqual(isCasualEmployee(createEmployee({ taxDeclaration: undefined })), false)
         })
     })
 

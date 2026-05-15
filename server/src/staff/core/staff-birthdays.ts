@@ -14,7 +14,9 @@ export type EmployeeBirthday = {
 }
 
 /*
- * Given xero employees, returns CASUAL employees who had a birthday within the range
+ * Given xero employees, returns employees who had a birthday within the range.
+ * The Xero list-employees API does not include full tax declaration details, so
+ * casual filtering happens after fetching each birthday candidate's full record.
  */
 export function getEmployeesWithBirthdayDuringRange({
     employees,
@@ -28,10 +30,13 @@ export function getEmployeesWithBirthdayDuringRange({
     end: DateTime
 }) {
     return employees
-        .filter((employee) => employee.taxDeclaration?.employmentBasis === EmploymentBasis.CASUAL)
         .map((employee) => parseEmployeeBirthday(employee, studio))
         .filter(isNotNull)
         .filter(({ dob }) => hasBirthdayDuring(dob, start, end))
+}
+
+export function isCasualEmployee(employee: Employee) {
+    return employee.taxDeclaration?.employmentBasis === EmploymentBasis.CASUAL
 }
 
 /*

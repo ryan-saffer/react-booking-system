@@ -8,6 +8,7 @@ import { DateTime } from 'luxon'
 
 import {
     isFranchise,
+    isNotNull,
     type FranchiseOrMaster,
     type GenerateTimesheetsParams,
     type ShiftUnderMinimumShiftLength,
@@ -19,7 +20,7 @@ import { SlingClient } from '@/sling/sling-client'
 import { isUsingEmulator, throwTrpcError } from '@/utilities'
 import { XeroClient } from '@/xero/XeroClient'
 
-import { didTurn18DuringRange, getEmployeesWithBirthdayDuringRange } from '../staff-birthdays'
+import { didTurn18DuringRange, getEmployeesWithBirthdayDuringRange, isCasualEmployee } from '../staff-birthdays'
 import { getShiftsUnderMinimumShiftLengthForTimesheets } from './minimum-shift-length-report'
 import {
     createTimesheetRows,
@@ -85,17 +86,23 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
         // cache for xero users
         const xeroUsersCache: XeroUserCache = {}
 
-        const xero = await XeroClient.getInstance(studio)
-
-        const xeroUsers = (await xero.payrollAUApi.getEmployees('')).body.employees
+        const xeroUsers = await getAllXeroEmployees(studio)
 
         // all employees who had a birthday during the pay run
-        const employeesWithBirthdayDuringPayrun = getEmployeesWithBirthdayDuringRange({
-            employees: xeroUsers || [],
+        const birthdayCandidates = getEmployeesWithBirthdayDuringRange({
+            employees: xeroUsers,
             studio,
             start: startDate,
             end: endDate,
         })
+        const employeesWithBirthdayDuringPayrun = (
+            await Promise.all(
+                birthdayCandidates.map(async (employee) => {
+                    const fullEmployee = await getAndCacheXeroUser(employee.employeeId, xeroUsersCache, studio)
+                    return isCasualEmployee(fullEmployee) ? employee : null
+                })
+            )
+        ).filter(isNotNull)
 
         const employeesWithBirthdayDuringPayrunMap = new Map(
             employeesWithBirthdayDuringPayrun.map((employee) => [employee.employeeId, employee])
@@ -306,6 +313,32 @@ async function getAndCacheXeroUser(userId: string, cache: XeroUserCache, studio:
     const employee = (await xero.payrollAUApi.getEmployee('', userId)).body.employees?.[0]!
     cache[userId] = employee
     return employee
+}
+
+export async function getAllXeroEmployees(studio: FranchiseOrMaster) {
+    const xero = await XeroClient.getInstance(studio)
+    const employees: Employee[] = []
+    let page = 1
+    let hasMorePages = true
+
+    while (hasMorePages) {
+        const pageEmployees = (await xero.payrollAUApi.getEmployees('', undefined, undefined, undefined, page)).body
+            .employees
+
+        if (!pageEmployees?.length) {
+            hasMorePages = false
+            continue
+        }
+
+        employees.push(...pageEmployees)
+
+        if (pageEmployees.length < 100) {
+            hasMorePages = false
+        }
+        page++
+    }
+
+    return employees
 }
 
 function formatBirthdayEmployeeLabel({
