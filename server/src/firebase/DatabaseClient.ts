@@ -1,23 +1,27 @@
-import { Timestamp, type DocumentReference, FieldValue } from 'firebase-admin/firestore'
+import { FieldValue, Timestamp } from 'firebase-admin/firestore'
 
 import type {
     AfterSchoolEnrolment,
-    Booking,
-    Employee,
-    FirestoreBooking,
-    RecursivePartial,
-    Event,
-    IncursionEvent,
-    DiscountCode,
-    Invitation,
-    PreschoolProgramEnrolment,
-    WithoutId,
-    StudioOrMaster,
     AuthUser,
-    InvitationsV2,
-    Rsvp,
+    Booking,
+    DiscountCode,
+    Employee,
+    Event,
+    FirestoreBooking,
     GoogleBusinessProfileReview,
+    IncursionEvent,
+    Invitation,
+    InvitationsV2,
+    InventoryCategory,
+    InventoryItem,
+    InventoryStockLevel,
+    InventoryStockMovement,
+    PreschoolProgramEnrolment,
+    RecursivePartial,
+    Rsvp,
     Studio,
+    StudioOrMaster,
+    WithoutId,
 } from 'fizz-kidz'
 
 import { midnight } from '@/utilities'
@@ -26,11 +30,38 @@ import { FirestoreClient } from './FirestoreClient'
 import { FirestoreRefs, type Document } from './FirestoreRefs'
 
 import type { CreateEvent } from '../events/core/create-event'
-import type { Query } from 'firebase-admin/firestore'
+import type { DocumentReference, Query } from 'firebase-admin/firestore'
 import type { DateTime } from 'luxon'
 
 type CreateDocOptions<T> = {
     ref?: Document<T>
+}
+
+type SetInventoryDocuments = {
+    items?: InventoryItem[]
+    stockLevels?: InventoryStockLevel[]
+    stockMovements?: InventoryStockMovement[]
+}
+
+type DeleteInventoryDocuments = {
+    itemIds?: string[]
+    stockLevelIds?: string[]
+    stockMovementIds?: string[]
+}
+
+type RunInventoryStockMovementTransaction = {
+    itemId: string
+    location: Studio
+    buildWrite(input: {
+        item: InventoryItem
+        stockLevel?: InventoryStockLevel
+        stockLevelId: string
+        movementId: string
+        now: Date
+    }): {
+        stockLevel: InventoryStockLevel
+        movement: InventoryStockMovement
+    }
 }
 
 export type UpdateDoc<T> = {
@@ -533,6 +564,170 @@ class Client {
         return [...reviewsById.values()]
             .sort((a, b) => getGoogleReviewTime(b) - getGoogleReviewTime(a))
             .slice(0, queryLimit)
+    }
+
+    async createInventoryItemId() {
+        return (await FirestoreRefs.inventoryItems()).doc().id
+    }
+
+    async createInventoryItem(item: WithoutId<InventoryItem>) {
+        const itemRef = (await FirestoreRefs.inventoryItems()).doc()
+        await itemRef.set({ ...item, id: itemRef.id } as InventoryItem)
+        return itemRef.id
+    }
+
+    async setInventoryDocuments(input: SetInventoryDocuments) {
+        const firestore = await FirestoreClient.getInstance()
+        const itemsRef = await FirestoreRefs.inventoryItems()
+        const stockLevelsRef = await FirestoreRefs.inventoryStockLevels()
+        const movementsRef = await FirestoreRefs.inventoryStockMovements()
+        const writes: { ref: DocumentReference; data: InventoryItem | InventoryStockLevel | InventoryStockMovement }[] =
+            [
+                ...(input.items ?? []).map((item) => ({ ref: itemsRef.doc(item.id), data: item })),
+                ...(input.stockLevels ?? []).map((stockLevel) => ({
+                    ref: stockLevelsRef.doc(stockLevel.id),
+                    data: stockLevel,
+                })),
+                ...(input.stockMovements ?? []).map((movement) => ({
+                    ref: movementsRef.doc(movement.id),
+                    data: movement,
+                })),
+            ]
+
+        for (let i = 0; i < writes.length; i += 500) {
+            const batch = firestore.batch()
+            writes.slice(i, i + 500).forEach((write) => batch.set(write.ref, write.data))
+            await batch.commit()
+        }
+    }
+
+    getInventoryItem(itemId: string) {
+        return this.#getDocument(FirestoreRefs.inventoryItem(itemId))
+    }
+
+    async listInventoryItems(input: { includeArchived?: boolean; category?: InventoryCategory } = {}) {
+        const itemsRef = await FirestoreRefs.inventoryItems()
+        let query: Query<InventoryItem> = itemsRef
+
+        if (!input.includeArchived) {
+            query = query.where('status', '==', 'active')
+        }
+
+        if (input.category) {
+            query = query.where('category', '==', input.category)
+        }
+
+        return this.#getDocuments(query)
+    }
+
+    updateInventoryItem(itemId: string, item: Partial<InventoryItem>) {
+        return this.#updateDocument(FirestoreRefs.inventoryItem(itemId), item as UpdateDoc<InventoryItem>)
+    }
+
+    async deleteInventoryItem(itemId: string) {
+        return (await FirestoreRefs.inventoryItem(itemId)).delete()
+    }
+
+    async deleteInventoryDocuments(input: DeleteInventoryDocuments) {
+        const firestore = await FirestoreClient.getInstance()
+        const itemsRef = await FirestoreRefs.inventoryItems()
+        const stockLevelsRef = await FirestoreRefs.inventoryStockLevels()
+        const movementsRef = await FirestoreRefs.inventoryStockMovements()
+        const refs = [
+            ...(input.itemIds ?? []).map((id) => itemsRef.doc(id)),
+            ...(input.stockLevelIds ?? []).map((id) => stockLevelsRef.doc(id)),
+            ...(input.stockMovementIds ?? []).map((id) => movementsRef.doc(id)),
+        ]
+
+        for (let i = 0; i < refs.length; i += 500) {
+            const batch = firestore.batch()
+            refs.slice(i, i + 500).forEach((ref) => batch.delete(ref))
+            await batch.commit()
+        }
+    }
+
+    async getInventoryStockLevel(input: { location: Studio; itemId: string }) {
+        const ref = await FirestoreRefs.inventoryStockLevel(input.location, input.itemId)
+        const snap = await ref.get()
+        const data = snap.data()
+
+        if (!data) return undefined
+
+        return this.#convertTimestamps(data)
+    }
+
+    updateInventoryStockLevel(input: { location: Studio; itemId: string; stockLevel: Partial<InventoryStockLevel> }) {
+        return this.#updateDocument(
+            FirestoreRefs.inventoryStockLevel(input.location, input.itemId),
+            input.stockLevel as UpdateDoc<InventoryStockLevel>
+        )
+    }
+
+    async listInventoryStockLevels(input: { location?: Studio; itemId?: string } = {}) {
+        const stockLevelsRef = await FirestoreRefs.inventoryStockLevels()
+        let query: Query<InventoryStockLevel> = stockLevelsRef
+
+        if (input.location) {
+            query = query.where('location', '==', input.location)
+        }
+
+        if (input.itemId) {
+            query = query.where('itemId', '==', input.itemId)
+        }
+
+        return this.#getDocuments(query)
+    }
+
+    async runInventoryStockMovementTransaction(input: RunInventoryStockMovementTransaction) {
+        const firestore = await FirestoreClient.getInstance()
+        const itemRef = await FirestoreRefs.inventoryItem(input.itemId)
+        const stockLevelRef = await FirestoreRefs.inventoryStockLevel(input.location, input.itemId)
+        const movementRef = (await FirestoreRefs.inventoryStockMovements()).doc()
+
+        return firestore.runTransaction(async (tx) => {
+            const itemSnap = await tx.get(itemRef)
+            if (!itemSnap.exists) {
+                throw new Error(`Cannot adjust stock for unknown inventory item: '${input.itemId}'`)
+            }
+
+            const item = itemSnap.data()!
+            const stockLevelSnap = await tx.get(stockLevelRef)
+            const currentStockLevel = stockLevelSnap.data()
+            const now = new Date()
+            const write = input.buildWrite({
+                item,
+                stockLevel: currentStockLevel,
+                stockLevelId: stockLevelRef.id,
+                movementId: movementRef.id,
+                now,
+            })
+
+            tx.set(stockLevelRef, write.stockLevel)
+            tx.set(movementRef, write.movement)
+
+            return write
+        })
+    }
+
+    async listInventoryStockMovements(input: { location?: Studio; itemId?: string; limit?: number } = {}) {
+        const movementsRef = await FirestoreRefs.inventoryStockMovements()
+        let query: Query<InventoryStockMovement> = movementsRef
+
+        if (input.location) {
+            query = query.where('location', '==', input.location)
+        }
+
+        if (input.itemId) {
+            query = query.where('itemId', '==', input.itemId)
+        }
+
+        query = query.orderBy('createdAt', 'desc')
+
+        if (input.limit) {
+            query = query.limit(input.limit)
+        }
+
+        return this.#getDocuments(query)
     }
 }
 
