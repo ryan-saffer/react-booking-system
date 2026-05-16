@@ -155,6 +155,14 @@ const adminItems: NavigationItem[] = [
         accentSoft: 'rgba(255, 79, 156, 0.14)',
     },
     {
+        title: 'Inventory',
+        description: 'Create consumable stock items and view studio stock levels.',
+        to: 'inventory',
+        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=archive&scale=70&backgroundColor=4BC5D9',
+        accent: '#00c2e3',
+        accentSoft: 'rgba(0, 194, 227, 0.16)',
+    },
+    {
         title: 'Territory Mapping',
         description: 'Catchment reference for our franchises',
         to: 'territory-mapping',
@@ -216,6 +224,13 @@ export const Navigation = () => {
                             title="Ops & admin"
                             subtitle="Tools to manage all our operations. Requires admin access to view."
                             items={adminItems}
+                        />
+                    )}
+                    {hasPermission('inventory:read') && !hasPermission('admin') && (
+                        <Section
+                            title="Operations"
+                            subtitle="Tools for daily studio operations."
+                            items={[adminItems.find((item) => item.title === 'Inventory')!]}
                         />
                     )}
                 </div>

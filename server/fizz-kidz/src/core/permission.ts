@@ -1,4 +1,4 @@
-import { Role } from './role'
+import type { Role } from './role'
 
 const PERMISSIONS = [
     'dashboard:view',
@@ -7,6 +7,10 @@ const PERMISSIONS = [
     'bookings:create',
     'after-school-programs:read',
     'creations:read',
+    'inventory:read',
+    'inventory:write',
+    'inventory:stocktake',
+    'inventory:shopping-list',
     'admin', // everything else.. could be broken down, but unneccesary for now.
 ] as const
 
@@ -21,8 +25,29 @@ export const RolePermissionMap: Record<Role, Permission[]> = {
         'bookings:edit',
         'creations:read',
         'after-school-programs:read',
+        'inventory:read',
+        'inventory:write',
+        'inventory:stocktake',
+        'inventory:shopping-list',
     ],
-    'studio-ipad': ['dashboard:view', 'bookings:read', 'creations:read', 'after-school-programs:read'],
-    manager: ['dashboard:view', 'bookings:edit', 'bookings:read', 'creations:read', 'after-school-programs:read'],
+    'studio-ipad': [
+        'dashboard:view',
+        'bookings:read',
+        'creations:read',
+        'after-school-programs:read',
+        'inventory:read',
+        'inventory:stocktake',
+    ],
+    manager: [
+        'dashboard:view',
+        'bookings:edit',
+        'bookings:read',
+        'creations:read',
+        'after-school-programs:read',
+        'inventory:read',
+        'inventory:write',
+        'inventory:stocktake',
+        'inventory:shopping-list',
+    ],
     facilitator: ['dashboard:view', 'after-school-programs:read'],
 }
