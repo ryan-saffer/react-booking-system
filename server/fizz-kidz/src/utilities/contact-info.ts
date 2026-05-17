@@ -25,7 +25,7 @@ export function getPartyCustomerContactInfo(location: Studio) {
         case 'kingsville':
             return {
                 email: 'kingsville@fizzkidz.com.au',
-                phoneDisplay: '0421 017 080',
+                phoneDisplay: '0403 057 999',
                 contactName: 'Kate',
                 contactSignoff: 'Kate and the Fizz Kidz team',
             }
