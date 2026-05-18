@@ -71,11 +71,6 @@ export async function updateSlingWages() {
             continue
         }
 
-        // if the employee is not casual, do not include them
-        if (xeroUser.taxDeclaration?.employmentBasis !== EmploymentBasis.CASUAL) {
-            continue
-        }
-
         const body: UpdateWagesBody = []
         logger.log(`Fetching Xero info for ${xeroUser.firstName} ${xeroUser.lastName}`)
         // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
