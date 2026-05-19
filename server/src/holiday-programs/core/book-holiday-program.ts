@@ -160,19 +160,21 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
         // MARK: CRM
         const zoho = new ZohoClient()
         try {
-            for (const line of input.payment.lineItems) {
-                await zoho.addHolidayProgramContact({
-                    firstName: input.parentFirstName,
-                    lastName: input.parentLastName,
-                    email: input.parentEmail,
-                    mobile: input.parentPhone,
+            await zoho.addHolidayProgramBookingToDeal({
+                firstName: input.parentFirstName,
+                lastName: input.parentLastName,
+                email: input.parentEmail,
+                mobile: input.parentPhone,
+                optOutOfMarketing: !input.joinMailingList,
+                rows: input.payment.lineItems.map((line, index) => ({
+                    appointmentId: appointments[index].id,
+                    dateTimeISO: line.time,
                     studio: AcuityUtilities.getStudioByCalendarId(line.calendarId),
                     childName: line.childName,
                     childBirthdayISO: line.childDob,
-                    holidayProgramDateISO: firstProgram.time.split('T')[0],
-                    optOutOfMarketing: !input.joinMailingList,
-                })
-            }
+                    bookingUrl: appointments[index].confirmationPage,
+                })),
+            })
         } catch (err) {
             logError(`unable to add holiday program booking to zoho with parent email: ${input.parentEmail}`, err, {
                 input,

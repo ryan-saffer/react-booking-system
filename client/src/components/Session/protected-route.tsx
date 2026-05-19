@@ -15,7 +15,7 @@ export function ProtectedRoute({
     children,
 }: {
     permission: Permission
-
+    // Limits access to this page to only 'Corporate Studios' or a Franchise studio. Corporate studios such as 'Malvern' will redirect back to the dashboard.
     franchiseOrMaster?: boolean
     children: ReactNode
 }) {

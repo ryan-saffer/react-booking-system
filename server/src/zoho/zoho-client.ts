@@ -14,40 +14,19 @@ import {
 
 import { DatabaseClient } from '../firebase/DatabaseClient'
 
-type BaseProps = {
-    firstName: string
-    lastName?: string
-    email: string
-    mobile?: string
-}
-
-type WithBaseProps<T> = BaseProps & T
-
-type Service =
-    | 'Birthday Party'
-    | 'Holiday Program'
-    | 'Preschool Program'
-    | 'Birthday Party Guest'
-    | 'After School Program'
-    | 'Activation / Event'
-    | 'Incursion'
-    | 'Play Lab'
-    | ''
+import type {
+    BaseProps,
+    HolidayProgramDealRow,
+    Service,
+    WithBaseProps,
+    ZohoHolidayProgramStatus,
+    ZohoRequestError,
+} from './zoho.types'
 
 const CHILD_MODULE_NAME = 'Child'
-
-type ZohoRequestError = {
-    name?: string
-    status?: number
-    errorBody?: {
-        data?: {
-            code?: string
-            details?: {
-                api_name?: string
-            }
-        }[]
-    }
-}
+const HOLIDAY_PROGRAM_PIPELINE = 'Holiday Program Pipeline'
+const HOLIDAY_PROGRAM_SUBFORM = 'Holiday_Program'
+const HOLIDAY_PROGRAM_DEAL_LAYOUT_ID = '76392000009097844'
 
 function isDuplicateChildLinkingError(err: unknown) {
     const zohoError = err as ZohoRequestError
@@ -173,6 +152,35 @@ export class ZohoClient {
         return DateTime.fromISO(date, { zone: 'Australia/Melbourne' }).toISODate()
     }
 
+    async #searchContactByEmail(email: string) {
+        const result = await this.#request({
+            endpoint: `Contacts/search?email=${encodeURIComponent(email)}`,
+            method: 'GET',
+        })
+
+        return result?.data?.[0] ?? null
+    }
+
+    async #getDeal(dealId: string) {
+        const result = await this.#request({
+            endpoint: `Deals/${dealId}`,
+            method: 'GET',
+        })
+
+        return result?.data?.[0] ?? null
+    }
+
+    async #searchHolidayProgramDealByEmail(email: string) {
+        const criteria = `((Email:equals:${email})and(Pipeline:equals:${HOLIDAY_PROGRAM_PIPELINE}))`
+        const result = await this.#request({
+            endpoint: `Deals/search?criteria=${encodeURIComponent(criteria)}`,
+            method: 'GET',
+        })
+        const dealId = result?.data?.[0]?.id
+
+        return dealId ? this.#getDeal(dealId) : null
+    }
+
     async #upsertContact(
         values: WithBaseProps<{
             optOutOfMarketing?: boolean
@@ -287,13 +295,15 @@ export class ZohoClient {
     ) {
         const parentContactId = await this.#upsertContact(values)
 
-        await this.#upsertChild({
+        const childId = await this.#upsertChild({
             childName: values.childName,
             childBirthdayISO: values.childBirthdayISO,
             parentContactId,
             optOutOfMarketing: values.optOutOfMarketing,
             partyDate: values.Party_Date,
         })
+
+        return { parentContactId, childId }
     }
 
     addBirthdayPartyContact(
@@ -354,12 +364,9 @@ export class ZohoClient {
 
         // need to check if this parent already has a holiday program date.
         // if not, add the date in, otherwise don't include it.
-        const searchResult = await this.#request({
-            endpoint: `Contacts/search?email=${encodeURIComponent(baseProps.email)})`,
-            method: 'GET',
-        })
+        const existingContact = await this.#searchContactByEmail(baseProps.email)
 
-        if (!searchResult) {
+        if (!existingContact) {
             // customer does not exist in zoho, so add them as new with the child
             return this.#addParentWithChild({
                 service: 'Holiday Program',
@@ -373,7 +380,6 @@ export class ZohoClient {
             })
         }
 
-        const existingContact = searchResult.data[0]
         const existingDate = existingContact['Holiday_Program_Date']
 
         return this.#addParentWithChild({
@@ -386,6 +392,175 @@ export class ZohoClient {
             ...(existingDate ? {} : { Holiday_Program_Date: holidayProgramDateISO }), // if they already have a date, no need to overwrite it
             ...baseProps,
         })
+    }
+
+    async addHolidayProgramBookingToDeal(
+        props: WithBaseProps<{
+            rows: HolidayProgramDealRow[]
+            optOutOfMarketing: boolean
+        }>
+    ) {
+        const { rows, optOutOfMarketing, ...baseProps } = props
+        const firstProgram = [...rows].sort((a, b) => (a.dateTimeISO < b.dateTimeISO ? -1 : 1))[0]
+
+        if (!firstProgram) {
+            return
+        }
+
+        // Upsert the parent contact first so the deal can be linked to a stable Contact record.
+        const existingContact = await this.#searchContactByEmail(baseProps.email)
+        const parentContactId = await this.#upsertContact({
+            service: 'Holiday Program',
+            branch: capitalise(firstProgram.studio),
+            customer_type: 'B2C',
+            Holiday_Program_Date: existingContact?.Holiday_Program_Date
+                ? undefined
+                : this.#toDateISO(firstProgram.dateTimeISO),
+            optOutOfMarketing,
+            ...baseProps,
+        })
+
+        // Build the subform rows, upserting each child so rows can link to the Child module.
+        const zohoRowsWithChildren = await Promise.all(
+            rows.map(async (row) => {
+                const childId = await this.#upsertChild({
+                    childName: row.childName,
+                    childBirthdayISO: row.childBirthdayISO,
+                    parentContactId,
+                    optOutOfMarketing,
+                })
+
+                return {
+                    childId,
+                    zohoRow: {
+                        Status: 'Booked',
+                        Booking_ID: row.appointmentId.toString(),
+                        Date_and_Time: this.#toDateTimeISO(row.dateTimeISO),
+                        Branch: capitalise(row.studio),
+                        ...(row.bookingUrl ? { Booking_URL: row.bookingUrl } : {}),
+                        Child: {
+                            id: childId,
+                        },
+                    },
+                }
+            })
+        )
+        const zohoRows = zohoRowsWithChildren.map(({ zohoRow }) => zohoRow)
+        const childIds = [...new Set(zohoRowsWithChildren.map(({ childId }) => childId))]
+
+        // There should only ever be one Holiday Program deal per customer email.
+        const existingDeal = await this.#searchHolidayProgramDealByEmail(baseProps.email)
+
+        if (!existingDeal) {
+            // First Holiday Program booking for this customer: create the deal with all rows attached.
+            const result = await this.#request({
+                endpoint: 'Deals',
+                method: 'POST',
+                data: [
+                    {
+                        Layout: {
+                            id: HOLIDAY_PROGRAM_DEAL_LAYOUT_ID,
+                        },
+                        Deal_Name: `[HP] ${baseProps.firstName}${baseProps.lastName ? ' ' + baseProps.lastName : ''}`,
+                        Service: 'Holiday Program',
+                        Pipeline: HOLIDAY_PROGRAM_PIPELINE,
+                        Contact_Name: {
+                            id: parentContactId,
+                        },
+                        Stage: 'Confirmed Booking',
+                        Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
+                        Customer_Type: 'B2C',
+                        Branch: capitalise(firstProgram.studio),
+                        Email: baseProps.email,
+                        Phone: baseProps.mobile || '',
+                        Closing_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
+                        [HOLIDAY_PROGRAM_SUBFORM]: zohoRows,
+                    },
+                ],
+            })
+
+            if (result?.data?.[0]?.code !== 'SUCCESS') {
+                throw new Error(`${result.data[0].code} - ${result.data[0].message}`)
+            }
+
+            const dealId = result.data[0].details.id as string
+            await this.#linkChildrenToDeal(dealId, childIds)
+            return dealId
+        }
+
+        // Repeat booking for the customer: append only rows that do not already exist in Zoho.
+        const existingBookingIds = new Set(
+            (existingDeal[HOLIDAY_PROGRAM_SUBFORM] ?? []).map((row: { Booking_ID?: string }) => row.Booking_ID)
+        )
+        const newRows = zohoRows.filter((row) => !existingBookingIds.has(row.Booking_ID))
+
+        if (newRows.length === 0) {
+            return existingDeal.id as string
+        }
+
+        const result = await this.#request({
+            endpoint: 'Deals',
+            method: 'PUT',
+            data: [
+                {
+                    id: existingDeal.id,
+                    Stage: 'Confirmed Booking',
+                    Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
+                    Branch: capitalise(firstProgram.studio),
+                    [HOLIDAY_PROGRAM_SUBFORM]: newRows,
+                },
+            ],
+        })
+
+        if (result?.data?.[0]?.code !== 'SUCCESS') {
+            throw new Error(`${result.data[0].code} - ${result.data[0].message}`)
+        }
+
+        await this.#linkChildrenToDeal(existingDeal.id, childIds)
+        return existingDeal.id as string
+    }
+
+    async updateHolidayProgramBookingRow(props: {
+        email: string
+        appointmentId: number | string
+        status?: ZohoHolidayProgramStatus
+        dateTimeISO?: string
+        studio?: StudioOrTest
+        bookingUrl?: string
+    }) {
+        const deal = await this.#searchHolidayProgramDealByEmail(props.email)
+        const row = deal?.[HOLIDAY_PROGRAM_SUBFORM]?.find(
+            (item: { Booking_ID?: string }) => item.Booking_ID === props.appointmentId.toString()
+        )
+
+        if (!deal || !row) {
+            return false
+        }
+
+        const rowUpdate = {
+            id: row.id,
+            ...(props.status ? { Status: props.status } : {}),
+            ...(props.dateTimeISO ? { Date_and_Time: this.#toDateTimeISO(props.dateTimeISO) } : {}),
+            ...(props.studio ? { Branch: capitalise(props.studio) } : {}),
+            ...(props.bookingUrl ? { Booking_URL: props.bookingUrl } : {}),
+        }
+
+        const result = await this.#request({
+            endpoint: 'Deals',
+            method: 'PUT',
+            data: [
+                {
+                    id: deal.id,
+                    [HOLIDAY_PROGRAM_SUBFORM]: [rowUpdate],
+                },
+            ],
+        })
+
+        if (result?.data?.[0]?.code !== 'SUCCESS') {
+            throw new Error(`${result.data[0].code} - ${result.data[0].message}`)
+        }
+
+        return true
     }
 
     async addPlayLabContact(
@@ -413,17 +588,13 @@ export class ZohoClient {
      * If so, mark the customer as checked in.
      */
     async holidayProgramCheckin({ email, programDate }: { email: string; programDate: string }) {
-        const searchResult = await this.#request({
-            endpoint: `Contacts/search?email=${encodeURIComponent(email)})`,
-            method: 'GET',
-        })
+        const existingContact = await this.#searchContactByEmail(email)
 
-        if (!searchResult) {
+        if (!existingContact) {
             // weird that they have a holiday program booking but not found in Zoho...
             return
         }
 
-        const existingContact = searchResult.data[0]
         const existingDate = existingContact['Holiday_Program_Date']
 
         if (existingDate === programDate) {
@@ -616,14 +787,14 @@ export class ZohoClient {
 
         if (result?.data?.[0]?.code === 'SUCCESS') {
             const zohoDealId = result.data[0].details.id as string
-            await this.#linkChildrenToBirthdayPartyDeal(zohoDealId, [...new Set(childIds)])
+            await this.#linkChildrenToDeal(zohoDealId, [...new Set(childIds)])
             return zohoDealId
         } else {
             throw new Error(`${result.data[0].code} - ${result.data[0].message}`)
         }
     }
 
-    async #linkChildrenToBirthdayPartyDeal(dealId: string, childIds: string[]) {
+    async #linkChildrenToDeal(dealId: string, childIds: string[]) {
         await Promise.all(
             childIds.map(async (childId) => {
                 try {
