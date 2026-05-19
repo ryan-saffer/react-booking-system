@@ -79,7 +79,7 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
             dealId: booking.zohoDealId,
             parentContactId: zohoContactId,
             partyDateISO: booking.dateTime.toDate().toISOString(),
-            parentName: booking.parentFirstName,
+            parentName: `${booking.parentFirstName} ${booking.parentLastName}`.trim(),
             address: booking.type === 'mobile' ? booking.address : '',
             studio: booking.location,
             type: booking.type,
