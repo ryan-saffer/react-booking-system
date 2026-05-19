@@ -88,7 +88,7 @@ export class AcuityClient {
     }
 
     async searchForAppointments(params: FetchAppointmentsParams) {
-        let path = `/appointments?appointmenTypeID=${params.appointmentTypeId}`
+        let path = `/appointments?appointmentTypeID=${params.appointmentTypeId}`
         if (params.calendarId) {
             path += `&calendarID=${params.calendarId}`
         }

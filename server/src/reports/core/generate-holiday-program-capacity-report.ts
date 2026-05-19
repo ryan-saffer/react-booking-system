@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 import { AcuityConstants, STUDIOS } from 'fizz-kidz'
-import type { Studio, StudioOrMaster } from 'fizz-kidz'
+import type { AcuityTypes, Studio, StudioOrMaster } from 'fizz-kidz'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { mergeAcuityWithStoryblok } from '@/acuity/core/merge-storyblok-with-acuity'
@@ -50,6 +50,7 @@ const appointmentTypeIds =
     env === 'prod'
         ? [AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM]
         : [AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM]
+const MAX_APPOINTMENT_RESULTS = 10000
 
 export async function generateHolidayProgramCapacityReport(
     input: GenerateHolidayProgramCapacityReportInput
@@ -65,34 +66,31 @@ export async function generateHolidayProgramCapacityReport(
         .filter((klass) => allowedCalendarIds.has(klass.calendarID))
         .sort((a, b) => a.time.localeCompare(b.time))
 
-    const classResults = await Promise.all(
-        classes.map(async (klass): Promise<HolidayProgramCapacityClassResult> => {
-            const appointments = await acuity.searchForAppointments({
-                appointmentTypeId: klass.appointmentTypeID,
-                calendarId: klass.calendarID,
-                classId: klass.id,
-                classTime: klass.time,
-                maxResults: 1000,
-            })
-            const bookedSpots = appointments.length
-            const totalCapacity = bookedSpots + klass.slotsAvailable
-            const studio = calendarIdsByStudio.get(klass.calendarID)!
+    const appointmentsByClassId = await getAppointmentsByClassId({
+        acuity,
+        classes,
+        calendarId: input.studio === 'master' ? undefined : AcuityConstants.StoreCalendars[input.studio],
+    })
 
-            return {
-                classId: klass.id,
-                appointmentTypeId: klass.appointmentTypeID,
-                calendarId: klass.calendarID,
-                studio,
-                name: klass.name,
-                ...(klass.title ? { title: klass.title } : {}),
-                time: klass.time,
-                bookedSpots,
-                totalCapacity,
-                slotsAvailable: klass.slotsAvailable,
-                utilisationPercentage: calculateUtilisation(bookedSpots, totalCapacity),
-            }
-        })
-    )
+    const classResults = classes.map((klass): HolidayProgramCapacityClassResult => {
+        const bookedSpots = appointmentsByClassId.get(klass.id)?.length ?? 0
+        const totalCapacity = bookedSpots + klass.slotsAvailable
+        const studio = calendarIdsByStudio.get(klass.calendarID)!
+
+        return {
+            classId: klass.id,
+            appointmentTypeId: klass.appointmentTypeID,
+            calendarId: klass.calendarID,
+            studio,
+            name: klass.name,
+            ...(klass.title ? { title: klass.title } : {}),
+            time: klass.time,
+            bookedSpots,
+            totalCapacity,
+            slotsAvailable: klass.slotsAvailable,
+            utilisationPercentage: calculateUtilisation(bookedSpots, totalCapacity),
+        }
+    })
 
     const studioResults = studios.map((studio): HolidayProgramCapacityStudioResult => {
         const studioClasses = classResults.filter((klass) => klass.studio === studio)
@@ -111,6 +109,45 @@ export async function generateHolidayProgramCapacityReport(
         overall: summarise(studioResults),
         studios: studioResults,
     }
+}
+
+async function getAppointmentsByClassId({
+    acuity,
+    classes,
+    calendarId,
+}: {
+    acuity: Awaited<ReturnType<typeof AcuityClient.getInstance>>
+    classes: Array<AcuityTypes.Api.Class & { title?: string }>
+    calendarId?: number
+}) {
+    const classIds = new Set(classes.map((klass) => klass.id))
+    if (classIds.size === 0) return new Map<number, AcuityTypes.Api.Appointment[]>()
+
+    const classAppointmentTypeIds = [...new Set(classes.map((klass) => klass.appointmentTypeID))]
+    const dates = classes.map((klass) => klass.time.split('T')[0]).sort()
+    const minDate = dates[0]
+    const maxDate = dates[dates.length - 1]
+    const appointments = (
+        await Promise.all(
+            classAppointmentTypeIds.map((appointmentTypeId) =>
+                acuity.searchForAppointments({
+                    appointmentTypeId,
+                    calendarId,
+                    minDate,
+                    maxDate,
+                    maxResults: MAX_APPOINTMENT_RESULTS,
+                })
+            )
+        )
+    )
+        .flat()
+        .filter((appointment) => classIds.has(appointment.classID))
+
+    return appointments.reduce((appointmentsByClassId, appointment) => {
+        const existingAppointments = appointmentsByClassId.get(appointment.classID) ?? []
+        appointmentsByClassId.set(appointment.classID, [...existingAppointments, appointment])
+        return appointmentsByClassId
+    }, new Map<number, AcuityTypes.Api.Appointment[]>())
 }
 
 function summarise(rows: HolidayProgramCapacitySummary[]): HolidayProgramCapacitySummary {
