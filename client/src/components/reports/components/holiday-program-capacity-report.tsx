@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { CalendarDays, ExternalLink, RefreshCw, UsersRound } from 'lucide-react'
+import { useState } from 'react'
 
 import type { Studio, StudioOrMaster } from 'fizz-kidz'
 
@@ -45,6 +46,15 @@ type HolidayProgramCapacityClassResult = HolidayProgramCapacitySummary & {
     time: string
 }
 
+type DailyBreakdown = {
+    date: string
+    summary: HolidayProgramCapacitySummary
+    morning: HolidayProgramCapacityClassResult[]
+    afternoon: HolidayProgramCapacityClassResult[]
+}
+
+type MasterBreakdownView = 'studio' | 'daily'
+
 const formatPercent = (value: number) =>
     new Intl.NumberFormat('en-AU', {
         maximumFractionDigits: 1,
@@ -54,6 +64,8 @@ const formatPercent = (value: number) =>
 const clampPercent = (value: number) => Math.min(100, Math.max(0, value))
 
 const formatClassTime = (value: string) => format(new Date(value), 'EEE d MMM, h:mm a')
+
+const formatDailyBreakdownDate = (value: string) => format(new Date(`${value}T00:00:00`), 'EEEE d MMMM')
 
 const getAcuityClassUrl = (classId: number) => {
     const params = new URLSearchParams({
@@ -130,6 +142,7 @@ export function HolidayProgramCapacityReport() {
 }
 
 function HolidayProgramCapacitySummary({ report }: { report: HolidayProgramCapacityReportResult }) {
+    const [masterView, setMasterView] = useState<MasterBreakdownView>('studio')
     const hasClasses = report.studios.some((studio) => studio.classes.length > 0)
     const classCount = report.studios.reduce((total, studio) => total + studio.classes.length, 0)
 
@@ -148,17 +161,165 @@ function HolidayProgramCapacitySummary({ report }: { report: HolidayProgramCapac
     return (
         <div className="flex flex-col gap-5">
             <OverallCapacityCard summary={report.overall} classCount={classCount} />
-            <Accordion type="multiple" className="grid gap-4">
-                {report.studios
-                    .filter((studio) => studio.classes.length > 0)
-                    .map((studio) => (
-                        <StudioCapacityCard
-                            key={studio.studio}
-                            studio={studio}
-                            showStudio={report.studio === 'master'}
-                        />
+            {report.studio === 'master' ? (
+                <div className="flex flex-col gap-4">
+                    <div className="flex flex-wrap gap-2">
+                        <BreakdownChip active={masterView === 'studio'} onClick={() => setMasterView('studio')}>
+                            Studio breakdown
+                        </BreakdownChip>
+                        <BreakdownChip active={masterView === 'daily'} onClick={() => setMasterView('daily')}>
+                            Daily breakdown
+                        </BreakdownChip>
+                    </div>
+                    {masterView === 'studio' ? (
+                        <StudioBreakdown report={report} />
+                    ) : (
+                        <DailyBreakdownView report={report} />
+                    )}
+                </div>
+            ) : (
+                <StudioBreakdown report={report} />
+            )}
+        </div>
+    )
+}
+
+function BreakdownChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: string }) {
+    return (
+        <button
+            type="button"
+            className={cn(
+                'rounded-full border px-4 py-2 text-sm font-bold transition-colors',
+                active
+                    ? 'border-[#B14594] bg-[#B14594] text-white shadow-sm'
+                    : 'border-slate-200 bg-white text-slate-600 hover:border-[#B14594]/40 hover:text-[#B14594]'
+            )}
+            onClick={onClick}
+        >
+            {children}
+        </button>
+    )
+}
+
+function StudioBreakdown({ report }: { report: HolidayProgramCapacityReportResult }) {
+    return (
+        <Accordion type="multiple" className="grid gap-4">
+            {report.studios
+                .filter((studio) => studio.classes.length > 0)
+                .map((studio) => (
+                    <StudioCapacityCard key={studio.studio} studio={studio} showStudio={report.studio === 'master'} />
+                ))}
+        </Accordion>
+    )
+}
+
+function DailyBreakdownView({ report }: { report: HolidayProgramCapacityReportResult }) {
+    const days = getDailyBreakdown(report)
+
+    return (
+        <Accordion type="multiple" className="grid gap-4">
+            {days.map((day) => (
+                <DailyBreakdownCard key={day.date} day={day} />
+            ))}
+        </Accordion>
+    )
+}
+
+function DailyBreakdownCard({ day }: { day: DailyBreakdown }) {
+    const relativeDayLabel = getRelativeDayLabel(day.date)
+
+    return (
+        <AccordionItem
+            value={day.date}
+            className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+        >
+            <AccordionTrigger className="bg-slate-50 px-5 py-5 text-left hover:no-underline">
+                <div className="flex flex-1 flex-col gap-4 pr-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="m-0 text-2xl font-black text-slate-950">
+                                {formatDailyBreakdownDate(day.date)}
+                            </h3>
+                            {relativeDayLabel ? <Badge variant="outline">{relativeDayLabel}</Badge> : null}
+                        </div>
+                        <p className="m-0 mt-1 text-sm text-slate-500">
+                            {day.summary.bookedSpots}/{day.summary.totalCapacity} booked across{' '}
+                            {day.morning.length + day.afternoon.length} classes
+                        </p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <Badge className="border-[#00c2e3]/20 bg-[#00c2e3]/10 text-[#007f96] hover:bg-[#00c2e3]/10">
+                            {formatPercent(day.summary.utilisationPercentage)}% full
+                        </Badge>
+                        <Badge variant="outline">{day.summary.slotsAvailable} spots left</Badge>
+                    </div>
+                </div>
+            </AccordionTrigger>
+            <AccordionContent className="p-0">
+                <DailySlotSection label="Morning" classes={day.morning} />
+                <DailySlotSection label="Afternoon" classes={day.afternoon} />
+            </AccordionContent>
+        </AccordionItem>
+    )
+}
+
+function DailySlotSection({
+    label,
+    classes,
+}: {
+    label: 'Morning' | 'Afternoon'
+    classes: HolidayProgramCapacityClassResult[]
+}) {
+    return (
+        <section className="border-t border-slate-100 first:border-t-0">
+            <div className="bg-white px-5 py-3">
+                <p className="m-0 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">{label}</p>
+            </div>
+            {classes.length > 0 ? (
+                <div className="flex flex-col divide-y divide-slate-100">
+                    {classes.map((klass) => (
+                        <DailyClassCapacityRow key={klass.classId} klass={klass} />
                     ))}
-            </Accordion>
+                </div>
+            ) : (
+                <p className="m-0 px-5 pb-5 text-sm text-slate-500">No {label.toLowerCase()} classes scheduled.</p>
+            )}
+        </section>
+    )
+}
+
+function DailyClassCapacityRow({ klass }: { klass: HolidayProgramCapacityClassResult }) {
+    const isFull = klass.slotsAvailable === 0 && klass.totalCapacity > 0
+
+    return (
+        <div className="grid gap-3 p-5 lg:grid-cols-[10rem_1fr_10rem_12rem_9rem] lg:items-center">
+            <div>
+                <p className="m-0 text-sm font-black text-slate-950">{getOrgName(klass.studio)}</p>
+                <p className="m-0 mt-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    {format(new Date(klass.time), 'h:mm a')}
+                </p>
+            </div>
+            <p className="m-0 text-sm text-slate-600">{klass.title ?? klass.name}</p>
+            <div className="flex items-center gap-2 lg:justify-end">
+                <span className="text-2xl font-black text-slate-950">
+                    {klass.bookedSpots}/{klass.totalCapacity}
+                </span>
+                <span className="text-xs font-semibold uppercase text-slate-400">booked</span>
+            </div>
+            <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between gap-3 text-xs font-bold uppercase tracking-wide">
+                    <span className={isFull ? 'text-[#B14594]' : 'text-slate-500'}>
+                        {isFull ? 'Full' : `${klass.slotsAvailable} left`}
+                    </span>
+                    <span className="text-slate-500">{formatPercent(klass.utilisationPercentage)}%</span>
+                </div>
+                <Progress className="h-2 bg-slate-100" value={clampPercent(klass.utilisationPercentage)} />
+            </div>
+            <Button asChild variant="outline" className="w-full gap-2 rounded-full lg:justify-self-end">
+                <a href={getAcuityClassUrl(klass.classId)} target="_blank" rel="noreferrer">
+                    Open in Acuity <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+            </Button>
         </div>
     )
 }
@@ -274,4 +435,57 @@ function HolidayProgramCapacitySkeleton() {
             <Skeleton className="h-64 rounded-3xl" />
         </div>
     )
+}
+
+function getDailyBreakdown(report: HolidayProgramCapacityReportResult): DailyBreakdown[] {
+    const classes = report.studios.flatMap((studio) => studio.classes)
+    const classesByDate = classes.reduce((groups, klass) => {
+        const date = klass.time.split('T')[0]
+        groups.set(date, [...(groups.get(date) ?? []), klass])
+        return groups
+    }, new Map<string, HolidayProgramCapacityClassResult[]>())
+
+    return [...classesByDate.entries()]
+        .sort(([firstDate], [secondDate]) => firstDate.localeCompare(secondDate))
+        .map(([date, dayClasses]) => {
+            const sortedClasses = [...dayClasses].sort((a, b) => {
+                const timeComparison = a.time.localeCompare(b.time)
+                if (timeComparison !== 0) return timeComparison
+                return getOrgName(a.studio).localeCompare(getOrgName(b.studio))
+            })
+
+            return {
+                date,
+                summary: summariseCapacity(sortedClasses),
+                morning: sortedClasses.filter((klass) => getClassSlot(klass) === 'morning'),
+                afternoon: sortedClasses.filter((klass) => getClassSlot(klass) === 'afternoon'),
+            }
+        })
+}
+
+function getClassSlot(klass: HolidayProgramCapacityClassResult) {
+    return new Date(klass.time).getHours() < 12 ? 'morning' : 'afternoon'
+}
+
+function summariseCapacity(rows: HolidayProgramCapacitySummary[]): HolidayProgramCapacitySummary {
+    const bookedSpots = rows.reduce((total, row) => total + row.bookedSpots, 0)
+    const totalCapacity = rows.reduce((total, row) => total + row.totalCapacity, 0)
+    const slotsAvailable = rows.reduce((total, row) => total + row.slotsAvailable, 0)
+
+    return {
+        bookedSpots,
+        totalCapacity,
+        slotsAvailable,
+        utilisationPercentage: totalCapacity === 0 ? 0 : (bookedSpots / totalCapacity) * 100,
+    }
+}
+
+function getRelativeDayLabel(date: string) {
+    const today = new Date()
+    const tomorrow = new Date()
+    tomorrow.setDate(today.getDate() + 1)
+
+    if (date === format(today, 'yyyy-MM-dd')) return 'Today'
+    if (date === format(tomorrow, 'yyyy-MM-dd')) return 'Tomorrow'
+    return null
 }
