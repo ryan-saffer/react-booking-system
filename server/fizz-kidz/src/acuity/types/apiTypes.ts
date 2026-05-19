@@ -66,6 +66,7 @@ export interface Payment {
 }
 
 export type Class = {
+    title: string
     id: number
     calendarID: number
     calendar: string

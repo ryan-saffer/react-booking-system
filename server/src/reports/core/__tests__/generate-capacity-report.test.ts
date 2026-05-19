@@ -4,7 +4,7 @@ import { STUDIOS, type FirestoreBooking, type StudioOrMaster } from 'fizz-kidz'
 
 import { mockDatabaseClient, resetDatabaseClientMock } from '@/test/mocks/database-client.mock'
 
-import { generateCapacityReport, generateCapacityReportInputSchema } from './generate-capacity-report'
+import { generateCapacityReport, generateCapacityReportInputSchema } from '../generate-capacity-report'
 
 type CapacityReportQueryInput = { startDate: Date; endDate: Date; studio: StudioOrMaster }
 

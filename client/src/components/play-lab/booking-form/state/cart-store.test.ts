@@ -16,6 +16,7 @@ const makeClass = (
     overrides: Partial<Omit<LocalAcuityClass, 'price'>> & { id: number; price: number; time: Date }
 ): LocalAcuityClass => ({
     id: overrides.id,
+    title: 'Title',
     price: overrides.price.toString(),
     time: overrides.time,
     name: overrides.name ?? `Class ${overrides.id}`,
