@@ -24,6 +24,8 @@ import type {
 } from './zoho.types'
 
 const CHILD_MODULE_NAME = 'Child'
+const BIRTHDAY_PARTY_PIPELINE = 'Birthday Party Pipeline'
+const BIRTHDAY_PARTY_DEAL_PREFIX = '[Party]'
 const HOLIDAY_PROGRAM_PIPELINE = 'Holiday Program Pipeline'
 const HOLIDAY_PROGRAM_SUBFORM = 'Holiday_Program'
 const HOLIDAY_PROGRAM_DEAL_LAYOUT_ID = '76392000009097844'
@@ -150,6 +152,13 @@ export class ZohoClient {
 
     #toDateISO(date: string) {
         return DateTime.fromISO(date, { zone: 'Australia/Melbourne' }).toISODate()
+    }
+
+    #formatBirthdayPartyDealName(name: string) {
+        const trimmedName = name.trim()
+        return trimmedName.startsWith(`${BIRTHDAY_PARTY_DEAL_PREFIX} `)
+            ? trimmedName
+            : `${BIRTHDAY_PARTY_DEAL_PREFIX} ${trimmedName}`
     }
 
     async #searchContactByEmail(email: string) {
@@ -703,9 +712,11 @@ export class ZohoClient {
             method: 'POST',
             data: [
                 {
-                    Deal_Name: `${props.firstName}${props.lastName ? ' ' + props.lastName : ''}`,
+                    Deal_Name: this.#formatBirthdayPartyDealName(
+                        `${props.firstName}${props.lastName ? ' ' + props.lastName : ''}`
+                    ),
                     Service: 'Birthday Party',
-                    Pipeline: 'Birthday Party Pipeline',
+                    Pipeline: BIRTHDAY_PARTY_PIPELINE,
                     Contact_Name: {
                         id: props.contactId,
                     },
@@ -768,9 +779,9 @@ export class ZohoClient {
                     id: dealId || undefined,
                     Stage: 'Confirmed Booking',
                     Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
-                    Deal_Name: parentName,
+                    Deal_Name: this.#formatBirthdayPartyDealName(parentName),
                     Service: 'Birthday Party',
-                    Pipeline: 'Birthday Party Pipeline',
+                    Pipeline: BIRTHDAY_PARTY_PIPELINE,
                     Contact_Name: {
                         id: parentContactId,
                     },
