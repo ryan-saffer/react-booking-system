@@ -1,6 +1,5 @@
 import { logger } from 'firebase-functions/v2'
 import { DateTime } from 'luxon'
-import { EmploymentBasis } from 'xero-node/dist/gen/model/payroll-au/employmentBasis'
 
 import { ObjectKeys, isFranchise, type FranchiseOrMaster, type FranchiseStudio, type Studio } from 'fizz-kidz'
 
