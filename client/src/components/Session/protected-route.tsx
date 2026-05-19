@@ -21,7 +21,7 @@ export function ProtectedRoute({
 }) {
     const authUser = useAuth()
     const { hasPermission, currentOrg } = useOrg()
-    if (!authUser || !currentOrg) {
+    if (!authUser?.uid || !currentOrg) {
         return <Navigate to="/sign-in" />
     }
 

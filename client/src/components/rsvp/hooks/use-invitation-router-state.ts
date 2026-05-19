@@ -13,7 +13,7 @@ import { hasRequiredState } from '../utils/has-required-state'
  *
  * @returns the invitation state
  */
-export function useInvitationRouterState(): Omit<InvitationsV2.Invitation, 'id' | 'uid' | 'invitation'> {
+export function useInvitationRouterState(): Omit<InvitationsV2.Invitation, 'id' | 'uid' | 'invitation'> | null {
     const state = useRouterState<Partial<InvitationsV2.Invitation>>()
 
     const navigate = useNavigate()
@@ -37,6 +37,10 @@ export function useInvitationRouterState(): Omit<InvitationsV2.Invitation, 'id' 
             navigate('/invite')
         }
     }, [isValid, navigate])
+
+    if (!isValid) {
+        return null
+    }
 
     return {
         bookingId: state!.bookingId!,

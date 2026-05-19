@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Info, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -15,11 +14,12 @@ import { Separator } from '@ui-components/separator'
 
 const formSchema = z.object({
     email: z.string().min(1, { message: 'Email cannot be empty.' }).email(),
-    password: z.string().min(8, { message: 'Password must be at least 8 characters long.' }),
+    password: z.string().min(1, { message: 'Password cannot be empty.' }),
 })
 
 export function LoginDialog({ open }: { open: boolean }) {
     const firebase = useFirebase()
+    const [mode, setMode] = useState<'create' | 'sign-in'>('create')
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -50,22 +50,33 @@ export function LoginDialog({ open }: { open: boolean }) {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             setLoading(true)
+            if (mode === 'sign-in') {
+                await firebase.doSignInWithEmailAndPassword(values.email, values.password)
+                return
+            }
+
+            if (values.password.length < 8) {
+                form.setError('password', { message: 'Password must be at least 8 characters long.' })
+                return
+            }
+
             await firebase.doCreateUserWithEmailAndPassword(values.email, values.password)
         } catch (err: any) {
+            if (mode === 'sign-in') {
+                toast.error('Invalid email address and password.')
+                return
+            }
+
             if (err.code == 'auth/weak-password') {
                 toast.error('Password is too weak.')
             } else if (err.code === 'auth/email-already-in-use') {
+                setMode('sign-in')
                 toast.error(
                     <div className="flex items-center gap-4 font-medium">
                         <Info className="h-10 w-10" />
                         <span>
-                            An account with this email already exists. Please
-                            <Link to="/sign-in" className="font-bold text-destructive">
-                                sign in
-                            </Link>
+                            An account with this email already exists. Please sign in below to finish your invitation.
                         </span>
-                        to your account, and then open the link in your booking confirmation email to generate your
-                        invitation again.
                     </div>,
                     { duration: 10000, closeButton: true }
                 )
@@ -81,12 +92,13 @@ export function LoginDialog({ open }: { open: boolean }) {
         <Dialog open={open}>
             <DialogContent className="twp sm:max-w-[425px]" hideCloseBtn>
                 <DialogHeader>
-                    <DialogTitle>Please create an account to continue</DialogTitle>
+                    <DialogTitle>
+                        {mode === 'create' ? 'Please create an account to continue' : 'Please sign in to continue'}
+                    </DialogTitle>
                     <DialogDescription>
-                        This is to protect you and your guests' information, so that you can track RSVP's.
-                        <br />
-                        <br />
-                        It will just take 10 seconds, we promise!
+                        {mode === 'create'
+                            ? "This protects you and your guests' information, so that you can track RSVP's. It will just take 10 seconds, we promise!"
+                            : 'Sign in with the account you already created and we will finish saving your invitation.'}
                     </DialogDescription>
                 </DialogHeader>
                 <Button
@@ -130,23 +142,26 @@ export function LoginDialog({ open }: { open: boolean }) {
                             )}
                         />
                         <Button className="mt-4 h-8 bg-[#B14594] hover:bg-[#b0288c]" type="submit">
-                            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Create account'}
+                            {loading ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : mode === 'create' ? (
+                                'Create account'
+                            ) : (
+                                'Sign in'
+                            )}
                         </Button>
                     </form>
                 </Form>
                 <div className="flex h-12 flex-col  items-center justify-center gap-2">
                     <p className="text-center text-[13px] text-[#747686]">
-                        Already have an account?{' '}
-                        <span className="font-medium text-[#B14594] hover:underline">
-                            <Link
-                                to="/sign-in"
-                                state={{
-                                    afterLoginUrl: '/invite',
-                                }}
-                            >
-                                Sign in
-                            </Link>
-                        </span>
+                        {mode === 'create' ? 'Already have an account?' : "Don't have an account?"}{' '}
+                        <button
+                            type="button"
+                            className="font-medium text-[#B14594] hover:underline"
+                            onClick={() => setMode((prev) => (prev === 'create' ? 'sign-in' : 'create'))}
+                        >
+                            {mode === 'create' ? 'Sign in' : 'Create one'}
+                        </button>
                     </p>
                 </div>
             </DialogContent>

@@ -26,7 +26,7 @@ export function DesignInvitationPage() {
     const auth = useAuth()
 
     const state = useInvitationRouterState()
-    const { childName } = state
+    const childName = state?.childName
 
     const [step, setStep] = useState(1)
     const [invitation, setInvitation] = useState<WithoutUid<InvitationsV2.Invitation> | null>(null)
@@ -75,7 +75,7 @@ export function DesignInvitationPage() {
         window.scrollTo({ top: 0 })
     }, [step])
 
-    const hasCreatedAccount = !!auth && finishPressed
+    const hasCreatedAccount = !!auth?.uid && finishPressed
 
     // listening for when both authenticated and ready to move on
     useEffect(() => {
@@ -155,30 +155,38 @@ export function DesignInvitationPage() {
                     />
                 </div>
                 <div className="mt-8">
-                    {step === 1 && (
-                        <Step1
-                            api={api}
-                            setApi={setApi}
-                            nextStep={nextStep}
-                            selectedInvitation={selectedInvitation}
-                            canScrollPrev={canScrollPrev}
-                            canScrollNext={canScrollNext}
-                        />
-                    )}
-                    {step === 2 && (
-                        <Step2
-                            selectedInvitation={selectedInvitation}
-                            onInvitationGenerated={(invitation) => {
-                                setInvitation(invitation)
-                                nextStep()
-                            }}
-                        />
-                    )}
-                    {step === 3 && invitation && (
-                        <Step3 invitationId={invitation.id} nextStep={nextStep} loading={hasCreatedAccount} />
+                    {!state ? (
+                        <div className="flex min-h-64 items-center justify-center rounded-2xl border border-white/70 bg-white/80 shadow-2xl backdrop-blur">
+                            <Loader />
+                        </div>
+                    ) : (
+                        <>
+                            {step === 1 && (
+                                <Step1
+                                    api={api}
+                                    setApi={setApi}
+                                    nextStep={nextStep}
+                                    selectedInvitation={selectedInvitation}
+                                    canScrollPrev={canScrollPrev}
+                                    canScrollNext={canScrollNext}
+                                />
+                            )}
+                            {step === 2 && (
+                                <Step2
+                                    selectedInvitation={selectedInvitation}
+                                    onInvitationGenerated={(invitation) => {
+                                        setInvitation(invitation)
+                                        nextStep()
+                                    }}
+                                />
+                            )}
+                            {step === 3 && invitation && (
+                                <Step3 invitationId={invitation.id} nextStep={nextStep} loading={hasCreatedAccount} />
+                            )}
+                        </>
                     )}
                 </div>
-                <LoginDialog open={!auth && finishPressed} />
+                <LoginDialog open={!auth?.uid && finishPressed} />
             </div>
         </div>
     )
@@ -286,11 +294,14 @@ function Step2({
 }) {
     const trpc = useTRPC()
     const state = useInvitationRouterState()
-    const { bookingId, ...defaultValues } = state
 
     const { isPending, mutateAsync: generateInvitation } = useMutation(
         trpc.parties.generateInvitationV2.mutationOptions()
     )
+
+    if (!state) return null
+
+    const { bookingId, ...defaultValues } = state
 
     const onSubmit = async (values: InvitationsV2.Invitation) => {
         try {

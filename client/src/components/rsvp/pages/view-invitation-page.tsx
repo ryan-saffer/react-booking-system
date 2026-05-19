@@ -32,14 +32,20 @@ export function ViewInvitationPage() {
         const invitationRef = doc(firebase.db, 'invitations-v2', id as string).withConverter(
             timestampConverter<InvitationsV2.Invitation>()
         )
-        const unsub = onSnapshot(invitationRef, (snap) => {
-            if (snap.exists()) {
-                const invitation = snap.data() as InvitationsV2.Invitation
-                setInvitation({ status: 'loaded', result: invitation })
-            } else {
-                setInvitation({ status: 'error', error: 'not-found' })
+        const unsub = onSnapshot(
+            invitationRef,
+            (snap) => {
+                if (snap.exists()) {
+                    const invitation = snap.data() as InvitationsV2.Invitation
+                    setInvitation({ status: 'loaded', result: invitation })
+                } else {
+                    setInvitation({ status: 'error', error: 'not-found' })
+                }
+            },
+            (error) => {
+                setInvitation({ status: 'error', error: error.message })
             }
-        })
+        )
 
         return () => unsub()
         // eslint-disable-next-line react-hooks/exhaustive-deps
