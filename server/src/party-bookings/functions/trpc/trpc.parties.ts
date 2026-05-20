@@ -10,6 +10,7 @@ import type {
     WithoutUid,
 } from 'fizz-kidz'
 
+import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { getPartyFormEmbedConfig } from '@/paperforms/core/party-form-prefill'
 import { createPartyBooking } from '@/party-bookings/core/create-party-booking'
 import { deletePartyBooking } from '@/party-bookings/core/delete-party-booking'
@@ -22,9 +23,11 @@ import { linkInvitation } from '@/party-bookings/core/rsvp/link-invitation-v2'
 import { resetInvitation } from '@/party-bookings/core/rsvp/reset-invitation-v2'
 import { rsvpToParty } from '@/party-bookings/core/rsvp/rsvp-to-party-v2'
 import type { RsvpProps } from '@/party-bookings/core/rsvp/rsvp-to-party-v2'
+import { sendPartyBookingConfirmationEmail } from '@/party-bookings/core/send-party-booking-confirmation-email'
 import { updatePartyBooking } from '@/party-bookings/core/update-party-booking'
 import { getCakeFormUrl, getPartyFormUrl } from '@/party-bookings/core/utils.party'
 import { authenticatedProcedure, publicProcedure, router } from '@/trpc/trpc'
+import { throwTrpcError } from '@/utilities'
 
 export type CreatePartyBooking = Booking
 export type UpdatePartyBooking = { bookingId: string; booking: Booking }
@@ -53,6 +56,17 @@ export const partiesRouter = router({
     getCakeFormUrl: authenticatedProcedure
         .input((input: unknown) => input as { bookingId: string })
         .mutation(({ input }) => getCakeFormUrl(input.bookingId)),
+    resendPartyBookingConfirmationEmail: authenticatedProcedure
+        .input(z.object({ bookingId: z.string() }))
+        .mutation(async ({ input }) => {
+            const booking = await DatabaseClient.getPartyBooking(input.bookingId)
+
+            try {
+                await sendPartyBookingConfirmationEmail({ bookingId: input.bookingId, booking })
+            } catch (err) {
+                throwTrpcError('INTERNAL_SERVER_ERROR', 'Unable to resend party booking confirmation email', err, input)
+            }
+        }),
     getPaperformEmbedConfig: publicProcedure
         .input(z.object({ bookingId: z.string(), partyOrCakeForm: z.enum(['party', 'cake']) }))
         .query(({ input }) => getPartyFormEmbedConfig(input.bookingId, input.partyOrCakeForm)),

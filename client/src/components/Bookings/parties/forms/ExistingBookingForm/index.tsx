@@ -47,6 +47,7 @@ import type { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDi
 import WithConfirmationDialog from '@components/Dialogs/ConfirmationDialog'
 import type { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
 import WithErrorDialog from '@components/Dialogs/ErrorDialog'
+import { useConfirm } from '@components/Hooks/confirmation-dialog.tsx/use-confirmation-dialog'
 import { useTRPC } from '@utils/trpc'
 
 import { mapFirestoreBookingToFormValues, mapFormToBooking } from '../utilities'
@@ -79,6 +80,7 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     showConfirmationDialog,
 }) => {
     const trpc = useTRPC()
+    const confirm = useConfirm()
     const mappedBooking = useMemo(() => mapFirestoreBookingToFormValues(booking), [booking])
     const [draftFormValues, setDraftFormValues] = useState<ExistingBookingFormFields | null>(null)
 
@@ -86,6 +88,9 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     const deleteBookingMutation = useMutation(trpc.parties.deletePartyBooking.mutationOptions())
     const getPartyFormUrl = useMutation(trpc.parties.getPartyFormUrl.mutationOptions())
     const getCakeFormUrl = useMutation(trpc.parties.getCakeFormUrl.mutationOptions())
+    const resendPartyBookingConfirmationEmail = useMutation(
+        trpc.parties.resendPartyBookingConfirmationEmail.mutationOptions()
+    )
 
     const { setDate } = useDateNavigation()
 
@@ -1000,6 +1005,30 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                             } catch (err) {
                                 console.error(err)
                                 toast.error('Unable to get cake form link.')
+                            } finally {
+                                setLoading(false)
+                            }
+                        },
+                    },
+                    {
+                        label: 'Resend confirmation email',
+                        action: async () => {
+                            const confirmed = await confirm({
+                                title: 'Resend confirmation email?',
+                                description: `This will send the party booking confirmation email to ${booking.parentEmail}.`,
+                            })
+
+                            if (!confirmed) return
+
+                            setLoading(true)
+                            try {
+                                await resendPartyBookingConfirmationEmail.mutateAsync({ bookingId: booking.id })
+                                toast.success(`Confirmation email sent to ${booking.parentEmail}.`)
+                            } catch (err) {
+                                console.error(err)
+                                toast.error('Unable to resend confirmation email.')
+                            } finally {
+                                setLoading(false)
                             }
                         },
                     },

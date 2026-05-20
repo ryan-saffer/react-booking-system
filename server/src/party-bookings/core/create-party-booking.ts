@@ -1,29 +1,16 @@
 import { Timestamp } from 'firebase-admin/firestore'
-import { DateTime } from 'luxon'
 
 import type { FirestoreBooking } from 'fizz-kidz'
-import {
-    capitalise,
-    getApplicationDomain,
-    getInvitationEntryUrl,
-    getStudioAddress,
-    getNumberOfKidsAllowed,
-    getPartyCustomerContactInfo,
-    getPartyCreationCount,
-    getPartyEndDate,
-    getPictureOfStudioUrl,
-    getStudioContactEmail,
-} from 'fizz-kidz'
+import { getApplicationDomain, getStudioAddress, getPartyEndDate } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { CalendarClient } from '@/google/CalendarClient'
 import { env } from '@/init'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
-import { MailClient } from '@/sendgrid/MailClient'
 import { throwTrpcError, logError, isUsingEmulator } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
-import { getCakeFormUrl } from './utils.party'
+import { sendPartyBookingConfirmationEmail } from './send-party-booking-confirmation-email'
 
 import type { CreatePartyBooking } from '../functions/trpc/trpc.parties'
 
@@ -94,75 +81,12 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
         logError('error creating zoho records during birthday party booking', err, { booking })
     }
 
-    // create the personalised invite url
-    const startTime = `${DateTime.fromJSDate(booking.dateTime.toDate(), {
-        zone: 'Australia/Melbourne',
-    }).toFormat('h:mm a')} - ${DateTime.fromJSDate(end, {
-        zone: 'Australia/Melbourne',
-    }).toFormat('h:mm a')}`
-
-    const params = [
-        `childName=${encodeURIComponent(booking.childName)}`,
-        `childAge=${encodeURIComponent(booking.childAge)}`,
-        `date=${encodeURIComponent(booking.dateTime.toDate().toISOString())}`,
-        `time=${encodeURIComponent(startTime)}`,
-        `type=${encodeURIComponent(booking.type)}`,
-        `studio=${encodeURIComponent(booking.location)}`,
-        `address=${encodeURIComponent(booking.address)}`,
-        `rsvpName=${encodeURIComponent(booking.parentFirstName)}`,
-        `rsvpDate=${encodeURIComponent(
-            DateTime.fromJSDate(booking.dateTime.toDate(), { zone: 'Australia/Melbourne' }).minus({ days: 14 }).toISO()
-        )}`,
-        `rsvpNumber=${encodeURIComponent(booking.parentMobile)}`,
-    ]
-
-    const cakeFormUrl = getCakeFormUrl(bookingId)
-    // only use the new rsvp system if it was chosen during booking
-    const invitationsUrl = booking.useRsvpSystem
-        ? getInvitationEntryUrl(env, isUsingEmulator(), bookingId)
-        : `${getApplicationDomain(env, isUsingEmulator())}/invitations?${params.join('&')}`
-
-    const customerContact = getPartyCustomerContactInfo(booking.location)
-    const studioContactEmail = getStudioContactEmail(booking.location)
-
     if (booking.sendConfirmationEmail) {
-        const mailClient = await MailClient.getInstance()
         try {
-            await mailClient.sendEmail(
-                'partyBookingConfirmation',
-                booking.parentEmail,
-                {
-                    header: `${booking.childName}'s party is booked in!`,
-                    openingLine: `We're delighted to confirm <strong>${booking.childName}'s ${booking.childAge}th Birthday Party at Fizz Kidz!</strong> We're so excited to celebrate with you.`,
-                    parentName: booking.parentFirstName,
-                    childName: booking.childName,
-                    childAge: booking.childAge,
-                    startDate: DateTime.fromJSDate(booking.dateTime.toDate(), {
-                        zone: 'Australia/Melbourne',
-                    }).toLocaleString(DateTime.DATE_HUGE),
-                    startTime: DateTime.fromJSDate(booking.dateTime.toDate(), {
-                        zone: 'Australia/Melbourne',
-                    }).toLocaleString(DateTime.TIME_SIMPLE),
-                    endTime: DateTime.fromJSDate(end, { zone: 'Australia/Melbourne' }).toLocaleString(
-                        DateTime.TIME_SIMPLE
-                    ),
-                    address: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
-                    location: capitalise(booking.location),
-                    isMobile: booking.type === 'mobile',
-                    creationCount: getPartyCreationCount(booking.type, booking.partyLength),
-                    contactEmail: customerContact.email,
-                    contactPhone: customerContact.phoneDisplay,
-                    contactName: customerContact.contactName || '',
-                    numberOfKidsAllowed: getNumberOfKidsAllowed(booking.location),
-                    studioPhotoUrl: getPictureOfStudioUrl(booking.location),
-                    useRsvpSystem: booking.useRsvpSystem || false,
-                    invitationsUrl,
-                    includesFood: booking.includesFood,
-                    canOrderCake: booking.type === 'studio',
-                    cakeFormUrl,
-                },
-                { replyTo: studioContactEmail }
-            )
+            await sendPartyBookingConfirmationEmail({
+                bookingId,
+                booking: { ..._booking, dateTime: new Date(_booking.dateTime) },
+            })
         } catch (err) {
             logError('party booked successfully, but unable to send confirmation email', err, { _booking })
         }
