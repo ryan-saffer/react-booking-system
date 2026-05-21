@@ -1,6 +1,10 @@
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
+import { normalize } from 'fizz-kidz'
 
-export async function checkDiscountCode(code: string) {
+import { DatabaseClient } from '../../../firebase/DatabaseClient'
+import { DiscountCodeAlreadyRedeemedError } from '../../../trpc/trpc.errors'
+import { throwCustomTrpcError } from '../../../utilities'
+
+export async function checkDiscountCode(code: string, customerEmail?: string) {
     const existingDiscountCodes = await DatabaseClient.checkDiscountCode(code)
     // each certificate should only exist once in the db. this is enforced when creating codes.
     if (existingDiscountCodes.length > 0) {
@@ -11,8 +15,20 @@ export async function checkDiscountCode(code: string) {
         if (discountCode.numberOfUses >= discountCode.numberOfUsesAllocated) {
             return 'exhausted'
         }
+        if (discountCode.limitToOneUsePerCustomer && customerEmail) {
+            const redemptions = await DatabaseClient.getDiscountCodeRedemptions(
+                getDiscountCodeRedemptionKey(code, customerEmail)
+            )
+            if (redemptions.length > 0) {
+                throwCustomTrpcError(new DiscountCodeAlreadyRedeemedError())
+            }
+        }
         return discountCode
     }
 
     return 'not-found'
+}
+
+export function getDiscountCodeRedemptionKey(code: string, customerEmail: string) {
+    return `${normalize(code)}:${normalize(customerEmail)}`
 }

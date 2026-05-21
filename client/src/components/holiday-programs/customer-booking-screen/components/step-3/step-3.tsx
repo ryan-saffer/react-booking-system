@@ -202,7 +202,7 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
     return (
         <>
             <BookingSummary form={form} numberOfKids={form.children.length} />
-            <DiscountInput numberOfKids={form.children.length} />
+            <DiscountInput numberOfKids={form.children.length} parentEmail={form.parentEmail} />
             <GiftCardInput numberOfKids={form.children.length} />
             <Root>
                 <PaymentForm

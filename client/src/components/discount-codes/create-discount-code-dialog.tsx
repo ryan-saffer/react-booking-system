@@ -9,6 +9,7 @@ import type { DiscountCode, WithoutId } from 'fizz-kidz'
 
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
+import { Checkbox } from '@ui-components/checkbox'
 import {
     Dialog,
     DialogContent,
@@ -38,6 +39,7 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
             discountAmount: '',
             expiryDate: undefined,
             numberOfUsesAllocated: 1,
+            limitToOneUsePerCustomer: false,
         },
     })
 
@@ -77,6 +79,7 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
                 code: values.code,
                 expiryDate: values.expiryDate,
                 numberOfUsesAllocated: numberOfUsesAllocated,
+                limitToOneUsePerCustomer: values.limitToOneUsePerCustomer ?? false,
             })
             toast.success('Discount code created!')
             close()
@@ -236,6 +239,28 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
                                         Booking multiple holiday programs at once only counts as one 'use'.
                                     </FormDescription>
                                     <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="limitToOneUsePerCustomer"
+                            render={({ field }) => (
+                                <FormItem className="space-y-0">
+                                    <FormLabel className="flex cursor-pointer flex-row items-start space-x-3 rounded-md border p-4 font-normal">
+                                        <FormControl>
+                                            <Checkbox
+                                                checked={field.value ?? false}
+                                                onCheckedChange={(checked) => field.onChange(checked === true)}
+                                            />
+                                        </FormControl>
+                                        <div className="space-y-1 leading-none">
+                                            <span className="font-medium">Limit to one use per customer</span>
+                                            <span className="block text-sm text-muted-foreground">
+                                                Customers can only redeem this code once per email address.
+                                            </span>
+                                        </div>
+                                    </FormLabel>
                                 </FormItem>
                             )}
                         />

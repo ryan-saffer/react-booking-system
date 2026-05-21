@@ -24,5 +24,6 @@ export async function createDiscountCode(discountCode: CreateDiscountCode) {
         expiryDate: discountCode.expiryDate,
         numberOfUses: 0,
         numberOfUsesAllocated: discountCode.numberOfUsesAllocated,
+        limitToOneUsePerCustomer: discountCode.limitToOneUsePerCustomer ?? false,
     })
 }

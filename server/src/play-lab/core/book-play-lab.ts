@@ -4,10 +4,11 @@ import { Status } from 'google-gax'
 import { DateTime } from 'luxon'
 import { SquareError } from 'square'
 
-import { AcuityConstants, AcuityUtilities, studioNameAndAddress, type AcuityTypes } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities, normalize, studioNameAndAddress, type AcuityTypes } from 'fizz-kidz'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { getDiscountCodeRedemptionKey } from '@/holiday-programs/core/discount-codes/check-discount-code'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
 import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
@@ -255,6 +256,29 @@ export async function bookPlayLab(input: BookPlayLabProps) {
             logError('Error while updating discount code during play lab booking', err, {
                 code: discount.code,
                 input,
+            })
+        }
+
+        try {
+            await DatabaseClient.createDiscountCodeRedemption({
+                code: discount.code,
+                normalizedCode: normalize(discount.code),
+                customerEmail: input.parentEmail,
+                normalizedCustomerEmail: normalize(input.parentEmail),
+                redemptionKey: getDiscountCodeRedemptionKey(discount.code, input.parentEmail),
+                customerName: `${input.parentFirstName} ${input.parentLastName}`.trim(),
+                bookingType: 'play-lab',
+                amountCents: input.payment.amount,
+                discountType: discount.type,
+                discountAmount: discount.amount,
+                appointmentIds: appointments.map((appointment) => appointment.id.toString()),
+                idempotencyKey: input.idempotencyKey,
+                usedAt: new Date(),
+            })
+        } catch (err) {
+            logError('Error while recording discount code redemption during play lab booking', err, {
+                code: discount.code,
+                customerEmail: input.parentEmail,
             })
         }
     }

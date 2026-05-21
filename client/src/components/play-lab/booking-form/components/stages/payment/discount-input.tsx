@@ -11,7 +11,6 @@ import { useTRPC } from '@utils/trpc'
 import { useCart } from '../../../state/cart-store'
 import { useBookingForm } from '../../../state/form-schema'
 
-
 export function DiscountInput() {
     const trpc = useTRPC()
     const form = useBookingForm()
@@ -32,7 +31,10 @@ export function DiscountInput() {
         }
 
         try {
-            const result = await checkDiscountCode({ code: discountCode })
+            const result = await checkDiscountCode({
+                code: discountCode,
+                customerEmail: form.getValues().parentEmailAddress,
+            })
             if (result === 'not-found') {
                 setError(`The discount code '${discountCode}' is invalid.`)
             } else if (result === 'expired') {
@@ -53,7 +55,11 @@ export function DiscountInput() {
                 setDiscountCode('')
             }
         } catch (err: any) {
-            setError(err.message)
+            if (err?.data?.code === 'DISCOUNT_CODE_ALREADY_REDEEMED') {
+                setError('This discount code has already been redeemed by you')
+            } else {
+                setError(err.message)
+            }
         }
     }
 

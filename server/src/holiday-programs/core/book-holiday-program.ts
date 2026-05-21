@@ -4,7 +4,7 @@ import { Status } from 'google-gax'
 import { DateTime } from 'luxon'
 
 import type { DiscountCode } from 'fizz-kidz'
-import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities, normalize } from 'fizz-kidz'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -14,6 +14,7 @@ import { ClassFullError } from '@/trpc/trpc.errors'
 import { logError, throwCustomTrpcError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
+import { getDiscountCodeRedemptionKey } from './discount-codes/check-discount-code'
 import { processHolidayProgramPayment } from './process-holiday-program-payment'
 import { sendConfirmationEmail } from './send-confirmation-email'
 
@@ -215,12 +216,37 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
 
         // MARK: Discount code
         // if using a discount code, update its number of uses
-        const code = input.payment.discount?.code
-        if (code) {
+        const discount = input.payment.discount
+        if (discount) {
             try {
-                await DatabaseClient.updateDiscountCode(code, { numberOfUses: FieldValue.increment(1) })
+                await DatabaseClient.updateDiscountCode(discount.code, { numberOfUses: FieldValue.increment(1) })
             } catch (err) {
-                logError('Error while updating discount code during holiday program registration', err, { code })
+                logError('Error while updating discount code during holiday program registration', err, {
+                    code: discount.code,
+                })
+            }
+
+            try {
+                await DatabaseClient.createDiscountCodeRedemption({
+                    code: discount.code,
+                    normalizedCode: normalize(discount.code),
+                    customerEmail: input.parentEmail,
+                    normalizedCustomerEmail: normalize(input.parentEmail),
+                    redemptionKey: getDiscountCodeRedemptionKey(discount.code, input.parentEmail),
+                    customerName: `${input.parentFirstName} ${input.parentLastName}`.trim(),
+                    bookingType: 'holiday-program',
+                    amountCents: input.payment.amount,
+                    discountType: discount.discountType,
+                    discountAmount: discount.discountAmount,
+                    appointmentIds: appointments.map((appointment) => appointment.id.toString()),
+                    idempotencyKey: input.idempotencyKey,
+                    usedAt: new Date(),
+                })
+            } catch (err) {
+                logError('Error while recording discount code redemption during holiday program registration', err, {
+                    code: discount.code,
+                    customerEmail: input.parentEmail,
+                })
             }
         }
 
@@ -254,7 +280,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
             numberOfSlots: input.payment.lineItems.length,
             numberOfKids: uniqueChildNamesCount,
             childAges,
-            ...(code && { discountCode: code }),
+            ...(discount && { discountCode: discount.code }),
             ...(titles.length && { titles }),
             ...(creations.length && { creations }),
         })

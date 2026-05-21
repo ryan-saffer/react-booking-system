@@ -3,6 +3,7 @@ import type {
     AuthUser,
     Booking,
     DiscountCode,
+    DiscountCodeRedemption,
     Employee,
     Event,
     FirestoreBooking,
@@ -121,6 +122,12 @@ export class FirestoreRefs {
 
     static async discountCode(id: string) {
         return (await this.discountCodes()).doc(id)
+    }
+
+    static async discountCodeRedemptions() {
+        return (await FirestoreClient.getInstance()).collection(
+            'discountCodeRedemptions'
+        ) as Collection<DiscountCodeRedemption>
     }
 
     static async users() {

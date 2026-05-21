@@ -9,6 +9,7 @@ import type {
     Event,
     IncursionEvent,
     DiscountCode,
+    DiscountCodeRedemption,
     Invitation,
     PreschoolProgramEnrolment,
     WithoutId,
@@ -358,6 +359,15 @@ class Client {
             const existingCode = snap.docs[0].data()
             this.#updateDocument(FirestoreRefs.discountCode(existingCode.id), discountCode)
         }
+    }
+
+    async createDiscountCodeRedemption(discountCodeRedemption: WithoutId<DiscountCodeRedemption>) {
+        return this.#createDocument(discountCodeRedemption, (await FirestoreRefs.discountCodeRedemptions()).doc())
+    }
+
+    async getDiscountCodeRedemptions(redemptionKey: string) {
+        const collection = await FirestoreRefs.discountCodeRedemptions()
+        return this.#getDocuments(collection.where('redemptionKey', '==', redemptionKey))
     }
 
     async createUser(uid: string, user: AuthUser) {

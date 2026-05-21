@@ -13,6 +13,9 @@ export function getErrorCode(error: Error | undefined, defaultCode: TRPC_ERROR_C
     if (error instanceof GiftCardNotFoundError) {
         return 'GIFT_CARD_NOT_FOUND'
     }
+    if (error instanceof DiscountCodeAlreadyRedeemedError) {
+        return 'DISCOUNT_CODE_ALREADY_REDEEMED'
+    }
     return defaultCode
 }
 
@@ -23,6 +26,7 @@ export type AppErrorCode =
     | 'CLASS_FULL'
     | 'GIFT_CARD_INACTIVE'
     | 'GIFT_CARD_NOT_FOUND'
+    | 'DISCOUNT_CODE_ALREADY_REDEEMED'
 
 /**
  * This class just exists to ensure only custom errors can be thrown by throwCustomTrpcError()
@@ -65,5 +69,12 @@ export class GiftCardNotFoundError extends CustomTrpcError {
     constructor(message?: string) {
         super(message ?? 'The porvided gift card could not be found')
         this.name = 'GiftCardNotFoundError'
+    }
+}
+
+export class DiscountCodeAlreadyRedeemedError extends CustomTrpcError {
+    constructor(message?: string) {
+        super(message ?? 'This discount code has already been redeemed by this email address')
+        this.name = 'DiscountCodeAlreadyRedeemedError'
     }
 }

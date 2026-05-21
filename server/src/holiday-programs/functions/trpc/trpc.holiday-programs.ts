@@ -22,8 +22,8 @@ export const holidayProgramsRouter = router({
         .input((input: unknown) => input as CreateDiscountCodeFromInvitation)
         .mutation(({ input }) => createDiscountCodeFromInvitation(input)),
     checkDiscountCode: publicProcedure
-        .input((input: unknown) => input as { code: string })
-        .mutation(({ input }) => checkDiscountCode(input.code)),
+        .input((input: unknown) => input as { code: string; customerEmail?: string })
+        .mutation(({ input }) => checkDiscountCode(input.code, input.customerEmail)),
     checkGiftCardBalance: publicProcedure
         .input((input: unknown) => input as { giftCardNumber: string })
         .mutation(({ input }) => checkGiftCardBalance(input.giftCardNumber)),

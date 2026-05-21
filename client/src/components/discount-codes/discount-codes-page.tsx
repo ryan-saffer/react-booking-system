@@ -1,4 +1,3 @@
-
 import {
     flexRender,
     getCoreRowModel,
@@ -18,6 +17,7 @@ import type { DiscountCode, Service } from 'fizz-kidz'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
+import { Checkbox } from '@ui-components/checkbox'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@ui-components/dropdown-menu'
 import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
@@ -232,6 +232,20 @@ export const DiscountCodesPage = () => {
             accessorKey: 'numberOfUses',
             header: () => <div className="text-center">Number of uses</div>,
             cell: ({ row }) => <div className="text-center">{row.getValue('numberOfUses')}</div>,
+        },
+        {
+            accessorKey: 'limitToOneUsePerCustomer',
+            header: () => <div className="text-center">Once per customer</div>,
+            cell: ({ row }) => (
+                <div className="flex justify-center">
+                    <Checkbox
+                        checked={!!row.original.limitToOneUsePerCustomer}
+                        onCheckedChange={(checked) =>
+                            updateDiscountCode({ ...row.original, limitToOneUsePerCustomer: checked === true })
+                        }
+                    />
+                </div>
+            ),
         },
         {
             id: 'actions',

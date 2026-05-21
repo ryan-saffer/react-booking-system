@@ -1,5 +1,5 @@
 import { InfoCircleOutlined } from '@ant-design/icons'
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from '@tanstack/react-query'
 import { Button, Input, Popover, Typography } from 'antd'
 import { useState } from 'react'
 
@@ -9,9 +9,8 @@ import { useTRPC } from '@utils/trpc'
 
 import { useCart } from '../../state/cart-store'
 
-
-const DiscountInput = ({ numberOfKids }: { numberOfKids: number }) => {
-    const trpc = useTRPC();
+const DiscountInput = ({ numberOfKids, parentEmail }: { numberOfKids: number; parentEmail: string }) => {
+    const trpc = useTRPC()
     const total = useCart((store) => store.total)
     const applyDiscount = useCart((store) => store.applyDiscount)
 
@@ -42,7 +41,7 @@ const DiscountInput = ({ numberOfKids }: { numberOfKids: number }) => {
         setError('')
 
         try {
-            const result = await checkDiscountCodeMutation.mutateAsync({ code: value })
+            const result = await checkDiscountCodeMutation.mutateAsync({ code: value, customerEmail: parentEmail })
             if (result === 'not-found') {
                 setError('Invalid discount code.')
             } else if (result === 'expired') {
@@ -61,7 +60,11 @@ const DiscountInput = ({ numberOfKids }: { numberOfKids: number }) => {
                 }
             }
         } catch (err: any) {
-            setError(err.message)
+            if (err?.data?.code === 'DISCOUNT_CODE_ALREADY_REDEEMED') {
+                setError('This discount code has already been redeemed by you')
+            } else {
+                setError(err.message)
+            }
         }
         setLoading(false)
     }
