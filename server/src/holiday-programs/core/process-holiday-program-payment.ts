@@ -82,6 +82,7 @@ export async function processHolidayProgramPayment(input: HolidayProgramBookingP
         return {
             orderId: order!.id!,
             recieptUrl,
+            squarePaymentLink: undefined,
         }
     }
 
@@ -209,5 +210,17 @@ export async function processHolidayProgramPayment(input: HolidayProgramBookingP
     return {
         orderId: order!.id!,
         recieptUrl,
+        squarePaymentLink: buildSquareDashboardPaymentLink(
+            payment?.id ?? giftCardPayment?.id,
+            input.payment.locationId
+        ),
     }
+}
+
+function buildSquareDashboardPaymentLink(paymentId: string | undefined, locationId: string) {
+    if (!paymentId) {
+        return undefined
+    }
+
+    return `https://app.squareup.com/dashboard/sales/transactions/${paymentId}/by-unit/${locationId}`
 }

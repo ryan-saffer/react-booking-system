@@ -94,7 +94,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
         // all classes have enough spots! let's continue
 
         // MARK: Process payment
-        const { orderId, recieptUrl } = await processHolidayProgramPayment(input)
+        const { orderId, recieptUrl, squarePaymentLink } = await processHolidayProgramPayment(input)
 
         // MARK: Schedule into acuity
         const appointments = await Promise.all(
@@ -173,6 +173,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
                     childName: line.childName,
                     childBirthdayISO: line.childDob,
                     bookingUrl: appointments[index].confirmationPage,
+                    squarePaymentLink,
                 })),
             })
         } catch (err) {

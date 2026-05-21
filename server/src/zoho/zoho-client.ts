@@ -447,6 +447,7 @@ export class ZohoClient {
                         Date_and_Time: this.#toDateTimeISO(row.dateTimeISO),
                         Branch: capitalise(row.studio),
                         ...(row.bookingUrl ? { Booking_URL: row.bookingUrl } : {}),
+                        ...(row.squarePaymentLink ? { Square_Payment_Link: row.squarePaymentLink } : {}),
                         Child: {
                             id: childId,
                         },
@@ -476,7 +477,7 @@ export class ZohoClient {
                         Contact_Name: {
                             id: parentContactId,
                         },
-                        Stage: 'Confirmed Booking',
+                        Stage: 'Holiday Program Booking',
                         Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
                         Customer_Type: 'B2C',
                         Branch: capitalise(firstProgram.studio),

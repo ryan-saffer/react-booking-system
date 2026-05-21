@@ -27,6 +27,7 @@ export type HolidayProgramDealRow = {
     childName: string
     childBirthdayISO: string
     bookingUrl?: string
+    squarePaymentLink?: string
 }
 
 export type ZohoHolidayProgramStatus = 'Booked' | 'Cancelled'
