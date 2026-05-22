@@ -144,8 +144,8 @@ export const HolidayProgramSelectionPage = () => {
             case AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM:
             case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM:
                 return 'Holiday Programs'
-            case AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING:
-                return 'Kingsville Opening'
+            case AcuityConstants.AppointmentTypes.GEELONG_OPENING:
+                return 'Geelong Opening'
             default: {
                 const exhaustive: never = appointmentTypeId
                 throw new Error(`Unhandled appointment type in renderProgramTitle(): ${exhaustive}`)
