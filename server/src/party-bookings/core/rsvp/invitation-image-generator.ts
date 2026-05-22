@@ -87,7 +87,7 @@ export class InvitationImageGenerator {
     #getContent(field: keyof InvitationCoordinates) {
         switch (field) {
             case 'childName': {
-                return `${this.#invitation.childName}'s ${this.#invitation.childAge}th`
+                return this.#formatChildsName(this.#invitation.childName, this.#invitation.childAge)
             }
             case 'date': {
                 return DateTime.fromJSDate(this.#invitation.date, { zone: 'Australia/Melbourne' }).toFormat(
@@ -115,6 +115,13 @@ export class InvitationImageGenerator {
                 throw new Error(`Unhandled field when getting invitation content for field: '${exhaustiveCheck}'`)
             }
         }
+    }
+
+    #formatChildsName(name: string, age: string) {
+        if (name.endsWith('s')) {
+            return `${name}' ${age}th`
+        }
+        return `${name}'s ${age}th`
     }
 }
 
