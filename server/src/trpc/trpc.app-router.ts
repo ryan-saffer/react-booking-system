@@ -4,6 +4,7 @@ import { authRouter } from '@/auth/functions/trpc/trpc.auth'
 import { creationsRouter } from '@/creations/functions/trpc/trpc.creations'
 import { eventsRouter } from '@/events/functions/trpc/trpc.events'
 import { holidayProgramsRouter } from '@/holiday-programs/functions/trpc/trpc.holiday-programs'
+import { inventoryRouter } from '@/inventory/functions/trpc/trpc.inventory'
 import { partiesRouter } from '@/party-bookings/functions/trpc/trpc.parties'
 import { playLabRouter } from '@/play-lab/functions/trpc/trpc.play-lab'
 import { preschoolProgramRouter } from '@/preschool-program/functions/trpc/trpc.preschool-program'
@@ -24,6 +25,7 @@ export const appRouter = router({
     playLab: playLabRouter,
     creations: creationsRouter,
     reports: reportsRouter,
+    inventory: inventoryRouter,
 })
 
 export type AppRouter = typeof appRouter

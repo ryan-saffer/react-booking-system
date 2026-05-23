@@ -1,3 +1,4 @@
+import { getInventoryStockLevelId } from 'fizz-kidz'
 import type {
     AfterSchoolEnrolment,
     AuthUser,
@@ -13,6 +14,11 @@ import type {
     PreschoolProgramEnrolment,
     ZohoAccessToken,
     GoogleBusinessProfileReview,
+    InventoryItem,
+    InventoryStockLevel,
+    InventoryStockMovement,
+    InventoryUsageRule,
+    Studio,
 } from 'fizz-kidz'
 
 import { FirestoreClient } from './FirestoreClient'
@@ -175,5 +181,41 @@ export class FirestoreRefs {
 
     static async googleBusinessProfileReview(id: string) {
         return (await this.googleBusinessProfileReviews()).doc(id)
+    }
+
+    static async inventoryItems() {
+        return (await FirestoreClient.getInstance()).collection('inventoryItems') as Collection<InventoryItem>
+    }
+
+    static async inventoryItem(id: string) {
+        return (await this.inventoryItems()).doc(id)
+    }
+
+    static async inventoryStockLevels() {
+        return (await FirestoreClient.getInstance()).collection(
+            'inventoryStockLevels'
+        ) as Collection<InventoryStockLevel>
+    }
+
+    static async inventoryStockLevel(location: Studio, itemId: string) {
+        return (await this.inventoryStockLevels()).doc(getInventoryStockLevelId(location, itemId))
+    }
+
+    static async inventoryStockMovements() {
+        return (await FirestoreClient.getInstance()).collection(
+            'inventoryStockMovements'
+        ) as Collection<InventoryStockMovement>
+    }
+
+    static async inventoryStockMovement(id: string) {
+        return (await this.inventoryStockMovements()).doc(id)
+    }
+
+    static async inventoryUsageRules() {
+        return (await FirestoreClient.getInstance()).collection('inventoryUsageRules') as Collection<InventoryUsageRule>
+    }
+
+    static async inventoryUsageRule(id: string) {
+        return (await this.inventoryUsageRules()).doc(id)
     }
 }

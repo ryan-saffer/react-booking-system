@@ -8,6 +8,8 @@ export function checkRoleForPermission(role: Role | null, permission: Permission
     switch (role) {
         case 'admin':
             return RolePermissionMap.admin.includes(permission)
+        case 'super-admin':
+            return RolePermissionMap['super-admin'].includes(permission)
         case 'studio-ipad':
             return RolePermissionMap['studio-ipad'].includes(permission)
         case 'manager':

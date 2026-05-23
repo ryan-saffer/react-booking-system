@@ -180,6 +180,9 @@ const TerritoryMappingPage = lazy(() =>
 const ReportsPage = lazy(() =>
     import('./components/reports/reports-page.js').then((module) => ({ default: module.ReportsPage }))
 )
+const InventoryPage = lazy(() =>
+    import('./components/inventory/pages/inventory-page.js').then((module) => ({ default: module.InventoryPage }))
+)
 const CreateInvitationPageV2 = lazy(() =>
     import('./components/rsvp/pages/create-invitation-page.js').then((module) => ({
         default: module.CreateInvitationPage,
@@ -376,6 +379,16 @@ const router = createBrowserRouter([
                             <Suspense fallback={<Loader fullScreen />}>
                                 <ProtectedRoute permission="admin" franchiseOrMaster>
                                     <ReportsPage />
+                                </ProtectedRoute>
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'inventory',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <ProtectedRoute permission="inventory:read">
+                                    <InventoryPage />
                                 </ProtectedRoute>
                             </Suspense>
                         ),
