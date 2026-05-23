@@ -161,6 +161,7 @@ function DateRangePicker({
             <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                     mode="range"
+                    weekStartsOn={1}
                     defaultMonth={selectedRange?.from}
                     selected={selectedRange}
                     onSelect={(range) => {
@@ -210,6 +211,7 @@ function ShoppingListTable({ lines }: { lines: InventoryShoppingListLine[] }) {
                     <TableHead>Item</TableHead>
                     <TableHead>Needed</TableHead>
                     <TableHead>In stock</TableHead>
+                    <TableHead>Keep at least</TableHead>
                     <TableHead>Buy</TableHead>
                     <TableHead>Source</TableHead>
                 </TableRow>
@@ -230,6 +232,7 @@ function ShoppingListTable({ lines }: { lines: InventoryShoppingListLine[] }) {
                         </TableCell>
                         <TableCell>{formatLineQuantity(line.requiredQuantity, line.baseUnit)}</TableCell>
                         <TableCell>{formatStockQuantity(line.quantityOnHand, line.baseUnit)}</TableCell>
+                        <TableCell>{formatKeepAtLeastQuantity(line.minimumTargetQuantity, line.baseUnit)}</TableCell>
                         <TableCell>
                             {line.suggestedPurchaseQuantity === null ? (
                                 <Badge className="w-fit rounded-full bg-slate-100 px-3 py-1 text-slate-600 hover:bg-slate-100">
@@ -297,6 +300,10 @@ function formatLineQuantity(quantity: number, unit: InventoryUnit) {
 
 function formatStockQuantity(quantity: number | null, unit: InventoryUnit) {
     return quantity === null ? 'Unknown' : formatLineQuantity(quantity, unit)
+}
+
+function formatKeepAtLeastQuantity(quantity: number | undefined, unit: InventoryUnit) {
+    return quantity ? formatLineQuantity(quantity, unit) : 'None'
 }
 
 function getWarningMessage(warning: InventoryShoppingListWarning) {

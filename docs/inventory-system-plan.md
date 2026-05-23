@@ -267,6 +267,7 @@ type InventoryItem = {
   $trackingMode: "quantity" | "qualitative";
   baseUnit?: InventoryUnit;
   runningLowThreshold?: number | null;
+  minimumTargetQuantity?: number | null;
   purchaseOptions?: InventoryPurchaseOption[];
   notes?: string;
   createdAt: Date;
@@ -787,12 +788,12 @@ Suggested calculation:
 
 ```ts
 suggestedPurchaseQuantity = Math.max(
-  requiredQuantity + targetBuffer - quantityOnHand,
+  requiredQuantity + minimumTargetQuantity - quantityOnHand,
   0,
 );
 ```
 
-Where `targetBuffer` can initially be `0`, then later use `parLevel` or per-item shopping-list settings.
+Where `minimumTargetQuantity` is the optional per-item shopping-list buffer, defaulting to `0` when blank.
 
 Qualitative items should not receive automated deductions. If a qualitative item is required for upcoming bookings, the shopping list should surface a warning such as `check bicarb level` or `reorder if low` based on the current qualitative level.
 

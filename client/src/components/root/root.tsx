@@ -93,7 +93,7 @@ function InnerRoot() {
             <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={theme}>
                     <ConfigProvider theme={antdTheme}>
-                        <LocalizationProvider dateAdapter={AdapterLuxon}>
+                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="en-AU">
                             <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
                                 <QueryClientProvider client={queryClient}>
                                     <AuthProvider>

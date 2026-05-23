@@ -786,6 +786,27 @@ describe('inventory core', () => {
             strictEqual(kingsvilleLine?.suggestedPurchaseQuantity, 0)
         })
 
+        it('includes the per-item keep-at-least stock in suggested purchase quantities', async () => {
+            configureInventoryListMocks({
+                bookings: [{ id: 'booking-1', booking: createBooking({ numberOfChildren: '40' }) }],
+                rules: [createUsageRule({ quantity: { $operation: 'per-child', quantityPerChild: 1 } })],
+                items: [createQuantityItem({ minimumTargetQuantity: 20 })],
+                stockLevels: [createStockLevel({ measurement: { $type: 'quantity', quantity: 50 } })],
+            })
+
+            const result = await generateInventoryShoppingList({
+                location: 'balwyn',
+                startDate: now,
+                endDate: new Date('2026-05-02T00:00:00.000Z'),
+            })
+
+            const line = result.studioReports[0].lines[0]
+            strictEqual(line.requiredQuantity, 40)
+            strictEqual(line.quantityOnHand, 50)
+            strictEqual(line.minimumTargetQuantity, 20)
+            strictEqual(line.suggestedPurchaseQuantity, 10)
+        })
+
         it('applies fixed, per-child, fixed-plus-per-child, food, and addition rules', async () => {
             configureInventoryListMocks({
                 bookings: [

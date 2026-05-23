@@ -191,6 +191,9 @@ function generateStudioReport(input: {
                 ? stockLevel.measurement.quantity
                 : null
 
+        const roundedRequiredQuantity = roundRequiredQuantity(required.requiredQuantity)
+        const minimumTargetQuantity = item.minimumTargetQuantity ?? 0
+
         lines.push({
             itemId: item.id,
             inventoryKey: required.inventoryKey,
@@ -198,12 +201,13 @@ function generateStudioReport(input: {
             category: item.category,
             baseUnit: item.baseUnit,
             location: input.location,
-            requiredQuantity: roundRequiredQuantity(required.requiredQuantity),
+            requiredQuantity: roundedRequiredQuantity,
             quantityOnHand,
+            minimumTargetQuantity,
             suggestedPurchaseQuantity:
                 quantityOnHand === null
                     ? null
-                    : Math.max(roundRequiredQuantity(required.requiredQuantity) - quantityOnHand, 0),
+                    : Math.max(roundedRequiredQuantity + minimumTargetQuantity - quantityOnHand, 0),
             stocked: stockLevel.stocked,
             sourceBreakdown: required.sourceBreakdown,
         })

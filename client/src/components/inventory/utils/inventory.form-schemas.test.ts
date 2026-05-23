@@ -30,6 +30,7 @@ const quantityItem: ClientInventoryItem = {
     $trackingMode: 'quantity',
     baseUnit: 'each',
     runningLowThreshold: 10,
+    minimumTargetQuantity: 20,
     notes: 'Notes',
     createdAt: now,
     updatedAt: now,
@@ -74,6 +75,7 @@ describe('inventory form schemas', () => {
             $trackingMode: 'quantity',
             baseUnit: 'each',
             runningLowThreshold: '10',
+            minimumTargetQuantity: '20',
             status: 'active',
             notes: 'Notes',
         })
@@ -87,6 +89,7 @@ describe('inventory form schemas', () => {
                 category: 'party-food',
                 baseUnit: 'each',
                 runningLowThreshold: '',
+                minimumTargetQuantity: '20',
                 status: 'active',
                 notes: '',
             })
@@ -99,6 +102,7 @@ describe('inventory form schemas', () => {
             category: 'party-food',
             baseUnit: 'each',
             runningLowThreshold: null,
+            minimumTargetQuantity: 20,
             status: 'active',
             notes: '',
         })
@@ -110,6 +114,7 @@ describe('inventory form schemas', () => {
             inventoryKeyName: 'custom-key',
             baseUnit: 'each',
             runningLowThreshold: '',
+            minimumTargetQuantity: '',
         })
 
         expect(
@@ -121,6 +126,7 @@ describe('inventory form schemas', () => {
                 category: 'glitter',
                 baseUnit: 'tub',
                 runningLowThreshold: '999',
+                minimumTargetQuantity: '999',
                 status: 'active',
                 notes: '',
             })
@@ -129,10 +135,11 @@ describe('inventory form schemas', () => {
             inventoryKeyName: '',
             inventoryKey: null,
             runningLowThreshold: null,
+            minimumTargetQuantity: null,
         })
     })
 
-    it('adds custom inventory item threshold validation', () => {
+    it('adds custom inventory item quantity validation', () => {
         expect(
             inventoryItemFormSchema.safeParse({
                 $trackingMode: 'quantity',
@@ -142,6 +149,7 @@ describe('inventory form schemas', () => {
                 category: 'party-food',
                 baseUnit: 'each',
                 runningLowThreshold: '-1',
+                minimumTargetQuantity: '',
                 status: 'active',
                 notes: '',
             }).success
@@ -155,6 +163,21 @@ describe('inventory form schemas', () => {
                 category: 'party-food',
                 baseUnit: 'each',
                 runningLowThreshold: '',
+                minimumTargetQuantity: '-1',
+                status: 'active',
+                notes: '',
+            }).success
+        ).toBe(false)
+        expect(
+            inventoryItemFormSchema.safeParse({
+                $trackingMode: 'quantity',
+                name: 'Party pies',
+                inventoryKeyType: 'party-base',
+                inventoryKeyName: 'partyPies',
+                category: 'party-food',
+                baseUnit: 'each',
+                runningLowThreshold: '',
+                minimumTargetQuantity: '',
                 status: 'active',
                 notes: '',
             }).success

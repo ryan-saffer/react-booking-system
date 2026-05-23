@@ -158,6 +158,7 @@ export function useInventoryActions() {
                 $trackingMode: 'quantity',
                 baseUnit: values.baseUnit,
                 runningLowThreshold: values.runningLowThreshold,
+                minimumTargetQuantity: values.minimumTargetQuantity,
             })
             return
         }
@@ -189,6 +190,7 @@ export function useInventoryActions() {
                     $trackingMode: 'quantity',
                     baseUnit: values.baseUnit,
                     runningLowThreshold: values.runningLowThreshold,
+                    minimumTargetQuantity: values.minimumTargetQuantity,
                 },
             })
             return

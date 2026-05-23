@@ -40,6 +40,8 @@ export type QuantityTrackedInventoryItem = BaseInventoryItem & {
     baseUnit: InventoryUnit
     /** Count at or below this value should be shown as running low. `null` disables the badge. */
     runningLowThreshold: number | null
+    /** Shopping lists buy enough to cover selected bookings and still leave at least this quantity on hand. `null` disables the buffer. */
+    minimumTargetQuantity?: number | null
 }
 
 export type QualitativeInventoryItem = BaseInventoryItem & {
@@ -170,6 +172,7 @@ export type InventoryShoppingListLine = {
     location: InventoryLocation
     requiredQuantity: number
     quantityOnHand: number | null
+    minimumTargetQuantity: number
     suggestedPurchaseQuantity: number | null
     stocked: boolean
     sourceBreakdown: InventoryShoppingListSourceBreakdown[]

@@ -22,17 +22,18 @@ import type { ClientInventoryItem, StockAction } from './inventory.types'
 
 const requiredNameSchema = z.string().trim().min(1, { message: 'Item name is required.' })
 const optionalInventoryKeyNameSchema = z.string().trim()
-const runningLowThresholdSchema = z
-    .string()
-    .trim()
-    .superRefine((value, ctx) => {
-        if (!value) return
+const optionalNonNegativeQuantitySchema = (label: string) =>
+    z
+        .string()
+        .trim()
+        .superRefine((value, ctx) => {
+            if (!value) return
 
-        const threshold = Number(value)
-        if (!Number.isFinite(threshold) || threshold < 0) {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Running low threshold must be zero or greater.' })
-        }
-    })
+            const quantity = Number(value)
+            if (!Number.isFinite(quantity) || quantity < 0) {
+                ctx.addIssue({ code: z.ZodIssueCode.custom, message: `${label} must be zero or greater.` })
+            }
+        })
 
 export const inventoryItemFormSchema = z.discriminatedUnion('$trackingMode', [
     z.object({
@@ -42,7 +43,8 @@ export const inventoryItemFormSchema = z.discriminatedUnion('$trackingMode', [
         inventoryKeyName: optionalInventoryKeyNameSchema,
         category: z.enum(INVENTORY_CATEGORIES),
         baseUnit: z.enum(INVENTORY_UNITS),
-        runningLowThreshold: runningLowThresholdSchema,
+        runningLowThreshold: optionalNonNegativeQuantitySchema('Running low threshold'),
+        minimumTargetQuantity: optionalNonNegativeQuantitySchema('Keep at least'),
         status: z.enum(['active', 'archived']),
         notes: z.string().trim(),
     }),
@@ -54,6 +56,7 @@ export const inventoryItemFormSchema = z.discriminatedUnion('$trackingMode', [
         category: z.enum(INVENTORY_CATEGORIES),
         baseUnit: z.enum(INVENTORY_UNITS),
         runningLowThreshold: z.string(),
+        minimumTargetQuantity: z.string(),
         status: z.enum(['active', 'archived']),
         notes: z.string().trim(),
     }),
@@ -70,6 +73,7 @@ export type InventoryItemFormValues =
           category: InventoryCategory
           baseUnit: InventoryUnit
           runningLowThreshold: number | null
+          minimumTargetQuantity: number | null
           status: 'active' | 'archived'
           notes: string
       }
@@ -82,6 +86,7 @@ export type InventoryItemFormValues =
           category: InventoryCategory
           baseUnit: InventoryUnit
           runningLowThreshold: null
+          minimumTargetQuantity: null
           status: 'active' | 'archived'
           notes: string
       }
@@ -94,6 +99,7 @@ export const defaultInventoryItemFormValues: InventoryItemFormInput = {
     $trackingMode: 'quantity',
     baseUnit: 'each',
     runningLowThreshold: '',
+    minimumTargetQuantity: '',
     status: 'active',
     notes: '',
 }
@@ -112,6 +118,10 @@ export function inventoryItemToFormValues(item: ClientInventoryItem): InventoryI
             item.$trackingMode === 'quantity' && item.runningLowThreshold !== null
                 ? String(item.runningLowThreshold)
                 : '',
+        minimumTargetQuantity:
+            item.$trackingMode === 'quantity' && item.minimumTargetQuantity != null
+                ? String(item.minimumTargetQuantity)
+                : '',
         status: item.status,
         notes: item.notes ?? '',
     }
@@ -127,10 +137,11 @@ export function normalizeInventoryItemFormValues(values: InventoryItemFormInput)
             inventoryKeyName,
             inventoryKey,
             runningLowThreshold: values.runningLowThreshold ? Number(values.runningLowThreshold) : null,
+            minimumTargetQuantity: values.minimumTargetQuantity ? Number(values.minimumTargetQuantity) : null,
         }
     }
 
-    return { ...values, inventoryKeyName, inventoryKey, runningLowThreshold: null }
+    return { ...values, inventoryKeyName, inventoryKey, runningLowThreshold: null, minimumTargetQuantity: null }
 }
 
 export const usageRuleQuantityFormSchema = z.discriminatedUnion('$operation', [

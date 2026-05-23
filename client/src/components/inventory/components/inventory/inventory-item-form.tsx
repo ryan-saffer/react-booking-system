@@ -206,23 +206,52 @@ export function InventoryItemForm({
                         )}
                     />
                     {trackingMode === 'quantity' ? (
-                        <FormField
-                            control={form.control}
-                            name="runningLowThreshold"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Running low threshold</FormLabel>
-                                    <FormControl>
-                                        <Input inputMode="decimal" placeholder="20" disabled={isPending} {...field} />
-                                    </FormControl>
-                                    <p className="m-0 text-xs leading-relaxed text-slate-500">
-                                        Show a red running-low badge when stock is at or below this count. Leave blank
-                                        to disable.
-                                    </p>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        <>
+                            <FormField
+                                control={form.control}
+                                name="runningLowThreshold"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Running low threshold</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                inputMode="decimal"
+                                                placeholder="20"
+                                                disabled={isPending}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <p className="m-0 text-xs leading-relaxed text-slate-500">
+                                            Show a red running-low badge when stock is at or below this count. Leave
+                                            blank to disable.
+                                        </p>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="minimumTargetQuantity"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Keep at least</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                inputMode="decimal"
+                                                placeholder="20"
+                                                disabled={isPending}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <p className="m-0 text-xs leading-relaxed text-slate-500">
+                                            Shopping lists buy enough to keep at least this amount after the selected
+                                            bookings. Leave blank for no buffer.
+                                        </p>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </>
                     ) : null}
                 </div>
 

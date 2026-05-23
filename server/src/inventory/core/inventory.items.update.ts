@@ -21,6 +21,7 @@ export const updateInventoryItemInputSchema = z.object({
             status: z.enum(['active', 'archived']).optional(),
             baseUnit: inventoryUnitSchema,
             runningLowThreshold: z.number().nonnegative().nullable(),
+            minimumTargetQuantity: z.number().nonnegative().nullable().optional(),
             purchaseOptions: z.array(inventoryPurchaseOptionSchema).optional(),
             notes: z.string().optional(),
         }),

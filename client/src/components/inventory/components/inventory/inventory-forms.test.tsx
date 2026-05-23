@@ -49,6 +49,7 @@ const quantityItem: ClientInventoryItem = {
     $trackingMode: 'quantity',
     baseUnit: 'each',
     runningLowThreshold: 10,
+    minimumTargetQuantity: 20,
     notes: 'Frozen',
     createdAt: now,
     updatedAt: now,
@@ -105,6 +106,7 @@ describe('InventoryItemForm', () => {
         await user.type(screen.getByLabelText('Item name'), 'Party pies')
         await user.type(screen.getByLabelText('Shopping-list name'), 'partyPies')
         await user.type(screen.getByLabelText('Running low threshold'), '5')
+        await user.type(screen.getByLabelText('Keep at least'), '20')
 
         const [keyType, category, tracking, baseUnit, status] = screen.getAllByRole('combobox')
         await user.selectOptions(keyType, 'party-base')
@@ -124,6 +126,7 @@ describe('InventoryItemForm', () => {
                 category: 'paint',
                 baseUnit: 'box',
                 runningLowThreshold: 5,
+                minimumTargetQuantity: 20,
                 status: 'archived',
                 notes: '',
             })
@@ -135,7 +138,11 @@ describe('InventoryItemForm', () => {
 
         await waitFor(() => {
             expect(onSubmit).toHaveBeenLastCalledWith(
-                expect.objectContaining({ $trackingMode: 'qualitative', runningLowThreshold: null })
+                expect.objectContaining({
+                    $trackingMode: 'qualitative',
+                    runningLowThreshold: null,
+                    minimumTargetQuantity: null,
+                })
             )
         })
     })
@@ -151,6 +158,7 @@ describe('InventoryItemForm', () => {
             $trackingMode: 'qualitative',
             baseUnit: 'tub',
             runningLowThreshold: '',
+            minimumTargetQuantity: '',
             status: 'active',
             notes: 'Use sparingly',
         }

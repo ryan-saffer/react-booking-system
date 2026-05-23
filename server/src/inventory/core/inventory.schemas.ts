@@ -42,6 +42,7 @@ export const inventoryItemInputSchema = z.discriminatedUnion('$trackingMode', [
         status: z.enum(['active', 'archived']).default('active'),
         baseUnit: inventoryUnitSchema,
         runningLowThreshold: z.number().nonnegative().nullable(),
+        minimumTargetQuantity: z.number().nonnegative().nullable().optional(),
         purchaseOptions: z.array(inventoryPurchaseOptionSchema).optional(),
         notes: z.string().optional(),
     }),
