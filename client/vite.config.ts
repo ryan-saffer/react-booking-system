@@ -52,6 +52,15 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '')
     const { version, builtAt } = resolveAppVersion(env)
     const functionsApiTarget = `http://127.0.0.1:5001/${env.VITE_FIREBASE_PROJECT_ID}/australia-southeast1/api`
+    const alias = {
+        '@components': path.resolve(__dirname, './src/components'),
+        '@ui-components': path.resolve(__dirname, './src/ui-components/ui'),
+        '@constants': path.resolve(__dirname, './src/constants'),
+        '@drawables': path.resolve(__dirname, './src/drawables'),
+        '@utils': path.resolve(__dirname, './src/utilities'),
+        '@hooks': path.resolve(__dirname, './src/components/Hooks'),
+        ...(mode === 'test' ? { 'fizz-kidz': path.resolve(__dirname, '../server/fizz-kidz/src') } : {}),
+    }
 
     return {
         define: {
@@ -72,15 +81,7 @@ export default defineConfig(({ mode }) => {
             },
         },
         resolve: {
-            alias: {
-                '@components': path.resolve(__dirname, './src/components'),
-                '@ui-components': path.resolve(__dirname, './src/ui-components/ui'),
-                '@constants': path.resolve(__dirname, './src/constants'),
-                '@drawables': path.resolve(__dirname, './src/drawables'),
-                '@utils': path.resolve(__dirname, './src/utilities'),
-                '@hooks': path.resolve(__dirname, './src/components/Hooks'),
-                'fizz-kidz': path.resolve(__dirname, '../server/fizz-kidz/src'),
-            },
+            alias,
         },
         build: {
             // Needed so Sentry can find and upload source maps during the build.
