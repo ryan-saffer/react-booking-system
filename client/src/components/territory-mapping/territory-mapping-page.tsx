@@ -6,7 +6,7 @@ export const TerritoryMappingPage = () => {
     const [isLoading, setIsLoading] = useState(true)
 
     return (
-        <div className="relative h-full w-full">
+        <div className="relative h-[calc(100vh-4rem)] w-full">
             {isLoading && (
                 <div className="absolute inset-0 z-10">
                     <Loader />
@@ -19,7 +19,7 @@ export const TerritoryMappingPage = () => {
                 src="//mangomap.com/fizz-kidz/maps/ae74a744-5aa0-11ef-a22c-02af6ed49e2d?preview=true"
                 width="100%"
                 height="100%"
-                className={isLoading ? 'opacity-0' : 'opacity-100'}
+                className={isLoading ? 'h-full opacity-0' : 'h-full opacity-100'}
                 onLoad={() => setIsLoading(false)}
             ></iframe>
         </div>

@@ -1,4 +1,3 @@
-
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import NavigateBefore from '@mui/icons-material/NavigateBefore'
 import NavigateNext from '@mui/icons-material/NavigateNext'
@@ -26,6 +25,7 @@ import { STUDIOS, capitalise } from 'fizz-kidz'
 import { useStickyNavbar } from '@components/root/use-sticky-navbar'
 import { useOrg } from '@components/Session/use-org'
 import { Button as MyButton } from '@ui-components/button'
+import { useSidebar } from '@ui-components/sidebar'
 
 import { DateNavigationContext } from './date-navigation.context'
 import { useLocationFilter } from '../location-filter/location-filter.hook'
@@ -77,6 +77,11 @@ const Root = styled('div')(({ theme }) => ({
     [`& .${classes.drawerPaper}`]: {
         width: drawerWidth,
         border: 0,
+        left: 'var(--dashboard-sidebar-offset, 0px)',
+        transition: theme.transitions.create('left', {
+            duration: theme.transitions.duration.shorter,
+            easing: theme.transitions.easing.easeInOut,
+        }),
     },
 
     [`& .${classes.content}`]: {
@@ -178,13 +183,18 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
     const { selectedLocation, filterByLocation } = useLocationFilter()
 
     const wrapFilter = useMediaQuery('(max-width: 550px)')
+    const { isMobile, open } = useSidebar()
+    const dashboardSidebarOffset = open && !isMobile ? 'var(--sidebar-width)' : '0px'
 
     useStickyNavbar()
 
     const { currentOrg } = useOrg()
 
     return (
-        <Root className={classes.root}>
+        <Root
+            className={classes.root}
+            style={{ '--dashboard-sidebar-offset': dashboardSidebarOffset } as React.CSSProperties}
+        >
             <CssBaseline />
             <Hidden mdDown>
                 <Drawer
@@ -265,6 +275,9 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                                                     border: '1px solid black',
                                                     margin: '-1px',
                                                 },
+                                            },
+                                            '& .MuiInputBase-adornedEnd': {
+                                                paddingRight: 0,
                                             },
                                             fieldSet: {
                                                 borderWidth: 0,

@@ -1,184 +1,23 @@
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-import { isFranchiseOrMaster } from 'fizz-kidz'
-
 import { useAuth } from '@components/Hooks/context/useAuth'
+import { getDashboardNavigationSections } from '@components/root/dashboard-navigation'
+import type { DashboardNavigationItem, DashboardNavigationSection } from '@components/root/dashboard-navigation'
 import { useOrg } from '@components/Session/use-org'
-import afterSchool from '@drawables/after-school.webp'
-import bodyGlitter from '@drawables/body-glitter.webp'
-import bracelets from '@drawables/bracelets.webp'
-import energy from '@drawables/energy.webp'
-import holidayPrograms from '@drawables/holiday-programs.webp'
-import jonah from '@drawables/jonah.webp'
-import kingsville from '@drawables/kingsville.webp'
-import parties from '@drawables/parties.webp'
 import { getOrgName } from '@utils/studioUtils'
 
 import type { MouseEvent } from 'react'
 
-type NavigationItem = {
-    title: string
-    to?: string
-    imgSrc: string
-    description?: string
-    accent: string
-    accentSoft: string
-    tag?: string
-    onClick?: () => void
-}
-
-const programs: NavigationItem[] = [
-    {
-        title: 'Parties, Events & Incursions',
-        description: 'View the schedule, booking details and more.',
-        to: 'bookings',
-        imgSrc: parties,
-        accent: '#ff4f9c',
-        accentSoft: 'rgba(255, 79, 156, 0.14)',
-    },
-    {
-        title: 'Holiday Programs',
-        description: 'Run exclusively during the school holidays on every weekday.',
-        to: `holiday-program?id=${import.meta.env.VITE_ENV === 'prod' ? '11036399' : '15026605'}`,
-        imgSrc: holidayPrograms,
-        accent: '#00c2e3',
-        accentSoft: 'rgba(0, 194, 227, 0.16)',
-    },
-    {
-        title: 'After School Program',
-        description: 'Art & Science programs run at schools.',
-        to: 'after-school-program',
-        imgSrc: afterSchool,
-        accent: '#f6ba34',
-        accentSoft: 'rgba(246, 186, 52, 0.18)',
-    },
-    {
-        title: 'Preschool Program',
-        description: 'Manage staff attendance for our new term-based preschool program',
-        to: 'preschool-program',
-        imgSrc: kingsville,
-        accent: '#9ecc48',
-        accentSoft: 'rgba(158, 204, 72, 0.16)',
-    },
-]
-
-const creations: NavigationItem[] = [
-    {
-        title: 'Birthday Party Creations',
-        description: 'Our core creations that are on offer for all birthday parties.',
-        to: 'creations',
-        imgSrc: bodyGlitter,
-        accent: '#b14594',
-        accentSoft: 'rgba(177, 69, 148, 0.14)',
-    },
-    {
-        title: 'Holiday Program Creations',
-        description: 'Full schedule and instructions for the current holiday program period.',
-        to: 'holiday-creations',
-        imgSrc: bracelets,
-        accent: '#F6BA33',
-        accentSoft: 'rgba(242, 221, 174, 0.4)',
-        tag: 'Seasonal',
-    },
-]
-
-const usefulLinks: NavigationItem[] = [
-    {
-        title: 'Incident Reporting',
-        description: 'Log any injuries or incidents on the floor.',
-        imgSrc: energy,
-        accent: '#00c2e3',
-        accentSoft: 'rgba(0, 194, 227, 0.16)',
-        tag: 'External',
-        onClick: () => window.open('/forms/incident-reporting', '_blank'),
-    },
-    {
-        title: 'Behaviour Management Plan',
-        description: 'Our response plan for tricky moments.',
-        imgSrc: jonah,
-        accent: '#9ecc48',
-        accentSoft: 'rgba(158, 204, 72, 0.16)',
-        tag: 'PDF',
-        onClick: () =>
-            window.open('https://www.fizzkidz.com.au/holiday-programs-behaviour-management-plan.pdf', '_blank'),
-    },
-]
-
-const adminItems: NavigationItem[] = [
-    {
-        title: 'After School Program Invoicing',
-        description: 'Manage enrolments, send invoices and track their payments.',
-        to: 'after-school-program-invoicing',
-        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=envelope&scale=70&backgroundColor=E91171',
-        accent: '#ff4f9c',
-        accentSoft: 'rgba(255, 79, 156, 0.14)',
-    },
-    {
-        title: 'Preschool Program Invoicing',
-        description: 'Send invoices and track payment status for Preschool Program enrolments.',
-        to: 'preschool-program-invoicing',
-        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=envelope&scale=70&backgroundColor=F6BA34',
-        accent: '#f6ba34',
-        accentSoft: 'rgba(246, 186, 52, 0.18)',
-    },
-    {
-        title: 'Payroll',
-        description: 'Generate timesheets ready for payroll.',
-        to: 'payroll',
-        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=cashCoin&scale=70&backgroundColor=4BC5D9',
-        accent: '#00c2e3',
-        accentSoft: 'rgba(0, 194, 227, 0.16)',
-    },
-    {
-        title: 'Onboarding',
-        description: 'Manage all new hires and onboarding steps in one place.',
-        to: 'onboarding',
-        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=signpost2&scale=70&backgroundColor=9ECC48',
-        accent: '#9ecc48',
-        accentSoft: 'rgba(158, 204, 72, 0.16)',
-    },
-    {
-        title: 'Discount Codes',
-        description: 'Create and manage promo codes.',
-        to: 'discount-codes',
-        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=ticketPerforated&scale=70&backgroundColor=B14594',
-        accent: '#b14594',
-        accentSoft: 'rgba(177, 69, 148, 0.14)',
-    },
-    {
-        title: 'Reports',
-        description: 'Run operational reports for the selected studio.',
-        to: 'reports',
-        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=magic&scale=69&backgroundColor=E91171',
-        accent: '#ff4f9c',
-        accentSoft: 'rgba(255, 79, 156, 0.14)',
-    },
-    {
-        title: 'Inventory',
-        description: 'Create consumable stock items and view studio stock levels.',
-        to: 'inventory',
-        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=archive&scale=70&backgroundColor=4BC5D9',
-        accent: '#00c2e3',
-        accentSoft: 'rgba(0, 194, 227, 0.16)',
-    },
-    {
-        title: 'Territory Mapping',
-        description: 'Catchment reference for our franchises',
-        to: 'territory-mapping',
-        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=map&scale=70&backgroundColor=F6BA34',
-        accent: '#f6ba34',
-        accentSoft: 'rgba(246, 186, 52, 0.18)',
-    },
-]
-
 export const Navigation = () => {
     const { hasPermission, currentOrg } = useOrg()
     const auth = useAuth()
+    const navigationSections = getDashboardNavigationSections({ currentOrg, hasPermission })
 
     return (
-        <div className="min-h-full bg-gradient-to-b from-[#fff7fb] via-[#fff7ec] to-[#f2faff] px-4 py-6 sm:px-6 sm:py-8">
-            <div className="mx-auto flex max-w-6xl flex-col gap-6">
+        <div className="relative min-h-full px-4 py-6 sm:px-6 sm:py-8">
+            <div className="pointer-events-none fixed inset-x-0 bottom-0 top-16 z-0 bg-gradient-to-b from-[#fff7fb] via-[#fff7ec] to-[#f2faff]" />
+            <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-6">
                 <header className="relative isolate py-6 sm:py-8">
                     <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                         <div className="relative flex flex-col gap-3">
@@ -208,71 +47,47 @@ export const Navigation = () => {
                 </header>
 
                 <div className="flex flex-col gap-6">
-                    <Section
-                        title="Programs"
-                        subtitle="View and edit bookings and manage children attendance."
-                        items={programs}
-                    />
-                    <Section
-                        title="Creations"
-                        subtitle="View all of our creations with step by step instructions on how to make them."
-                        items={creations}
-                    />
-                    <Section title="Quick links" subtitle="Open-and-go references." items={usefulLinks} />
-                    {hasPermission('admin') && isFranchiseOrMaster(currentOrg!) && (
-                        <Section
-                            title="Ops & admin"
-                            subtitle="Tools to manage all our operations. Requires admin access to view."
-                            items={adminItems}
-                        />
-                    )}
-                    {hasPermission('inventory:read') && !hasPermission('admin') && (
-                        <Section
-                            title="Operations"
-                            subtitle="Tools for daily studio operations."
-                            items={[adminItems.find((item) => item.title === 'Inventory')!]}
-                        />
-                    )}
+                    {navigationSections.map((section) => (
+                        <Section key={section.title} section={section} />
+                    ))}
                 </div>
             </div>
         </div>
     )
 }
 
-function Section({ title, subtitle, items }: { title: string; subtitle?: string; items: NavigationItem[] }) {
+function Section({ section }: { section: DashboardNavigationSection }) {
     return (
         <section className="relative overflow-hidden rounded-3xl border border-white/70 bg-white p-4 shadow-[0_14px_32px_rgba(15,23,42,0.1)] sm:bg-white/90 sm:p-5 sm:backdrop-blur">
             <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
                 <div className="flex flex-col">
-                    <h2 className="lilita m-0 text-xl text-slate-900 sm:text-2xl">{title}</h2>
-                    {subtitle ? <p className="m-0 text-sm text-slate-600">{subtitle}</p> : null}
+                    <h2 className="lilita m-0 text-xl text-slate-900 sm:text-2xl">{section.title}</h2>
+                    {section.subtitle ? <p className="m-0 text-sm text-slate-600">{section.subtitle}</p> : null}
                 </div>
             </div>
             <div className="grid auto-rows-[minmax(0,1fr)] grid-cols-1 items-stretch gap-3 sm:grid-cols-2">
-                {items.map((item) => (
-                    <ListItem key={item.title} {...item} />
+                {section.items.map((item) => (
+                    <ListItem key={item.label} item={item} />
                 ))}
             </div>
         </section>
     )
 }
 
-function ListItem({ title, to, imgSrc, onClick, description, accent, accentSoft, tag }: NavigationItem) {
-    const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
-        if (!to && onClick) {
-            event.preventDefault()
-            onClick()
-            return
-        }
+function ListItem({ item }: { item: DashboardNavigationItem }) {
+    const { label, accent, accentSoft, description, tag } = item
+    const Icon = item.icon
 
-        if (onClick) {
-            onClick()
+    const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+        if (item.href) {
+            event.preventDefault()
+            window.open(item.href, '_blank')
         }
     }
 
     return (
         <Link
-            to={to ?? '#'}
+            to={item.to ?? '#'}
             onClick={handleClick}
             className="group relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-white/60 bg-white/90 p-4 text-inherit no-underline shadow-md ring-1 ring-slate-100 transition hover:-translate-y-1 hover:bg-[var(--accent-soft)] hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
             style={{
@@ -281,14 +96,23 @@ function ListItem({ title, to, imgSrc, onClick, description, accent, accentSoft,
             }}
         >
             <div className="flex items-start gap-3 sm:gap-4">
-                <img
-                    src={imgSrc}
-                    alt={`${title} icon`}
-                    className="h-14 w-14 shrink-0 rounded-xl object-cover object-center"
-                />
+                {item.imageSrc ? (
+                    <img
+                        src={item.imageSrc}
+                        alt={`${label} icon`}
+                        className="h-14 w-14 shrink-0 rounded-xl object-cover object-center"
+                    />
+                ) : (
+                    <span
+                        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl transition group-hover:scale-105"
+                        style={{ backgroundColor: accentSoft, color: accent }}
+                    >
+                        <Icon className="h-7 w-7" aria-hidden="true" />
+                    </span>
+                )}
                 <div className="flex flex-1 flex-col gap-1">
                     <div className="flex items-start justify-between gap-2">
-                        <h4 className="m-0 text-base font-extrabold text-slate-900 sm:text-[17px]">{title}</h4>
+                        <h4 className="m-0 text-base font-extrabold text-slate-900 sm:text-[17px]">{label}</h4>
                         {tag ? (
                             <span
                                 className="flex items-center rounded-full px-3 py-1 text-[11px] font-semibold"
