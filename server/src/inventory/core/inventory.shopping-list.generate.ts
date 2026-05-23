@@ -315,7 +315,9 @@ function aggregateRequiredSources(sources: RequiredInventorySource[]) {
 }
 
 function parseChildCount(value: string) {
-    const childCount = Number(value)
+    // parse ranges like '12 - 15' to just '15'
+    const rangeMatch = value.trim().match(/^\d+\s*-\s*(\d+)$/)
+    const childCount = Number(rangeMatch?.[1] ?? value)
     if (!Number.isInteger(childCount) || childCount < 0) {
         return null
     }
