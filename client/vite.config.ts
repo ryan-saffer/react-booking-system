@@ -79,6 +79,7 @@ export default defineConfig(({ mode }) => {
                 '@drawables': path.resolve(__dirname, './src/drawables'),
                 '@utils': path.resolve(__dirname, './src/utilities'),
                 '@hooks': path.resolve(__dirname, './src/components/Hooks'),
+                'fizz-kidz': path.resolve(__dirname, '../server/fizz-kidz/src'),
             },
         },
         build: {
