@@ -2,7 +2,7 @@ import { deepStrictEqual, rejects, strictEqual } from 'assert'
 
 import { STUDIOS, type FirestoreBooking, type StudioOrMaster } from 'fizz-kidz'
 
-import { mockDatabaseClient, resetDatabaseClientMock } from '@/test/mocks/database-client.mock'
+import { mockDatabaseClient, resetDatabaseClientMock } from '@/__mocks__/database-client.mock'
 
 import { generateCapacityReport, generateCapacityReportInputSchema } from '../generate-capacity-report'
 

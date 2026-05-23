@@ -14,7 +14,7 @@
         "ts:check": "tsc -b",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
         "test": "vitest --run",
-        "test:coverage": "vitest run --coverage",
+        "test:coverage": "vitest run --coverage --coverage.reporter=html && open coverage/index.html",
         "eject": "react-scripts eject"
     },
     "dependencies": {
