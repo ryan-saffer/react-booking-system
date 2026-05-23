@@ -304,6 +304,10 @@ function getWarningMessage(warning: InventoryShoppingListWarning) {
         case 'no-active-rules':
             return warning.message
         case 'invalid-child-count':
+            if (!warning.value?.trim()) {
+                return `${getOrgName(warning.location)} booking ${warning.bookingLabel} has not completed party form.`
+            }
+
             return `${getOrgName(warning.location)} booking ${warning.bookingLabel} has invalid child count '${warning.value}'.`
         case 'missing-inventory-item':
             return `${getOrgName(warning.location)} needs ${formatQuantity(warning.requiredQuantity)} for '${warning.inventoryKey}', but no active inventory item matches that key.`

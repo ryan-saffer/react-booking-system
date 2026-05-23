@@ -314,7 +314,11 @@ function aggregateRequiredSources(sources: RequiredInventorySource[]) {
     return requiredByInventoryKey
 }
 
-function parseChildCount(value: string) {
+function parseChildCount(value: string | undefined) {
+    if (!value) {
+        return null
+    }
+
     // parse ranges like '12 - 15' to just '15'
     const rangeMatch = value.trim().match(/^\d+\s*-\s*(\d+)$/)
     const childCount = Number(rangeMatch?.[1] ?? value)
@@ -376,7 +380,7 @@ function getRuleLabel(rule: InventoryUsageRule) {
 }
 
 function getBookingLabel(bookingRecord: BookingRecord) {
-    return `${bookingRecord.booking.childName || 'Party'} (${bookingRecord.id})`
+    return bookingRecord.booking.childName || 'Party'
 }
 
 function roundRequiredQuantity(quantity: number) {

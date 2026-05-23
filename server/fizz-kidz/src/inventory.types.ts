@@ -185,7 +185,7 @@ export type InventoryShoppingListWarning =
           bookingId: string
           location: InventoryLocation
           bookingLabel: string
-          value: string
+          value?: string
       }
     | {
           $type: 'missing-inventory-item'
