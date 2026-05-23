@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
-import { ROLES } from 'fizz-kidz'
+import { ASSIGNABLE_ROLES } from 'fizz-kidz'
 import type { Role } from 'fizz-kidz'
 
 import { useOrg } from '@components/Session/use-org'
@@ -136,7 +136,7 @@ export function NewUserDialog({ open, close }: { open: boolean; close: () => voi
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent className="z-[1202]">
-                                            {ROLES.map((role) => (
+                                            {ASSIGNABLE_ROLES.map((role) => (
                                                 <SelectItem key={role} value={role}>
                                                     {getRoleDisplayValue(role)}
                                                 </SelectItem>

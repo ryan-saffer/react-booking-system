@@ -10,6 +10,8 @@ export function getRoleDisplayValue(role: Role) {
             return 'Manager'
         case 'facilitator':
             return 'Facilitator'
+        case 'super-admin':
+            return 'Admin'
         default: {
             const exhaustiveCheck: never = role
             localStorage.removeItem('authUser') // helps recover from a stuck state

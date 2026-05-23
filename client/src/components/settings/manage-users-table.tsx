@@ -11,7 +11,7 @@ import { ArrowUpDown, Loader2, MoreHorizontal } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
-import { ROLES } from 'fizz-kidz'
+import { ASSIGNABLE_ROLES } from 'fizz-kidz'
 import type { Role, StaffUser } from 'fizz-kidz'
 
 import { useConfirm } from '@components/Hooks/confirmation-dialog.tsx/use-confirmation-dialog'
@@ -142,7 +142,7 @@ export function ManageUsersTable() {
                     </Button>
                 ),
                 cell: ({ row }) => {
-                    if (role !== 'admin') {
+                    if (role !== 'admin' && role !== 'super-admin') {
                         const user = users[row.original.uid]
                         return (
                             <div>
@@ -172,7 +172,7 @@ export function ManageUsersTable() {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {ROLES.map((role) => (
+                                    {ASSIGNABLE_ROLES.map((role) => (
                                         <SelectItem key={role} value={role}>
                                             {getRoleDisplayValue(role)}
                                         </SelectItem>
@@ -191,7 +191,7 @@ export function ManageUsersTable() {
             columnHelper.display({
                 id: 'actions',
                 cell: ({ row }) => {
-                    if (role !== 'admin') {
+                    if (role !== 'admin' && role !== 'super-admin') {
                         return null
                     }
 
