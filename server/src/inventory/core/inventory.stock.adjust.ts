@@ -8,7 +8,7 @@ import {
     inventoryStockAdjustmentInputSchema,
     inventoryStockMovementSourceSchema,
     studioSchema,
-} from './inventory-schemas'
+} from './inventory.schemas'
 
 export const adjustInventoryStockInputSchema = z.object({
     itemId: z.string().min(1),

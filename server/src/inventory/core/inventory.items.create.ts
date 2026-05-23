@@ -3,7 +3,7 @@ import type { InventoryItem, InventoryStockLevel } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 
-import { inventoryItemInputSchema } from './inventory-schemas'
+import { inventoryItemInputSchema } from './inventory.schemas'
 
 import type { z } from 'zod'
 

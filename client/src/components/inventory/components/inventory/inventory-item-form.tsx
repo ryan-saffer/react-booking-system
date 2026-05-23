@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 
 import { INVENTORY_CATEGORIES, INVENTORY_UNITS } from 'fizz-kidz'
-import type { InventoryCategory, InventoryItem, InventoryUnit } from 'fizz-kidz'
+import type { InventoryCategory, InventoryItem, InventoryUnit, InventoryUsageRuleType } from 'fizz-kidz'
 
 import { Button } from '@ui-components/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
@@ -12,16 +12,17 @@ import { Input } from '@ui-components/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { Textarea } from '@ui-components/textarea'
 
-import { primaryButtonClass } from '../constants'
+import { primaryButtonClass } from '../../utils/inventory.constants'
 import {
     defaultInventoryItemFormValues,
     inventoryItemFormSchema,
     normalizeInventoryItemFormValues,
-} from '../form-schemas'
-import { formatCategory, formatUnit } from '../utils'
+} from '../../utils/inventory.form-schemas'
+import { inventoryUsageRuleTypeOptions } from '../../utils/inventory.usage-rules'
+import { formatCategory, formatUnit } from '../../utils/inventory.utils'
 
-import type { InventoryItemFormInput, InventoryItemFormValues } from '../form-schemas'
-import type { ClientInventoryItem, TrackingMode } from '../types'
+import type { InventoryItemFormInput, InventoryItemFormValues } from '../../utils/inventory.form-schemas'
+import type { ClientInventoryItem, TrackingMode } from '../../utils/inventory.types'
 
 export function InventoryItemForm({
     defaultValues,
@@ -67,6 +68,54 @@ export function InventoryItemForm({
                         </FormItem>
                     )}
                 />
+
+                <div className="grid gap-4 sm:grid-cols-[220px,1fr]">
+                    <FormField
+                        control={form.control}
+                        name="inventoryKeyType"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Shopping-list type</FormLabel>
+                                <Select
+                                    value={field.value}
+                                    disabled={isPending}
+                                    onValueChange={(type) => field.onChange(type as InventoryUsageRuleType)}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Type" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {inventoryUsageRuleTypeOptions.map((option) => (
+                                            <SelectItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="inventoryKeyName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Shopping-list name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="chickenNuggets" disabled={isPending} {...field} />
+                                </FormControl>
+                                <p className="m-0 text-xs leading-relaxed text-slate-500">
+                                    Optional. Use the same type and name on a usage rule to include this item in
+                                    generated shopping lists.
+                                </p>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                     <FormField

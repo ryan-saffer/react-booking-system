@@ -17,7 +17,7 @@ import type {
     SearchableInventoryItem,
     StockAction,
     StockStatusFilter,
-} from './types'
+} from './inventory.types'
 
 export function getAvailableInventoryLocations(currentOrg: StudioOrMaster | null) {
     if (currentOrg === 'master') {

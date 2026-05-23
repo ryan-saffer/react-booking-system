@@ -726,6 +726,14 @@ Important rule:
 
 Build this only after usage rules exist.
 
+Initial implementation scope:
+
+- Generate shopping lists on demand from current bookings, usage rules, catalogue items, and stock levels.
+- Do not persist generated shopping lists yet. Add `inventoryShoppingLists` only once staff need saved lists, completion status, or purchase history.
+- Studio users generate a list for their own studio only.
+- Master users generate one combined response grouped by studio.
+- Start with party bookings only: base party items, food-package items when `includesFood` is true, and selected party additions.
+
 Shopping-list generation flow:
 
 1. User selects location and date range, probably the upcoming week.
@@ -734,7 +742,46 @@ Shopping-list generation flow:
 4. Server sums required quantities per item.
 5. Server fetches current stock levels.
 6. Server calculates suggested purchase quantity for quantity-tracked items and a reorder warning for qualitative items.
-7. User can save the generated list to `inventoryShoppingLists`.
+7. User can review the generated report grouped by studio. Saving can come later.
+
+Usage-rule document shape:
+
+```ts
+type InventoryUsageRule = {
+  id: string;
+  inventoryKey: string;
+  label?: string;
+  status: "active" | "archived";
+  quantity:
+    | { $operation: "fixed"; quantity: number }
+    | { $operation: "per-child"; quantityPerChild: number }
+    | {
+        $operation: "fixed-plus-per-child";
+        fixedQuantity: number;
+        quantityPerChild: number;
+      };
+  notes?: string;
+  createdAt: Date;
+  updatedAt: Date;
+} & (
+  | { $type: "party-base" }
+  | { $type: "party-food-package" }
+  | { $type: "party-addition"; addition: Addition }
+);
+```
+
+Inventory items get an optional stable `inventoryKey` so usage rules can target a logical item without depending on a Firestore id. Staff should not type the full key manually. The UI captures a rule type and a short name, then builds keys as `${type}:${name}`. Example keys: `party-base:partyPies`, `party-food-package:fairyBread`, `party-addition:chickenNuggets`.
+
+Generation warnings should be shown rather than failing the whole report:
+
+- No active usage rules are configured.
+- A booking has an invalid or missing `numberOfChildren`.
+- A rule points to no active item with the configured `inventoryKey`.
+- Multiple active items use the same `inventoryKey`.
+- A required item is qualitative, because automatic purchase quantities require quantity tracking.
+- A required item has no stock-level record for that studio.
+- A required item is marked unused at that studio.
+- A required item has an unknown stock count.
 
 Suggested calculation:
 
@@ -769,6 +816,7 @@ The exact indexes can be added when Firestore reports them, but these query shap
 - `inventoryStockMovements`: `location` plus `createdAt desc`.
 - `inventoryStockMovements`: `location`, `itemId`, plus `createdAt desc`.
 - `inventoryItems`: `status`, `category` if filtering server-side.
+- `bookings`: `dateTime`, `type`, and optionally `location` for shopping-list generation.
 
 ## Testing And Verification
 

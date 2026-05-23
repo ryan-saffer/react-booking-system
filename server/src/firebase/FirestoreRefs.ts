@@ -17,6 +17,7 @@ import type {
     InventoryItem,
     InventoryStockLevel,
     InventoryStockMovement,
+    InventoryUsageRule,
     Studio,
 } from 'fizz-kidz'
 
@@ -208,5 +209,13 @@ export class FirestoreRefs {
 
     static async inventoryStockMovement(id: string) {
         return (await this.inventoryStockMovements()).doc(id)
+    }
+
+    static async inventoryUsageRules() {
+        return (await FirestoreClient.getInstance()).collection('inventoryUsageRules') as Collection<InventoryUsageRule>
+    }
+
+    static async inventoryUsageRule(id: string) {
+        return (await this.inventoryUsageRules()).doc(id)
     }
 }

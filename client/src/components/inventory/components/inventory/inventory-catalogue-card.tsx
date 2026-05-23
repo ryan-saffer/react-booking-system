@@ -21,14 +21,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { getOrgName } from '@utils/studioUtils'
 import { cn } from '@utils/tailwind'
 
-import { ALL_CATEGORIES, primaryButtonClass } from '../constants'
-import { useInventoryActions } from '../hooks/use-inventory-actions'
-import { useInventoryData } from '../hooks/use-inventory-data'
-import { useInventoryStore } from '../state/inventory-store'
-import { formatCategory, pluraliseItem } from '../utils'
 import { InventoryItemForm } from './inventory-item-form'
 import { InventoryItemsTable } from './inventory-items-table'
 import { StockStatusFilters } from './stock-status-filters'
+import { useInventoryActions } from '../../hooks/use-inventory-actions'
+import { useInventoryData } from '../../hooks/use-inventory-data'
+import { useInventoryStore } from '../../state/inventory-store'
+import { ALL_CATEGORIES, primaryButtonClass } from '../../utils/inventory.constants'
+import { formatCategory, pluraliseItem } from '../../utils/inventory.utils'
 
 import type { ReactNode } from 'react'
 

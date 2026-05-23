@@ -1,7 +1,7 @@
 import { Button } from '@ui-components/button'
 import { cn } from '@utils/tailwind'
 
-import type { StockStatusFilter } from '../types'
+import type { StockStatusFilter } from '../../utils/inventory.types'
 
 export function StockStatusFilters({
     value,

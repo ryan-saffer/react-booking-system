@@ -16,6 +16,7 @@ import type {
     InventoryItem,
     InventoryStockLevel,
     InventoryStockMovement,
+    InventoryUsageRule,
     PreschoolProgramEnrolment,
     RecursivePartial,
     Rsvp,
@@ -42,6 +43,7 @@ type SetInventoryDocuments = {
     items?: InventoryItem[]
     stockLevels?: InventoryStockLevel[]
     stockMovements?: InventoryStockMovement[]
+    usageRules?: InventoryUsageRule[]
 }
 
 type DeleteInventoryDocuments = {
@@ -160,6 +162,26 @@ class Client {
 
         const snap = await partiesQuery.get()
         return snap.docs.map((doc) => doc.data()).filter((booking) => booking.type === 'studio')
+    }
+
+    async listPartyBookingsForInventoryShoppingList(input: { startDate: Date; endDate: Date; location?: Studio }) {
+        const partiesRef = await FirestoreRefs.partyBookings()
+        let partiesQuery: Query<FirestoreBooking> = partiesRef
+            .where('dateTime', '>=', input.startDate)
+            .where('dateTime', '<', input.endDate)
+            .where('type', '==', 'studio')
+
+        if (input.location) {
+            partiesQuery = partiesQuery.where('location', '==', input.location)
+        }
+
+        const snap = await partiesQuery.get()
+        return Promise.all(
+            snap.docs.map(async (doc) => ({
+                id: doc.id,
+                booking: (await this.#convertTimestamps(doc.data())) as unknown as Booking,
+            }))
+        )
     }
 
     async deletePartyBooking(bookingId: string) {
@@ -591,18 +613,22 @@ class Client {
         const itemsRef = await FirestoreRefs.inventoryItems()
         const stockLevelsRef = await FirestoreRefs.inventoryStockLevels()
         const movementsRef = await FirestoreRefs.inventoryStockMovements()
-        const writes: { ref: DocumentReference; data: InventoryItem | InventoryStockLevel | InventoryStockMovement }[] =
-            [
-                ...(input.items ?? []).map((item) => ({ ref: itemsRef.doc(item.id), data: item })),
-                ...(input.stockLevels ?? []).map((stockLevel) => ({
-                    ref: stockLevelsRef.doc(stockLevel.id),
-                    data: stockLevel,
-                })),
-                ...(input.stockMovements ?? []).map((movement) => ({
-                    ref: movementsRef.doc(movement.id),
-                    data: movement,
-                })),
-            ]
+        const usageRulesRef = await FirestoreRefs.inventoryUsageRules()
+        const writes: {
+            ref: DocumentReference
+            data: InventoryItem | InventoryStockLevel | InventoryStockMovement | InventoryUsageRule
+        }[] = [
+            ...(input.items ?? []).map((item) => ({ ref: itemsRef.doc(item.id), data: item })),
+            ...(input.stockLevels ?? []).map((stockLevel) => ({
+                ref: stockLevelsRef.doc(stockLevel.id),
+                data: stockLevel,
+            })),
+            ...(input.stockMovements ?? []).map((movement) => ({
+                ref: movementsRef.doc(movement.id),
+                data: movement,
+            })),
+            ...(input.usageRules ?? []).map((rule) => ({ ref: usageRulesRef.doc(rule.id), data: rule })),
+        ]
 
         for (let i = 0; i < writes.length; i += 500) {
             const batch = firestore.batch()
@@ -630,7 +656,14 @@ class Client {
         return this.#getDocuments(query)
     }
 
-    updateInventoryItem(itemId: string, item: Partial<InventoryItem>) {
+    async listInventoryItemsByInventoryKey(inventoryKey: string) {
+        const itemsRef = await FirestoreRefs.inventoryItems()
+        const query = itemsRef.where('inventoryKey', '==', inventoryKey)
+
+        return this.#getDocuments(query)
+    }
+
+    updateInventoryItem(itemId: string, item: UpdateDoc<InventoryItem>) {
         return this.#updateDocument(FirestoreRefs.inventoryItem(itemId), item as UpdateDoc<InventoryItem>)
     }
 
@@ -738,6 +771,33 @@ class Client {
         }
 
         return this.#getDocuments(query)
+    }
+
+    async listInventoryUsageRules(input: { includeArchived?: boolean } = {}) {
+        const usageRulesRef = await FirestoreRefs.inventoryUsageRules()
+        let query: Query<InventoryUsageRule> = usageRulesRef
+
+        if (!input.includeArchived) {
+            query = query.where('status', '==', 'active')
+        }
+
+        return this.#getDocuments(query)
+    }
+
+    getInventoryUsageRule(ruleId: string) {
+        return this.#getDocument(FirestoreRefs.inventoryUsageRule(ruleId))
+    }
+
+    async createInventoryUsageRuleId() {
+        return (await FirestoreRefs.inventoryUsageRules()).doc().id
+    }
+
+    updateInventoryUsageRule(ruleId: string, usageRule: UpdateDoc<InventoryUsageRule>) {
+        return this.#updateDocument(FirestoreRefs.inventoryUsageRule(ruleId), usageRule)
+    }
+
+    async deleteInventoryUsageRule(ruleId: string) {
+        return (await FirestoreRefs.inventoryUsageRule(ruleId)).delete()
     }
 }
 

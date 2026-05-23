@@ -12,16 +12,16 @@ import { Input } from '@ui-components/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { Textarea } from '@ui-components/textarea'
 
-import { primaryButtonClass } from '../constants'
+import { primaryButtonClass } from '../../utils/inventory.constants'
 import {
     getStockActionFormDefaultValues,
     getStockActionFormSchema,
     normalizeStockActionFormValues,
-} from '../form-schemas'
-import { formatQualitativeLevel, getCurrentQuantity, getStockActionSubmitLabel } from '../utils'
+} from '../../utils/inventory.form-schemas'
+import { formatQualitativeLevel, getCurrentQuantity, getStockActionSubmitLabel } from '../../utils/inventory.utils'
 
-import type { StockActionFormInput, StockActionFormValues } from '../form-schemas'
-import type { StockAction } from '../types'
+import type { StockActionFormInput, StockActionFormValues } from '../../utils/inventory.form-schemas'
+import type { StockAction } from '../../utils/inventory.types'
 
 export function StockActionForm({
     action,

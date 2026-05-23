@@ -7,6 +7,7 @@ import { throwTrpcError } from '@/utilities'
 
 export const inventoryReadProcedure = createGlobalInventoryProcedure('inventory:read')
 export const inventoryWriteProcedure = createGlobalInventoryProcedure('inventory:write')
+export const inventoryShoppingListProcedure = createShoppingListInventoryProcedure()
 export const inventoryLocationReadProcedure = createLocationInventoryProcedure('inventory:read', 'location')
 export const inventoryLocationWriteProcedure = createLocationInventoryProcedure('inventory:write', 'location')
 
@@ -31,6 +32,24 @@ function createLocationInventoryProcedure(permission: Permission, locationField:
     })
 }
 
+function createShoppingListInventoryProcedure() {
+    return authenticatedProcedure.use(async ({ ctx, getRawInput, next }) => {
+        const rawInput = await getRawInput()
+        if (getMasterFromInput(rawInput, 'location')) {
+            await assertMasterInventoryPermission({ uid: ctx.uid, permission: 'inventory:shopping-list' })
+            return next()
+        }
+
+        const location = getStudioFromInput(rawInput, 'location')
+        if (!location) {
+            throwTrpcError('BAD_REQUEST', 'inventory shopping list requires a studio or master location')
+        }
+
+        await assertInventoryPermission({ uid: ctx.uid, location, permission: 'inventory:shopping-list' })
+        return next()
+    })
+}
+
 function getStudioFromInput(input: unknown, field: 'location') {
     if (!input || typeof input !== 'object') return undefined
 
@@ -40,6 +59,12 @@ function getStudioFromInput(input: unknown, field: 'location') {
     }
 
     return undefined
+}
+
+function getMasterFromInput(input: unknown, field: 'location') {
+    if (!input || typeof input !== 'object') return false
+
+    return (input as Record<string, unknown>)[field] === 'master'
 }
 
 async function assertInventoryPermission(input: { uid: string; location: Studio; permission: Permission }) {
@@ -76,4 +101,18 @@ async function assertGlobalInventoryPermission(input: { uid: string; permission:
     }
 
     throwTrpcError('FORBIDDEN', `inventory requires '${input.permission}' permission`)
+}
+
+async function assertMasterInventoryPermission(input: { uid: string; permission: Permission }) {
+    const user = await DatabaseClient.getUser(input.uid)
+    if (user?.accountType !== 'staff' || !user.roles) {
+        throwTrpcError('FORBIDDEN', 'inventory requires staff access')
+    }
+
+    const masterRole = user.roles.master
+    if (masterRole && RolePermissionMap[masterRole].includes(input.permission)) {
+        return
+    }
+
+    throwTrpcError('FORBIDDEN', `inventory requires '${input.permission}' permission for 'master'`)
 }

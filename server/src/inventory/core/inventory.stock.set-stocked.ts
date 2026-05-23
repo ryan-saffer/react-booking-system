@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 
-import { studioSchema } from './inventory-schemas'
+import { studioSchema } from './inventory.schemas'
 
 export const setInventoryStockedInputSchema = z.object({
     itemId: z.string().min(1),

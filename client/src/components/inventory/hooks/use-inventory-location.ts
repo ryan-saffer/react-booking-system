@@ -1,7 +1,7 @@
 import { useOrg } from '@components/Session/use-org'
 
 import { useInventoryStore } from '../state/inventory-store'
-import { getAvailableInventoryLocations } from '../utils'
+import { getAvailableInventoryLocations } from '../utils/inventory.utils'
 
 export function useInventoryLocation() {
     const { currentOrg } = useOrg()

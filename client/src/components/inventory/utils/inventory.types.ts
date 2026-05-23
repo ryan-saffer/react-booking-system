@@ -1,4 +1,4 @@
-import type { InventoryItem, InventoryStockLevel } from 'fizz-kidz'
+import type { InventoryItem, InventoryStockLevel, InventoryUsageRule } from 'fizz-kidz'
 
 export type TrackingMode = InventoryItem['$trackingMode']
 
@@ -15,6 +15,8 @@ export type ClientInventoryStockLevel = Omit<InventoryStockLevel, 'lastMovementA
     lastMovementAt?: string | Date
     updatedAt: string | Date
 }
+
+export type ClientInventoryUsageRule = ClientDates<InventoryUsageRule>
 
 export type SearchableInventoryItem = {
     item: ClientInventoryItem
