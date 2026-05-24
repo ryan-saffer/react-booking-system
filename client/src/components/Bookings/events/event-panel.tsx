@@ -2,7 +2,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material'
 import dateFormat from 'dateformat'
 import { SquareArrowOutUpRight } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
 
 import type { Event } from 'fizz-kidz'
 
@@ -13,8 +13,10 @@ type Props = {
 }
 
 const EventPanel: React.FC<Props> = ({ event }) => {
+    const [expanded, setExpanded] = useState(false)
+
     return (
-        <Accordion>
+        <Accordion expanded={expanded} onChange={(_, isExpanded) => setExpanded(isExpanded)}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <div className="flex w-full flex-col justify-between gap-4 md:flex-row">
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -51,9 +53,7 @@ const EventPanel: React.FC<Props> = ({ event }) => {
                     </Button>
                 </div>
             </AccordionSummary>
-            <AccordionDetails>
-                <ExistingEventForm event={event} />
-            </AccordionDetails>
+            <AccordionDetails>{expanded && <ExistingEventForm event={event} />}</AccordionDetails>
         </Accordion>
     )
 }

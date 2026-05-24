@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 
 import EventPanel from './event-panel'
 import { useEvents } from './use-events'
+import { useLocationFilter } from '../location-filter/location-filter.hook'
 
 const PREFIX = 'Events'
 
@@ -19,12 +20,17 @@ const Root = styled('h1')(({ theme }) => ({
 }))
 
 const Incursions = () => {
+    const { selectedLocation } = useLocationFilter()
     const events = useEvents('incursion')
 
     const combinedEvents = useMemo(
-        () => (events.status === 'loaded' ? Object.values(events.result).flat(1) : []),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [events.status]
+        () =>
+            events.status === 'loaded'
+                ? selectedLocation === 'all'
+                    ? Object.values(events.result).flat(1)
+                    : (events.result[selectedLocation] ?? [])
+                : [],
+        [events, selectedLocation]
     )
 
     if (events.status === 'error') {
