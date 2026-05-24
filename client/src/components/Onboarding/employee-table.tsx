@@ -185,6 +185,7 @@ const EmployeeDetails: React.FC<{ employee: Employee }> = ({ employee }) => {
             <Descriptions.Item label="Last Name">{employee.lastName}</Descriptions.Item>
             <Descriptions.Item label="Email">{employee.email}</Descriptions.Item>
             <Descriptions.Item label="Phone">{employee.mobile}</Descriptions.Item>
+            <Descriptions.Item label="Position">{employee.position}</Descriptions.Item>
             {hasFilledInForm && (
                 <>
                     <Descriptions.Item label="Pronouns">{employee.pronouns}</Descriptions.Item>
@@ -192,7 +193,13 @@ const EmployeeDetails: React.FC<{ employee: Employee }> = ({ employee }) => {
                     <Descriptions.Item label="Address">{employee.address.full}</Descriptions.Item>
                 </>
             )}
-            <Descriptions.Item label="Manager">{employee.managerName}</Descriptions.Item>
+            {employee.managerName && <Descriptions.Item label="Manager">{employee.managerName}</Descriptions.Item>}
+            {employee.employeeRole === 'area-manager' && (
+                <>
+                    <Descriptions.Item label="Hours Per Week">{employee.hoursPerWeek}</Descriptions.Item>
+                    <Descriptions.Item label="Annual Salary">{employee.annualSalary}</Descriptions.Item>
+                </>
+            )}
             <Descriptions.Item label="Contract">
                 <Button href={`https://esignatures.io/contracts/${employee.contract.id}`} target="_none">
                     View Contract

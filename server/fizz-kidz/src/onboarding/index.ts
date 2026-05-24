@@ -4,19 +4,22 @@ interface BaseEmployee {
     id: string
     created: number
     studio: StudioOrMaster
+    employeeRole?: EmployeeRole
     firstName: string
     lastName: string
     position: string
     email: string
     mobile: string
     commencementDate: string
-    location: Studio
-    normalRate: number
-    sundayRate: number
-    managerName: string
-    managerPosition: string
+    location?: Studio
+    normalRate?: number
+    sundayRate?: number
+    managerName?: string
+    managerPosition?: string
     senderName: string
-    senderPosition: string
+    senderPosition?: string
+    hoursPerWeek?: string
+    annualSalary?: string
     contract: Contract
 }
 
@@ -52,7 +55,9 @@ export type Employee =
           driveFolderId: string
       })
 
-export type InitiateEmployeeProps = {
+export type EmployeeRole = 'party-facilitator' | 'area-manager'
+
+type InitiateEmployeeBaseProps = {
     studio: StudioOrMaster
     firstName: string
     lastName: string
@@ -60,6 +65,10 @@ export type InitiateEmployeeProps = {
     email: string
     mobile: string
     commencementDate: string
+}
+
+export type InitiatePartyFacilitatorEmployeeProps = InitiateEmployeeBaseProps & {
+    employeeRole: 'party-facilitator'
     location: Studio
     normalRate: number
     sundayRate: number
@@ -68,6 +77,14 @@ export type InitiateEmployeeProps = {
     senderName: string
     senderPosition: string
 }
+
+export type InitiateAreaManagerEmployeeProps = InitiateEmployeeBaseProps & {
+    employeeRole: 'area-manager'
+    hoursPerWeek: string
+    annualSalary: string
+}
+
+export type InitiateEmployeeProps = InitiatePartyFacilitatorEmployeeProps | InitiateAreaManagerEmployeeProps
 
 type File = {
     url: string

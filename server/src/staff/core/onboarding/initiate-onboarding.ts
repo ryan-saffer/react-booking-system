@@ -12,26 +12,42 @@ export async function initiateOnboarding(input: InitiateEmployeeProps) {
     const employeeRef = (await FirestoreRefs.employees()).doc()
 
     const esignaturesClient = new ESignatureClient()
+    const employeeName = `${input.firstName} ${input.lastName}`
 
     let contractId, contractSignUrl
     try {
-        ;({ contractId, contractSignUrl } = await esignaturesClient.createContract({
-            id: employeeRef.id,
-            email: input.email,
-            mobile: input.mobile,
-            templateVariables: {
-                name: `${input.firstName} ${input.lastName}`,
-                address: getStudioAddress(input.location),
-                position: input.position,
-                commencementDate: input.commencementDate,
-                normalRate: input.normalRate,
-                sundayRate: input.sundayRate,
-                managerName: input.managerName,
-                managerPosition: input.managerPosition,
-                senderName: input.senderName,
-                senderPosition: input.senderPosition,
-            },
-        }))
+        if (input.employeeRole === 'area-manager') {
+            ;({ contractId, contractSignUrl } = await esignaturesClient.createAreaManagerContract({
+                id: employeeRef.id,
+                email: input.email,
+                mobile: input.mobile,
+                templateVariables: {
+                    name: employeeName,
+                    position: input.position,
+                    commencementDate: input.commencementDate,
+                    hoursPerWeek: input.hoursPerWeek,
+                    annualSalary: input.annualSalary,
+                },
+            }))
+        } else {
+            ;({ contractId, contractSignUrl } = await esignaturesClient.createPartyFacilitatorContract({
+                id: employeeRef.id,
+                email: input.email,
+                mobile: input.mobile,
+                templateVariables: {
+                    name: employeeName,
+                    address: getStudioAddress(input.location),
+                    position: input.position,
+                    commencementDate: input.commencementDate,
+                    normalRate: input.normalRate,
+                    sundayRate: input.sundayRate,
+                    managerName: input.managerName,
+                    managerPosition: input.managerPosition,
+                    senderName: input.senderName,
+                    senderPosition: input.senderPosition,
+                },
+            }))
+        }
     } catch (err) {
         throwTrpcError('INTERNAL_SERVER_ERROR', 'error creating contract', err)
     }
@@ -40,18 +56,27 @@ export async function initiateOnboarding(input: InitiateEmployeeProps) {
         id: employeeRef.id,
         created: new Date().getTime(),
         studio: input.studio,
+        employeeRole: input.employeeRole,
         lastName: input.lastName,
         email: input.email,
         mobile: input.mobile,
         position: input.position,
         commencementDate: input.commencementDate,
-        location: input.location,
-        normalRate: input.normalRate,
-        sundayRate: input.sundayRate,
-        managerName: input.managerName,
-        managerPosition: input.managerPosition,
-        senderName: input.senderName,
-        senderPosition: input.senderPosition,
+        ...(input.employeeRole === 'area-manager'
+            ? {
+                  hoursPerWeek: input.hoursPerWeek,
+                  annualSalary: input.annualSalary,
+                  senderName: 'Fizz Kidz',
+              }
+            : {
+                  location: input.location,
+                  normalRate: input.normalRate,
+                  sundayRate: input.sundayRate,
+                  managerName: input.managerName,
+                  managerPosition: input.managerPosition,
+                  senderName: input.senderName,
+                  senderPosition: input.senderPosition,
+              }),
         firstName: input.firstName,
         status: 'form-sent',
         contract: {
