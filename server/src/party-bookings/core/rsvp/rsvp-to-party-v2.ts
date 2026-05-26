@@ -67,7 +67,7 @@ export async function guestRsvpToParty(input: RsvpProps) {
                 mobile: parentMobile,
                 studio: invitation.studio,
                 childName: child.name,
-                childBirthdayISO: child.dob!.toISOString(),
+                childBirthdayISO: getChildDobISO(child.dob),
                 optOutOfMarketing: !joinMailingList,
             })
         }
@@ -177,4 +177,12 @@ function mergeChildrenNames(children: RsvpProps['children']) {
     const names = children.map((child) => child.name)
     const last = names.pop()
     return `${names.join(', ')} and ${last}`
+}
+
+function getChildDobISO(dob: Rsvp['children'][number]['dob']) {
+    if (!dob) {
+        throwTrpcError('BAD_REQUEST', 'Date of birth is required for guest RSVPs')
+    }
+
+    return dob instanceof Date ? dob.toISOString() : new Date(dob).toISOString()
 }

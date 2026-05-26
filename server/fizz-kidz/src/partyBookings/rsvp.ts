@@ -12,7 +12,7 @@ export type Rsvp = {
 
 type Child = {
     name: string
-    dob?: Date
+    dob?: Date | string
     rsvp: 'attending' | 'not-attending'
     hasAllergies?: boolean
     allergies?: string
