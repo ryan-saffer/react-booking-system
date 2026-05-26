@@ -27,6 +27,7 @@ const CHILD_MODULE_NAME = 'Child'
 const BIRTHDAY_PARTY_PIPELINE = 'Birthday Party Pipeline'
 const BIRTHDAY_PARTY_DEAL_PREFIX = '[Party]'
 const HOLIDAY_PROGRAM_PIPELINE = 'Holiday Program Pipeline'
+const HOLIDAY_PROGRAM_STAGE = 'Holiday Program Booking'
 const HOLIDAY_PROGRAM_SUBFORM = 'Holiday_Program'
 const HOLIDAY_PROGRAM_DEAL_LAYOUT_ID = '76392000009097844'
 
@@ -477,7 +478,7 @@ export class ZohoClient {
                         Contact_Name: {
                             id: parentContactId,
                         },
-                        Stage: 'Holiday Program Booking',
+                        Stage: HOLIDAY_PROGRAM_STAGE,
                         Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
                         Customer_Type: 'B2C',
                         Branch: capitalise(firstProgram.studio),
@@ -514,7 +515,7 @@ export class ZohoClient {
             data: [
                 {
                     id: existingDeal.id,
-                    Stage: 'Confirmed Booking',
+                    Stage: HOLIDAY_PROGRAM_STAGE,
                     Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
                     Branch: capitalise(firstProgram.studio),
                     [HOLIDAY_PROGRAM_SUBFORM]: newRows,
