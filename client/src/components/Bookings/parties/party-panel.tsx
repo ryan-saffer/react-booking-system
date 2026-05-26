@@ -8,7 +8,13 @@ import Typography from '@mui/material/Typography'
 import dateFormat from 'dateformat'
 import { UsersRound } from 'lucide-react'
 
-import { getInvitationShareUrl, type Booking, type FirestoreBooking, type WithId } from 'fizz-kidz'
+import {
+    getInvitationShareUrl,
+    getPartyBirthdayChildDisplay,
+    type Booking,
+    type FirestoreBooking,
+    type WithId,
+} from 'fizz-kidz'
 
 import { Button } from '@ui-components/button'
 
@@ -69,6 +75,8 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 }))
 
 const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
+    const birthdayChildDisplay = getPartyBirthdayChildDisplay(booking)
+
     const handleOpenInvitation = (e: MouseEvent | KeyboardEvent) => {
         e.stopPropagation()
         window.open(
@@ -88,8 +96,7 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                                 {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), 'h:MM TT')}
                             </Typography>
                             <Typography className={classes.secondaryHeading}>
-                                {booking.parentFirstName} {booking.parentLastName} - {booking.childName}
-                                's {booking.childAge}th
+                                {booking.parentFirstName} {booking.parentLastName} - {birthdayChildDisplay}
                             </Typography>
                         </div>
                         {booking.invitationId && (

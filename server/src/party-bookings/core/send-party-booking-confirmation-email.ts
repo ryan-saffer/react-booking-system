@@ -12,6 +12,7 @@ import {
     getPartyEndDate,
     getPictureOfStudioUrl,
     getStudioContactEmail,
+    getPartyBirthdayChildDisplay,
 } from 'fizz-kidz'
 
 import { env } from '@/init'
@@ -60,6 +61,7 @@ export async function sendPartyBookingConfirmationEmail({
 
     const customerContact = getPartyCustomerContactInfo(booking.location)
     const studioContactEmail = getStudioContactEmail(booking.location)
+    const birthdayChildDisplay = getPartyBirthdayChildDisplay(booking)
     const mailClient = await MailClient.getInstance()
 
     await mailClient.sendEmail(
@@ -69,7 +71,7 @@ export async function sendPartyBookingConfirmationEmail({
             header: header ?? `${booking.childName}'s party is booked in!`,
             openingLine:
                 openingLine ??
-                `We're delighted to confirm <strong>${booking.childName}'s ${booking.childAge}th Birthday Party at Fizz Kidz!</strong> We're so excited to celebrate with you.`,
+                `We're delighted to confirm <strong>${birthdayChildDisplay} Birthday Party at Fizz Kidz!</strong> We're so excited to celebrate with you.`,
             parentName: booking.parentFirstName,
             childName: booking.childName,
             childAge: booking.childAge,

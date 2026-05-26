@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase-admin/firestore'
 
 import type { FirestoreBooking } from 'fizz-kidz'
-import { getApplicationDomain, getStudioAddress, getPartyEndDate } from 'fizz-kidz'
+import { getApplicationDomain, getStudioAddress, getPartyEndDate, getPartyBirthdayChildDisplay } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { CalendarClient } from '@/google/CalendarClient'
@@ -23,6 +23,7 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
     const bookingId = await DatabaseClient.createPartyBooking(booking)
 
     const end = getPartyEndDate(booking.dateTime.toDate(), booking.partyLength)
+    const birthdayChildDisplay = getPartyBirthdayChildDisplay(booking)
 
     const calendarClient = await CalendarClient.getInstance()
     let eventId: string
@@ -34,7 +35,7 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
                 location: booking.location,
             },
             {
-                title: `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`,
+                title: `${booking.parentFirstName} / ${birthdayChildDisplay} ${booking.parentMobile}`,
                 start: booking.dateTime.toDate(),
                 end,
                 location: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),

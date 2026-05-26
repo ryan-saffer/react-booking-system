@@ -7,6 +7,7 @@ import type { Addition } from './additions'
 import type { Creation } from './creations'
 import type { ProductType } from './products'
 import type { TakeHomeBagType } from './take-home-bags'
+import { addOrdinalSuffix, combineStrings } from '../utilities/stringUtilities'
 
 type AdditionKeyValues = Record<Addition, boolean>
 
@@ -193,6 +194,27 @@ export const BookingFields: BookingKeys = {
     useRsvpSystem: 'useRsvpSystem',
     invitationId: 'invitationId',
     invitationOwnerUid: 'invitationOwnerUid',
+}
+
+type PartyChildrenDisplayInput = Pick<BaseBooking, 'childName' | 'childAge' | 'children'>
+
+function possessiveName(name: string) {
+    const trimmedName = name.trim()
+    if (trimmedName.endsWith('s')) {
+        return `${trimmedName}'`
+    }
+
+    return `${trimmedName}'s`
+}
+
+export function getPartyBirthdayChildDisplay(booking: PartyChildrenDisplayInput) {
+    const children = booking.children?.filter((child) => child.name.trim() && child.age.trim())
+
+    if (children && children.length > 0) {
+        return combineStrings(children.map((child) => `${possessiveName(child.name)} ${addOrdinalSuffix(child.age)}`))
+    }
+
+    return `${possessiveName(booking.childName)} ${addOrdinalSuffix(booking.childAge)}`
 }
 
 export const PARTY_LOST_REASONS = [

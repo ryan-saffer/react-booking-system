@@ -138,6 +138,7 @@ export type Emails = {
         parentName: string
         childName: string
         childAge: string
+        birthdayChildDisplay: string
         startDate: string
         startTime: string
         endTime: string

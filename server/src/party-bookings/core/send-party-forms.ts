@@ -8,6 +8,7 @@ import {
     getStudioAddress,
     getPartyEndDate,
     getStudioContactEmail,
+    getPartyBirthdayChildDisplay,
 } from 'fizz-kidz'
 
 import { FirestoreRefs } from '@/firebase/FirestoreRefs'
@@ -54,6 +55,7 @@ async function sendForm(bookingId: string, booking: Booking) {
     const prefilledFormUrl = getPartyFormUrl(bookingId)
     const customerContact = getPartyCustomerContactInfo(booking.location)
     const studioContactEmail = getStudioContactEmail(booking.location)
+    const birthdayChildDisplay = getPartyBirthdayChildDisplay(booking)
 
     return mailClient.sendEmail(
         'partyForm',
@@ -62,6 +64,7 @@ async function sendForm(bookingId: string, booking: Booking) {
             parentName: booking.parentFirstName,
             childName: booking.childName,
             childAge: booking.childAge,
+            birthdayChildDisplay,
             startDate: DateTime.fromJSDate(booking.dateTime, { zone: 'Australia/Melbourne' }).toLocaleString(
                 DateTime.DATE_HUGE
             ),

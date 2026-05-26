@@ -12,6 +12,7 @@ import {
     getPartyEndDate,
     getPictureOfStudioUrl,
     getStudioContactEmail,
+    getPartyBirthdayChildDisplay,
 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -33,6 +34,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
     await DatabaseClient.updatePartyBooking(bookingId, booking)
 
     const calendarClient = await CalendarClient.getInstance()
+    const birthdayChildDisplay = getPartyBirthdayChildDisplay(booking)
 
     if (!booking.eventId) throwTrpcError('PRECONDITION_FAILED', 'booking is missing event id', null, input)
 
@@ -41,7 +43,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
             booking.eventId,
             { eventType: 'party-bookings', type: booking.type, location: booking.location },
             {
-                title: `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`,
+                title: `${booking.parentFirstName} / ${birthdayChildDisplay} ${booking.parentMobile}`,
                 location: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
                 start: booking.dateTime,
                 end: getPartyEndDate(booking.dateTime, booking.partyLength),
@@ -100,7 +102,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
                 booking.parentEmail,
                 {
                     header: `${booking.childName}'s party time has been updated`,
-                    openingLine: `We've updated the time for ${booking.childName}'s ${booking.childAge}th birthday party. Here is the updated date and time:`,
+                    openingLine: `We've updated the time for ${birthdayChildDisplay} birthday party. Here is the updated date and time:`,
                     parentName: booking.parentFirstName,
                     childName: booking.childName,
                     childAge: booking.childAge,
