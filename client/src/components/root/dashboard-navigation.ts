@@ -9,7 +9,6 @@ import {
     Home,
     Map,
     PartyPopper,
-    Settings,
     Sparkles,
     TicketPercent,
     TreePalm,
