@@ -7,10 +7,8 @@ import React, { useState } from 'react'
 import type { AcuityTypes } from 'fizz-kidz'
 import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 
-
 import { formatMobileNumber } from '@utils/stringUtilities'
 import { useTRPC } from '@utils/trpc'
-
 
 const { Panel } = Collapse
 
@@ -74,6 +72,7 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
         AcuityConstants.FormFields.EMERGENCY_CONTACT_NUMBER_HP
     )
     const hasAllergies = allergies !== ''
+    const isAnaphylactic = allergies.includes('Anaphylactic: Yes')
     const stayingAllDay = appointment.certificate === 'ALLDAY'
 
     const updateLabel = async (value: AcuityTypes.Client.Label) => {
@@ -103,15 +102,31 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
         updateLabel('none')
     }
 
+    const renderMultilineWithLinks = (value: string) => {
+        return (
+            <span style={{ whiteSpace: 'pre-wrap' }}>
+                {value.split(/(https?:\/\/\S+)/g).map((part) =>
+                    part.startsWith('http') ? (
+                        <a key={part} href={part} target="_blank" rel="noreferrer">
+                            {part}
+                        </a>
+                    ) : (
+                        part
+                    )
+                )}
+            </span>
+        )
+    }
+
     const childInfo = [
         {
             label: 'Allergies',
-            value: allergies,
+            value: renderMultilineWithLinks(allergies),
             render: hasAllergies,
         },
         {
             label: 'Notes',
-            value: additionalInfo,
+            value: renderMultilineWithLinks(additionalInfo),
             render: !!additionalInfo,
         },
         {
@@ -147,6 +162,11 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
                 {hasAllergies && (
                     <Tag color="red" icon={<ExclamationCircleOutlined />}>
                         Allergy
+                    </Tag>
+                )}
+                {isAnaphylactic && (
+                    <Tag color="volcano" icon={<ExclamationCircleOutlined />}>
+                        Anaphylactic
                     </Tag>
                 )}
                 {stayingAllDay && <Tag color="geekblue">All Day</Tag>}

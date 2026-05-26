@@ -131,7 +131,7 @@ export const Step2: React.FC<Props> = ({ form, appointmentTypeId }) => {
                                             }}
                                         />
                                     </Divider>
-                                    <ChildForm appointmentTypeId={appointmentTypeId} childNumber={index} />
+                                    <ChildForm form={form} appointmentTypeId={appointmentTypeId} childNumber={index} />
                                 </Fragment>
                             ))}
                             <Form.Item key="addChild" style={{ marginBottom: 0 }}>

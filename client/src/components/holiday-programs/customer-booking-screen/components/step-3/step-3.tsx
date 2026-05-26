@@ -103,6 +103,8 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                         childName: child.childName,
                         childDob: child.childAge.toISOString(),
                         childAllergies: child.allergies || '',
+                        childIsAnaphylactic: child.isAnaphylactic === 'yes',
+                        childAnaphylaxisPlan: child.anaphylaxisPlan?.storagePath || '',
                         childAdditionalInfo: child.additionalInfo || '',
                         isAllDayClass: sameDayClasses.includes(klass.id),
                         title: klass.title,

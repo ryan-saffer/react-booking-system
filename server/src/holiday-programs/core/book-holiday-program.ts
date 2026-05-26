@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto'
+
 import { FieldValue } from 'firebase-admin/firestore'
 import { logger } from 'firebase-functions/v2'
 import { Status } from 'google-gax'
@@ -8,10 +10,12 @@ import { AcuityConstants, AcuityUtilities, normalize } from 'fizz-kidz'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { StorageClient } from '@/firebase/StorageClient'
 import { SheetsClient } from '@/google/SheetsClient'
+import { projectId } from '@/init'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { ClassFullError } from '@/trpc/trpc.errors'
-import { logError, throwCustomTrpcError, throwTrpcError } from '@/utilities'
+import { isUsingEmulator, logError, throwCustomTrpcError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
 import { getDiscountCodeRedemptionKey } from './discount-codes/check-discount-code'
@@ -46,6 +50,8 @@ export type HolidayProgramBookingProps = {
             childName: string
             childDob: string // ISO
             childAllergies: string
+            childIsAnaphylactic: boolean
+            childAnaphylaxisPlan: string
             childAdditionalInfo: string
             isAllDayClass: boolean
             title?: string // eg. 'Swifty Spectacular'. For mixpanel.
@@ -53,6 +59,86 @@ export type HolidayProgramBookingProps = {
         }[]
         discount: (DiscountCode & { description: string }) | null
     }
+}
+
+async function getAnaphylaxisPlanUrls(input: HolidayProgramBookingProps) {
+    const missingPlan = input.payment.lineItems.find((item) => item.childIsAnaphylactic && !item.childAnaphylaxisPlan)
+    if (missingPlan) {
+        throwTrpcError('BAD_REQUEST', `missing anaphylaxis plan for child: ${missingPlan.childName}`)
+    }
+
+    const planPaths = [
+        ...new Set(
+            input.payment.lineItems
+                .filter((item) => item.childIsAnaphylactic && item.childAnaphylaxisPlan)
+                .map((item) => item.childAnaphylaxisPlan)
+        ),
+    ]
+
+    const signedUrls = new Map<string, string>()
+
+    if (planPaths.length === 0) {
+        return signedUrls
+    }
+
+    const today = new Date()
+    const expires = new Date(today.setMonth(today.getMonth() + 6))
+    const storage = await StorageClient.getInstance()
+    const bucketName = `${projectId}.appspot.com`
+    const bucket = storage.bucket(bucketName)
+
+    await Promise.all(
+        planPaths.map(async (planPath) => {
+            if (!planPath.startsWith('anaphylaxisPlans/holiday-program-')) {
+                throwTrpcError('BAD_REQUEST', `invalid anaphylaxis plan path: ${planPath}`)
+            }
+
+            if (planPath.slice('anaphylaxisPlans/'.length).includes('/')) {
+                throwTrpcError('BAD_REQUEST', `invalid anaphylaxis plan path: ${planPath}`)
+            }
+
+            const file = bucket.file(planPath)
+
+            let signedUrl: string
+            if (isUsingEmulator()) {
+                const downloadToken = randomUUID()
+                await file.setMetadata({
+                    metadata: {
+                        firebaseStorageDownloadTokens: downloadToken,
+                    },
+                })
+                signedUrl = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(planPath)}?alt=media&token=${downloadToken}`
+            } else {
+                ;[signedUrl] = await file.getSignedUrl({
+                    version: 'v2',
+                    action: 'read',
+                    expires,
+                })
+            }
+
+            signedUrls.set(planPath, signedUrl)
+        })
+    )
+
+    return signedUrls
+}
+
+function formatChildAllergies(
+    item: HolidayProgramBookingProps['payment']['lineItems'][number],
+    anaphylaxisPlanUrls: Map<string, string>
+) {
+    const allergyDetails = [item.childAllergies]
+
+    if (item.childIsAnaphylactic) {
+        allergyDetails.push('Anaphylactic: Yes')
+
+        const anaphylaxisPlanUrl = anaphylaxisPlanUrls.get(item.childAnaphylaxisPlan)
+        if (anaphylaxisPlanUrl) {
+            allergyDetails.push(`Anaphylaxis plan: ${anaphylaxisPlanUrl}`)
+        }
+    }
+
+    return allergyDetails.filter(Boolean).join('\n\n')
 }
 
 export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
@@ -94,6 +180,8 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
 
         // all classes have enough spots! let's continue
 
+        const anaphylaxisPlanUrls = await getAnaphylaxisPlanUrls(input)
+
         // MARK: Process payment
         const { orderId, recieptUrl, squarePaymentLink } = await processHolidayProgramPayment(input)
 
@@ -124,7 +212,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
                         },
                         {
                             id: AcuityConstants.FormFields.CHILDREN_ALLERGIES,
-                            value: item.childAllergies,
+                            value: formatChildAllergies(item, anaphylaxisPlanUrls),
                         },
                         {
                             id: AcuityConstants.FormFields.CHILD_ADDITIONAL_INFO,
@@ -209,6 +297,31 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
             }
         } catch (err) {
             logError(`Error writing to holiday program additional needs spreadsheet`, err, { input })
+        }
+
+        // MARK: Anaphylactic children spreadsheet
+        const anaphylacticLineItems = input.payment.lineItems.filter((it) => it.childIsAnaphylactic)
+
+        try {
+            if (anaphylacticLineItems.length > 0) {
+                const sheetsClient = await SheetsClient.getInstance()
+                await sheetsClient.addRowToSheet(
+                    'holidayProgramAdditionalNeeds',
+                    anaphylacticLineItems.map((item) => [
+                        `${item.title ?? 'Holiday Program'} - ${DateTime.fromISO(item.time).toFormat('dd/LL/yyyy h:mm a')}`,
+                        input.parentFirstName,
+                        input.parentLastName,
+                        input.parentPhone,
+                        item.childName,
+                        Math.abs(DateTime.fromISO(item.childDob).diffNow('years').years).toFixed(0),
+                        item.childAllergies,
+                        anaphylaxisPlanUrls.get(item.childAnaphylaxisPlan) ?? '',
+                    ]),
+                    'Anaphylactic Plans'
+                )
+            }
+        } catch (err) {
+            logError(`Error writing to anaphylactic children checklist for holiday program booking`, err, { input })
         }
 
         // MARL: Cconfirmation email

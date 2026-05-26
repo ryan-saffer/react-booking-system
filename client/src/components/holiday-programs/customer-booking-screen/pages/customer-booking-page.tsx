@@ -29,8 +29,13 @@ export type Form = {
     children: {
         childName: string
         childAge: dayjs.Dayjs
-        hasAllergies: boolean
+        hasAllergies: 'yes' | 'no'
         allergies?: string
+        isAnaphylactic?: 'yes' | 'no'
+        anaphylaxisPlan?: {
+            fileName: string
+            storagePath: string
+        }
         additionalInfo: string
     }[]
     joinMailingList: boolean

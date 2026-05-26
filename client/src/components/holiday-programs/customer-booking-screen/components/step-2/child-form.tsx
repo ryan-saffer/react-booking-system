@@ -1,23 +1,121 @@
-import { DatePicker, Form, Input, Select } from 'antd'
+import { UploadOutlined } from '@ant-design/icons'
+import { Button, DatePicker, Form, Input, Upload } from 'antd'
 import dayjs from 'dayjs'
+import { ref as firebaseRef, uploadBytesResumable } from 'firebase/storage'
 import React, { useState } from 'react'
+import { toast } from 'sonner'
 
 import { AcuityConstants } from 'fizz-kidz'
 
+import useFirebase from '@components/Hooks/context/UseFirebase'
 import { SimpleTextRule } from '@utils/formUtils'
 
 import { useCart } from '../../state/cart-store'
 
+import type { Form as TForm } from '../../pages/customer-booking-page'
+import type { FormInstance } from 'antd'
+
 const { TextArea } = Input
 
+const FormValue: React.FC = () => null
+
+type YesNoValue = 'yes' | 'no'
+
+type YesNoButtonsProps = {
+    value?: YesNoValue
+    onChange?: (value: YesNoValue) => void
+    onValueChange?: (value: YesNoValue) => void
+}
+
+const YesNoButtons: React.FC<YesNoButtonsProps> = ({ value, onChange, onValueChange }) => {
+    function handleChange(nextValue: YesNoValue) {
+        onChange?.(nextValue)
+        onValueChange?.(nextValue)
+    }
+
+    return (
+        <div style={{ display: 'flex', gap: 8 }}>
+            <Button type={value === 'yes' ? 'primary' : 'default'} onClick={() => handleChange('yes')}>
+                Yes
+            </Button>
+            <Button type={value === 'no' ? 'primary' : 'default'} onClick={() => handleChange('no')}>
+                No
+            </Button>
+        </div>
+    )
+}
+
 type Props = {
+    form: FormInstance<TForm>
     appointmentTypeId: number
     childNumber: number
 }
 
-export const ChildForm: React.FC<Props> = ({ appointmentTypeId, childNumber }) => {
+export const ChildForm: React.FC<Props> = ({ form, appointmentTypeId, childNumber }) => {
+    const firebase = useFirebase()
     const getEarliestClass = useCart((cart) => cart.getEarliestClass)
-    const [hasAllergies, setHasAllergies] = useState(false)
+    const [uploading, setUploading] = useState(false)
+    const [uploadProgress, setUploadProgress] = useState(0)
+
+    const hasAllergies = Form.useWatch(['children', childNumber, 'hasAllergies'], form) === 'yes'
+    const isAnaphylactic = Form.useWatch(['children', childNumber, 'isAnaphylactic'], form) === 'yes'
+    const anaphylaxisPlan = Form.useWatch(['children', childNumber, 'anaphylaxisPlan'], form)
+
+    const isValidFile = (file: File) => {
+        if (file.type !== 'application/pdf') {
+            toast.error('File must be a PDF')
+            return false
+        }
+
+        if (file.size >= 5_000_000) {
+            toast.error('Anaphylaxis plan must be smaller than 5MB')
+            return false
+        }
+
+        return true
+    }
+
+    const uploadAnaphylaxisPlan = (
+        file: File,
+        onProgress?: (percent: number) => void,
+        onError?: (error: Error) => void,
+        onSuccess?: () => void
+    ) => {
+        if (!isValidFile(file)) {
+            onError?.(new Error('Invalid file'))
+            return
+        }
+
+        setUploading(true)
+        setUploadProgress(0)
+
+        const storagePath = `anaphylaxisPlans/holiday-program-${crypto.randomUUID()}-${file.name}`
+        const storageRef = firebaseRef(firebase.storage, storagePath)
+        const uploadTask = uploadBytesResumable(storageRef, file, { contentType: 'application/pdf' })
+
+        uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                setUploadProgress(progress)
+                onProgress?.(progress)
+            },
+            (error) => {
+                setUploading(false)
+                toast.error('Error occurred during upload')
+                onError?.(error)
+            },
+            () => {
+                setUploading(false)
+                form.setFieldValue(['children', childNumber, 'anaphylaxisPlan'], {
+                    fileName: file.name,
+                    storagePath,
+                })
+                void form.validateFields([['children', childNumber, 'anaphylaxisPlan']])
+                onSuccess?.()
+            }
+        )
+    }
 
     return (
         <>
@@ -77,10 +175,15 @@ export const ChildForm: React.FC<Props> = ({ appointmentTypeId, childNumber }) =
                     },
                 ]}
             >
-                <Select onChange={(value) => setHasAllergies(value === 'yes')}>
-                    <Select.Option value="yes">Yes</Select.Option>
-                    <Select.Option value="no">No</Select.Option>
-                </Select>
+                <YesNoButtons
+                    onValueChange={(value) => {
+                        if (value === 'no') {
+                            form.setFieldValue(['children', childNumber, 'allergies'], undefined)
+                            form.setFieldValue(['children', childNumber, 'isAnaphylactic'], undefined)
+                            form.setFieldValue(['children', childNumber, 'anaphylaxisPlan'], undefined)
+                        }
+                    }}
+                />
             </Form.Item>
             {hasAllergies && (
                 <Form.Item
@@ -96,6 +199,90 @@ export const ChildForm: React.FC<Props> = ({ appointmentTypeId, childNumber }) =
                 >
                     <TextArea rows={3} />
                 </Form.Item>
+            )}
+            {hasAllergies && (
+                <Form.Item
+                    name={[childNumber, 'isAnaphylactic']}
+                    label="Is this child anaphylactic?"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input if the child is anaphylactic',
+                        },
+                    ]}
+                >
+                    <YesNoButtons
+                        onValueChange={(value) => {
+                            if (value === 'no') {
+                                form.setFieldValue(['children', childNumber, 'anaphylaxisPlan'], undefined)
+                            }
+                        }}
+                    />
+                </Form.Item>
+            )}
+            {isAnaphylactic && (
+                <>
+                    <Form.Item
+                        name={[childNumber, 'anaphylaxisPlan']}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please upload an anaphylaxis plan',
+                            },
+                        ]}
+                        noStyle
+                    >
+                        <FormValue />
+                    </Form.Item>
+                    <Form.Item noStyle shouldUpdate>
+                        {() => {
+                            const errors = form.getFieldError(['children', childNumber, 'anaphylaxisPlan'])
+
+                            return (
+                                <Form.Item
+                                    label="Please upload this child's anaphylaxis plan"
+                                    required
+                                    validateStatus={errors.length ? 'error' : undefined}
+                                    help={errors[0]}
+                                    extra="PDF only. Maximum file size is 5MB."
+                                >
+                                    <Upload
+                                        accept=".pdf"
+                                        maxCount={1}
+                                        customRequest={(options) => {
+                                            uploadAnaphylaxisPlan(
+                                                options.file as File,
+                                                (percent) => options.onProgress?.({ percent }),
+                                                (error) => options.onError?.(error),
+                                                () => options.onSuccess?.('ok')
+                                            )
+                                        }}
+                                        fileList={
+                                            anaphylaxisPlan
+                                                ? [
+                                                      {
+                                                          uid: anaphylaxisPlan.storagePath,
+                                                          name: anaphylaxisPlan.fileName,
+                                                          status: 'done',
+                                                      },
+                                                  ]
+                                                : []
+                                        }
+                                        onRemove={() => {
+                                            form.setFieldValue(['children', childNumber, 'anaphylaxisPlan'], undefined)
+                                            void form.validateFields([['children', childNumber, 'anaphylaxisPlan']])
+                                            return true
+                                        }}
+                                    >
+                                        <Button icon={<UploadOutlined />} loading={uploading}>
+                                            {uploading ? `Uploading ${uploadProgress}%` : 'Upload PDF'}
+                                        </Button>
+                                    </Upload>
+                                </Form.Item>
+                            )
+                        }}
+                    </Form.Item>
+                </>
             )}
             <Form.Item
                 name={[childNumber, 'additionalInfo']}

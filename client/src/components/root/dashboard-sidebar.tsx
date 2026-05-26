@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom'
 
 import {
     dashboardHomeItem,
-    dashboardSidebarFooterItems,
     getDashboardNavigationSections,
     getDashboardPath,
 } from '@components/root/dashboard-navigation'
@@ -58,11 +57,6 @@ export function DashboardSidebar() {
             </SidebarContent>
             <SidebarGroup className="border-t border-sidebar-border p-3">
                 <SidebarGroupContent>
-                    <SidebarMenu>
-                        {dashboardSidebarFooterItems.map((item) => (
-                            <DashboardSidebarLink key={item.label} item={item} />
-                        ))}
-                    </SidebarMenu>
                     <div className="mt-2">
                         <UserButton variant="sidebar" onAction={() => setOpenMobile(false)} />
                     </div>

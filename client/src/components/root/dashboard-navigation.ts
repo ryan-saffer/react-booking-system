@@ -245,16 +245,6 @@ const dashboardNavigationSections: DashboardNavigationSection[] = [
     },
 ]
 
-export const dashboardSidebarFooterItems: DashboardNavigationItem[] = [
-    {
-        label: 'Settings',
-        to: 'settings',
-        icon: Settings,
-        accent: '#b14594',
-        accentSoft: 'rgba(177, 69, 148, 0.14)',
-    },
-]
-
 export const dashboardHomeItem: DashboardNavigationItem = {
     label: 'Dashboard',
     to: '',
