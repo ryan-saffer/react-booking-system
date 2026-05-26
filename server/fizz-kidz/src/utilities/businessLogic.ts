@@ -152,3 +152,10 @@ export function studioNameAndAddress(studio: StudioOrTest) {
 
     return `Fizz Kidz ${capitalise(studio)}\nStudio<br>${getStudioAddress(studio)}`
 }
+
+export function getNumberOfCreations(bookingType: Booking['type'], partyLength: Booking['partyLength']) {
+    if (bookingType === 'studio') {
+        return partyLength === '1.5' ? 2 : 3
+    }
+    return partyLength === '1' ? 2 : 3
+}
