@@ -18,7 +18,9 @@ This folder contains the server-side implementation of the v2 invitation + RSVP 
 ## RSVP Handling
 
 - RSVPs are stored per child under the booking, allowing multiple invitations/designs without affecting responses.
+- RSVP records have a required `source` field: `guest` for public invitation submissions and `host` for responses entered by the party host.
 - This keeps a single source of truth for who is attending, independent of any specific invitation image.
+- Hosts can add RSVPs from the manage page via the authenticated host RSVP endpoint. These records are stored in the same RSVP collection, but do not require child date of birth and skip Zoho enrichment and guest confirmation email side effects.
 - Future use: expose aggregated RSVP data to party hosts or other systems.
 
 ## Image Generation

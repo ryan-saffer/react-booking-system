@@ -21,8 +21,8 @@ import { generateInvitationV2 } from '@/party-bookings/core/rsvp/generate-invita
 import { getInvitationDownloadUrl } from '@/party-bookings/core/rsvp/get-invitation-download-url-v2'
 import { linkInvitation } from '@/party-bookings/core/rsvp/link-invitation-v2'
 import { resetInvitation } from '@/party-bookings/core/rsvp/reset-invitation-v2'
-import { rsvpToParty } from '@/party-bookings/core/rsvp/rsvp-to-party-v2'
-import type { RsvpProps } from '@/party-bookings/core/rsvp/rsvp-to-party-v2'
+import { hostRsvpToParty, guestRsvpToParty } from '@/party-bookings/core/rsvp/rsvp-to-party-v2'
+import type { HostRsvpProps, RsvpProps } from '@/party-bookings/core/rsvp/rsvp-to-party-v2'
 import { sendPartyBookingConfirmationEmail } from '@/party-bookings/core/send-party-booking-confirmation-email'
 import { updatePartyBooking } from '@/party-bookings/core/update-party-booking'
 import { getCakeFormUrl, getPartyFormUrl } from '@/party-bookings/core/utils.party'
@@ -91,7 +91,10 @@ export const partiesRouter = router({
     resetInvitation: authenticatedProcedure
         .input((input: unknown) => input as { invitationId: string })
         .mutation(({ input }) => resetInvitation(input.invitationId)),
-    rsvp: publicProcedure
+    guestRsvp: publicProcedure
         .input((input: unknown) => input as WithoutId<RsvpProps>)
-        .mutation(({ input }) => rsvpToParty(input)),
+        .mutation(({ input }) => guestRsvpToParty(input)),
+    hostRsvp: authenticatedProcedure
+        .input((input: unknown) => input as WithoutId<HostRsvpProps>)
+        .mutation(({ input, ctx }) => hostRsvpToParty(input, { uid: ctx.uid, email: ctx.email })),
 })

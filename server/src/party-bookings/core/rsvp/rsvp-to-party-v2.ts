@@ -4,18 +4,53 @@ import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { env } from '@/init'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
-import { isUsingEmulator, logError } from '@/utilities'
+import { isUsingEmulator, logError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
-export type RsvpProps = WithoutId<Rsvp> & {
+type SubmittedRsvp = WithoutId<Omit<Rsvp, 'source'>>
+
+export type RsvpProps = SubmittedRsvp & {
     bookingId: string
     invitationId: string
     joinMailingList: boolean
 }
 
-export async function rsvpToParty(input: RsvpProps) {
+export type HostRsvpProps = SubmittedRsvp & {
+    bookingId: string
+    invitationId: string
+}
+
+export async function guestRsvpToParty(input: RsvpProps) {
     const { bookingId, invitationId, joinMailingList, ...rsvp } = input
-    await DatabaseClient.addRsvpToParty(bookingId, rsvp)
+
+    if (!rsvp.parentEmail) {
+        throwTrpcError('BAD_REQUEST', 'Parent email is required for guest RSVPs', undefined, {
+            bookingId,
+            invitationId,
+        })
+    }
+
+    if (!rsvp.parentMobile) {
+        throwTrpcError('BAD_REQUEST', 'Parent mobile is required for guest RSVPs', undefined, {
+            bookingId,
+            invitationId,
+        })
+    }
+
+    const parentEmail = rsvp.parentEmail
+    const parentMobile = rsvp.parentMobile
+
+    for (const child of rsvp.children) {
+        if (!child.dob) {
+            throwTrpcError('BAD_REQUEST', 'Date of birth is required for guest RSVPs', undefined, {
+                bookingId,
+                invitationId,
+                childName: child.name,
+            })
+        }
+    }
+
+    await DatabaseClient.addRsvpToParty(bookingId, { ...rsvp, source: 'guest' })
 
     const invitation = await DatabaseClient.getInvitationV2(invitationId)
 
@@ -28,23 +63,23 @@ export async function rsvpToParty(input: RsvpProps) {
             await zoho.addBirthdayPartyGuestContactWithChild({
                 firstName,
                 lastName,
-                email: input.parentEmail,
-                mobile: input.parentMobile,
+                email: parentEmail,
+                mobile: parentMobile,
                 studio: invitation.studio,
                 childName: child.name,
-                childBirthdayISO: new Date(child.dob).toISOString(),
+                childBirthdayISO: child.dob!.toISOString(),
                 optOutOfMarketing: !joinMailingList,
             })
         }
     } catch (err) {
-        logError(`error adding RSVP contact to zoho: ${input.parentEmail}`, err, { input })
+        logError(`error adding RSVP contact to zoho: ${parentEmail}`, err, { input })
     }
 
     const mailClient = await MailClient.getInstance()
     try {
         mailClient.sendEmail(
             'rsvpToParty',
-            input.parentEmail,
+            parentEmail,
             {
                 parentName: input.parentName,
                 children: input.children.map((child) => ({
@@ -64,7 +99,7 @@ export async function rsvpToParty(input: RsvpProps) {
             { bccBookings: false }
         )
     } catch (err) {
-        logError(`Error sending rsvp confirmation to parent '${input.parentEmail}'`, err, { input })
+        logError(`Error sending rsvp confirmation to parent '${parentEmail}'`, err, { input })
     }
 
     // notify the host
@@ -95,14 +130,40 @@ export async function rsvpToParty(input: RsvpProps) {
     // tracking
     const mixpanel = await MixpanelClient.getInstance()
     await mixpanel.track('invitation-rsvp', {
-        distinct_id: input.parentEmail,
+        distinct_id: parentEmail,
         bookingId: invitation.bookingId,
         invitationId: invitation.id,
         partyDate: invitation.date,
         parentName: input.parentName,
-        parentEmail: input.parentEmail,
+        parentEmail,
         numberOfChildren: input.children.length,
         joinMailingList: input.joinMailingList,
+    })
+}
+
+export async function hostRsvpToParty(input: HostRsvpProps, host: { uid: string; email: string }) {
+    const { bookingId, invitationId, ...rsvp } = input
+    const invitation = await DatabaseClient.getInvitationV2(invitationId)
+
+    if (invitation.uid !== host.uid || invitation.bookingId !== bookingId) {
+        throwTrpcError('FORBIDDEN', 'Host is not authorised to manage RSVPs for this invitation', undefined, {
+            bookingId,
+            invitationId,
+            uid: host.uid,
+        })
+    }
+
+    await DatabaseClient.addRsvpToParty(bookingId, { ...rsvp, source: 'host' })
+
+    const mixpanel = await MixpanelClient.getInstance()
+    await mixpanel.track('Host Invitation RSVP', {
+        distinct_id: host.email,
+        bookingId: invitation.bookingId,
+        invitationId: invitation.id,
+        partyDate: invitation.date,
+        hostEmail: host.email,
+        parentName: input.parentName,
+        numberOfChildren: input.children.length,
     })
 }
 

@@ -29,7 +29,7 @@ This folder contains the client-side experience for the invitation + RSVP flow.
 
 - `view-invitation-page` decides whether to show the public invite (for guests) or manage view (for authenticated owners).
 - Guests see `view-invitation` (invitation preview + RSVP button). They can submit RSVPs; customers cannot edit RSVP responses.
-- Owners see manage RSVPs (table of responses, edit/delete, edit invitation details, choose a new design, share/download).
+- Owners see manage RSVPs (table of responses, add/edit/delete responses, edit invitation details, choose a new design, share/download).
 
 ## Authentication & Return Flow
 
@@ -39,8 +39,10 @@ This folder contains the client-side experience for the invitation + RSVP flow.
 ## Guest Experience
 
 - Guests RSVP from the public invitation page; a confirmation email is sent after submission.
+- Guest RSVPs require each child's date of birth so the guest can be added to Zoho CRM.
 
 ## Owner Experience
 
-- Manage RSVPs: view/update/delete responses, edit invitation details, or regenerate with a different design.
+- Manage RSVPs: view/add/update/delete responses, edit invitation details, or regenerate with a different design.
+- Host-added RSVPs are entered from the manage page and do not require child date of birth, add the guest to Zoho, or send the guest confirmation email.
 - Share dialog: share link or download/print invite (QR code points back to the RSVP page).

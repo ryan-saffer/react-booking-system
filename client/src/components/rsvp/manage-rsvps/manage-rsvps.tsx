@@ -1,6 +1,6 @@
 import { flexRender } from '@tanstack/react-table'
 import { doc, updateDoc } from 'firebase/firestore'
-import { CheckCircle2, Eye, Frown, Share2, Sparkles, Users } from 'lucide-react'
+import { CheckCircle2, Eye, Frown, Share2, Sparkles, UserPlus, Users } from 'lucide-react'
 import { Fragment, useState } from 'react'
 
 import type { InvitationsV2 } from 'fizz-kidz'
@@ -14,6 +14,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { cn } from '@utils/tailwind'
 
 import { EditInvitationDialog } from './edit-invitation-dialog'
+import { HostRsvpDialog } from './host-rsvp-dialog'
 import { ShareInvitaitonDialog } from './share-invitation-dialog'
 import { useInvitation } from '../hooks/use-invitation'
 import { useRsvpTable } from '../hooks/use-rsvp-table'
@@ -58,6 +59,9 @@ export function ManageRsvps() {
 
     const [showShareDialog, setShowShareDialog] = useState(false)
     const [showEditDialog, setShowEditDialog] = useState(false)
+    const [showHostRsvpDialog, setShowHostRsvpDialog] = useState(false)
+
+    const isHost = auth?.uid === invitation.uid
 
     const isLoaded = rsvps.status === 'loaded'
     const attendingCount = isLoaded ? rsvps.result.attendingCount : 0
@@ -89,7 +93,7 @@ export function ManageRsvps() {
                             </p>
                         </div>
                     </div>
-                    {auth?.uid === invitation.uid && (
+                    {isHost && (
                         <div className="flex items-center justify-between rounded-2xl border border-white/70 bg-white/80 px-4 py-3 text-sm text-slate-700 shadow sm:px-5">
                             <div>
                                 <p className="font-semibold text-slate-900">Email notifications</p>
@@ -170,9 +174,15 @@ export function ManageRsvps() {
                                         Tap a guest row to see parent details and notes.
                                     </p>
                                 </div>
-                                <div className="rounded-full bg-[#F2E7FF] px-3 py-1 text-xs font-semibold text-[#9B3EEA]">
-                                    Live updates
-                                </div>
+                                {isHost && (
+                                    <Button
+                                        className="gap-2 rounded-xl bg-[#9B3EEA] font-semibold shadow hover:bg-[#8B2DE3]"
+                                        onClick={() => setShowHostRsvpDialog(true)}
+                                    >
+                                        <UserPlus className="h-4 w-4" />
+                                        Add RSVP
+                                    </Button>
+                                )}
                             </div>
                             <div className="overflow-auto">
                                 <Table className="w-full table-auto">
@@ -249,12 +259,12 @@ export function ManageRsvps() {
                                                                 />
                                                                 <ExpandableContent
                                                                     label="Parent Phone"
-                                                                    value={row.original.parentMobile}
+                                                                    value={row.original.parentMobile ?? 'Not provided'}
                                                                     colSpan={colSpan}
                                                                 />
                                                                 <ExpandableContent
                                                                     label="Parent Email"
-                                                                    value={row.original.parentEmail}
+                                                                    value={row.original.parentEmail ?? 'Not provided'}
                                                                     colSpan={colSpan}
                                                                 />
                                                                 {row.original.message && (
@@ -275,7 +285,7 @@ export function ManageRsvps() {
                                                     colSpan={table.getAllColumns().length}
                                                     className="h-28 text-center text-sm text-slate-600"
                                                 >
-                                                    No RSVPs yet. Share your invitation to start collecting responses.
+                                                    No RSVPs yet. Share your invitation or add one manually.
                                                 </TableCell>
                                             </TableRow>
                                         )}
@@ -293,6 +303,11 @@ export function ManageRsvps() {
                 share={() => setShowShareDialog(true)}
             />
             <ShareInvitaitonDialog isOpen={showShareDialog} close={() => setShowShareDialog(false)} />
+            <HostRsvpDialog
+                invitation={invitation}
+                isOpen={showHostRsvpDialog}
+                close={() => setShowHostRsvpDialog(false)}
+            />
 
             <div className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/90 backdrop-blur">
                 <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-3 sm:flex-row sm:px-6">

@@ -107,6 +107,15 @@ export type MixpanelEvent = {
         numberOfChildren: number
         joinMailingList: boolean
     }
+    'Host Invitation RSVP': {
+        distinct_id: string
+        bookingId: string
+        invitationId: string
+        partyDate: Date
+        hostEmail: string
+        parentName: string
+        numberOfChildren: number
+    }
     'invitation-coupon-signup': {
         distinct_id: string
         invitationId: string
@@ -267,6 +276,7 @@ const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'invitation-edited-v2': 'Invitation Edited [New]',
     'invitation-generated-v2': 'Invitation Generated [New]',
     'invitation-rsvp': 'Invitation RSVP',
+    'Host Invitation RSVP': 'Host Invitation RSVP',
     'invitation-coupon-signup': 'Invitation Coupon Code Signup',
     'holiday-program-website-discount': 'Website Holiday Program Discount Generated',
     'website-enquiry': 'Website Enquiry',

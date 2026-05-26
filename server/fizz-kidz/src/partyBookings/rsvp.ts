@@ -2,16 +2,17 @@ import { getApplicationDomain } from '../utilities'
 
 export type Rsvp = {
     id: string
+    source: 'guest' | 'host'
     parentName: string
-    parentEmail: string
-    parentMobile: string
+    parentEmail?: string
+    parentMobile?: string
     children: Child[]
     message?: string
 }
 
 type Child = {
     name: string
-    dob: Date
+    dob?: Date
     rsvp: 'attending' | 'not-attending'
     hasAllergies?: boolean
     allergies?: string

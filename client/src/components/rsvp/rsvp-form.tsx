@@ -25,57 +25,84 @@ import { useTRPC } from '@utils/trpc'
 
 import type { DateTime } from 'luxon'
 
-const formSchema = z.object({
-    parentName: z.string().trim().min(1, { message: 'Please enter your name' }),
-    parentEmail: z.string().email({ message: 'Please enter a valid email' }).trim().toLowerCase(),
-    parentMobile: z.string().trim().min(10, { message: 'Number must be at least 10 digits' }),
-    children: z.array(
-        z
-            .object({
-                name: z.string().trim().min(1, { message: 'Please enter childs name' }),
-                dob: z
-                    .date()
-                    .optional()
-                    .refine((date) => !!date, 'Date of birth is required'),
-                rsvp: z.enum(['attending', 'not-attending']),
-                hasAllergies: z.boolean().optional(),
-                allergies: z.string().optional(),
-            })
-            .superRefine((val, ctx) => {
-                if (val.rsvp === 'attending') {
-                    if (val.hasAllergies === undefined) {
-                        ctx.addIssue({
-                            code: z.ZodIssueCode.custom,
-                            message: `Please select if ${val.name ?? 'this child'} has any allergies`,
-                            path: ['hasAllergies'],
-                        })
-                    }
-                    if (val.hasAllergies && val.allergies === '') {
-                        ctx.addIssue({
-                            code: z.ZodIssueCode.custom,
-                            message: `Please enter ${val.name ?? 'this child'}s allergies`,
-                            path: ['allergies'],
-                        })
-                    }
-                }
-            })
-    ),
-    message: z.string().trim().optional(),
-    joinMailingList: z.boolean(),
-})
+type Form = {
+    parentName: string
+    parentEmail?: string
+    parentMobile?: string
+    children: {
+        name: string
+        dob?: Date
+        rsvp: 'attending' | 'not-attending'
+        hasAllergies?: boolean
+        allergies?: string
+    }[]
+    message?: string
+    joinMailingList: boolean
+}
 
-type Form = z.infer<typeof formSchema>
+function createFormSchema(mode: 'guest' | 'host') {
+    return z.object({
+        parentName: z.string().trim().min(1, { message: 'Please enter your name' }),
+        parentEmail:
+            mode === 'guest'
+                ? z.string().email({ message: 'Please enter a valid email' }).trim().toLowerCase()
+                : z.string().trim().optional(),
+        parentMobile:
+            mode === 'guest'
+                ? z.string().trim().min(10, { message: 'Number must be at least 10 digits' })
+                : z.string().trim().optional(),
+        children: z.array(
+            z
+                .object({
+                    name: z.string().trim().min(1, { message: 'Please enter childs name' }),
+                    dob:
+                        mode === 'guest'
+                            ? z
+                                  .date()
+                                  .optional()
+                                  .refine((date) => !!date, 'Date of birth is required')
+                            : z.date().optional(),
+                    rsvp: z.enum(['attending', 'not-attending']),
+                    hasAllergies: z.boolean().optional(),
+                    allergies: z.string().optional(),
+                })
+                .superRefine((val, ctx) => {
+                    if (val.rsvp === 'attending') {
+                        if (val.hasAllergies === undefined) {
+                            ctx.addIssue({
+                                code: z.ZodIssueCode.custom,
+                                message: `Please select if ${val.name ?? 'this child'} has any allergies`,
+                                path: ['hasAllergies'],
+                            })
+                        }
+                        if (val.hasAllergies && val.allergies === '') {
+                            ctx.addIssue({
+                                code: z.ZodIssueCode.custom,
+                                message: `Please enter ${val.name ?? 'this child'}s allergies`,
+                                path: ['allergies'],
+                            })
+                        }
+                    }
+                })
+        ),
+        message: z.string().trim().optional(),
+        joinMailingList: z.boolean(),
+    })
+}
 
 export function RsvpForm({
     invitation,
     onComplete,
+    mode = 'guest',
 }: {
     invitation: InvitationsV2.Invitation
     onComplete: (status: 'attending' | 'not-attending') => void
+    mode?: 'guest' | 'host'
 }) {
     const trpc = useTRPC()
+    const isHostMode = mode === 'host'
     const form = useForm<Form>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(createFormSchema(mode)),
         defaultValues: {
             parentName: '',
             parentEmail: '',
@@ -109,17 +136,38 @@ export function RsvpForm({
         form.setFocus('parentName')
     }, [form])
 
-    const { isPending, mutateAsync: sendRsvp } = useMutation(trpc.parties.rsvp.mutationOptions())
+    const { isPending: isSendingRsvp, mutateAsync: sendGuestRsvp } = useMutation(
+        trpc.parties.guestRsvp.mutationOptions()
+    )
+    const { isPending: isSendingHostRsvp, mutateAsync: sendHostRsvp } = useMutation(
+        trpc.parties.hostRsvp.mutationOptions()
+    )
+    const isPending = isSendingRsvp || isSendingHostRsvp
     // needed to close date picker when date is chosen
     const [openCalendars, setOpenCalendars] = useState<Record<string, boolean>>({})
 
     async function onSubmit(values: Form) {
         try {
-            await sendRsvp({ ...values, bookingId: invitation.bookingId, invitationId: invitation.id })
+            if (isHostMode) {
+                await sendHostRsvp({
+                    bookingId: invitation.bookingId,
+                    invitationId: invitation.id,
+                    parentName: values.parentName,
+                    children: values.children,
+                    message: values.message,
+                })
+            } else {
+                await sendGuestRsvp({ ...values, bookingId: invitation.bookingId, invitationId: invitation.id })
+            }
+
             const hasAttending = values.children.some((child) => child.rsvp === 'attending')
             onComplete(hasAttending ? 'attending' : 'not-attending')
         } catch {
-            toast.error("There was a problem RSVP'ing. Please let the parent know directly if you are able to attend.")
+            toast.error(
+                isHostMode
+                    ? 'There was a problem adding this RSVP.'
+                    : "There was a problem RSVP'ing. Please let the parent know directly if you are able to attend."
+            )
         }
     }
 
@@ -145,30 +193,34 @@ export function RsvpForm({
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="parentEmail"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Parent Email</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Parent's Email" disabled={isPending} {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="parentMobile"
-                        render={({ field }) => (
-                            <FormItem className="pb-2">
-                                <FormLabel>Parent Mobile</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Parent's Mobile" disabled={isPending} {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
+                    {!isHostMode && (
+                        <>
+                            <FormField
+                                control={form.control}
+                                name="parentEmail"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Parent Email</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Parent's Email" disabled={isPending} {...field} />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="parentMobile"
+                                render={({ field }) => (
+                                    <FormItem className="pb-2">
+                                        <FormLabel>Parent Mobile</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Parent's Mobile" disabled={isPending} {...field} />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        </>
+                    )}
                     <SectionBreak title="Children Details" />
                     {children.map((child, idx) => {
                         const watchedChild = watchedChildren[idx] ?? form.getValues(`children.${idx}`)
@@ -216,55 +268,57 @@ export function RsvpForm({
                                         </FormItem>
                                     )}
                                 />
-                                <FormField
-                                    control={form.control}
-                                    name={`children.${idx}.dob` as const}
-                                    render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                            <FormLabel>Date of birth</FormLabel>
-                                            <Popover
-                                                open={openCalendars[child.id]}
-                                                onOpenChange={(open) =>
-                                                    setOpenCalendars((prev) => ({ ...prev, [child.id]: open }))
-                                                }
-                                            >
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button
-                                                            variant={'outline'}
-                                                            className={cn(
-                                                                'w-full pl-3 text-left font-normal',
-                                                                !field.value && 'text-muted-foreground'
-                                                            )}
-                                                            disabled={isPending}
-                                                        >
-                                                            {field.value ? (
-                                                                format(field.value, 'PPP')
-                                                            ) : (
-                                                                <span>Pick a date</span>
-                                                            )}
-                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" align="start">
-                                                    <DateCalendar
-                                                        openTo="year"
-                                                        onChange={(datetime: DateTime | null, state) => {
-                                                            if (datetime && state === 'finish') {
-                                                                field.onChange(datetime.toJSDate())
-                                                                setOpenCalendars((prev) => ({
-                                                                    ...prev,
-                                                                    [child.id]: false,
-                                                                }))
-                                                            }
-                                                        }}
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
-                                        </FormItem>
-                                    )}
-                                />
+                                {!isHostMode && (
+                                    <FormField
+                                        control={form.control}
+                                        name={`children.${idx}.dob` as const}
+                                        render={({ field }) => (
+                                            <FormItem className="flex flex-col">
+                                                <FormLabel>Date of birth</FormLabel>
+                                                <Popover
+                                                    open={openCalendars[child.id]}
+                                                    onOpenChange={(open) =>
+                                                        setOpenCalendars((prev) => ({ ...prev, [child.id]: open }))
+                                                    }
+                                                >
+                                                    <PopoverTrigger asChild>
+                                                        <FormControl>
+                                                            <Button
+                                                                variant={'outline'}
+                                                                className={cn(
+                                                                    'w-full pl-3 text-left font-normal',
+                                                                    !field.value && 'text-muted-foreground'
+                                                                )}
+                                                                disabled={isPending}
+                                                            >
+                                                                {field.value ? (
+                                                                    format(field.value, 'PPP')
+                                                                ) : (
+                                                                    <span>Pick a date</span>
+                                                                )}
+                                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                            </Button>
+                                                        </FormControl>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-auto p-0" align="start">
+                                                        <DateCalendar
+                                                            openTo="year"
+                                                            onChange={(datetime: DateTime | null, state) => {
+                                                                if (datetime && state === 'finish') {
+                                                                    field.onChange(datetime.toJSDate())
+                                                                    setOpenCalendars((prev) => ({
+                                                                        ...prev,
+                                                                        [child.id]: false,
+                                                                    }))
+                                                                }
+                                                            }}
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
+                                            </FormItem>
+                                        )}
+                                    />
+                                )}
                                 <FormField
                                     control={form.control}
                                     name={`children.${idx}.rsvp` as const}
@@ -336,12 +390,14 @@ export function RsvpForm({
                                                 <FormLabel>
                                                     Please enter {watchedChild?.name || 'the child'}'s allergies here
                                                 </FormLabel>
-                                                <FormDescription>
-                                                    This information is for the host's planning.
-                                                    <br />
-                                                    Fizz Kidz doesn't monitor these RSVPs. Your host will handle any
-                                                    allergy arrangements directly.
-                                                </FormDescription>
+                                                {mode === 'guest' && (
+                                                    <FormDescription>
+                                                        This information is for the host's planning.
+                                                        <br />
+                                                        Fizz Kidz doesn't monitor these RSVPs. Your host will handle any
+                                                        allergy arrangements directly.
+                                                    </FormDescription>
+                                                )}
                                                 <FormControl>
                                                     <Textarea disabled={isPending} {...field} />
                                                 </FormControl>
@@ -373,58 +429,64 @@ export function RsvpForm({
                         {form.getValues('children').length === 0 ? 'Add Child' : 'Add another invited child'}
                         <Plus className="ml-2 h-4 w-4" />
                     </Button>
-                    <FormField
-                        control={form.control}
-                        name="message"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Message</FormLabel>
-                                <FormControl>
-                                    <Textarea
-                                        placeholder={`An optional message to send to ${invitation.childName}'s parents`}
-                                        rows={4}
-                                        disabled={isPending}
-                                        {...field}
-                                    />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="joinMailingList"
-                        render={({ field }) => (
-                            <FormItem className="py-4">
-                                <div className="flex items-center justify-end space-y-0">
+                    {mode === 'guest' && (
+                        <FormField
+                            control={form.control}
+                            name="message"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Message</FormLabel>
                                     <FormControl>
-                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                        <Textarea
+                                            placeholder={`An optional message to send to ${invitation.childName}'s parents`}
+                                            rows={4}
+                                            disabled={isPending}
+                                            {...field}
+                                        />
                                     </FormControl>
-                                    <FormLabel className="ml-2 cursor-pointer">
-                                        Keep me informed about the latest Fizz Kidz programs and offers.
-                                    </FormLabel>
-                                </div>
-                            </FormItem>
-                        )}
-                    />
-                    <p className="text-center text-sm text-muted-foreground">
-                        RSVP details are only visible to the party host and Fizz Kidz. Check out our{' '}
-                        <a
-                            className="font-medium text-[#9B3EEA] underline underline-offset-2 hover:text-[#8B2DE3]"
-                            href="https://fizzkidz.com.au/policies#privacy"
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            privacy policy
-                        </a>
-                        .
-                    </p>
+                                </FormItem>
+                            )}
+                        />
+                    )}
+                    {!isHostMode && (
+                        <>
+                            <FormField
+                                control={form.control}
+                                name="joinMailingList"
+                                render={({ field }) => (
+                                    <FormItem className="py-4">
+                                        <div className="flex items-center justify-end space-y-0">
+                                            <FormControl>
+                                                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                            </FormControl>
+                                            <FormLabel className="ml-2 cursor-pointer">
+                                                Keep me informed about the latest Fizz Kidz programs and offers.
+                                            </FormLabel>
+                                        </div>
+                                    </FormItem>
+                                )}
+                            />
+                            <p className="text-center text-sm text-muted-foreground">
+                                RSVP details are only visible to the party host and Fizz Kidz. Check out our{' '}
+                                <a
+                                    className="font-medium text-[#9B3EEA] underline underline-offset-2 hover:text-[#8B2DE3]"
+                                    href="https://fizzkidz.com.au/policies#privacy"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    privacy policy
+                                </a>
+                                .
+                            </p>
+                        </>
+                    )}
                 </div>
                 <Button
                     className="w-full rounded-2xl bg-[#9B3EEA] text-base font-semibold text-white shadow-lg transition hover:bg-[#8B2DE3] hover:shadow-xl disabled:opacity-70"
                     type="submit"
                     disabled={isPending}
                 >
-                    {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Send RSVP'}
+                    {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : isHostMode ? 'Add RSVP' : 'Send RSVP'}
                 </Button>
             </form>
         </Form>
