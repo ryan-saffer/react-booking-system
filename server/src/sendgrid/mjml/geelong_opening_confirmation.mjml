@@ -18,7 +18,7 @@
             <mj-column width="100%">
                 <mj-spacer height="30px" />
                 <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
-                    Kingsville Open Day Booking Confirmation
+                    Geelong Open Day Booking Confirmation
                 </mj-text>
             </mj-column>
         </mj-section>
@@ -31,7 +31,7 @@
             <mj-column width="100%">
                 <mj-text color="#637381" font-size="16px"> Hi {{parentName}}, </mj-text>
                 <mj-text color="#637381" font-size="16px">
-                    We're delighted to confirm your booking into the Kingsville Open Day! Below are the details of the
+                    We're delighted to confirm your booking into the Geelong Open Day! Below are the details of the
                     programs you have booked:.
                 </mj-text>
                 <mj-text color="#637381" font-size="16px">

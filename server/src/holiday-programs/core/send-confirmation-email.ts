@@ -52,7 +52,7 @@ export async function sendConfirmationEmail(
             break
         }
         case AcuityConstants.AppointmentTypes.GEELONG_OPENING:
-            await mailClient.sendEmail('kingsvilleOpeningConfirmation', appointments[0].email, {
+            await mailClient.sendEmail('geelongOpeningConfirmation', appointments[0].email, {
                 parentName: appointments[0].firstName,
                 location: `Fizz Kidz ${appointments[0].calendar}`,
                 address: appointments[0].location,
