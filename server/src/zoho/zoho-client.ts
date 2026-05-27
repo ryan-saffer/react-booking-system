@@ -155,6 +155,10 @@ export class ZohoClient {
         return DateTime.fromISO(date, { zone: 'Australia/Melbourne' }).toISODate()
     }
 
+    #getUniqueChildKey(parentContactId: string, childBirthdayISO: string) {
+        return `${parentContactId}|${this.#toDateISO(childBirthdayISO)}`
+    }
+
     #formatBirthdayPartyDealName(name: string) {
         const trimmedName = name.trim()
         return trimmedName.startsWith(`${BIRTHDAY_PARTY_DEAL_PREFIX} `)
@@ -270,7 +274,7 @@ export class ZohoClient {
                         id: props.parentContactId,
                     },
                     Marketing_Campaign_Opt_Out: props.optOutOfMarketing,
-                    Unique_Child_Key: `${props.parentContactId}|${childBirthday}`,
+                    Unique_Child_Key: this.#getUniqueChildKey(props.parentContactId, props.childBirthdayISO),
                     ...(props.partyDate ? { Party_Date: this.#toDateISO(props.partyDate) } : {}),
                 },
             ],
@@ -430,9 +434,15 @@ export class ZohoClient {
             ...baseProps,
         })
 
-        // Build the subform rows, upserting each child so rows can link to the Child module.
-        const zohoRowsWithChildren = await Promise.all(
-            rows.map(async (row) => {
+        // Multiple booked programs can reference the same child. Upsert each child once so Zoho's
+        // duplicate check is not raced by concurrent upserts for the same Unique_Child_Key.
+        const rowsByChildKey = rows.reduce((acc, row) => {
+            const childKey = this.#getUniqueChildKey(parentContactId, row.childBirthdayISO)
+            return acc.has(childKey) ? acc : acc.set(childKey, row)
+        }, new Map<string, HolidayProgramDealRow>())
+
+        const childIdEntries = await Promise.all(
+            [...rowsByChildKey.entries()].map(async ([childKey, row]): Promise<[string, string]> => {
                 const childId = await this.#upsertChild({
                     childName: row.childName,
                     childBirthdayISO: row.childBirthdayISO,
@@ -440,24 +450,30 @@ export class ZohoClient {
                     optOutOfMarketing,
                 })
 
-                return {
-                    childId,
-                    zohoRow: {
-                        Status: 'Booked',
-                        Booking_ID: row.appointmentId.toString(),
-                        Date_and_Time: this.#toDateTimeISO(row.dateTimeISO),
-                        Branch: capitalise(row.studio),
-                        ...(row.bookingUrl ? { Booking_URL: row.bookingUrl } : {}),
-                        ...(row.squarePaymentLink ? { Square_Payment_Link: row.squarePaymentLink } : {}),
-                        Child: {
-                            id: childId,
-                        },
-                    },
-                }
+                return [childKey, childId]
             })
         )
-        const zohoRows = zohoRowsWithChildren.map(({ zohoRow }) => zohoRow)
-        const childIds = [...new Set(zohoRowsWithChildren.map(({ childId }) => childId))]
+        const childIdsByKey = new Map(childIdEntries)
+
+        const zohoRows = rows.map((row) => {
+            const childId = childIdsByKey.get(this.#getUniqueChildKey(parentContactId, row.childBirthdayISO))
+            if (!childId) {
+                throw new Error(`Unable to find upserted child in Zoho: ${row.childName}`)
+            }
+
+            return {
+                Status: 'Booked',
+                Booking_ID: row.appointmentId.toString(),
+                Date_and_Time: this.#toDateTimeISO(row.dateTimeISO),
+                Branch: capitalise(row.studio),
+                ...(row.bookingUrl ? { Booking_URL: row.bookingUrl } : {}),
+                ...(row.squarePaymentLink ? { Square_Payment_Link: row.squarePaymentLink } : {}),
+                Child: {
+                    id: childId,
+                },
+            }
+        })
+        const childIds = [...new Set(childIdsByKey.values())]
 
         // There should only ever be one Holiday Program deal per customer email.
         const existingDeal = await this.#searchHolidayProgramDealByEmail(baseProps.email)
