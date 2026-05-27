@@ -19,7 +19,11 @@ type Props = {
 
 const Step1: React.FC<Props> = ({ appointmentTypeId, classes, onClassSelectionChange }) => {
     const selectedStudio = useCart((store) => store.selectedStudio)
+    const selectedClasses = useCart((store) => store.selectedClasses)
     const setSelectedStudio = useCart((store) => store.setSelectedStudio)
+
+    const isGeelongOpening = appointmentTypeId === AcuityConstants.AppointmentTypes.GEELONG_OPENING
+    const selectedClassCount = Object.keys(selectedClasses).length
 
     const filteredClasses = useMemo(() => {
         if (selectedStudio) {
@@ -94,11 +98,15 @@ const Step1: React.FC<Props> = ({ appointmentTypeId, classes, onClassSelectionCh
             {filteredClasses?.map((klass) => {
                 const name = `${klass.id}-checkbox`
                 const slotsAvailable = getSlotsAvailable(klass)
+                const isSelected = !!selectedClasses[klass.id]
                 return (
                     <Form.Item style={{ marginBottom: 4 }} key={klass.id} name={name} valuePropName="checked">
                         <Checkbox
                             value={klass.id}
-                            disabled={klass.slotsAvailable === 0}
+                            disabled={
+                                klass.slotsAvailable === 0 ||
+                                (isGeelongOpening && selectedClassCount > 0 && !isSelected)
+                            }
                             onChange={() => onClassSelectionChange(klass)}
                             style={{ marginBottom: 2 }}
                         >
