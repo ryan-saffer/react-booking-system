@@ -1,7 +1,7 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { styled } from '@mui/material/styles'
 import { useMutation } from '@tanstack/react-query'
-import { Button as AntButton, Collapse, List, Tag } from 'antd'
+import { Button as AntButton, Collapse, List, Modal, Tag } from 'antd'
 import React, { useState } from 'react'
 
 import type { AcuityTypes } from 'fizz-kidz'
@@ -10,15 +10,19 @@ import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import { formatMobileNumber } from '@utils/stringUtilities'
 import { useTRPC } from '@utils/trpc'
 
-const { Panel } = Collapse
-
 const PREFIX = 'ChildExpansionPanel'
 
 const classes = {
     panel: `${PREFIX}-panel`,
 }
 
-const StyledPanel = styled(Panel)({
+const anaphylaxisPlanButtonStyle = {
+    backgroundColor: '#fa541c',
+    borderColor: '#fa541c',
+    color: 'white',
+}
+
+const StyledCollapse = styled(Collapse)({
     [`&.${classes.panel}`]: {
         '& .ant-collapse-header': {
             alignItems: 'center !important',
@@ -34,6 +38,9 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
     const trpc = useTRPC()
     const [appointment, setAppointment] = useState(originalAppointment)
     const [loading, setLoading] = useState(false)
+    const [showAnaphylaxisPrompt, setShowAnaphylaxisPrompt] = useState(false)
+    const [showAnaphylaxisPlan, setShowAnaphylaxisPlan] = useState(false)
+    const [allowSignInFromAnaphylaxisPlan, setAllowSignInFromAnaphylaxisPlan] = useState(false)
 
     const updateLabelMutation = useMutation(trpc.acuity.updateLabel.mutationOptions())
 
@@ -73,6 +80,8 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
     )
     const hasAllergies = allergies !== ''
     const isAnaphylactic = allergies.includes('Anaphylactic: Yes')
+    const anaphylaxisPlanUrl = allergies.match(/Anaphylaxis plan:\s*(https?:\/\/\S+)/)?.[1] || ''
+    const allergiesWithoutAnaphylaxisPlan = allergies.replace(/\n*\s*Anaphylaxis plan:\s*https?:\/\/\S+/, '').trim()
     const stayingAllDay = appointment.certificate === 'ALLDAY'
 
     const updateLabel = async (value: AcuityTypes.Client.Label) => {
@@ -90,10 +99,21 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
         }
     }
 
-    const handleSignIn = (e: any) => {
-        e.stopPropagation()
+    const signIn = () => {
         setLoading(true)
         updateLabel('checked-in')
+    }
+
+    const handleSignIn = (e: any) => {
+        e.stopPropagation()
+
+        if (isAnaphylactic) {
+            setAllowSignInFromAnaphylaxisPlan(true)
+            setShowAnaphylaxisPrompt(true)
+            return
+        }
+
+        signIn()
     }
 
     const handleSignOut = (e: any) => {
@@ -118,10 +138,31 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
         )
     }
 
+    const handleViewAnaphylaxisPlan = () => {
+        setAllowSignInFromAnaphylaxisPlan(false)
+        setShowAnaphylaxisPlan(true)
+        setShowAnaphylaxisPrompt(true)
+    }
+
+    const renderAllergies = () => {
+        return (
+            <div className="space-y-2">
+                {!!allergiesWithoutAnaphylaxisPlan && renderMultilineWithLinks(allergiesWithoutAnaphylaxisPlan)}
+                {!!anaphylaxisPlanUrl && (
+                    <div>
+                        <AntButton size="small" style={anaphylaxisPlanButtonStyle} onClick={handleViewAnaphylaxisPlan}>
+                            View anaphylaxis plan
+                        </AntButton>
+                    </div>
+                )}
+            </div>
+        )
+    }
+
     const childInfo = [
         {
             label: 'Allergies',
-            value: renderMultilineWithLinks(allergies),
+            value: renderAllergies(),
             render: hasAllergies,
         },
         {
@@ -184,40 +225,119 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
         )
     }
 
+    const handleCloseAnaphylaxisPrompt = () => {
+        setShowAnaphylaxisPrompt(false)
+        setShowAnaphylaxisPlan(false)
+        setAllowSignInFromAnaphylaxisPlan(false)
+    }
+
+    const handleVerifyAndSignIn = () => {
+        handleCloseAnaphylaxisPrompt()
+        signIn()
+    }
+
     return (
-        <StyledPanel
-            className={classes.panel}
-            header={
-                <p style={{ margin: 0 }}>
-                    {childName} <i>({childAge})</i>
-                </p>
-            }
-            key={appointment.id}
-            {...props}
-            extra={renderExtra()}
-        >
-            <List
-                dataSource={childInfo}
-                renderItem={(item) =>
-                    item.render && (
-                        <List.Item>
-                            {<strong>{item.label}</strong>}: {item.value}
-                        </List.Item>
-                    )
-                }
+        <>
+            <StyledCollapse
+                className={classes.panel}
+                {...props}
+                items={[
+                    {
+                        key: appointment.id,
+                        label: (
+                            <p style={{ margin: 0 }}>
+                                {childName} <i>({childAge})</i>
+                            </p>
+                        ),
+                        extra: renderExtra(),
+                        children: (
+                            <>
+                                <List
+                                    dataSource={childInfo}
+                                    renderItem={(item) =>
+                                        item.render && (
+                                            <List.Item>
+                                                {<strong>{item.label}</strong>}: {item.value}
+                                            </List.Item>
+                                        )
+                                    }
+                                />
+                                {isSignedIn && (
+                                    <div style={{ display: 'flex', justifyContent: 'end' }}>
+                                        <AntButton
+                                            style={{
+                                                backgroundColor: '#fff1f0',
+                                                borderColor: '#ffa39e',
+                                                color: '#cf1322',
+                                            }}
+                                            loading={loading}
+                                            onClick={handleSignOut}
+                                        >
+                                            Undo Sign In
+                                        </AntButton>
+                                    </div>
+                                )}
+                            </>
+                        ),
+                    },
+                ]}
             />
-            {isSignedIn && (
-                <div style={{ display: 'flex', justifyContent: 'end' }}>
-                    <AntButton
-                        style={{ backgroundColor: '#fff1f0', borderColor: '#ffa39e', color: '#cf1322' }}
-                        loading={loading}
-                        onClick={handleSignOut}
-                    >
-                        Undo Sign In
-                    </AntButton>
-                </div>
-            )}
-        </StyledPanel>
+            <Modal
+                title={allowSignInFromAnaphylaxisPlan ? 'Anaphylaxis plan verification' : 'Anaphylaxis plan'}
+                open={showAnaphylaxisPrompt}
+                onCancel={handleCloseAnaphylaxisPrompt}
+                width={showAnaphylaxisPlan ? '90vw' : 520}
+                style={showAnaphylaxisPlan ? { top: 24 } : undefined}
+                footer={
+                    showAnaphylaxisPlan
+                        ? allowSignInFromAnaphylaxisPlan
+                            ? [
+                                  <AntButton key="back" onClick={() => setShowAnaphylaxisPlan(false)}>
+                                      Back
+                                  </AntButton>,
+                                  <AntButton
+                                      key="sign-in"
+                                      type="primary"
+                                      loading={loading}
+                                      onClick={handleVerifyAndSignIn}
+                                  >
+                                      Verified and sign in
+                                  </AntButton>,
+                              ]
+                            : [
+                                  <AntButton key="close" type="primary" onClick={handleCloseAnaphylaxisPrompt}>
+                                      Close
+                                  </AntButton>,
+                              ]
+                        : [
+                              <AntButton key="cancel" onClick={handleCloseAnaphylaxisPrompt}>
+                                  Cancel
+                              </AntButton>,
+                              <AntButton
+                                  key="view-plan"
+                                  style={anaphylaxisPlanButtonStyle}
+                                  disabled={!anaphylaxisPlanUrl}
+                                  onClick={() => setShowAnaphylaxisPlan(true)}
+                              >
+                                  View anaphylaxis plan
+                              </AntButton>,
+                          ]
+                }
+            >
+                {showAnaphylaxisPlan ? (
+                    <iframe
+                        title={`${childName} anaphylaxis plan`}
+                        src={anaphylaxisPlanUrl}
+                        style={{ width: '100%', height: '75vh', border: 0 }}
+                    />
+                ) : (
+                    <p>
+                        This child is anaphylatic. Please verify their anaphylaxis plan is accurate, and discuss any
+                        issues with the parent.
+                    </p>
+                )}
+            </Modal>
+        </>
     )
 }
 

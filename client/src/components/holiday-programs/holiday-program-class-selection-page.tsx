@@ -1,248 +1,253 @@
-import { Button, Paper } from '@mui/material'
-import { Skeleton } from '@mui/material'
-import FormControl from '@mui/material/FormControl'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
-import { styled } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
 import { useQuery } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
-import { AcuityConstants, ObjectEntries } from 'fizz-kidz'
+import { AcuityConstants, capitalise } from 'fizz-kidz'
+import type { AcuityTypes, StudioOrTest } from 'fizz-kidz'
 
 import { useOrg } from '@components/Session/use-org'
-import { capitalise } from '@utils/stringUtilities'
+import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
+import { Button } from '@ui-components/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@ui-components/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
+import { Skeleton } from '@ui-components/skeleton'
 import { useTRPC } from '@utils/trpc'
 
-import type { SelectChangeEvent } from '@mui/material/Select'
+import { resolveCalendarStudio } from '../preschool-program/booking-form/utils/resolve-calendar-studio'
 
-const PREFIX = 'HolidayProgramSelection'
+import type { ReactNode } from 'react'
 
-const cssClasses = {
-    appBar: `${PREFIX}-appBar`,
-    toolbar: `${PREFIX}-toolbar`,
-    logo: `${PREFIX}-logo`,
-    paper: `${PREFIX}-paper`,
-    main: `${PREFIX}-main`,
-    heading: `${PREFIX}-heading`,
-    formControl: `${PREFIX}-formControl`,
-    submitButton: `${PREFIX}-submitButton`,
+const isProdEnv = import.meta.env.VITE_ENV === 'prod'
+
+function Root({ children }: { children: ReactNode }) {
+    return <div className="twp mx-4 my-4 max-w-3xl md:mx-auto">{children}</div>
 }
 
-const Root = styled('div')(({ theme }) => ({
-    [`& .${cssClasses.appBar}`]: {
-        zIndex: theme.zIndex.drawer + 1,
-    },
+function getCalendarIdForStudio(studio: StudioOrTest) {
+    return studio === 'test' ? AcuityConstants.TestCalendarId : AcuityConstants.StoreCalendars[studio]
+}
 
-    [`& .${cssClasses.toolbar}`]: {
-        display: 'flex',
-    },
+function getProgramTitle(appointmentTypeId: AcuityConstants.AppointmentTypeValue) {
+    switch (appointmentTypeId) {
+        case AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM:
+        case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM:
+            return 'Holiday Program Class Selection'
+        case AcuityConstants.AppointmentTypes.GEELONG_OPENING:
+            return 'Geelong Opening Selection'
+        default: {
+            const exhaustive: never = appointmentTypeId
+            throw new Error(`Unhandled appointment type in getProgramTitle(): ${exhaustive}`)
+        }
+    }
+}
 
-    [`& .${cssClasses.logo}`]: {
-        height: 50,
-        cursor: 'pointer',
-        position: 'absolute',
-        left: '50%',
-        right: '50%',
-        transform: 'translate(-50%)',
-    },
+function getClassLabel(klass: AcuityTypes.Client.Class) {
+    const classDateTime = DateTime.fromISO(klass.time, { setZone: true })
+    const className = klass.title || klass.name
 
-    [`& .${cssClasses.paper}`]: {
-        padding: theme.spacing(2),
-        // [theme.breakpoints.up(800 + parseInt(theme.spacing(3).substring(-2)) * 2)]: {
-        //     marginTop: theme.spacing(6),
-        //     marginBottom: theme.spacing(6),
-        //     padding: theme.spacing(3),
-        // },
-    },
+    return `${classDateTime.toFormat('cccc d LLLL, h:mm a')} - ${className}`
+}
 
-    [`& .${cssClasses.main}`]: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-    },
+function getSelectionDescription(showStudioSelector: boolean) {
+    return showStudioSelector
+        ? 'Choose the studio and holiday program class to view enrolments.'
+        : 'Choose the holiday program class to view enrolments.'
+}
 
-    [`& .${cssClasses.heading}`]: {
-        width: '100%',
-    },
-
-    [`& .${cssClasses.formControl}`]: {
-        marginTop: theme.spacing(1),
-        marginBottom: 16,
-        minWidth: 120,
-    },
-
-    [`& .${cssClasses.submitButton}`]: {
-        marginTop: 16,
-        background: '#AC4390',
-        ['&:hover']: {
-            background: '#B5589D',
-        },
-    },
-}))
+function LoadingState({ title, showStudioSelector }: { title: string; showStudioSelector: boolean }) {
+    return (
+        <Root>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="font-lilita text-2xl font-normal tracking-wide">{title}</CardTitle>
+                    <CardDescription>{getSelectionDescription(showStudioSelector)}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {showStudioSelector && <Skeleton className="h-10" />}
+                    <Skeleton className="h-10" />
+                    <Button className="w-full" disabled>
+                        Select Class
+                    </Button>
+                </CardContent>
+            </Card>
+        </Root>
+    )
+}
 
 export const HolidayProgramSelectionPage = () => {
-    const trpc = useTRPC()
-    const [searchParams] = useSearchParams()
-    const appointmentTypeId = parseInt(searchParams.get('id') || '0') as AcuityConstants.AppointmentTypeValue
-
-    const [minDate] = useState(() => Date.now())
-
-    const navigate = useNavigate()
-
     const { currentOrg } = useOrg()
 
-    const showLocationSelector = currentOrg === 'master'
+    return <HolidayProgramSelectionPageContent key={currentOrg ?? 'master'} currentOrg={currentOrg} />
+}
 
-    const [selectedCalendarOverride, setSelectedCalendarOverride] = useState<number | ''>('')
-    const selectedCalendar =
-        currentOrg === 'master' ? selectedCalendarOverride : AcuityConstants.StoreCalendars[currentOrg!]
-    const [selectedClass, setSelectedClass] = useState<string>('')
+function HolidayProgramSelectionPageContent({ currentOrg }: { currentOrg: ReturnType<typeof useOrg>['currentOrg'] }) {
+    const trpc = useTRPC()
+    const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
+    const appointmentTypeId = parseInt(searchParams.get('id') || '0') as AcuityConstants.AppointmentTypeValue
+    const programTitle = getProgramTitle(appointmentTypeId)
+    const showStudioSelector = currentOrg === 'master'
+
+    const [selectedStudio, setSelectedStudio] = useState<StudioOrTest | null>(
+        currentOrg === 'master' ? null : isProdEnv ? currentOrg : 'test'
+    )
+    const [selectedClass, setSelectedClass] = useState<string | null>(null)
+    const [minDate] = useState(() => DateTime.now().startOf('day').toMillis())
 
     const {
         data: classes,
         isPending,
         isSuccess,
+        isError,
+        refetch,
+        isFetching,
     } = useQuery(
         trpc.acuity.classAvailability.queryOptions({
-            appointmentTypeIds:
-                import.meta.env.VITE_ENV === 'prod'
-                    ? [appointmentTypeId]
-                    : [AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM],
+            appointmentTypeIds: isProdEnv
+                ? [appointmentTypeId]
+                : [AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM],
             includeUnavailable: true,
             minDate,
         })
     )
 
-    const filteredClasses = useMemo(
-        () => (isSuccess && selectedCalendar !== '' ? classes.filter((it) => it.calendarID === selectedCalendar) : []),
-        [classes, isSuccess, selectedCalendar]
-    )
+    const availableStudios = useMemo(() => {
+        if (!classes) return []
 
-    const handleCalendarChange = (event: SelectChangeEvent<number>) => {
-        const calendar = event.target.value as number
-        setSelectedCalendarOverride(calendar)
-        setSelectedClass('')
-    }
-
-    const handleClassSelection = () => {
-        if (isSuccess) {
-            const klass = classes.find((it) => it.id === parseInt(selectedClass))
-            if (!klass) return
-            navigate(
-                `class?appointmentTypeId=${klass.appointmentTypeID}&calendarId=${
-                    klass.calendarID
-                }&classId=${klass.id}&classTime=${encodeURIComponent(klass.time)}`
+        return Array.from(
+            new Set(
+                classes
+                    .map((klass) => resolveCalendarStudio(klass.calendarID))
+                    .filter((studio): studio is StudioOrTest => !!studio)
             )
-        }
+        ).sort((a, b) => a.localeCompare(b))
+    }, [classes])
+
+    const filteredClasses = useMemo(() => {
+        if (!classes || !selectedStudio) return []
+
+        const selectedCalendarId = getCalendarIdForStudio(selectedStudio)
+
+        return classes
+            .filter((klass) => klass.calendarID === selectedCalendarId)
+            .sort((a, b) => DateTime.fromISO(a.time).toMillis() - DateTime.fromISO(b.time).toMillis())
+    }, [classes, selectedStudio])
+
+    function handleClassSelection() {
+        const klass = classes?.find((it) => it.id === parseInt(selectedClass || '0'))
+        if (!klass) return
+
+        navigate(
+            `class?appointmentTypeId=${klass.appointmentTypeID}&calendarId=${klass.calendarID}&classId=${
+                klass.id
+            }&classTime=${encodeURIComponent(klass.time)}`
+        )
     }
 
-    const renderProgramTitle = () => {
-        switch (appointmentTypeId) {
-            case AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM:
-            case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM:
-                return 'Holiday Programs'
-            case AcuityConstants.AppointmentTypes.GEELONG_OPENING:
-                return 'Geelong Opening'
-            default: {
-                const exhaustive: never = appointmentTypeId
-                throw new Error(`Unhandled appointment type in renderProgramTitle(): ${exhaustive}`)
-            }
-        }
+    if (isPending) {
+        return <LoadingState title={programTitle} showStudioSelector={showStudioSelector} />
     }
+
+    if (isError) {
+        return (
+            <div className="twp m-4 flex h-[calc(100vh-64px)] flex-col items-center justify-center">
+                <Alert variant="destructive" className="w-full max-w-md">
+                    <AlertTitle className="text-center">Unable to load holiday program classes</AlertTitle>
+                    <AlertDescription className="text-center">
+                        We couldn't load the available classes from Acuity.
+                    </AlertDescription>
+                </Alert>
+                <Button variant="outline" className="mt-4" onClick={() => refetch()}>
+                    {isFetching ? <Loader2 className="animate-spin" /> : 'Retry'}
+                </Button>
+            </div>
+        )
+    }
+
+    if (!isSuccess) return null
+
+    const hasAnyClasses = classes.length > 0
+    const hasStudioClasses = filteredClasses.length > 0
 
     return (
-        <Root className="flex justify-center bg-slate-100 px-4 dashboard-full-screen">
-            <div className="w-full max-w-5xl">
-                <h1 className="lilita text-2xl">{renderProgramTitle()}</h1>
-                <Paper className={cssClasses.paper}>
-                    <div className={cssClasses.main}>
-                        {isPending ? (
-                            <Skeleton height={80} />
-                        ) : (
-                            <>
-                                {showLocationSelector && (
-                                    <>
-                                        <Typography className={cssClasses.heading} variant="body1">
-                                            Select studio:
-                                        </Typography>
-                                        <FormControl className={cssClasses.formControl} variant="outlined">
-                                            <Select
-                                                id="calendars-select"
-                                                value={selectedCalendar}
-                                                onChange={handleCalendarChange}
-                                            >
-                                                {import.meta.env.VITE_ENV === 'prod' &&
-                                                    ObjectEntries(AcuityConstants.StoreCalendars)
-                                                        .filter(
-                                                            ([location]) =>
-                                                                !!classes?.find(
-                                                                    (it) =>
-                                                                        it.calendarID ===
-                                                                        AcuityConstants.StoreCalendars[location]
-                                                                )
-                                                        )
-                                                        .map(([store, calendarId]) => {
-                                                            return (
-                                                                <MenuItem key={calendarId} value={calendarId}>
-                                                                    {capitalise(store)}
-                                                                </MenuItem>
-                                                            )
-                                                        })}
-                                                {import.meta.env.VITE_ENV === 'dev' && (
-                                                    <MenuItem
-                                                        key={AcuityConstants.TestCalendarId}
-                                                        value={AcuityConstants.TestCalendarId}
-                                                    >
-                                                        Test Calendar
-                                                    </MenuItem>
-                                                )}
-                                            </Select>
-                                        </FormControl>
-                                    </>
-                                )}
-                                {filteredClasses.length !== 0 && (
-                                    <>
-                                        <Typography className={cssClasses.heading} variant="body1">
-                                            Select class:
-                                        </Typography>
-                                        <FormControl className={cssClasses.formControl} variant="outlined">
-                                            <Select
-                                                id="classes-select"
-                                                value={selectedClass}
-                                                onChange={(e) => setSelectedClass(e.target.value as string)}
-                                            >
-                                                {filteredClasses.map((mClass) => {
-                                                    const midnight = DateTime.now().set({ hour: 0 })
-                                                    const classDateTime = DateTime.fromISO(mClass.time)
-                                                    if (classDateTime > midnight) {
-                                                        return (
-                                                            <MenuItem key={mClass.id} value={mClass.id}>
-                                                                {classDateTime.toFormat('EEEE MMMM d, h:mm a, yyyy')}
-                                                            </MenuItem>
-                                                        )
-                                                    } else return ''
-                                                })}
-                                            </Select>
-                                        </FormControl>
-                                        <Button
-                                            className={cssClasses.submitButton}
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={handleClassSelection}
-                                            disabled={!selectedCalendar || !selectedClass}
-                                        >
-                                            Select
-                                        </Button>
-                                    </>
-                                )}
-                            </>
-                        )}
-                    </div>
-                </Paper>
-            </div>
+        <Root>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="font-lilita text-2xl font-normal tracking-wide">{programTitle}</CardTitle>
+                    <CardDescription>{getSelectionDescription(showStudioSelector)}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {!hasAnyClasses && (
+                        <Alert>
+                            <AlertTitle>No holiday program classes found</AlertTitle>
+                            <AlertDescription>
+                                There are no upcoming classes available for this program right now.
+                            </AlertDescription>
+                        </Alert>
+                    )}
+
+                    {hasAnyClasses && showStudioSelector && (
+                        <Select
+                            onValueChange={(studio) => {
+                                setSelectedStudio(studio as StudioOrTest)
+                                setSelectedClass(null)
+                            }}
+                            value={selectedStudio || ''}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select Studio" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {availableStudios.map((studio) => (
+                                    <SelectItem key={studio} value={studio}>
+                                        {capitalise(studio)}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    )}
+
+                    {hasAnyClasses && (
+                        <Select
+                            onValueChange={setSelectedClass}
+                            value={selectedClass || ''}
+                            disabled={!selectedStudio || !hasStudioClasses}
+                        >
+                            <SelectTrigger>
+                                <SelectValue
+                                    placeholder={
+                                        selectedStudio && !hasStudioClasses
+                                            ? 'No classes for this studio'
+                                            : 'Select Class'
+                                    }
+                                />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {filteredClasses.map((klass) => (
+                                    <SelectItem key={klass.id} value={klass.id.toString()}>
+                                        {getClassLabel(klass)}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    )}
+
+                    {hasAnyClasses && selectedStudio && !hasStudioClasses && (
+                        <Alert>
+                            <AlertTitle>No classes for {capitalise(selectedStudio)}</AlertTitle>
+                            <AlertDescription>
+                                This studio does not have any upcoming classes for this holiday program.
+                            </AlertDescription>
+                        </Alert>
+                    )}
+
+                    <Button className="w-full" disabled={!selectedClass} onClick={handleClassSelection}>
+                        Select Class
+                    </Button>
+                </CardContent>
+            </Card>
         </Root>
     )
 }
