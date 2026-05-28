@@ -299,32 +299,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
             logError(`Error writing to holiday program additional needs spreadsheet`, err, { input })
         }
 
-        // MARK: Anaphylactic children spreadsheet
-        const anaphylacticLineItems = input.payment.lineItems.filter((it) => it.childIsAnaphylactic)
-
-        try {
-            if (anaphylacticLineItems.length > 0) {
-                const sheetsClient = await SheetsClient.getInstance()
-                await sheetsClient.addRowToSheet(
-                    'holidayProgramAdditionalNeeds',
-                    anaphylacticLineItems.map((item) => [
-                        `${item.title ?? 'Holiday Program'} - ${DateTime.fromISO(item.time).toFormat('dd/LL/yyyy h:mm a')}`,
-                        input.parentFirstName,
-                        input.parentLastName,
-                        input.parentPhone,
-                        item.childName,
-                        Math.abs(DateTime.fromISO(item.childDob).diffNow('years').years).toFixed(0),
-                        item.childAllergies,
-                        anaphylaxisPlanUrls.get(item.childAnaphylaxisPlan) ?? '',
-                    ]),
-                    'Anaphylactic Plans'
-                )
-            }
-        } catch (err) {
-            logError(`Error writing to anaphylactic children checklist for holiday program booking`, err, { input })
-        }
-
-        // MARL: Cconfirmation email
+        // MARK: Cconfirmation email
         await sendConfirmationEmail(appointments, recieptUrl)
 
         // MARK: Discount code
