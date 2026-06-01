@@ -5,7 +5,7 @@ import { logger } from 'firebase-functions/v2'
 import { Status } from 'google-gax'
 import { DateTime } from 'luxon'
 
-import type { DiscountCode } from 'fizz-kidz'
+import type { DiscountCode, StudioOrTest } from 'fizz-kidz'
 import { AcuityConstants, AcuityUtilities, normalize } from 'fizz-kidz'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
@@ -61,84 +61,11 @@ export type HolidayProgramBookingProps = {
     }
 }
 
-async function getAnaphylaxisPlanUrls(input: HolidayProgramBookingProps) {
-    const missingPlan = input.payment.lineItems.find((item) => item.childIsAnaphylactic && !item.childAnaphylaxisPlan)
-    if (missingPlan) {
-        throwTrpcError('BAD_REQUEST', `missing anaphylaxis plan for child: ${missingPlan.childName}`)
-    }
-
-    const planPaths = [
-        ...new Set(
-            input.payment.lineItems
-                .filter((item) => item.childIsAnaphylactic && item.childAnaphylaxisPlan)
-                .map((item) => item.childAnaphylaxisPlan)
-        ),
-    ]
-
-    const signedUrls = new Map<string, string>()
-
-    if (planPaths.length === 0) {
-        return signedUrls
-    }
-
-    const today = new Date()
-    const expires = new Date(today.setMonth(today.getMonth() + 6))
-    const storage = await StorageClient.getInstance()
-    const bucketName = `${projectId}.appspot.com`
-    const bucket = storage.bucket(bucketName)
-
-    await Promise.all(
-        planPaths.map(async (planPath) => {
-            if (!planPath.startsWith('anaphylaxisPlans/holiday-program-')) {
-                throwTrpcError('BAD_REQUEST', `invalid anaphylaxis plan path: ${planPath}`)
-            }
-
-            if (planPath.slice('anaphylaxisPlans/'.length).includes('/')) {
-                throwTrpcError('BAD_REQUEST', `invalid anaphylaxis plan path: ${planPath}`)
-            }
-
-            const file = bucket.file(planPath)
-
-            let signedUrl: string
-            if (isUsingEmulator()) {
-                const downloadToken = randomUUID()
-                await file.setMetadata({
-                    metadata: {
-                        firebaseStorageDownloadTokens: downloadToken,
-                    },
-                })
-                signedUrl = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(planPath)}?alt=media&token=${downloadToken}`
-            } else {
-                ;[signedUrl] = await file.getSignedUrl({
-                    version: 'v2',
-                    action: 'read',
-                    expires,
-                })
-            }
-
-            signedUrls.set(planPath, signedUrl)
-        })
-    )
-
-    return signedUrls
-}
-
-function formatChildAllergies(
-    item: HolidayProgramBookingProps['payment']['lineItems'][number],
-    anaphylaxisPlanUrls: Map<string, string>
-) {
-    const allergyDetails = [item.childAllergies]
-
-    if (item.childIsAnaphylactic) {
-        allergyDetails.push('Anaphylactic: Yes')
-
-        const anaphylaxisPlanUrl = anaphylaxisPlanUrls.get(item.childAnaphylaxisPlan)
-        if (anaphylaxisPlanUrl) {
-            allergyDetails.push(`Anaphylaxis plan: ${anaphylaxisPlanUrl}`)
-        }
-    }
-
-    return allergyDetails.filter(Boolean).join('\n\n')
+export type HolidayProgramBookingResult = {
+    transactionId: string
+    value: number
+    currency: 'AUD'
+    studio: StudioOrTest
 }
 
 export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
@@ -151,7 +78,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
             if (e.code === Status.ALREADY_EXISTS) {
                 // already run this function for this payment. perhaps a double click.. (has happened before)
                 // end early.
-                return
+                return getHolidayProgramBookingResult(input)
             }
             throwTrpcError('INTERNAL_SERVER_ERROR', 'unable to create payment idempotency key for holiday program', e, {
                 input,
@@ -377,9 +304,100 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
             idempotencyKey: input.idempotencyKey,
         })
 
-        return
+        return getHolidayProgramBookingResult(input)
     } catch (err) {
         console.error('✗ bookHolidayProgram failed:', err)
         throw err
     }
+}
+
+function getHolidayProgramBookingResult(input: HolidayProgramBookingProps): HolidayProgramBookingResult {
+    const firstProgram = [...input.payment.lineItems].sort((a, b) => (a.time < b.time ? -1 : 1))[0]!
+
+    return {
+        transactionId: input.idempotencyKey,
+        value: input.payment.amount / 100,
+        currency: 'AUD',
+        studio: AcuityUtilities.getStudioByCalendarId(firstProgram.calendarId),
+    }
+}
+
+async function getAnaphylaxisPlanUrls(input: HolidayProgramBookingProps) {
+    const missingPlan = input.payment.lineItems.find((item) => item.childIsAnaphylactic && !item.childAnaphylaxisPlan)
+    if (missingPlan) {
+        throwTrpcError('BAD_REQUEST', `missing anaphylaxis plan for child: ${missingPlan.childName}`)
+    }
+
+    const planPaths = [
+        ...new Set(
+            input.payment.lineItems
+                .filter((item) => item.childIsAnaphylactic && item.childAnaphylaxisPlan)
+                .map((item) => item.childAnaphylaxisPlan)
+        ),
+    ]
+
+    const signedUrls = new Map<string, string>()
+
+    if (planPaths.length === 0) {
+        return signedUrls
+    }
+
+    const today = new Date()
+    const expires = new Date(today.setMonth(today.getMonth() + 6))
+    const storage = await StorageClient.getInstance()
+    const bucketName = `${projectId}.appspot.com`
+    const bucket = storage.bucket(bucketName)
+
+    await Promise.all(
+        planPaths.map(async (planPath) => {
+            if (!planPath.startsWith('anaphylaxisPlans/holiday-program-')) {
+                throwTrpcError('BAD_REQUEST', `invalid anaphylaxis plan path: ${planPath}`)
+            }
+
+            if (planPath.slice('anaphylaxisPlans/'.length).includes('/')) {
+                throwTrpcError('BAD_REQUEST', `invalid anaphylaxis plan path: ${planPath}`)
+            }
+
+            const file = bucket.file(planPath)
+
+            let signedUrl: string
+            if (isUsingEmulator()) {
+                const downloadToken = randomUUID()
+                await file.setMetadata({
+                    metadata: {
+                        firebaseStorageDownloadTokens: downloadToken,
+                    },
+                })
+                signedUrl = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(planPath)}?alt=media&token=${downloadToken}`
+            } else {
+                ;[signedUrl] = await file.getSignedUrl({
+                    version: 'v2',
+                    action: 'read',
+                    expires,
+                })
+            }
+
+            signedUrls.set(planPath, signedUrl)
+        })
+    )
+
+    return signedUrls
+}
+
+function formatChildAllergies(
+    item: HolidayProgramBookingProps['payment']['lineItems'][number],
+    anaphylaxisPlanUrls: Map<string, string>
+) {
+    const allergyDetails = [item.childAllergies]
+
+    if (item.childIsAnaphylactic) {
+        allergyDetails.push('Anaphylactic: Yes')
+
+        const anaphylaxisPlanUrl = anaphylaxisPlanUrls.get(item.childAnaphylaxisPlan)
+        if (anaphylaxisPlanUrl) {
+            allergyDetails.push(`Anaphylaxis plan: ${anaphylaxisPlanUrl}`)
+        }
+    }
+
+    return allergyDetails.filter(Boolean).join('\n\n')
 }

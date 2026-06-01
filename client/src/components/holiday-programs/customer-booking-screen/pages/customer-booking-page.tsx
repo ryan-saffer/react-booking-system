@@ -19,6 +19,24 @@ import { useCart } from '../state/cart-store'
 
 import type dayjs from 'dayjs'
 
+const GOOGLE_TAG_MANAGER_ID = 'GTM-NBCZ5XHQ'
+
+function loadGoogleTagManager(containerId: string) {
+    const scriptId = `gtm-script-${containerId}`
+    if (document.getElementById(scriptId)) {
+        return
+    }
+
+    window.dataLayer = window.dataLayer || []
+    window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
+
+    const script = document.createElement('script')
+    script.id = scriptId
+    script.async = true
+    script.src = `https://www.googletagmanager.com/gtm.js?id=${containerId}`
+    document.head.appendChild(script)
+}
+
 export type Form = {
     parentFirstName: string
     parentLastName: string
@@ -63,6 +81,10 @@ export const CustomerBookingPage = () => {
 
     const [step, setStep] = useState(1)
     const [showNoChildrenModal, setShowNoChildrenModal] = useState(false)
+
+    useEffect(() => {
+        loadGoogleTagManager(GOOGLE_TAG_MANAGER_ID)
+    }, [])
 
     const { data, isPending, isSuccess, isError } = useQuery(
         trpc.acuity.classAvailability.queryOptions({

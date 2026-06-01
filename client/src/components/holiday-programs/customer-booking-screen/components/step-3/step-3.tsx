@@ -55,6 +55,7 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
     const squareLocationId = getSquareLocationId(selectedStudio!)
 
     const idempotencyKey = useRef(crypto.randomUUID())
+    const conversionEventPushed = useRef(false)
     const walletKey = `${discount?.code}-${discount?.discountAmount}-${discount?.discountType}-${giftCard?.id}` // force rerender the square checkout component when disconut code changes
 
     // MARK: hooks
@@ -64,13 +65,26 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
         isSuccess,
         isError,
         error,
+        data: bookingResult,
     } = useMutation(trpc.holidayPrograms.book.mutationOptions())
 
     useEffect(() => {
         if (isSuccess) {
+            if (bookingResult && !conversionEventPushed.current) {
+                conversionEventPushed.current = true
+                window.dataLayer = window.dataLayer || []
+                window.dataLayer.push({
+                    event: 'holiday_program_booking',
+                    value: bookingResult.value,
+                    currency: bookingResult.currency,
+                    transaction_id: bookingResult.transactionId,
+                    studio: bookingResult.studio,
+                })
+            }
+
             handleBookingSuccess()
         }
-    }, [isSuccess, handleBookingSuccess])
+    }, [bookingResult, isSuccess, handleBookingSuccess])
 
     // MARK: functions
     function handleBooking({ token, buyerVerificationToken }: { token?: string; buyerVerificationToken?: string }) {
