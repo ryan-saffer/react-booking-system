@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 import { capitalise, getInvitationShareUrl, getStudioAddress, type Rsvp, type WithoutId } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -90,7 +92,7 @@ export async function guestRsvpToParty(input: RsvpProps) {
                 attending: input.children.some((child) => child.rsvp === 'attending'),
                 hostName: invitation.parentName,
                 hostPhone: invitation.parentMobile,
-                date: invitation.date.toDateString(),
+                date: DateTime.fromJSDate(invitation.date, { zone: 'Australia/Melbourne' }).toFormat('ccc LLL dd yyyy'),
                 time: invitation.time,
                 isMobile: invitation.$type === 'mobile',
                 studio: capitalise(invitation.studio),
