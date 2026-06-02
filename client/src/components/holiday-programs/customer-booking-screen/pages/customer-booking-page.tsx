@@ -60,6 +60,17 @@ export type Form = {
     termsAndConditions: boolean
 }
 
+function filterRemovedChildren(values: any) {
+    const nextValues = { ...values }
+
+    // AntD can leave sparse/empty entries after Form.List removals.
+    if (nextValues.children) {
+        nextValues.children = nextValues.children.filter((child: any) => child && child.childName !== undefined)
+    }
+
+    return nextValues
+}
+
 export const CustomerBookingPage = () => {
     const trpc = useTRPC()
     const [searchParams] = useSearchParams()
@@ -156,12 +167,7 @@ export const CustomerBookingPage = () => {
                 form={form}
                 initialValues={{ prefix: '61', joinMailingList: true }}
                 onValuesChange={(_, values) => {
-                    // filter out any removed children with undefined values
-                    const children = values.children
-                    if (children) {
-                        values.children = children.filter((child: any) => child && child.childName !== undefined)
-                    }
-                    setFormValues(values)
+                    setFormValues(filterRemovedChildren(values))
                 }}
                 layout="vertical"
             >
@@ -203,8 +209,12 @@ export const CustomerBookingPage = () => {
                         } catch {
                             return new Error()
                         }
+
+                        const currentFormValues = filterRemovedChildren(form.getFieldsValue(true))
+                        setFormValues(currentFormValues)
+
                         if (step === 2) {
-                            if (formValues.children && formValues.children.length !== 0) {
+                            if (currentFormValues.children && currentFormValues.children.length !== 0) {
                                 setStep(step + 1)
                             } else {
                                 setShowNoChildrenModal(true)

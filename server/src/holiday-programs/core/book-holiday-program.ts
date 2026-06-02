@@ -71,6 +71,8 @@ export type HolidayProgramBookingResult = {
 export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
     logger.info('❯ bookHolidayProgram start', { input }) // temporary while debugging 500 error
     try {
+        const anaphylaxisPlanUrls = await getAnaphylaxisPlanUrls(input)
+
         // MARK: Verify idempotency key
         try {
             await DatabaseClient.createPaymentIdempotencyKey(input.idempotencyKey)
@@ -106,8 +108,6 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
         }
 
         // all classes have enough spots! let's continue
-
-        const anaphylaxisPlanUrls = await getAnaphylaxisPlanUrls(input)
 
         // MARK: Process payment
         const { orderId, recieptUrl, squarePaymentLink } = await processHolidayProgramPayment(input)
