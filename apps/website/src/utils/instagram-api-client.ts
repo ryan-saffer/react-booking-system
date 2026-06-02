@@ -2,6 +2,10 @@ import { getStore } from "@netlify/blobs";
 
 const SITE_ID = "44edea96-5fbf-4c21-b5b0-8e29832d5237";
 
+function getInstagramErrorMessage(response: any, fallback: string) {
+  return response?.error?.message ?? fallback;
+}
+
 class InstagramClient {
   async getAccessToken() {
     // get current token
@@ -25,32 +29,49 @@ class InstagramClient {
       const result = await fetch(
         `https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${accessToken}`,
       );
-      if (result.ok) {
-        // store it back into the blob
-        const response = await result.json();
-        accessToken = response.access_token;
-        await apiKeys.set("instagram", accessToken, {
-          metadata: {
-            expires: Math.round(Date.now()) + response.expires_in * 1000, // instagram returns expiry in seconds
-          },
-        });
+
+      const response = await result.json().catch(() => undefined);
+      if (!result.ok) {
+        throw new Error(
+          `Failed to refresh Instagram access token (${result.status}): ${getInstagramErrorMessage(response, result.statusText)}`,
+        );
       }
+
+      // store it back into the blob
+      accessToken = response.access_token;
+      await apiKeys.set("instagram", accessToken, {
+        metadata: {
+          expires: Math.round(Date.now()) + response.expires_in * 1000, // instagram returns expiry in seconds
+        },
+      });
     }
 
     return accessToken;
   }
 
   async getRecentPosts() {
-    const accessToken = await this.getAccessToken();
-    const result = await fetch(
-      `https://graph.instagram.com/v20.0/17841403227407427/media?fields=media_url,caption,media_type,thumbnail_url,permalink&access_token=${accessToken}`,
-      {
-        method: "GET",
-      },
-    );
+    try {
+      const accessToken = await this.getAccessToken();
+      const result = await fetch(
+        `https://graph.instagram.com/me/media?fields=media_url,caption,media_type,thumbnail_url,permalink&access_token=${accessToken}`,
+        {
+          method: "GET",
+        },
+      );
 
-    if (result.status === 200) {
-      const posts = await result.json();
+      const posts = await result.json().catch(() => undefined);
+      if (!result.ok) {
+        console.error(
+          `Failed to fetch Instagram posts (${result.status}): ${getInstagramErrorMessage(posts, result.statusText)}`,
+        );
+        return [];
+      }
+
+      if (!Array.isArray(posts?.data)) {
+        console.error("Failed to fetch Instagram posts: response data missing");
+        return [];
+      }
+
       return posts.data.filter(
         (it: any) =>
           // its possible instagram doesnt return media_url if content is marked as copyright violated.
@@ -67,9 +88,10 @@ class InstagramClient {
             media_type: "VIDEO";
             thumbnail_url: string;
           }
-        | { media_type: "IMAGE" | "CAROUSEL_ALBUM" }
+          | { media_type: "IMAGE" | "CAROUSEL_ALBUM" }
       ))[];
-    } else {
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : error);
       return [];
     }
   }
