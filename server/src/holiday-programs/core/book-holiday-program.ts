@@ -72,6 +72,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
     logger.info('❯ bookHolidayProgram start', { input }) // temporary while debugging 500 error
     try {
         const anaphylaxisPlanUrls = await getAnaphylaxisPlanUrls(input)
+        validatePaymentAmount(input)
 
         // MARK: Verify idempotency key
         try {
@@ -320,6 +321,35 @@ function getHolidayProgramBookingResult(input: HolidayProgramBookingProps): Holi
         currency: 'AUD',
         studio: AcuityUtilities.getStudioByCalendarId(firstProgram.calendarId),
     }
+}
+
+function validatePaymentAmount(input: HolidayProgramBookingProps) {
+    const expectedAmount = calculateExpectedPaymentAmount(input)
+
+    if (expectedAmount < 0) {
+        throwTrpcError('BAD_REQUEST', 'holiday program discount amount exceeds booking total')
+    }
+
+    if (input.payment.amount !== expectedAmount) {
+        throwTrpcError(
+            'BAD_REQUEST',
+            `holiday program payment amount mismatch: expected ${expectedAmount}, received ${input.payment.amount}`
+        )
+    }
+}
+
+function calculateExpectedPaymentAmount(input: HolidayProgramBookingProps) {
+    const subtotal = input.payment.lineItems.reduce((total, item) => total + item.amount, 0)
+
+    if (!input.payment.discount) {
+        return subtotal
+    }
+
+    if (input.payment.discount.discountType === 'percentage') {
+        return Math.round(subtotal * (1 - input.payment.discount.discountAmount / 100))
+    }
+
+    return subtotal - input.payment.discount.discountAmount
 }
 
 async function getAnaphylaxisPlanUrls(input: HolidayProgramBookingProps) {

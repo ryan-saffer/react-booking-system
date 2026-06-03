@@ -127,6 +127,22 @@ describe('cart-store', () => {
         expect(useCart.getState().total).toBe((15 + 20) * 2)
     })
 
+    it('can recalculate after classes were selected before children were added', () => {
+        const klass = createClass({
+            id: 1,
+            price: 54,
+            time: '2024-02-03T09:00:00.000Z',
+        })
+
+        useCart.getState().toggleClass(klass, 0)
+        expect(useCart.getState().total).toBe(0)
+
+        useCart.getState().calculateTotal(1)
+        expect(useCart.getState().subtotal).toBe(54)
+        expect(useCart.getState().total).toBe(54)
+        expect(useCart.getState().totalShownToCustomer).toBe(54)
+    })
+
     it('returns the earliest class date when classes are selected', () => {
         const later = createClass({
             id: 1,
@@ -224,6 +240,25 @@ describe('cart-store', () => {
             useCart.getState().clearGiftCard(1)
             expect(useCart.getState().giftCard).toBeNull()
             expect(useCart.getState().totalShownToCustomer).toBe(50)
+        })
+
+        it('keeps gift card application stable across repeated recalculations', () => {
+            const klass = createClass({
+                id: 1,
+                price: 50,
+                time: '2024-04-05T09:00:00.000Z',
+            })
+            useCart.getState().toggleClass(klass, 1)
+
+            const giftCard = createGiftCard(8000) // $80
+            useCart.getState().applyGiftCard(giftCard as any, 1)
+            useCart.getState().calculateTotal(1)
+            useCart.getState().calculateTotal(1)
+
+            const state = useCart.getState()
+            expect(state.totalShownToCustomer).toBe(0)
+            expect(state.giftCard?.balanceAppliedCents).toBe(5000)
+            expect(state.giftCard?.balanceRemainingCents).toBe(3000)
         })
     })
 })

@@ -88,6 +88,7 @@ export const CustomerBookingPage = () => {
     const selectedClasses = useCart((store) => store.selectedClasses)
     const clearCart = useCart((store) => store.clearCart)
     const toggleClass = useCart((store) => store.toggleClass)
+    const calculateTotal = useCart((store) => store.calculateTotal)
     const selectedStudio = useCart((store) => store.selectedStudio)
 
     const [step, setStep] = useState(1)
@@ -215,6 +216,7 @@ export const CustomerBookingPage = () => {
 
                         if (step === 2) {
                             if (currentFormValues.children && currentFormValues.children.length !== 0) {
+                                calculateTotal(currentFormValues.children.length)
                                 setStep(step + 1)
                             } else {
                                 setShowNoChildrenModal(true)

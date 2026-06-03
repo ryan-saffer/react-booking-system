@@ -44,13 +44,12 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
     const trpc = useTRPC()
     // MARK: variables
     const selectedClasses = useCart((store) => store.selectedClasses)
-    const sameDayClasses = useCart((store) => store.sameDayClasses)
     const selectedStudio = useCart((store) => store.selectedStudio)
-    const total = useCart((store) => store.total)
     const totalShownToCustomer = useCart((store) => store.totalShownToCustomer)
     const subtotal = useCart((store) => store.subtotal)
     const discount = useCart((store) => store.discount)
     const giftCard = useCart((store) => store.giftCard)
+    const calculateTotal = useCart((store) => store.calculateTotal)
 
     const squareLocationId = getSquareLocationId(selectedStudio!)
 
@@ -67,6 +66,10 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
         error,
         data: bookingResult,
     } = useMutation(trpc.holidayPrograms.book.mutationOptions())
+
+    useEffect(() => {
+        calculateTotal(form.children.length)
+    }, [calculateTotal, form.children.length, selectedClasses])
 
     useEffect(() => {
         if (isSuccess) {
@@ -88,6 +91,9 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
 
     // MARK: functions
     function handleBooking({ token, buyerVerificationToken }: { token?: string; buyerVerificationToken?: string }) {
+        calculateTotal(form.children.length)
+        const currentCart = useCart.getState()
+
         return book({
             idempotencyKey: idempotencyKey.current,
             parentFirstName: form.parentFirstName,
@@ -101,10 +107,10 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
             payment: {
                 token: token || '',
                 buyerVerificationToken: buyerVerificationToken || '',
-                giftCardId: giftCard?.id || '',
-                amount: Math.round(total * 100), // cents
+                giftCardId: currentCart.giftCard?.id || '',
+                amount: Math.round(currentCart.total * 100), // cents
                 locationId: squareLocationId,
-                lineItems: Object.values(selectedClasses).flatMap((klass) =>
+                lineItems: Object.values(currentCart.selectedClasses).flatMap((klass) =>
                     form.children.map((child) => ({
                         name: `${child.childName} - ${formatClassTime(klass.time)}`,
                         amount: Math.round(parseInt(klass.price) * 100), // cents
@@ -120,19 +126,19 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                         childIsAnaphylactic: child.isAnaphylactic === 'yes',
                         childAnaphylaxisPlan: child.anaphylaxisPlan?.storagePath || '',
                         childAdditionalInfo: child.additionalInfo || '',
-                        isAllDayClass: sameDayClasses.includes(klass.id),
+                        isAllDayClass: currentCart.sameDayClasses.includes(klass.id),
                         title: klass.title,
                         creations: klass.creations,
                     }))
                 ),
-                discount: discount
+                discount: currentCart.discount
                     ? {
-                          ...discount,
+                          ...currentCart.discount,
                           discountAmount:
-                              discount.discountType === 'percentage'
-                                  ? discount.discountAmount
-                                  : discount.discountAmount * 100, // price discounts must be in cents
-                          description: discountDescription(discount),
+                              currentCart.discount.discountType === 'percentage'
+                                  ? currentCart.discount.discountAmount
+                                  : currentCart.discount.discountAmount * 100, // price discounts must be in cents
+                          description: discountDescription(currentCart.discount),
                       }
                     : null,
             },

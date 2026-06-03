@@ -126,28 +126,21 @@ export const useCart = create<Cart>()((set, get) => ({
         const giftCard = get().giftCard
         let totalShownToCustomer = total
         if (giftCard) {
-            const balanceDollars = giftCard.balanceRemainingCents / 100
+            const totalCents = Math.round(total * 100)
+            const availableBalanceCents = giftCard.balanceAppliedCents + giftCard.balanceRemainingCents
 
-            if (total === 0) {
+            if (totalCents === 0) {
                 set({ giftCard: null })
-            } else if (total <= balanceDollars) {
-                set({
-                    giftCard: {
-                        ...giftCard,
-                        balanceAppliedCents: total * 100,
-                        balanceRemainingCents: giftCard.balanceRemainingCents - total * 100,
-                    },
-                })
-                totalShownToCustomer = 0
             } else {
+                const balanceAppliedCents = Math.min(totalCents, availableBalanceCents)
                 set({
                     giftCard: {
                         ...giftCard,
-                        balanceAppliedCents: giftCard.balanceRemainingCents,
-                        balanceRemainingCents: 0,
+                        balanceAppliedCents,
+                        balanceRemainingCents: availableBalanceCents - balanceAppliedCents,
                     },
                 })
-                totalShownToCustomer -= balanceDollars
+                totalShownToCustomer = (totalCents - balanceAppliedCents) / 100
             }
         }
 
