@@ -79,8 +79,8 @@
                     {{ #cake.message }}
                     <mj-text color="#637381" font-size="14px" padding-top="0">Message: "{{ cake.message }}"</mj-text>
                     {{ /cake.message }}
+                    {{/cake}}
                 </mj-column>
-                {{/cake}}
                 <mj-column width="100%">
                     <mj-text color="#637381" font-size="16px">
                         If anything here is incorrect, or anything changes, please let us know.
