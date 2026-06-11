@@ -9,6 +9,7 @@ import {
     type CreateDiscountCodeFromInvitation,
     createDiscountCodeFromInvitation,
 } from '@/holiday-programs/core/discount-codes/create-discount-code-from-invitation'
+import { getAnaphylaxisPlanUrl } from '@/holiday-programs/core/get-anaphylaxis-plan-url'
 import { publicProcedure, authenticatedProcedure, router } from '@/trpc/trpc'
 
 export const holidayProgramsRouter = router({
@@ -27,4 +28,7 @@ export const holidayProgramsRouter = router({
     checkGiftCardBalance: publicProcedure
         .input((input: unknown) => input as { giftCardNumber: string })
         .mutation(({ input }) => checkGiftCardBalance(input.giftCardNumber)),
+    getAnaphylaxisPlanUrl: authenticatedProcedure
+        .input((input: unknown) => input as { anaphylaxisPlanUrl: string })
+        .mutation(({ input }) => getAnaphylaxisPlanUrl(input)),
 })

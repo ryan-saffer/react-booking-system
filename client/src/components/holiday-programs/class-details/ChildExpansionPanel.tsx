@@ -1,12 +1,13 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { styled } from '@mui/material/styles'
 import { useMutation } from '@tanstack/react-query'
-import { Button as AntButton, Collapse, List, Modal, Tag } from 'antd'
+import { Button as AntButton, Collapse, List, Modal, Spin, Tag } from 'antd'
 import React, { useState } from 'react'
 
 import type { AcuityTypes } from 'fizz-kidz'
 import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 
+import Loader from '@components/Shared/Loader'
 import { formatMobileNumber } from '@utils/stringUtilities'
 import { useTRPC } from '@utils/trpc'
 
@@ -40,9 +41,11 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
     const [loading, setLoading] = useState(false)
     const [showAnaphylaxisPrompt, setShowAnaphylaxisPrompt] = useState(false)
     const [showAnaphylaxisPlan, setShowAnaphylaxisPlan] = useState(false)
+    const [anaphylaxisPlanViewUrl, setAnaphylaxisPlanViewUrl] = useState('')
     const [allowSignInFromAnaphylaxisPlan, setAllowSignInFromAnaphylaxisPlan] = useState(false)
 
     const updateLabelMutation = useMutation(trpc.acuity.updateLabel.mutationOptions())
+    const getAnaphylaxisPlanUrlMutation = useMutation(trpc.holidayPrograms.getAnaphylaxisPlanUrl.mutationOptions())
 
     const notSignedIn = appointment.labels === null
     const isSignedIn = appointment.labels && appointment.labels[0].id === AcuityConstants.Labels.CHECKED_IN
@@ -138,10 +141,26 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
         )
     }
 
+    const loadAnaphylaxisPlan = async () => {
+        if (!anaphylaxisPlanUrl) {
+            return
+        }
+
+        setAnaphylaxisPlanViewUrl('')
+        setShowAnaphylaxisPlan(true)
+
+        try {
+            const refreshedUrl = await getAnaphylaxisPlanUrlMutation.mutateAsync({ anaphylaxisPlanUrl })
+            setAnaphylaxisPlanViewUrl(refreshedUrl)
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
     const handleViewAnaphylaxisPlan = () => {
         setAllowSignInFromAnaphylaxisPlan(false)
-        setShowAnaphylaxisPlan(true)
         setShowAnaphylaxisPrompt(true)
+        void loadAnaphylaxisPlan()
     }
 
     const renderAllergies = () => {
@@ -228,7 +247,30 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
     const handleCloseAnaphylaxisPrompt = () => {
         setShowAnaphylaxisPrompt(false)
         setShowAnaphylaxisPlan(false)
+        setAnaphylaxisPlanViewUrl('')
         setAllowSignInFromAnaphylaxisPlan(false)
+    }
+
+    const renderAnaphylaxisPlan = () => {
+        if (getAnaphylaxisPlanUrlMutation.isPending) {
+            return (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '75vh' }}>
+                    <Loader />
+                </div>
+            )
+        }
+
+        if (!anaphylaxisPlanViewUrl) {
+            return <p>Unable to load the anaphylaxis plan. Please try again.</p>
+        }
+
+        return (
+            <iframe
+                title={`${childName} anaphylaxis plan`}
+                src={anaphylaxisPlanViewUrl}
+                style={{ width: '100%', height: '75vh', border: 0 }}
+            />
+        )
     }
 
     const handleVerifyAndSignIn = () => {
@@ -317,7 +359,7 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
                                   key="view-plan"
                                   style={anaphylaxisPlanButtonStyle}
                                   disabled={!anaphylaxisPlanUrl}
-                                  onClick={() => setShowAnaphylaxisPlan(true)}
+                                  onClick={() => void loadAnaphylaxisPlan()}
                               >
                                   View anaphylaxis plan
                               </AntButton>,
@@ -325,11 +367,7 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
                 }
             >
                 {showAnaphylaxisPlan ? (
-                    <iframe
-                        title={`${childName} anaphylaxis plan`}
-                        src={anaphylaxisPlanUrl}
-                        style={{ width: '100%', height: '75vh', border: 0 }}
-                    />
+                    renderAnaphylaxisPlan()
                 ) : (
                     <p>
                         This child is anaphylatic. Please verify their anaphylaxis plan is accurate, and discuss any
