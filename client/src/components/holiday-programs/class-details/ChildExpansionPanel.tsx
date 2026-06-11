@@ -1,7 +1,7 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { styled } from '@mui/material/styles'
 import { useMutation } from '@tanstack/react-query'
-import { Button as AntButton, Collapse, List, Modal, Spin, Tag } from 'antd'
+import { Button as AntButton, Collapse, List, Modal, Tag } from 'antd'
 import React, { useState } from 'react'
 
 import type { AcuityTypes } from 'fizz-kidz'
