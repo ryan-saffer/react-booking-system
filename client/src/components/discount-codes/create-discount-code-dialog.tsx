@@ -32,6 +32,7 @@ type TForm = WithoutId<Omit<DiscountCode, 'numberOfUses'>>
 
 export function NewCodeDialog({ open, close }: { open: boolean; close: () => void }) {
     const trpc = useTRPC()
+    const expiryDateEndMonth = new Date(new Date().getFullYear() + 10, 11)
     const form = useForm<NumberOrString<TForm>>({
         defaultValues: {
             code: '',
@@ -213,6 +214,7 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
                                                 mode="single"
                                                 selected={field.value}
                                                 captionLayout="dropdown"
+                                                endMonth={expiryDateEndMonth}
                                                 onSelect={(e) => {
                                                     field.onChange(e)
                                                     setIsCalendarOpen(false)
