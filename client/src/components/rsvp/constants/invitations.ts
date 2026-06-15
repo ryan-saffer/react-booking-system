@@ -26,6 +26,10 @@ export const INVITATIONS: { name: InvitationsV2.InvitationOption; src: string }[
         src: '/invitations-v2/Swift.png',
     },
     {
+        name: 'Unicorn',
+        src: '/invitations-v2/Unicorn.png',
+    },
+    {
         name: 'Bubbling Fun',
         src: '/invitations-v2/Bubbling.png',
     },

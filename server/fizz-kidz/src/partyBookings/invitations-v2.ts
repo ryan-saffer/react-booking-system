@@ -31,3 +31,4 @@ export type InvitationOption =
     | 'Slime Time'
     | 'Tie Dye'
     | 'Swiftie'
+    | 'Unicorn'

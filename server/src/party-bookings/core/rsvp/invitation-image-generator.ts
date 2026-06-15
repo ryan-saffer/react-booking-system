@@ -57,8 +57,8 @@ export class InvitationImageGenerator {
         })
 
         const qrCodeBuffer = await QRCode.toBuffer(getInvitationShareUrl(env, isUsingEmulator(), this.#invitation.id), {
-            width: 300,
-            color: { dark: '000000', light: 'FFDC5D' },
+            width: InvitationInfo[this.#invitation.invitation].qrCodeSize,
+            color: { dark: '000000', light: InvitationInfo[this.#invitation.invitation].qrCodeColor },
             margin: 0,
         })
         const qrCodeImage = await loadImage(qrCodeBuffer)
@@ -145,11 +145,19 @@ type InvitationCoordinates = {
 
 const InvitationInfo: Record<
     InvitationsV2.InvitationOption,
-    { filename: string; textInfo: InvitationCoordinates; qrCodePosition: { x: number; y: number } }
+    {
+        filename: string
+        textInfo: InvitationCoordinates
+        qrCodePosition: { x: number; y: number }
+        qrCodeSize: number
+        qrCodeColor: string
+    }
 > = {
     'Kpop Demon Hunters': {
         filename: 'kpop-demon-hunters.png',
         qrCodePosition: { x: 1000, y: 1600 },
+        qrCodeSize: 300,
+        qrCodeColor: 'FFDC5D',
         textInfo: {
             childName: {
                 font: '160px petit-cochon',
@@ -192,6 +200,8 @@ const InvitationInfo: Record<
     Freckles: {
         filename: 'freckles.png',
         qrCodePosition: { x: 900, y: 1550 },
+        qrCodeSize: 300,
+        qrCodeColor: 'FFDC5D',
         textInfo: {
             childName: {
                 font: '160px petit-cochon',
@@ -234,6 +244,8 @@ const InvitationInfo: Record<
     Stripes: {
         filename: 'stripes.png',
         qrCodePosition: { x: 952, y: 1590 },
+        qrCodeSize: 300,
+        qrCodeColor: 'FFDC5D',
         textInfo: {
             childName: {
                 font: '160px petit-cochon',
@@ -276,6 +288,8 @@ const InvitationInfo: Record<
     Dots: {
         filename: 'dots.png',
         qrCodePosition: { x: 1005, y: 1540 },
+        qrCodeSize: 300,
+        qrCodeColor: 'FFDC5D',
         textInfo: {
             childName: {
                 font: '150px petit-cochon',
@@ -318,6 +332,8 @@ const InvitationInfo: Record<
     'Glitz & Glam': {
         filename: 'glitz.png',
         qrCodePosition: { x: 1030, y: 1625 },
+        qrCodeSize: 300,
+        qrCodeColor: 'FFDC5D',
         textInfo: {
             childName: {
                 font: '160px petit-cochon',
@@ -360,6 +376,8 @@ const InvitationInfo: Record<
     'Bubbling Fun': {
         filename: 'bubbling.png',
         qrCodePosition: { x: 1024, y: 1562 },
+        qrCodeSize: 300,
+        qrCodeColor: 'FFDC5D',
         textInfo: {
             childName: {
                 font: '160px petit-cochon',
@@ -402,6 +420,8 @@ const InvitationInfo: Record<
     'Bubbling Blue Fun': {
         filename: 'bubbling-blue.png',
         qrCodePosition: { x: 1035, y: 1634 },
+        qrCodeSize: 300,
+        qrCodeColor: 'FFDC5D',
         textInfo: {
             childName: {
                 font: '160px petit-cochon',
@@ -444,6 +464,8 @@ const InvitationInfo: Record<
     'Slime Time': {
         filename: 'slime.png',
         qrCodePosition: { x: 1002, y: 1672 },
+        qrCodeSize: 300,
+        qrCodeColor: 'FFDC5D',
         textInfo: {
             childName: {
                 font: '160px petit-cochon',
@@ -486,6 +508,8 @@ const InvitationInfo: Record<
     Swiftie: {
         filename: 'swift.png',
         qrCodePosition: { x: 1049, y: 1667 },
+        qrCodeSize: 300,
+        qrCodeColor: 'FFDC5D',
         textInfo: {
             childName: {
                 font: '160px petit-cochon',
@@ -528,6 +552,8 @@ const InvitationInfo: Record<
     'Tie Dye': {
         filename: 'tie-dye.png',
         qrCodePosition: { x: 1016, y: 1655 },
+        qrCodeSize: 300,
+        qrCodeColor: 'FFDC5D',
         textInfo: {
             childName: {
                 font: '160px petit-cochon',
@@ -564,6 +590,50 @@ const InvitationInfo: Record<
                 fillStyle: 'black',
                 textAlign: 'center',
                 coords: { x: 670, y: 1689 },
+            },
+        },
+    },
+    Unicorn: {
+        filename: 'unicorn.png',
+        qrCodePosition: { x: 992, y: 1655 },
+        qrCodeSize: 270,
+        qrCodeColor: 'FFFFFF',
+        textInfo: {
+            childName: {
+                font: '160px petit-cochon',
+                textAlign: 'center',
+                fillStyle: '#E71971',
+                coords: { x: 725, y: 1065 },
+            },
+            date: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 399, y: 1412 },
+            },
+            time: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 842, y: 1402 },
+            },
+            rsvpLine1: {
+                font: 'italic bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'center',
+                coords: { x: 668, y: 1520 },
+            },
+            rsvpLine2: {
+                font: 'italic bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'center',
+                coords: { x: 668, y: 1575 },
+            },
+            address: {
+                font: 'bold 34px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'center',
+                coords: { x: 650, y: 1842 },
             },
         },
     },
