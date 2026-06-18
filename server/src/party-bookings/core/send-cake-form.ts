@@ -9,6 +9,7 @@ import { getCakeFormUrl, getUpcoming } from './utils.party'
 /**
  *  Runs every Tuesday.
  *  Sends cake form to parties 3-4 weeks away. Skips parties that already ordered a cake or take-home bag.
+ *  Excludes at-home parties.
  */
 export async function sendCakeForms() {
     // since this runs on a Tuesday, it will get Tuesday in one week from today.
@@ -28,11 +29,12 @@ export async function sendCakeForms() {
     // filter out bookings that have already ordered a cake or take home bag
     const bookings = querySnapshot.docs.filter((doc) => {
         const booking = doc.data() as Booking
+        const excluded = booking.location === 'geelong' || booking.type === 'mobile'
         const alreadyOrderedSomething =
             !!booking.cake ||
             Object.keys(booking.takeHomeBags || {}).length > 0 ||
             Object.keys(booking.products || {}).length > 0
-        return !alreadyOrderedSomething
+        return !alreadyOrderedSomething && !excluded
     })
 
     const mailClient = await MailClient.getInstance()

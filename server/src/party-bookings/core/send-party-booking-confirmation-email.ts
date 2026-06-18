@@ -90,7 +90,7 @@ export async function sendPartyBookingConfirmationEmail({
             useRsvpSystem: booking.useRsvpSystem || false,
             invitationsUrl,
             includesFood: booking.includesFood,
-            canOrderCake: booking.type === 'studio',
+            canOrderCake: booking.type === 'studio' && booking.location !== 'geelong',
             cakeFormUrl: getCakeFormUrl(bookingId),
         },
         { subject, replyTo: studioContactEmail }
