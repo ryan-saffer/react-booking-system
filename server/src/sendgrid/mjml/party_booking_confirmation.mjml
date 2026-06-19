@@ -203,6 +203,20 @@
                 </mj-button>
             </mj-column>
             {{/useRsvpSystem}}
+            {{^isMobile}}
+            <mj-column width="100%">
+                <mj-text font-weight="bold" padding-bottom="0">Payment</mj-text>
+
+                <mj-text padding-top="0">
+                    Payment is made at the end of the party. Your party package includes up to 12 children, and any
+                    additional children are simply counted on the day and added to your final total.
+                </mj-text>
+
+                <mj-text padding-top="0">
+                    Please note that Fizz Kidz is a cashless venue, so we do not accept cash payments. On the day, a 1.52% card processing surcharge applies to card payments.
+                </mj-text>
+            </mj-column>
+            {{/isMobile}}
             <mj-column width="100%">
                 <mj-text font-weight="bold" padding-bottom="0"> Cancellation Policy </mj-text>
 
