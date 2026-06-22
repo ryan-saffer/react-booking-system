@@ -90,6 +90,7 @@ export type PartyTheme =
     | 'glam'
     | 'fluid-bears'
     | 'kpop'
+    | 'fairy'
     | 'safari'
     | 'science'
     | 'slime'
@@ -151,6 +152,7 @@ export const PartyThemeDisplayValueMap: Record<PartyTheme, string> = {
     glam: 'Glam Party',
     'fluid-bears': 'Fluid Bears Party',
     kpop: 'Kpop Demon Hunters Party',
+    fairy: 'Fairy Party',
     safari: 'Safari Party',
     science: 'Science Party',
     slime: 'Slime Party',
