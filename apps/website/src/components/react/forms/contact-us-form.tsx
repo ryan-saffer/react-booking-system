@@ -67,6 +67,7 @@ const formSchema = z
         "glam",
         "fluid-bears",
         "kpop",
+        "fairy",
         "safari",
         "science",
         "slime",
@@ -153,6 +154,7 @@ function ContactUsForm() {
       assertNoCorsRequestSucceeded(response);
       window.dataLayer.push({
         event: "lead_submit",
+        studio: values.location,
       });
     } catch (err) {
       console.error({ err });
@@ -349,6 +351,7 @@ function ContactUsForm() {
                       Fluid Bears Party
                     </SelectItem>
                     <SelectItem value="kpop">Kpop Power Party</SelectItem>
+                    <SelectItem value="fairy">Fairy Party</SelectItem>
                     <SelectItem value="safari">Jungle Safari Party</SelectItem>
                     <SelectItem value="science">Science Party</SelectItem>
                     <SelectItem value="slime">Slime Party</SelectItem>
