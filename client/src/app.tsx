@@ -160,6 +160,13 @@ const PlayLabBookingPage = lazy(() =>
         default: module.PlayLabBookingPage,
     }))
 )
+const PreschoolProgramV2BookingPage = lazy(() =>
+    import('./components/preschool-program-v2/booking-form/pages/preschool-program-v2-booking-page.js').then(
+        (module) => ({
+            default: module.PreschoolProgramV2BookingPage,
+        })
+    )
+)
 const PlayLabSessionSelectorPage = lazy(() =>
     import('./components/play-lab/attendance/session-selector/play-lab-session-selector-page.js').then((module) => ({
         default: module.PlayLabSessionSelectorPage,
@@ -635,6 +642,14 @@ const router = createBrowserRouter([
                 Component: () => (
                     <Suspense fallback={<Loader fullScreen />}>
                         <PlayLabBookingPage />
+                    </Suspense>
+                ),
+            },
+            {
+                path: 'preschool-program-v2-booking',
+                Component: () => (
+                    <Suspense fallback={<Loader fullScreen />}>
+                        <PreschoolProgramV2BookingPage />
                     </Suspense>
                 ),
             },

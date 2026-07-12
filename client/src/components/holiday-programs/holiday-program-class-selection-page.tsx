@@ -29,7 +29,12 @@ function getCalendarIdForStudio(studio: StudioOrTest) {
     return studio === 'test' ? AcuityConstants.TestCalendarId : AcuityConstants.StoreCalendars[studio]
 }
 
-function getProgramTitle(appointmentTypeId: AcuityConstants.AppointmentTypeValue) {
+type ClassSelectionAppointmentType =
+    | typeof AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
+    | typeof AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM
+    | typeof AcuityConstants.AppointmentTypes.GEELONG_OPENING
+
+function getProgramTitle(appointmentTypeId: ClassSelectionAppointmentType) {
     switch (appointmentTypeId) {
         case AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM:
         case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM:
@@ -86,7 +91,7 @@ function HolidayProgramSelectionPageContent({ currentOrg }: { currentOrg: Return
     const trpc = useTRPC()
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
-    const appointmentTypeId = parseInt(searchParams.get('id') || '0') as AcuityConstants.AppointmentTypeValue
+    const appointmentTypeId = parseInt(searchParams.get('id') || '0') as ClassSelectionAppointmentType
     const programTitle = getProgramTitle(appointmentTypeId)
     const showStudioSelector = currentOrg === 'master'
 

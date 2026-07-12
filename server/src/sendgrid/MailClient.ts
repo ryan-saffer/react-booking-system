@@ -868,6 +868,34 @@ export class MailClient {
                     template: 'preschool_program_booking_confirmation.mjml',
                     useMjml: true,
                 }
+            case 'preschoolProgramV2BookingConfirmation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Preschool Program Booking Confirmation',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'preschool_program_v2_booking_confirmation.mjml',
+                    useMjml: true,
+                }
+            case 'preschoolProgramV2Cancellation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Preschool Program Session Cancelled',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'preschool_program_v2_cancellation.mjml',
+                    useMjml: true,
+                }
             case 'preschoolProgramUnenrolmentConfirmation':
                 return {
                     emailInfo: {
