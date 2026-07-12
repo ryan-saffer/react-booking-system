@@ -6,6 +6,11 @@ import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import { MailClient } from '@/sendgrid/MailClient'
 import type { Emails } from '@/sendgrid/types'
 
+type ConfirmationAppointmentType =
+    | typeof AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
+    | typeof AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM
+    | typeof AcuityConstants.AppointmentTypes.GEELONG_OPENING
+
 export async function sendConfirmationEmail(
     appointments: AcuityTypes.Api.Appointment[],
     receiptUrl: string | undefined
@@ -38,7 +43,7 @@ export async function sendConfirmationEmail(
 
     const mailClient = await MailClient.getInstance()
 
-    const appointmentTypeId = sortedAppointments[0].appointmentTypeID as AcuityConstants.AppointmentTypeValue
+    const appointmentTypeId = sortedAppointments[0].appointmentTypeID as ConfirmationAppointmentType
     switch (appointmentTypeId) {
         case AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM:
         case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM: {

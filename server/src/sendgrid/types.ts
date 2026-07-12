@@ -52,6 +52,22 @@ export type Emails = {
         appointmentTimes: string[]
     }
 
+    preschoolProgramV2BookingConfirmation: {
+        parentName: string
+        location: string
+        bookings: { time: string; details: string; confirmationPage: string; isFullTermDiscount: boolean }[]
+        receiptUrl: string | undefined
+    }
+
+    preschoolProgramV2Cancellation: {
+        parentName: string
+        booking: string
+        location: string
+        receiptUrl: string
+        refundAmount: string
+        hasRefund: boolean
+    }
+
     preschoolProgramUnenrolmentConfirmation: {
         parentName: string
         childName: string

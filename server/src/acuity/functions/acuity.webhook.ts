@@ -6,6 +6,7 @@ import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import { checkInToCrm } from '@/holiday-programs/core/check-in-to-crm'
 import { processHolidayProgramRefund } from '@/holiday-programs/core/process-holiday-program-refund'
 import { processPlayLabRefund } from '@/play-lab/core/process-play-lab-refund'
+import { processPreschoolProgramV2Refund } from '@/preschool-program-v2/core/process-preschool-program-v2-refund'
 import { logError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
@@ -38,6 +39,10 @@ acuityWebhook.post('/acuity', async (req, resp) => {
                     return
                 } else if (await isPlayLab(data.appointmentTypeID)) {
                     await processPlayLabRefund(data)
+                    resp.status(200).send()
+                    return
+                } else if (isPreschoolProgramV2(data.appointmentTypeID)) {
+                    await processPreschoolProgramV2Refund(data)
                     resp.status(200).send()
                     return
                 } else {
@@ -86,6 +91,13 @@ function isHolidayProgram(appointmentTypeId: string) {
     return (
         appointmentTypeId === AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM.toString() ||
         appointmentTypeId === AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM.toString()
+    )
+}
+
+function isPreschoolProgramV2(appointmentTypeId: string) {
+    return (
+        appointmentTypeId === AcuityConstants.AppointmentTypes.PRESCHOOL_PROGRAM.toString() ||
+        appointmentTypeId === AcuityConstants.AppointmentTypes.TEST_PRESCHOOL_PROGRAM.toString()
     )
 }
 
