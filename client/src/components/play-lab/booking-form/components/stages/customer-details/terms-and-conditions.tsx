@@ -1,8 +1,16 @@
-export function TermsAndConditions() {
+type Props = {
+    programName?: string
+    programUrl?: string
+}
+
+export function TermsAndConditions({
+    programName = 'play lab program',
+    programUrl = 'https://www.fizzkidz.com.au/play-lab',
+}: Props) {
     return (
         <>
             <p>
-                These terms and conditions apply to the play lab program provided by Fizz Kidz Australia Pty Ltd (ABN 40
+                These terms and conditions apply to the {programName} provided by Fizz Kidz Australia Pty Ltd (ABN 40
                 611 366 075) in relation to which you are enrolling your child (the 'Program'). These terms and
                 conditions constitute a legally enforceable contract between you and Fizz Kidz. When you enrol your
                 child in the Program you consent to your child's participation in the Program and confirm your agreement
@@ -17,8 +25,8 @@ export function TermsAndConditions() {
             </p>
             <p>
                 1.2. Details of the Program, including the activities it entails can be found here on our website{' '}
-                <a href="https://www.fizzkidz.com.au/play-lab" target="_blank" rel="noreferrer">
-                    www.fizzkidz.com.au/play-lab
+                <a href={programUrl} target="_blank" rel="noreferrer">
+                    {programUrl.replace('https://', '')}
                 </a>
                 . It is important that you familiarise yourself with the Program's activities.
             </p>

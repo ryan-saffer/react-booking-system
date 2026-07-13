@@ -18,6 +18,7 @@ import {
 } from '@ui-components/alert-dialog'
 import { Button } from '@ui-components/button'
 import { Checkbox } from '@ui-components/checkbox'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@ui-components/dialog'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
@@ -27,6 +28,8 @@ import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
 import { cn } from '@utils/tailwind'
 
+import { PreschoolProgramCancellationPolicy } from './cancellation-policy'
+import { PreschoolProgramTermsAndConditions } from './terms-and-conditions'
 import { useCart } from '../state/cart-store'
 import { useBookingForm, type PreschoolProgramV2BookingForm } from '../state/form-schema'
 import { useFormStage } from '../state/form-stage-store'
@@ -41,6 +44,8 @@ export function CustomerDetails() {
     const watchedChildren = useWatch({ control: form.control, name: 'children' }) ?? []
     const [showNotEnoughSpotsDialog, setShowNotEnoughSpotsDialog] = useState(false)
     const [openCalendars, setOpenCalendars] = useState<Record<string, boolean>>({})
+    const [showTermsAndConditions, setShowTermsAndConditions] = useState(false)
+    const [showCancellationPolicy, setShowCancellationPolicy] = useState(false)
 
     const {
         fields: children,
@@ -382,7 +387,23 @@ export function CustomerDetails() {
                             </FormControl>
                             <div className="space-y-1">
                                 <FormLabel className="cursor-pointer">
-                                    I confirm the information provided is correct and I agree to continue to payment.
+                                    I have read and agree to the{' '}
+                                    <button
+                                        type="button"
+                                        className="text-primary hover:underline"
+                                        onClick={() => setShowCancellationPolicy(true)}
+                                    >
+                                        Cancellation Policy
+                                    </button>{' '}
+                                    and the{' '}
+                                    <button
+                                        type="button"
+                                        className="text-primary hover:underline"
+                                        onClick={() => setShowTermsAndConditions(true)}
+                                    >
+                                        Terms and Conditions
+                                    </button>
+                                    .
                                 </FormLabel>
                                 <FormMessage />
                             </div>
@@ -411,6 +432,22 @@ export function CustomerDetails() {
             <Button type="submit" className="font-semibold">
                 Continue to payment
             </Button>
+            <Dialog open={showTermsAndConditions} onOpenChange={setShowTermsAndConditions}>
+                <DialogContent className="twp max-h-[80vh] overflow-y-auto sm:max-w-4xl">
+                    <DialogHeader>
+                        <DialogTitle>Terms and Conditions</DialogTitle>
+                    </DialogHeader>
+                    <PreschoolProgramTermsAndConditions />
+                </DialogContent>
+            </Dialog>
+            <Dialog open={showCancellationPolicy} onOpenChange={setShowCancellationPolicy}>
+                <DialogContent className="twp max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Cancellation Policy</DialogTitle>
+                    </DialogHeader>
+                    <PreschoolProgramCancellationPolicy />
+                </DialogContent>
+            </Dialog>
             <AlertDialog open={showNotEnoughSpotsDialog} onOpenChange={setShowNotEnoughSpotsDialog}>
                 <AlertDialogContent className="twp">
                     <AlertDialogHeader>

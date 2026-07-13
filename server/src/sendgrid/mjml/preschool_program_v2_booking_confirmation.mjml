@@ -86,9 +86,20 @@
                 </mj-column>
                 <mj-column width="100%">
                     <mj-text font-size="16px">
-                        Our Preschool Program is a weekly 2.5-hour drop-off filled with hands-on science, sensory play,
-                        creative craft, movement and story time, all in a calm and supportive environment designed for
-                        little learners.
+                        The Preschool Program is a 2-hour session for children aged 2.5 to 5 years. Each week brings a
+                        new hands-on science, art and sensory adventure, with a consistent session structure that builds
+                        confidence, independence and school-readiness through intentional play.
+                    </mj-text>
+                    <mj-text font-size="16px">
+                        Children enjoy creative projects, sensory exploration, science experiments, movement, music and
+                        story time, and take home their creations each week.
+                    </mj-text>
+                    <mj-text font-size="16px">
+                        <strong>Cancellation and refunds:</strong> You can cancel a session more than 48 hours before its
+                        scheduled start time for an automatic full refund, using the Change / Cancel link above.
+                        Cancellations made within 48 hours are not eligible for a refund. If cancelling a session means a
+                        booking no longer includes every session in a discounted full-term booking, the refund is
+                        recalculated at the standard session price.
                     </mj-text>
                     <mj-text font-size="16px">
                         If you have any questions, just reply to this email or call us on
