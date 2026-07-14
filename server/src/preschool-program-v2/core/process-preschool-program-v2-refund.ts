@@ -6,6 +6,7 @@ import type { AcuityTypes } from 'fizz-kidz'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import type { AcuityWebhookData } from '@/acuity/functions/acuity.webhook'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
 import { SquareClient } from '@/square/core/square-client'
 import { logError } from '@/utilities'
@@ -239,6 +240,15 @@ async function sendCancellationEmail({
         location: studioNameAndAddress(AcuityUtilities.getStudioByCalendarId(appointment.calendarID)),
         receiptUrl,
         refundAmount: (refundAmountCents / 100).toFixed(2),
+        hasRefund: refundAmountCents > 0,
+    })
+
+    const mixpanel = await MixpanelClient.getInstance()
+    await mixpanel.track('preschool-program-cancellation', {
+        distinct_id: appointment.email,
+        location: AcuityUtilities.getStudioByCalendarId(appointment.calendarID),
+        booking: lineItem.name || appointment.type,
+        refundAmount: refundAmountCents / 100,
         hasRefund: refundAmountCents > 0,
     })
 }

@@ -171,6 +171,22 @@ export type MixpanelEvent = {
         titles?: string[]
         creations?: string[]
     }
+    'preschool-program-booking': {
+        distinct_id: string
+        location: StudioOrTest
+        amount: number
+        numberOfSlots: number
+        numberOfKids: number
+        discountCode?: string
+        childAges: string[]
+    }
+    'preschool-program-cancellation': {
+        distinct_id: string
+        location: StudioOrTest
+        booking: string
+        refundAmount: number
+        hasRefund: boolean
+    }
     'birthday-party-booking': {
         distinct_id: string
         bookingId: string
@@ -283,6 +299,8 @@ const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'google-business-profile-review': 'Google Review',
     'holiday-program-checkout-reached': 'Holiday Program Checkout Reached',
     'holiday-program-booking': 'Holiday Program Booking',
+    'preschool-program-booking': 'Preschool Program Booking',
+    'preschool-program-cancellation': 'Preschool Program Cancellation',
     'birthday-party-booking': 'Birthday Party Booking',
     'birthday-party-form-completed': 'Birthday Party Form Completed',
     'incursion-form-completed': 'Incursion Form Completed',

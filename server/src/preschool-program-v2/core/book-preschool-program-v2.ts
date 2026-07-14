@@ -10,6 +10,7 @@ import type { AcuityTypes, DiscountCode } from 'fizz-kidz'
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { getDiscountCodeRedemptionKey } from '@/holiday-programs/core/discount-codes/check-discount-code'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
 import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
 import { ClassFullError, CustomTrpcError, PaymentMethodInvalidError } from '@/trpc/trpc.errors'
@@ -247,6 +248,25 @@ export async function bookPreschoolProgramV2(input: BookPreschoolProgramV2Props)
             })
         }
     }
+
+    const mixpanel = await MixpanelClient.getInstance()
+    const childAges = [
+        ...new Set(
+            sanitizedLineItems.map((line) =>
+                Math.abs(DateTime.fromISO(line.childDob).diffNow('years').years).toFixed(0)
+            )
+        ),
+    ]
+
+    await mixpanel.track('preschool-program-booking', {
+        distinct_id: input.parentEmail,
+        location: AcuityUtilities.getStudioByCalendarId(sanitizedLineItems[0].calendarID),
+        amount: input.payment.amount / 100,
+        numberOfSlots: sanitizedLineItems.length,
+        numberOfKids: new Set(sanitizedLineItems.map((line) => `${line.childFirstName} ${line.childLastName}`)).size,
+        childAges,
+        ...(discount && { discountCode: discount.code }),
+    })
 
     return {
         orderId: order.id || '',
