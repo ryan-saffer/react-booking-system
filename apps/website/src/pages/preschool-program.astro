@@ -207,13 +207,14 @@ const funCarouselImages = [
       <h1
         class="text-center font-lilita text-4xl uppercase leading-none min-[480px]:text-5xl md:text-6xl"
       >
-        Book in <span class="text-nowrap text-[#FF4FB3]">3 simple steps</span>
+        Everything you <span class="text-[#FF4FB3]">need to know</span>
       </h1>
       <p
         class="mx-auto mt-6 max-w-4xl text-center font-gotham text-lg text-[#5F5F5F] md:text-2xl"
       >
-        Choose the sessions that work for your family, pay upfront, and your
-        child is ready for a weekly adventure.
+        Fizz Kidz Preschool Program runs throughout the school term, with the
+        flexibility to book for the full term or join us casually, whatever
+        works best for your family!
       </p>
 
       <div class="mt-12 grid gap-8 xl:grid-cols-3">
@@ -224,9 +225,9 @@ const funCarouselImages = [
               alt: "Child wearing science goggles during a Fizz Kidz activity",
               title: "Choose your sessions",
               points: [
-                "<strong>Each 2-hour session is $39 per child.</strong>",
-                "Book as many or as few Wednesday and Friday sessions as you like.",
-                "A predictable weekly format with a new art, science and sensory adventure each session.",
+                "<strong>Each 2-hour session is $39.00, filled with art, science and sensory fun.</strong>",
+                "Choose from Wednesday or Friday sessions, or enjoy a mix of both.",
+                "Every week brings a brand-new adventure for your little one to explore.",
               ],
               number: "1",
               numberColor: "bg-[#FFC61B]",
@@ -234,11 +235,11 @@ const funCarouselImages = [
             {
               image: step2,
               alt: "Child exploring a science activity with a microscope",
-              title: "Save when you book the term",
+              title: "Join us for the term",
               points: [
-                "Book all nine Wednesday or Friday sessions before the term starts and save 20%.",
-                "Your discounted price is <strong>$31.20 per child, per session.</strong>",
-                "You can still add individual sessions whenever they suit your family.",
+                "Book for the term before the term begins and save 20%.",
+                "Enjoy the special term rate of <strong>$31.20 per child, per session.</strong>",
+                "A regular weekly session gives your child a familiar routine and something exciting to look forward to.",
               ],
               number: "2",
               numberColor: "bg-[#4BE06C]",
@@ -246,11 +247,11 @@ const funCarouselImages = [
             {
               image: step3,
               alt: "Child drawing during a Fizz Kidz learning activity",
-              title: "Pay and you are booked",
+              title: "Come along casually",
               points: [
-                "All payments are made upfront when you book.",
-                "Book Wednesday and Friday sessions together in one checkout.",
-                "Cancellations made more than 48 hours before a session are automatically refunded.",
+                "Prefer more flexibility? Book individual sessions whenever suits your family.",
+                "Choose as many or as few sessions as you like.",
+                "Plans change? Cancellations made more than 48 hours before a session are automatically refunded.",
               ],
               number: "3",
               numberColor: "bg-[#45D3F3]",
@@ -263,11 +264,11 @@ const funCarouselImages = [
                 class="h-64 w-full rounded-[1.5rem] object-cover md:h-72"
               />
 
-              <h2 class="mt-6 min-h-[3.75rem] font-lilita text-3xl leading-tight md:min-h-[5rem] md:text-4xl">
+              <h2 class="mt-6 font-lilita text-3xl leading-tight md:text-4xl">
                 {card.title}
               </h2>
 
-              <div class="mt-6 space-y-5">
+              <div class="mt-4 space-y-5">
                 {card.points.map((point) => (
                   <div class="flex items-start gap-4">
                     <Image
