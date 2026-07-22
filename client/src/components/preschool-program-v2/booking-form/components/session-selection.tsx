@@ -280,10 +280,12 @@ function ContinueButton() {
     )
 }
 
+/** Formats a preschool class date in the Melbourne timezone. */
 function formatClassDate(klass: LocalAcuityClass) {
     return DateTime.fromJSDate(klass.time, { zone: 'Australia/Melbourne' }).toFormat('cccc d LLLL')
 }
 
+/** Formats a preschool class start and end time in the Melbourne timezone. */
 function formatClassTimeRange(klass: LocalAcuityClass) {
     const start = DateTime.fromJSDate(klass.time, { zone: 'Australia/Melbourne' })
     return `${start.toFormat('h:mm a')} - ${start.plus({ minutes: klass.duration }).toFormat('h:mm a')}`

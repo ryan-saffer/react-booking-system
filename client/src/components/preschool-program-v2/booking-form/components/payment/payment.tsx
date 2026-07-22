@@ -358,10 +358,12 @@ export function Payment() {
     )
 }
 
+/** Formats a selected session date and time for checkout line items. */
 function formatClassDateTime(date: Date) {
     return DateTime.fromJSDate(date, { zone: 'Australia/Melbourne' }).toFormat('cccc d LLLL, h:mm a')
 }
 
+/** Describes a percentage or fixed discount code in customer-facing checkout text. */
 function formatDiscountCodeLabel(discountCode: {
     description: string
     discountType: 'percentage' | 'price'

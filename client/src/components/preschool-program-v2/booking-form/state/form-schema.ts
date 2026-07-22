@@ -112,6 +112,7 @@ export const defaultValues: PreschoolProgramV2BookingForm = {
     joinMailingList: true,
 }
 
+/** Returns the preschool-v2 booking form instance from its provider context. */
 export function useBookingForm() {
     return useFormContext<PreschoolProgramV2BookingForm>()
 }

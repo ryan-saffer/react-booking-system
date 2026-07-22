@@ -524,6 +524,7 @@ function AnaphylaxisPlanUpload({
     const [uploading, setUploading] = useState(false)
     const [uploadProgress, setUploadProgress] = useState(0)
 
+    /** Validates an uploaded anaphylaxis plan as a PDF within the configured size limit. */
     function isValidFile(file: File) {
         if (file.type !== 'application/pdf') {
             toast.error('File must be a PDF')

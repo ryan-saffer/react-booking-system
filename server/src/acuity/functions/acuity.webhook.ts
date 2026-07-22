@@ -94,6 +94,7 @@ function isHolidayProgram(appointmentTypeId: string) {
     )
 }
 
+/** Reports whether an Acuity webhook belongs to a production or test preschool-v2 appointment type. */
 function isPreschoolProgramV2(appointmentTypeId: string) {
     return (
         appointmentTypeId === AcuityConstants.AppointmentTypes.PRESCHOOL_PROGRAM.toString() ||

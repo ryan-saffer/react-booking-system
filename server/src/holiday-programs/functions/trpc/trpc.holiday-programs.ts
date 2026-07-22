@@ -1,3 +1,5 @@
+import { ANAPHYLAXIS_PLAN_PREFIXES } from '@/anaphylaxis-plans/anaphylaxis-plan-path'
+import { getAnaphylaxisPlanUrl } from '@/anaphylaxis-plans/get-anaphylaxis-plan-url'
 import { checkGiftCardBalance } from '@/gift-cards/check-gift-card-balance'
 import { type HolidayProgramBookingProps, bookHolidayProgram } from '@/holiday-programs/core/book-holiday-program'
 import { checkDiscountCode } from '@/holiday-programs/core/discount-codes/check-discount-code'
@@ -9,7 +11,6 @@ import {
     type CreateDiscountCodeFromInvitation,
     createDiscountCodeFromInvitation,
 } from '@/holiday-programs/core/discount-codes/create-discount-code-from-invitation'
-import { getAnaphylaxisPlanUrl } from '@/holiday-programs/core/get-anaphylaxis-plan-url'
 import { publicProcedure, authenticatedProcedure, router } from '@/trpc/trpc'
 
 export const holidayProgramsRouter = router({
@@ -30,5 +31,7 @@ export const holidayProgramsRouter = router({
         .mutation(({ input }) => checkGiftCardBalance(input.giftCardNumber)),
     getAnaphylaxisPlanUrl: authenticatedProcedure
         .input((input: unknown) => input as { anaphylaxisPlanUrl: string })
-        .mutation(({ input }) => getAnaphylaxisPlanUrl(input)),
+        .mutation(({ input }) =>
+            getAnaphylaxisPlanUrl(input.anaphylaxisPlanUrl, ANAPHYLAXIS_PLAN_PREFIXES.HOLIDAY_PROGRAM)
+        ),
 })

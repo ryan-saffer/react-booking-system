@@ -91,6 +91,10 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
 - Done: Full-term booking now uses inferred term blocks split by 2-week-or-greater gaps, and the 20% option only appears/applies when the whole inferred term is still available and starts in the future.
 - Done: Added cancellation/refund webhook handling with full-term discount clawback logic.
 - Done: Added unit tests for preschool-v2 client cart pricing, inferred term grouping, server discount-code amount calculation, and server refund repricing/clawback helpers.
+- Done: Replaced `/dashboard/preschool-program` with an Acuity-only preschool-v2 session selector and attendance screen.
+- Done: Attendance rows support sign in, undo sign in, sign out, and undo sign out through Acuity labels, with no Firestore enrolment dependency.
+- Done: Attendance rows show allergy/anaphylaxis/additional-information tags and expandable parent, emergency contact, allergy, and secure anaphylaxis-plan details.
+- Done: Consolidated Holiday Program and preschool-v2 anaphylaxis plan signing into one shared server implementation with program-specific allowed path prefixes.
 - Done: Narrowed existing holiday-program exhaustive appointment-type checks after adding preschool constants to the shared appointment type union.
 - Next: Manually test preschool-v2 checkout and cancellation/refund flows in Square sandbox.
 
@@ -275,11 +279,15 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
 
 ## Stage 11: Admin And Attendance
 
-1. Add v2 dashboard route later, likely `/dashboard/preschool-program-v2`.
-2. Reuse Play Lab attendance patterns.
-3. Source children/session details from Acuity appointments.
-4. Use existing Acuity labels for check-in, check-out, and not attending if compatible.
-5. Do not use `preschoolProgramEnrolments` for v2.
+1. Done: Replace the existing `/dashboard/preschool-program` route in place; no separate v2 route is needed.
+2. Done: Reuse and modernise Play Lab attendance patterns with shadcn UI.
+3. Done: Source child, parent, allergy, additional-needs, and emergency-contact details from Acuity appointments.
+4. Done: Use Acuity labels for check-in/check-out state and undo actions.
+5. Done: Do not query or update `preschoolProgramEnrolments` for v2 attendance.
+6. Done: Allow master users to select studios while franchise users remain scoped to their current studio selection UI.
+7. Done: Support upcoming sessions from the single preschool-v2 Acuity appointment type; when requested, include previous sessions only from inferred term blocks that still have upcoming sessions.
+8. Done: Add compact attendance counts and expandable child details.
+9. Done: Add defensive unit tests for missing Acuity fields, allergy/anaphylaxis parsing, and unordered attendance labels.
 
 ## Stage 12: Legacy Cutover And Cleanup
 
@@ -316,6 +324,9 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
    - Acuity appointment fields.
    - Acuity reschedule.
    - Acuity cancellation refund.
+   - Preschool dashboard session selection for master and franchise users.
+   - Preschool child sign in, undo sign in, sign out, and undo sign out.
+   - Preschool allergy/anaphylaxis badges and signed plan access.
 8. Done: Added client unit tests for:
    - Full-term discount totals.
    - Discount-code totals after full-term discounts.
@@ -335,4 +346,3 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
 - Square catalog object IDs for dev and prod.
 - Manual validation of cancellation/refund policy details in Square sandbox.
 - Whether Zoho and Mixpanel are required for launch.
-- Whether a v2 dashboard attendance page is required before launch or can follow shortly after.

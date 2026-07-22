@@ -35,6 +35,7 @@ export const useFormStage = create<State>((set, get) => ({
     },
 }))
 
+/** Returns the booking page to the top after a stage transition. */
 function scrollToTop() {
     window.scrollTo({ top: 170, behavior: 'instant' })
 }

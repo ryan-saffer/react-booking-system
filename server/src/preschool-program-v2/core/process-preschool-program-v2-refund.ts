@@ -19,6 +19,7 @@ const REFUND_CUTOFF_HOURS = 48
 const SIBLING_APPOINTMENT_LOOKBACK_MONTHS = 6
 const SIBLING_APPOINTMENT_LOOKAHEAD_MONTHS = 18
 
+/** Handles an Acuity cancellation by repricing active siblings and issuing any eligible Square refund. */
 export async function processPreschoolProgramV2Refund(data: AcuityWebhookData) {
     const acuity = await AcuityClient.getInstance()
     const appointment = await acuity.getAppointment(data.id)
@@ -78,6 +79,7 @@ export async function processPreschoolProgramV2Refund(data: AcuityWebhookData) {
     })
 }
 
+/** Calculates the currently refundable amount from net paid funds and remaining appointment line items. */
 async function calculateRefundAmount(
     square: Awaited<ReturnType<typeof SquareClient.getInstance>>,
     order: Order,
@@ -88,6 +90,7 @@ async function calculateRefundAmount(
     return calculateRefundCents(netPaidCents, repricedRemainingTotalCents)
 }
 
+/** Totals completed tender payments after subtracting all prior refunds. */
 async function getNetPaidCents(square: Awaited<ReturnType<typeof SquareClient.getInstance>>, order: Order) {
     let netPaidCents = BigInt(0)
 
@@ -109,6 +112,7 @@ async function getNetPaidCents(square: Awaited<ReturnType<typeof SquareClient.ge
     return netPaidCents
 }
 
+/** Distributes a refund across available Square tenders without exceeding each tender's refundable balance. */
 async function refundAcrossTenders(
     square: Awaited<ReturnType<typeof SquareClient.getInstance>>,
     order: Order,
@@ -174,6 +178,7 @@ async function refundAcrossTenders(
     }
 }
 
+/** Finds active Acuity appointments that belong to the same Square order as the cancelled appointment. */
 async function getRemainingOrderAppointments(
     acuity: Awaited<ReturnType<typeof AcuityClient.getInstance>>,
     cancelledAppointment: AcuityTypes.Api.Appointment,
@@ -195,11 +200,13 @@ async function getRemainingOrderAppointments(
     )
 }
 
+/** Reports whether the appointment is at least 48 hours away and therefore refund eligible. */
 function isOutsideRefundCutoff(appointment: AcuityTypes.Api.Appointment) {
     const hoursUntilAppointment = DateTime.fromISO(appointment.datetime, { setZone: true }).diffNow('hours').hours
     return hoursUntilAppointment >= REFUND_CUTOFF_HOURS
 }
 
+/** Reads the Square order ID stored on an Acuity appointment. */
 function getAppointmentOrderId(appointment: AcuityTypes.Api.Appointment) {
     return AcuityUtilities.retrieveFormAndField(
         appointment,
@@ -208,6 +215,7 @@ function getAppointmentOrderId(appointment: AcuityTypes.Api.Appointment) {
     ) as string
 }
 
+/** Reads the stable Square line-item identifier stored on an Acuity appointment. */
 function getAppointmentLineItemIdentifier(appointment: AcuityTypes.Api.Appointment) {
     return (
         AcuityUtilities.retrieveFormAndField(
@@ -218,10 +226,12 @@ function getAppointmentLineItemIdentifier(appointment: AcuityTypes.Api.Appointme
     )
 }
 
+/** Finds the Square line item associated with an Acuity appointment. */
 function findLineItemByIdentifier(order: Order, lineItemIdentifier: string) {
     return order.lineItems?.find((lineItem) => lineItem.metadata?.['lineItemIdentifier'] === lineItemIdentifier)
 }
 
+/** Sends the cancellation outcome, including refund amount and receipt when available. */
 async function sendCancellationEmail({
     appointment,
     lineItem,

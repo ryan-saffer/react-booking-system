@@ -94,7 +94,7 @@ const dashboardNavigationSections: DashboardNavigationSection[] = [
             },
             {
                 label: 'Preschool Program',
-                description: 'Manage staff attendance for our new term-based preschool program',
+                description: 'View session bookings and manage child attendance.',
                 to: 'preschool-program',
                 icon: Sparkles,
                 imageSrc: kingsville,

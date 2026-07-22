@@ -1,5 +1,6 @@
 import { useParams as useReactRouterParams, useSearchParams } from 'react-router-dom'
 
+/** Parses and validates the route parameters required to load one preschool attendance session. */
 export function useParams() {
     const { appointmentTypeId } = useReactRouterParams()
     const [searchParams] = useSearchParams()

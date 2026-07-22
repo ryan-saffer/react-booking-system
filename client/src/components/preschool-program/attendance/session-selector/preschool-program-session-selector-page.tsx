@@ -1,277 +1,200 @@
 import { useQuery } from '@tanstack/react-query'
-import { Loader2 } from 'lucide-react'
+import { CalendarDays, Loader2 } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { capitalise } from 'fizz-kidz'
+import { AcuityConstants, capitalise } from 'fizz-kidz'
 import type { StudioOrTest } from 'fizz-kidz'
 
+import { resolveCalendarStudio } from '@components/preschool-program/booking-form/utils/resolve-calendar-studio'
+import { filterAttendanceClassesForCurrentTerms } from '@components/preschool-program-v2/booking-form/state/session-grouping'
 import { useOrg } from '@components/Session/use-org'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@ui-components/card'
 import { Checkbox } from '@ui-components/checkbox'
 import { Label } from '@ui-components/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { Skeleton } from '@ui-components/skeleton'
 import { useTRPC } from '@utils/trpc'
 
-import { resolveCalendarStudio } from '../../booking-form/utils/resolve-calendar-studio'
-
-import type { ReactNode } from 'react'
-
-const PRESCHOOL_PROGRAM_CATEGORIES: Array<'preschool-program' | 'preschool-program-test'> =
-    import.meta.env.VITE_ENV === 'prod' ? ['preschool-program'] : ['preschool-program-test']
-
-const isProdEnv = import.meta.env.VITE_ENV === 'prod'
-
-function Root({ children }: { children: ReactNode }) {
-    return (
-        <div className="twp mx-4 my-4 flex max-w-3xl flex-col gap-4 rounded-md border p-8 pt-4 md:mx-auto">
-            <p className="mb-2 font-lilita text-xl tracking-wide">Preschool Program Selection</p>
-            {children}
-        </div>
-    )
-}
+const APPOINTMENT_TYPE_ID =
+    import.meta.env.VITE_ENV === 'prod'
+        ? AcuityConstants.AppointmentTypes.PRESCHOOL_PROGRAM
+        : AcuityConstants.AppointmentTypes.TEST_PRESCHOOL_PROGRAM
 
 export function PreschoolProgramSessionSelectorPage() {
     const { currentOrg } = useOrg()
-
-    return <PreschoolProgramSessionSelectorPageContent key={currentOrg ?? 'master'} currentOrg={currentOrg} />
+    return <SessionSelector key={currentOrg ?? 'master'} currentOrg={currentOrg} />
 }
 
-function PreschoolProgramSessionSelectorPageContent({
-    currentOrg,
-}: {
-    currentOrg: ReturnType<typeof useOrg>['currentOrg']
-}) {
+function SessionSelector({ currentOrg }: { currentOrg: ReturnType<typeof useOrg>['currentOrg'] }) {
     const trpc = useTRPC()
     const navigate = useNavigate()
-
-    const showStudioSelector = currentOrg === 'master'
-
+    const [today] = useState(() => DateTime.now())
     const [selectedStudio, setSelectedStudio] = useState<StudioOrTest | null>(
-        currentOrg === 'master' ? null : isProdEnv ? currentOrg : 'test'
+        currentOrg === 'master' ? null : import.meta.env.VITE_ENV === 'prod' ? currentOrg : 'test'
     )
-    const [selectedAppointmentType, setSelectedAppointmentType] = useState<string | null>(null)
-    const [selectedClass, setSelectedClass] = useState<string | null>(null)
+    const [selectedClassId, setSelectedClassId] = useState<string>('')
     const [showPreviousSessions, setShowPreviousSessions] = useState(false)
-    const [now] = useState(() => DateTime.now())
 
-    const {
-        data: appointmentTypes,
-        isPending: isLoadingAppointmentTypes,
-        isSuccess: isSuccessAppointmentTypes,
-        isError: isErrorAppointmentTypes,
-        refetch,
-        isFetching,
-    } = useQuery(
-        trpc.acuity.getAppointmentTypes.queryOptions({
-            category: PRESCHOOL_PROGRAM_CATEGORIES,
-            availableToBook: true,
+    const classesQuery = useQuery(
+        trpc.acuity.classAvailability.queryOptions({
+            appointmentTypeIds: [APPOINTMENT_TYPE_ID],
+            includeUnavailable: true,
+            minDate: today.minus({ months: 6 }).toMillis(),
         })
     )
 
-    const {
-        data: classes,
-        isSuccess: isSuccessClasses,
-        isPending: isLoadingClasses,
-        isError: isErrorClasses,
-    } = useQuery(
-        trpc.acuity.classAvailability.queryOptions(
-            {
-                appointmentTypeIds: isSuccessAppointmentTypes ? appointmentTypes.map((it) => it.id) : [],
-                includeUnavailable: true,
-            },
-            { enabled: isSuccessAppointmentTypes }
-        )
-    )
-
-    const isSuccess = isSuccessAppointmentTypes && isSuccessClasses
-    const isPending = isLoadingAppointmentTypes || isLoadingClasses
-    const isError = isErrorAppointmentTypes || isErrorClasses
-
     const availableStudios = useMemo(() => {
-        if (!classes) return []
-
         return Array.from(
             new Set(
-                classes
+                (classesQuery.data || [])
                     .map((klass) => resolveCalendarStudio(klass.calendarID))
                     .filter((studio): studio is StudioOrTest => !!studio)
             )
-        ).sort((a, b) => (a < b ? -1 : 1))
-    }, [classes])
+        ).sort((a, b) => a.localeCompare(b))
+    }, [classesQuery.data])
 
-    const filteredAppointmentTypes = useMemo(
-        () =>
-            appointmentTypes?.filter((program) => {
-                if (!selectedStudio || !classes) return false
-                return classes.some(
-                    (klass) =>
-                        klass.appointmentTypeID === program.id &&
-                        resolveCalendarStudio(klass.calendarID) === selectedStudio
-                )
-            }) || [],
-        [appointmentTypes, classes, selectedStudio]
-    )
+    const sessions = useMemo(() => {
+        if (!selectedStudio) return []
 
-    const filteredClasses = useMemo(
-        () =>
-            classes?.filter((klass) => {
-                const isProgram = klass.appointmentTypeID.toString() === selectedAppointmentType
-                if (!isProgram) return false
+        const studioClasses = (classesQuery.data || []).filter(
+            (klass) => resolveCalendarStudio(klass.calendarID) === selectedStudio
+        )
+        const visibleClassIds = new Set(
+            filterAttendanceClassesForCurrentTerms(
+                studioClasses.map((klass) => ({ ...klass, time: new Date(klass.time) })),
+                showPreviousSessions,
+                today.toJSDate()
+            ).map((klass) => klass.id)
+        )
 
-                if (showPreviousSessions) return true
+        return studioClasses
+            .filter((klass) => visibleClassIds.has(klass.id))
+            .sort((a, b) => DateTime.fromISO(a.time).toMillis() - DateTime.fromISO(b.time).toMillis())
+    }, [classesQuery.data, selectedStudio, showPreviousSessions, today])
 
-                const classDate = DateTime.fromISO(klass.time, { setZone: true })
-                const todayInClassZone = now.setZone(classDate.zoneName).startOf('day')
+    const selectedClass = sessions.find((klass) => klass.id.toString() === selectedClassId)
 
-                return classDate.startOf('day') >= todayInClassZone
-            }) || [],
-        [classes, selectedAppointmentType, showPreviousSessions, now]
-    )
-
-    function formatDate(time: string) {
-        return DateTime.fromISO(time, { setZone: true }).toFormat('cccc d LLLL, h:mm a')
-    }
-
-    function handleSubmit() {
-        const klass = classes?.find((it) => it.id === parseInt(selectedClass || '0'))
-        const appointmentType = appointmentTypes?.find((it) => it.id === parseInt(selectedAppointmentType || '0'))
-        if (!klass || !appointmentType) return
+    function selectSession() {
+        if (!selectedClass) return
 
         navigate(
-            `${appointmentType.id}?classId=${klass.id}&calendarId=${klass.calendarID}&classTime=${encodeURIComponent(klass.time)}&className=${encodeURIComponent(appointmentType.name)}`
+            `${APPOINTMENT_TYPE_ID}?classId=${selectedClass.id}&calendarId=${selectedClass.calendarID}&classTime=${encodeURIComponent(selectedClass.time)}&className=${encodeURIComponent('Preschool Program')}`
         )
     }
 
-    if (isPending) {
+    if (classesQuery.isPending) {
         return (
-            <Root>
+            <PageCard>
                 <Skeleton className="h-10" />
                 <Skeleton className="h-10" />
                 <Skeleton className="h-10" />
-                <Button disabled>Select Session</Button>
-            </Root>
+            </PageCard>
         )
     }
 
-    if (isError) {
+    if (classesQuery.isError) {
         return (
-            <div className="twp m-4 flex h-[calc(100vh-64px)] flex-col items-center justify-center">
-                <Alert variant="destructive" className="w-full max-w-md">
-                    <AlertTitle className="text-center">Oops! Something went wrong.</AlertTitle>
-                    <AlertDescription className="text-center">
-                        We couldn't load the Preschool Program sessions.
+            <div className="twp flex min-h-[calc(100vh-7rem)] items-center justify-center p-4">
+                <Alert variant="destructive" className="max-w-lg">
+                    <AlertTitle>Unable to load preschool sessions</AlertTitle>
+                    <AlertDescription className="mt-2 flex items-center justify-between gap-4">
+                        Please try again.
+                        <Button variant="outline" size="sm" onClick={() => classesQuery.refetch()}>
+                            {classesQuery.isFetching ? <Loader2 className="size-4 animate-spin" /> : 'Retry'}
+                        </Button>
                     </AlertDescription>
                 </Alert>
-                <Button variant="outline" className="mt-4" onClick={() => refetch()}>
-                    {isFetching ? <Loader2 className="animate-spin" /> : 'Retry'}
-                </Button>
             </div>
         )
     }
 
-    if (isSuccess) {
-        return (
-            <Root>
-                {showStudioSelector && (
+    return (
+        <PageCard>
+            {currentOrg === 'master' ? (
+                <div className="space-y-2">
+                    <Label htmlFor="preschool-studio">Studio</Label>
                     <Select
+                        value={selectedStudio || ''}
                         onValueChange={(value) => {
                             setSelectedStudio(value as StudioOrTest)
-                            setSelectedAppointmentType(null)
-                            setSelectedClass(null)
+                            setSelectedClassId('')
                         }}
-                        value={selectedStudio || ''}
                     >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select Studio" />
+                        <SelectTrigger id="preschool-studio">
+                            <SelectValue placeholder="Select a studio" />
                         </SelectTrigger>
                         <SelectContent>
                             {availableStudios.map((studio) => (
-                                <SelectItem key={studio} value={studio}>
+                                <SelectItem value={studio} key={studio}>
                                     {capitalise(studio)}
                                 </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
-                )}
-
-                <Select
-                    onValueChange={(id) => {
-                        setSelectedAppointmentType(id)
-                        setSelectedClass(null)
-                    }}
-                    value={selectedAppointmentType || ''}
-                    disabled={!selectedStudio || filteredAppointmentTypes.length === 0}
-                >
-                    <SelectTrigger>
-                        <SelectValue
-                            placeholder={
-                                filteredAppointmentTypes.length === 0 && selectedStudio
-                                    ? 'No available programs'
-                                    : 'Select Program'
-                            }
-                        />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {filteredAppointmentTypes.map((appointmentType) => (
-                            <SelectItem key={appointmentType.id} value={appointmentType.id.toString()}>
-                                {appointmentType.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-
-                <Select
-                    onValueChange={setSelectedClass}
-                    value={selectedClass || ''}
-                    disabled={!selectedAppointmentType || filteredClasses.length === 0}
-                >
-                    <SelectTrigger>
-                        <SelectValue
-                            placeholder={
-                                filteredClasses.length === 0 && selectedAppointmentType
-                                    ? 'No upcoming sessions'
-                                    : 'Select Session'
-                            }
-                        />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {filteredClasses.map((klass) => (
-                            <SelectItem key={klass.id} value={klass.id.toString()}>
-                                {formatDate(klass.time)}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-
-                <div className="my-2 flex cursor-pointer items-center justify-end gap-4">
-                    <Checkbox
-                        id="showPreviousSessions"
-                        onCheckedChange={(checked) => {
-                            setShowPreviousSessions(!!checked)
-                            if (!checked && selectedClass) {
-                                const klass = classes?.find((it) => it.id === parseInt(selectedClass))
-                                if (klass) {
-                                    const classDate = DateTime.fromISO(klass.time, { setZone: true })
-                                    const todayInClassZone = now.setZone(classDate.zoneName).startOf('day')
-                                    if (classDate.startOf('day') < todayInClassZone) setSelectedClass(null)
-                                }
-                            }
-                        }}
-                        checked={showPreviousSessions}
-                    />
-                    <Label htmlFor="showPreviousSessions" className="cursor-pointer">
-                        Show previous sessions
-                    </Label>
                 </div>
+            ) : null}
 
-                <Button disabled={!selectedClass} onClick={handleSubmit}>
-                    Select Session
-                </Button>
-            </Root>
-        )
-    }
+            <div className="space-y-2">
+                <Label htmlFor="preschool-session">Session</Label>
+                <Select value={selectedClassId} onValueChange={setSelectedClassId} disabled={!selectedStudio}>
+                    <SelectTrigger id="preschool-session">
+                        <SelectValue
+                            placeholder={
+                                sessions.length === 0 && selectedStudio ? 'No sessions found' : 'Select a session'
+                            }
+                        />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {sessions.map((klass) => (
+                            <SelectItem value={klass.id.toString()} key={klass.id}>
+                                {DateTime.fromISO(klass.time, { setZone: true }).toFormat('cccc d LLLL, h:mm a')}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
+
+            <div className="flex items-center gap-3 rounded-md border bg-muted/30 px-3 py-2">
+                <Checkbox
+                    id="show-previous-preschool-sessions"
+                    checked={showPreviousSessions}
+                    onCheckedChange={(checked) => setShowPreviousSessions(checked === true)}
+                />
+                <Label htmlFor="show-previous-preschool-sessions" className="cursor-pointer font-normal">
+                    Show previous sessions
+                </Label>
+            </div>
+
+            <Button onClick={selectSession} disabled={!selectedClass}>
+                View attendance
+            </Button>
+        </PageCard>
+    )
+}
+
+function PageCard({ children }: { children: React.ReactNode }) {
+    return (
+        <main className="twp mx-auto w-full max-w-2xl p-4 sm:p-6">
+            <Card>
+                <CardHeader>
+                    <div className="flex items-start gap-3">
+                        <div className="rounded-lg bg-[#AC4390]/10 p-2 text-[#AC4390]">
+                            <CalendarDays className="size-5" />
+                        </div>
+                        <div>
+                            <CardTitle>Preschool attendance</CardTitle>
+                            <CardDescription className="mt-1">
+                                Choose a studio and session to sign children in and out.
+                            </CardDescription>
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-5">{children}</CardContent>
+            </Card>
+        </main>
+    )
 }
