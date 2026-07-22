@@ -18,6 +18,7 @@ type BaseSessionGroup = Omit<SessionGroup, 'key' | 'classes' | 'bookableClasses'
     classes: LocalAcuityClass[]
 }
 
+/** Groups Acuity classes by weekday/time and splits them into inferred school-term blocks. */
 export function groupClasses(classes: LocalAcuityClass[], now = new Date()) {
     const baseGroups = new Map<string, BaseSessionGroup>()
 
@@ -41,6 +42,34 @@ export function groupClasses(classes: LocalAcuityClass[], now = new Date()) {
         .sort((a, b) => a.sortValue - b.sortValue)
 }
 
+/**
+ * Returns upcoming classes plus, when requested, past classes from inferred term blocks that are still in progress.
+ */
+export function filterAttendanceClassesForCurrentTerms(
+    classes: LocalAcuityClass[],
+    showPreviousSessions: boolean,
+    now = new Date()
+) {
+    const today = DateTime.fromJSDate(now, { zone: 'Australia/Melbourne' }).startOf('day')
+    const isUpcoming = (klass: LocalAcuityClass) =>
+        DateTime.fromJSDate(klass.time, { zone: 'Australia/Melbourne' }).startOf('day') >= today
+
+    if (!showPreviousSessions) return classes.filter(isUpcoming)
+
+    const activeTermClassIds = new Set(
+        groupClasses(classes, now)
+            .filter(
+                (group) =>
+                    group.classes.some((klass) => !isUpcoming(klass)) &&
+                    group.classes.some((klass) => isUpcoming(klass))
+            )
+            .flatMap((group) => group.classes.map((klass) => klass.id))
+    )
+
+    return classes.filter((klass) => isUpcoming(klass) || activeTermClassIds.has(klass.id))
+}
+
+/** Splits one weekday/time group whenever consecutive classes are at least two weeks apart. */
 function splitIntoTermGroups(baseKey: string, group: BaseSessionGroup, now: Date) {
     const sortedClasses = group.classes.sort((a, b) => a.time.getTime() - b.time.getTime())
     const termGroups: SessionGroup[] = []
@@ -67,6 +96,7 @@ function splitIntoTermGroups(baseKey: string, group: BaseSessionGroup, now: Date
     return termGroups
 }
 
+/** Builds display and full-term eligibility metadata for one inferred term. */
 function createTermGroup(
     baseKey: string,
     group: Omit<SessionGroup, 'key' | 'classes' | 'bookableClasses' | 'isFullTermBookable'>,

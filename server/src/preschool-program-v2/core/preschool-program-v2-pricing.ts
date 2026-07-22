@@ -12,6 +12,7 @@ type DiscountLineItem = {
     isFullTermDiscount: boolean
 }
 
+/** Calculates the fixed cent amount sent to Square for a discount code after full-term discounts. */
 export function getDiscountCodeAmountCents(input: { discount: Discount; lineItems: DiscountLineItem[] }) {
     if (!input.discount) return 0
 
@@ -30,11 +31,13 @@ export function getDiscountCodeAmountCents(input: { discount: Discount; lineItem
     return Math.round(subtotalAfterFullTermDiscounts * (input.discount.discountAmount / 100))
 }
 
+/** Returns the refundable difference between net payments and the repriced remaining booking, floored at zero. */
 export function calculateRefundCents(netPaidCents: bigint, repricedRemainingTotalCents: bigint) {
     const refundCents = netPaidCents - repricedRemainingTotalCents
     return refundCents > BigInt(0) ? refundCents : BigInt(0)
 }
 
+/** Reprices active order lines and removes full-term eligibility when any discounted term line was cancelled. */
 export function repriceRemainingOrder(order: Order, remainingLineItemIdentifiers: Set<string>) {
     const remainingLineItems = (order.lineItems || []).filter((lineItem) =>
         remainingLineItemIdentifiers.has(lineItem.metadata?.['lineItemIdentifier'] || '')
@@ -62,6 +65,7 @@ export function repriceRemainingOrder(order: Order, remainingLineItemIdentifiers
     return BigInt(Math.max(0, discountedSubtotalCents - discountCodeAmountCents))
 }
 
+/** Recalculates the original discount code against a new post-term-discount subtotal. */
 function getRepricedDiscountCodeAmountCents(order: Order, discountedSubtotalCents: number) {
     const discountCodeType = order.metadata?.['discountCodeType']
     const discountCodeAmount = Number.parseFloat(order.metadata?.['discountCodeAmount'] || '')
@@ -75,14 +79,17 @@ function getRepricedDiscountCodeAmountCents(order: Order, discountedSubtotalCent
     return Math.min(Math.round(discountCodeAmount * 100), discountedSubtotalCents)
 }
 
+/** Reports whether a Square line item received the preschool full-term discount. */
 function hasFullTermDiscountApplied(lineItem: OrderLineItem) {
     return lineItem.appliedDiscounts?.some((discount) => discount.discountUid === FULL_TERM_DISCOUNT_UID) ?? false
 }
 
+/** Returns a Square line item's undiscounted base amount as a JavaScript number of cents. */
 function getLineItemBaseAmountCents(lineItem: OrderLineItem) {
     return Number(lineItem.basePriceMoney?.amount ?? BigInt(0))
 }
 
+/** Applies percentage rounding to cents consistently with checkout calculations. */
 function roundPercentageCents(amountCents: number, percentage: number) {
     return Math.round(amountCents * (percentage / 100))
 }

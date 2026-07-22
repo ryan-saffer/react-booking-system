@@ -142,6 +142,7 @@ export const useCart = create<Cart>()((set, get) => ({
     },
 }))
 
+/** Recalculates cart totals in cents using the same discount and gift-card order as Square checkout. */
 function recalculateTotals() {
     const { selectedClasses, fullTermClassIds, childCount, discountCode } = useCart.getState()
     const selected = Object.values(selectedClasses)
@@ -215,14 +216,17 @@ function recalculateTotals() {
     })
 }
 
+/** Converts an Acuity dollar price string to an integer number of cents. */
 function dollarsToCents(value: string) {
     return Math.round(Number.parseFloat(value) * 100)
 }
 
+/** Converts an integer number of cents to a dollar value for display state. */
 function centsToDollars(value: number) {
     return value / 100
 }
 
+/** Applies Square-compatible percentage rounding to a cent amount. */
 function squarePercentageDiscountCents(amountCents: number, percentage: number) {
     return Math.round(amountCents * (percentage / 100))
 }

@@ -1,92 +1,155 @@
-import { format } from 'date-fns'
+import { useMutation } from '@tanstack/react-query'
+import { ExternalLink, Loader2, Mail, Phone, ShieldAlert, UserRound } from 'lucide-react'
+import { toast } from 'sonner'
 
 import type { AcuityTypes } from 'fizz-kidz'
 
-import { Badge } from '@ui-components/badge'
-import { cn } from '@utils/tailwind'
+import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
+import { Button } from '@ui-components/button'
+import { useTRPC } from '@utils/trpc'
 
-import type { PreschoolProgramAttendanceEnrolment } from '../utils/get-enrolment'
+import { getPreschoolAttendanceDetails } from '../utils/acuity-attendance'
 
-export function ChildExpandedDetails({
-    appointment,
-    enrolment,
-}: {
-    appointment: AcuityTypes.Api.Appointment
-    enrolment: PreschoolProgramAttendanceEnrolment
-}) {
-    const maybeSignature = enrolment.signatures[appointment.id]
-    const signature = typeof maybeSignature === 'string' ? null : maybeSignature
+export function ChildExpandedDetails({ appointment }: { appointment: AcuityTypes.Api.Appointment }) {
+    const trpc = useTRPC()
+    const details = getPreschoolAttendanceDetails(appointment)
+    const planMutation = useMutation(
+        trpc.preschoolProgramV2.getAnaphylaxisPlanUrl.mutationOptions({
+            onError: () => toast.error('Unable to open the anaphylaxis plan'),
+        })
+    )
 
-    const rows: { title: string; value: React.ReactNode; className?: string }[] = [
-        ...(enrolment.child.additionalInfo
-            ? [
-                  {
-                      title: 'Additional Information:',
-                      value: enrolment.child.additionalInfo,
-                      className: 'bg-blue-100 hover:bg-blue-200/60 shadow-[inset_4px_0_0_0_theme(colors.blue.400)]',
-                  },
-              ]
-            : []),
-        ...(enrolment.child.allergies
-            ? [
-                  {
-                      title: 'Allergies:',
-                      value: enrolment.child.allergies,
-                      className:
-                          'bg-red-100 shadow-[inset_4px_0_0_0_theme(colors.orange.400)] border-t-1 hover:bg-orange-200/60',
-                  },
-              ]
-            : []),
-        {
-            title: 'Date of Birth:',
-            value: format(new Date(enrolment.child.dob), 'PPP'),
-            className: 'sm:hidden',
-        },
-        {
-            title: 'Program Type:',
-            value: <Badge>Term Enrolment</Badge>,
-            className: 'sm:hidden',
-        },
-        { title: 'Parent Name:', value: `${enrolment.parent.firstName} ${enrolment.parent.lastName}` },
-        {
-            title: 'Parent Phone:',
-            value: (
-                <a href={`tel:${enrolment.parent.phone}`} className="text-blue-500 underline">
-                    {enrolment.parent.phone}
-                </a>
-            ),
-        },
-        { title: 'Parent Email:', value: enrolment.parent.email },
-        { title: 'Emergency Contact Name:', value: enrolment.emergencyContact.name },
-        { title: 'Emergency Contact Relation:', value: enrolment.emergencyContact.relation },
-        {
-            title: 'Emergency Contact Phone:',
-            value: (
-                <a href={`tel:${enrolment.emergencyContact.phone}`} className="text-blue-500 underline">
-                    {enrolment.emergencyContact.phone}
-                </a>
-            ),
-        },
-        ...(signature
-            ? [
-                  { title: 'Signed Out By:', value: signature.pickupPerson },
-                  { title: 'Signed Out At:', value: format(new Date(signature.timestamp), 'PPP p') },
-                  ...(signature.staffReason ? [{ title: 'Staff Reason:', value: signature.staffReason }] : []),
-              ]
-            : []),
-    ]
+    async function openAnaphylaxisPlan() {
+        if (!details.anaphylaxisPlanPath) return
+        const planWindow = window.open('', '_blank')
+
+        try {
+            const url = await planMutation.mutateAsync({ storagePath: details.anaphylaxisPlanPath })
+            if (planWindow) {
+                planWindow.opener = null
+                planWindow.location.href = url
+            } else {
+                window.open(url, '_blank', 'noopener,noreferrer')
+            }
+        } catch {
+            planWindow?.close()
+        }
+    }
 
     return (
-        <div className="flex flex-col">
-            {rows.map((row, idx) => (
-                <div
-                    key={idx}
-                    className={cn('flex border-t bg-slate-100 first:border-t-0 hover:bg-slate-200/50', row.className)}
-                >
-                    <p className="w-1/2 max-w-full border-r p-4 font-semibold sm:ml-12 sm:max-w-60">{row.title}</p>
-                    <div className="w-1/2 min-w-14 text-wrap p-4">{row.value}</div>
-                </div>
-            ))}
+        <div className="space-y-4 bg-muted/20 p-4 sm:p-6">
+            {details.allergies || details.isAnaphylactic ? (
+                <Alert variant="destructive">
+                    <ShieldAlert className="size-4" />
+                    <AlertTitle>
+                        {details.isAnaphylactic ? 'Anaphylaxis and allergy information' : 'Allergy information'}
+                    </AlertTitle>
+                    <AlertDescription className="mt-2 space-y-3 whitespace-pre-wrap">
+                        {details.allergies || 'Anaphylactic child. Review the plan before sign-in.'}
+                        {details.anaphylaxisPlanPath ? (
+                            <div>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={openAnaphylaxisPlan}
+                                    disabled={planMutation.isPending}
+                                >
+                                    {planMutation.isPending ? (
+                                        <Loader2 className="mr-2 size-4 animate-spin" />
+                                    ) : (
+                                        <ExternalLink className="mr-2 size-4" />
+                                    )}
+                                    View anaphylaxis plan
+                                </Button>
+                            </div>
+                        ) : null}
+                    </AlertDescription>
+                </Alert>
+            ) : null}
+
+            {details.additionalInfo ? (
+                <Alert>
+                    <AlertTitle>Additional information</AlertTitle>
+                    <AlertDescription className="mt-2 whitespace-pre-wrap">{details.additionalInfo}</AlertDescription>
+                </Alert>
+            ) : null}
+
+            <div className="grid gap-4 md:grid-cols-2">
+                <DetailSection title="Parent details" icon={<UserRound className="size-4" />}>
+                    <Detail label="Name" value={details.parentName} />
+                    <Detail
+                        label="Phone"
+                        value={
+                            details.parentPhone ? (
+                                <a
+                                    className="inline-flex items-center gap-1 text-blue-700 underline"
+                                    href={`tel:${details.parentPhone}`}
+                                >
+                                    <Phone className="size-3.5" /> {details.parentPhone}
+                                </a>
+                            ) : (
+                                '—'
+                            )
+                        }
+                    />
+                    <Detail
+                        label="Email"
+                        value={
+                            details.parentEmail ? (
+                                <a
+                                    className="inline-flex items-center gap-1 break-all text-blue-700 underline"
+                                    href={`mailto:${details.parentEmail}`}
+                                >
+                                    <Mail className="size-3.5" /> {details.parentEmail}
+                                </a>
+                            ) : (
+                                '—'
+                            )
+                        }
+                    />
+                </DetailSection>
+
+                <DetailSection title="Emergency contact" icon={<ShieldAlert className="size-4" />}>
+                    <Detail label="Name" value={details.emergencyContactName || '—'} />
+                    <Detail label="Relation" value={details.emergencyContactRelation || '—'} />
+                    <Detail
+                        label="Phone"
+                        value={
+                            details.emergencyContactPhone ? (
+                                <a
+                                    className="inline-flex items-center gap-1 text-blue-700 underline"
+                                    href={`tel:${details.emergencyContactPhone}`}
+                                >
+                                    <Phone className="size-3.5" /> {details.emergencyContactPhone}
+                                </a>
+                            ) : (
+                                '—'
+                            )
+                        }
+                    />
+                </DetailSection>
+            </div>
+        </div>
+    )
+}
+
+function DetailSection({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
+    return (
+        <section className="rounded-lg border bg-background p-4 shadow-sm">
+            <h3 className="mb-3 flex items-center gap-2 font-semibold">
+                {icon} {title}
+            </h3>
+            <dl className="space-y-2 text-sm">{children}</dl>
+        </section>
+    )
+}
+
+function Detail({ label, value }: { label: string; value: React.ReactNode }) {
+    return (
+        <div className="grid grid-cols-[7rem_1fr] gap-2">
+            <dt className="text-muted-foreground">{label}</dt>
+            <dd>{value}</dd>
         </div>
     )
 }

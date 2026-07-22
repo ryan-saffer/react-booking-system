@@ -5,6 +5,7 @@ const PRESCHOOL_PROGRAM_V2_SESSION_CATALOG_OBJECT_IDS = {
     dev: 'XNGVRY2YK2JICTVIFJLV4EEP',
 } as const
 
+/** Returns the environment-specific Square catalog object used for preschool session line items. */
 export function getPreschoolProgramV2SessionCatalogObjectId() {
     return env === 'prod'
         ? PRESCHOOL_PROGRAM_V2_SESSION_CATALOG_OBJECT_IDS.prod

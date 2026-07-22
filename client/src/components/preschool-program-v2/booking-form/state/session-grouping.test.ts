@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { groupClasses, TERM_BOUNDARY_GAP_DAYS } from './session-grouping'
+import { filterAttendanceClassesForCurrentTerms, groupClasses, TERM_BOUNDARY_GAP_DAYS } from './session-grouping'
 
 import type { LocalAcuityClass } from './cart-store'
 
@@ -73,5 +73,22 @@ describe('preschool-v2 session grouping', () => {
 
         expect(groups[0].isFullTermBookable).toBe(false)
         expect(groups[0].bookableClasses.map((klass) => klass.id)).toEqual([1, 2])
+    })
+
+    it('shows previous attendance sessions only from an inferred term that is still active', () => {
+        const classes = [
+            makeClass({ id: 1, time: '2026-05-04T00:00:00.000Z' }),
+            makeClass({ id: 2, time: '2026-05-11T00:00:00.000Z' }),
+            makeClass({ id: 3, time: '2026-06-15T00:00:00.000Z' }),
+            makeClass({ id: 4, time: '2026-06-22T00:00:00.000Z' }),
+            makeClass({ id: 5, time: '2026-06-29T00:00:00.000Z' }),
+            makeClass({ id: 6, time: '2026-09-07T00:00:00.000Z' }),
+        ]
+        const now = new Date('2026-06-24T00:00:00.000Z')
+
+        expect(filterAttendanceClassesForCurrentTerms(classes, false, now).map((klass) => klass.id)).toEqual([5, 6])
+        expect(filterAttendanceClassesForCurrentTerms(classes, true, now).map((klass) => klass.id)).toEqual([
+            3, 4, 5, 6,
+        ])
     })
 })

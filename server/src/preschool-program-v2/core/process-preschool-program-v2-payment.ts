@@ -13,6 +13,7 @@ import { getDiscountCodeAmountCents } from './preschool-program-v2-pricing'
 
 import type { BookPreschoolProgramV2Props } from './book-preschool-program-v2'
 
+/** Creates and pays the Square order, applying discounts before gift-card and card tenders. */
 export async function processPreschoolProgramV2Payment(
     idempotencyKey: string,
     input: BookPreschoolProgramV2Props['payment'],

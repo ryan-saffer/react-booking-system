@@ -73,6 +73,7 @@ export type PreschoolProgramV2LineItem = {
     isFullTermDiscount: boolean
 }
 
+/** Validates, charges, schedules, records, and confirms one preschool-v2 checkout. */
 export async function bookPreschoolProgramV2(input: BookPreschoolProgramV2Props) {
     try {
         await DatabaseClient.createPaymentIdempotencyKey(input.idempotencyKey)
@@ -255,6 +256,7 @@ export async function bookPreschoolProgramV2(input: BookPreschoolProgramV2Props)
     }
 }
 
+/** Determines whether a class belongs to a fully selected, available term that has not started. */
 function isClassFullTermDiscounted(
     klass: AcuityTypes.Api.Class,
     allClasses: AcuityTypes.Api.Class[],
@@ -271,6 +273,7 @@ function isClassFullTermDiscounted(
     )
 }
 
+/** Finds the inferred term block containing a class using weekday/time grouping and two-week boundaries. */
 function getTermClassesForClass(klass: AcuityTypes.Api.Class, allClasses: AcuityTypes.Api.Class[]) {
     const groupKey = getClassGroupKey(klass)
     const groupClasses = allClasses
@@ -306,11 +309,13 @@ function getTermClassesForClass(klass: AcuityTypes.Api.Class, allClasses: Acuity
     return terms.find((term) => term.some((candidate) => candidate.id === klass.id)) ?? []
 }
 
+/** Builds a stable studio, weekday, and start-time key for an Acuity class. */
 function getClassGroupKey(klass: AcuityTypes.Api.Class) {
     const start = DateTime.fromISO(klass.time, { setZone: true })
     return `${klass.calendarID}-${start.weekday}-${start.toFormat('HH:mm')}`
 }
 
+/** Formats allergy text and the private anaphylaxis storage path for Acuity. */
 function formatChildAllergies(line: PreschoolProgramV2LineItem) {
     const parts = [line.childAllergies.trim()]
 
@@ -321,6 +326,7 @@ function formatChildAllergies(line: PreschoolProgramV2LineItem) {
     return parts.filter(Boolean).join('\n\n')
 }
 
+/** Sends the paid-booking confirmation with session management links and receipt details. */
 async function sendConfirmationEmail(
     input: BookPreschoolProgramV2Props,
     lineItems: PreschoolProgramV2LineItem[],
