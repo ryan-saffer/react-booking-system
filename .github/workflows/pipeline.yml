@@ -139,13 +139,32 @@ jobs:
           fi
           exit "$status"
 
-      - name: Run client tests
-        run: npm test
-        working-directory: client
+      # Client tests resolve fizz-kidz directly to its source, so they can run safely
+      # alongside the server tests while the server test script builds that package.
+      - name: Run server and client tests
+        run: |
+          # Prefix concurrent output so failures remain attributable when logs interleave.
+          (
+            set -o pipefail
+            npm --prefix server test 2>&1 | sed -u 's/^/[server] /'
+          ) &
+          server_test_pid=$!
+          (
+            set -o pipefail
+            npm --prefix client test 2>&1 | sed -u 's/^/[client] /'
+          ) &
+          client_test_pid=$!
 
-      - name: Run server tests
-        run: npm test
-        working-directory: server
+          status=0
+          if ! wait "$server_test_pid"; then
+            echo "::error title=Server tests failed::See the [server]-prefixed output in this step."
+            status=1
+          fi
+          if ! wait "$client_test_pid"; then
+            echo "::error title=Client tests failed::See the [client]-prefixed output in this step."
+            status=1
+          fi
+          exit "$status"
 
       - name: Install Firebase CLI
         run: npm i -g firebase-tools
