@@ -13,7 +13,7 @@ import { logError } from '@/utilities'
 
 import { calculateRefundCents, repriceRemainingOrder } from './preschool-program-v2-pricing'
 
-import type { Order, OrderLineItem } from 'square/api'
+import type { Square } from 'square'
 
 const REFUND_CUTOFF_HOURS = 48
 const SIBLING_APPOINTMENT_LOOKBACK_MONTHS = 6
@@ -31,7 +31,7 @@ export async function processPreschoolProgramV2Refund(data: AcuityWebhookData) {
     }
 
     const square = await SquareClient.getInstance()
-    let order: Order
+    let order: Square.Order
 
     try {
         const result = await square.orders.get({ orderId })
@@ -82,7 +82,7 @@ export async function processPreschoolProgramV2Refund(data: AcuityWebhookData) {
 /** Calculates the currently refundable amount from net paid funds and remaining appointment line items. */
 async function calculateRefundAmount(
     square: Awaited<ReturnType<typeof SquareClient.getInstance>>,
-    order: Order,
+    order: Square.Order,
     remainingLineItemIdentifiers: Set<string>
 ) {
     const netPaidCents = await getNetPaidCents(square, order)
@@ -91,7 +91,7 @@ async function calculateRefundAmount(
 }
 
 /** Totals completed tender payments after subtracting all prior refunds. */
-async function getNetPaidCents(square: Awaited<ReturnType<typeof SquareClient.getInstance>>, order: Order) {
+async function getNetPaidCents(square: Awaited<ReturnType<typeof SquareClient.getInstance>>, order: Square.Order) {
     let netPaidCents = BigInt(0)
 
     for (const tender of order.tenders || []) {
@@ -115,7 +115,7 @@ async function getNetPaidCents(square: Awaited<ReturnType<typeof SquareClient.ge
 /** Distributes a refund across available Square tenders without exceeding each tender's refundable balance. */
 async function refundAcrossTenders(
     square: Awaited<ReturnType<typeof SquareClient.getInstance>>,
-    order: Order,
+    order: Square.Order,
     amountToRefund: bigint,
     data: AcuityWebhookData
 ) {
@@ -227,7 +227,7 @@ function getAppointmentLineItemIdentifier(appointment: AcuityTypes.Api.Appointme
 }
 
 /** Finds the Square line item associated with an Acuity appointment. */
-function findLineItemByIdentifier(order: Order, lineItemIdentifier: string) {
+function findLineItemByIdentifier(order: Square.Order, lineItemIdentifier: string) {
     return order.lineItems?.find((lineItem) => lineItem.metadata?.['lineItemIdentifier'] === lineItemIdentifier)
 }
 
@@ -239,7 +239,7 @@ async function sendCancellationEmail({
     refundAmountCents,
 }: {
     appointment: AcuityTypes.Api.Appointment
-    lineItem: OrderLineItem
+    lineItem: Square.OrderLineItem
     receiptUrl: string
     refundAmountCents: number
 }) {

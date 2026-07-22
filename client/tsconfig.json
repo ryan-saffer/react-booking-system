@@ -6,14 +6,13 @@
         "module": "ESNext",
         "skipLibCheck": true,
 
-        "baseUrl": ".",
         "paths": {
-            "@components/*": ["src/components/*"],
-            "@ui-components/*": ["src/ui-components/ui/*"],
-            "@constants/*": ["src/constants/*"],
-            "@drawables/*": ["src/drawables/*"],
-            "@utils/*": ["src/utilities/*"],
-            "@hooks/*": ["src/components/Hooks/*"],
+            "@components/*": ["./src/components/*"],
+            "@ui-components/*": ["./src/ui-components/ui/*"],
+            "@constants/*": ["./src/constants/*"],
+            "@drawables/*": ["./src/drawables/*"],
+            "@utils/*": ["./src/utilities/*"],
+            "@hooks/*": ["./src/components/Hooks/*"],
             "fizz-kidz": ["../server/fizz-kidz/src"]
         },
 
@@ -22,7 +21,9 @@
         "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
         "isolatedModules": true,
+        "noUncheckedSideEffectImports": false,
         "noEmit": true,
+        "types": ["*"],
         "jsx": "react-jsx",
         "allowJs": true,
 

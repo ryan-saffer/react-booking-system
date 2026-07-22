@@ -28,7 +28,7 @@ import { getHolidayPrograms } from './reports/get-holiday-programs'
 import { getParties } from './reports/get-parties'
 import { getPlayLabPrograms } from './reports/get-play-lab'
 
-import type { Order } from 'square/api'
+import type { Square } from 'square'
 ;(async () => {
     const { script } = await prompts({
         type: 'select',
@@ -351,7 +351,7 @@ import type { Order } from 'square/api'
         }))
 
         const square = await SquareClient.getInstance()
-        const ordersById = new Map<string, Order>()
+        const ordersById = new Map<string, Square.Order>()
         const orderIds = Array.from(new Set(orderLookups.map((lookup) => lookup.orderId).filter((orderId) => orderId)))
 
         for (let i = 0; i < orderIds.length; i += 100) {

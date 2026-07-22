@@ -25,7 +25,7 @@ import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
 import { SquareClient } from '@/square/core/square-client'
 import { isUsingEmulator, logError } from '@/utilities'
 
-import type { InventoryChange } from 'square/api'
+import type { Square } from 'square'
 
 const SUCCESS_REDIRECT = 'https://fizzkidz.com.au/form-result?result=success'
 const ERROR_REDIRECT = 'https://fizzkidz.com.au/form-result?result=error'
@@ -265,7 +265,7 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
         const booking = await DatabaseClient.getPartyBooking(bookingId)
         const locationId = getSquareLocationId(env === 'prod' ? booking.location : 'test')
         const square = await SquareClient.getInstance()
-        const takeHomeBagChanges: InventoryChange[] = takeHomeBags.map((item) => ({
+        const takeHomeBagChanges: Square.InventoryChange[] = takeHomeBags.map((item) => ({
             type: 'ADJUSTMENT',
             adjustment: {
                 catalogObjectId: mapTakeHomeBagToSquareVariation(env, item.SKU as TakeHomeBagType),
@@ -276,7 +276,7 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
                 occurredAt: new Date().toISOString(),
             },
         }))
-        const productsChanges: InventoryChange[] = products.map((product) => ({
+        const productsChanges: Square.InventoryChange[] = products.map((product) => ({
             type: 'ADJUSTMENT',
             adjustment: {
                 catalogObjectId: mapProductToSquareVariation(env, product.SKU as ProductType),

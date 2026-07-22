@@ -12,7 +12,7 @@ import { throwTrpcError } from '@/utilities'
 
 import { sendInvoice } from './send-invoice'
 
-import type { InvoiceStatus } from 'square/api'
+import type { Square } from 'square'
 
 export async function sendInvoices(input: SendInvoiceParams[]) {
     const invoiceStatusMap: InvoiceStatusMap = {}
@@ -44,7 +44,13 @@ export async function sendInvoices(input: SendInvoiceParams[]) {
                             { invoiceData }
                         )
 
-                    const UNCANCELLABLE_STATUSES: InvoiceStatus[] = ['DRAFT', 'PAID', 'REFUNDED', 'CANCELED', 'FAILED']
+                    const UNCANCELLABLE_STATUSES: Square.InvoiceStatus[] = [
+                        'DRAFT',
+                        'PAID',
+                        'REFUNDED',
+                        'CANCELED',
+                        'FAILED',
+                    ]
                     if (!UNCANCELLABLE_STATUSES.includes(existingInvoice.status)) {
                         await square.invoices.cancel({
                             invoiceId: existingInvoice.id,

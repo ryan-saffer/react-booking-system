@@ -27,8 +27,8 @@ The client-side application handles the user interface and interaction.
 - **Build Tool:** [Vite](https://vitejs.dev/) for fast development and optimized builds (see `client/vite.config.ts`).
 - **Routing:** [React Router DOM](https://reactrouter.com/) for client-side routing (see `client/src/app.tsx`).
 - **API Consumption:** Uses [tRPC](https://trpc.io/) to communicate with the server.
-  - tRPC client initialized in `client/src/utilities/trpc.ts`.
-  - Enables type-safe API calls from React components (see `client/src/app.tsx` and its children).
+    - tRPC client initialized in `client/src/utilities/trpc.ts`.
+    - Enables type-safe API calls from React components (see `client/src/app.tsx` and its children).
 
 ## Server
 
@@ -37,9 +37,9 @@ The server-side application handles business logic, data processing, and API pro
 - **Main Entry:** `server/src/index.ts` exports modules for various application features (e.g., acuity, events, party bookings).
 - **Core Logic:** Shared business logic, types, and utilities reside in `server/fizz-kidz/src/index.ts`.
 - **API with tRPC:**
-  - Exposes a tRPC API for client consumption.
-  - Comprises multiple feature-specific routers (e.g., `partiesRouter`, `eventsRouter`) consolidated into `appRouter` (`server/src/trpc/trpc.app-router.ts`), which defines the full API surface.
-  - The entire router is mounted on a single Express app inside `server/src/api.ts`, which serves the `/api/trpc` endpoint from one [Firebase Function](https://firebase.google.com/docs/functions) alongside related HTTPS webhooks.
+    - Exposes a tRPC API for client consumption.
+    - Comprises multiple feature-specific routers (e.g., `partiesRouter`, `eventsRouter`) consolidated into `appRouter` (`server/src/trpc/trpc.app-router.ts`), which defines the full API surface.
+    - The entire router is mounted on a single Express app inside `server/src/api.ts`, which serves the `/api/trpc` endpoint from one [Firebase Function](https://firebase.google.com/docs/functions) alongside related HTTPS webhooks.
 - **Background Jobs:** Scheduled/background tasks share one Pub/Sub topic (`background`) and are dispatched from `server/src/pubsub.ts` based on message name.
 
 ## tRPC Interaction
@@ -62,6 +62,14 @@ A monorepo co-locating client and server:
     _Note: Client builds depend on `../server/fizz-kidz`. Ensure its dependencies are installed._
 
 ## Development
+
+Run all client and server linting, typechecking, and tests from either `client/` or `server/`:
+
+```bash
+npm run verify
+```
+
+From the repository root, use `./scripts/verify.sh`. The command formats changed files, then runs linting, typechecking, and tests. It prints phase progress, successful completion, or output from failed checks.
 
 **Client:**
 
@@ -101,22 +109,22 @@ Other server scripts (`server/package.json`):
 Deployed using Firebase.
 
 - **Client (Firebase Hosting):**
-  - Client app built to static assets (`client/dist/`).
-  - Served by Firebase Hosting.
-  - `firebase.json` defines hosting config (URL rewrites, `predeploy` script: `sh ./client/predeploy.sh`).
-  - Backend-owned browser paths must be explicitly rewritten here. Today that includes `/api/**` and `/forms/**`.
+    - Client app built to static assets (`client/dist/`).
+    - Served by Firebase Hosting.
+    - `firebase.json` defines hosting config (URL rewrites, `predeploy` script: `sh ./client/predeploy.sh`).
+    - Backend-owned browser paths must be explicitly rewritten here. Today that includes `/api/**` and `/forms/**`.
 - **Server (Firebase Functions):**
-  - The Express-based `api` Firebase Function exposes `/api/trpc` for tRPC along with `/api/webhooks/*` endpoints.
-  - It also handles durable browser entrypoints under `/forms/**`, which then redirect to the current client implementation.
-  - The client sends all tRPC requests to this single function URL (see `client/src/components/root/root.tsx` for tRPC client `fetch` logic).
-  - Background jobs use the `background` Pub/Sub topic, handled centrally by `server/src/pubsub.ts`.
-  - `firebase.json` specifies `server/` as functions source.
-  - `functions` `predeploy` script in `firebase.json` (`npm --prefix "$RESOURCE_DIR" run build`) builds server code.
-  - Deploy via Firebase CLI:
-    ```bash
-    cd server && npm run deploy
-    # Or from root: firebase deploy --only functions
-    ```
+    - The Express-based `api` Firebase Function exposes `/api/trpc` for tRPC along with `/api/webhooks/*` endpoints.
+    - It also handles durable browser entrypoints under `/forms/**`, which then redirect to the current client implementation.
+    - The client sends all tRPC requests to this single function URL (see `client/src/components/root/root.tsx` for tRPC client `fetch` logic).
+    - Background jobs use the `background` Pub/Sub topic, handled centrally by `server/src/pubsub.ts`.
+    - `firebase.json` specifies `server/` as functions source.
+    - `functions` `predeploy` script in `firebase.json` (`npm --prefix "$RESOURCE_DIR" run build`) builds server code.
+    - Deploy via Firebase CLI:
+        ```bash
+        cd server && npm run deploy
+        # Or from root: firebase deploy --only functions
+        ```
 
 See `firebase.json`, `client/package.json`, `server/package.json` for detailed configurations.
 
@@ -125,6 +133,6 @@ See `firebase.json`, `client/package.json`, `server/package.json` for detailed c
 - Use clean backend-owned URLs for long-lived external/customer-facing links when you want future frontend changes to stay backward compatible.
 - In this repo, `/forms/**` is the durable public form entrypoint and `/form` is the current client-side implementation behind it.
 - When adding another backend-owned browser route, update all three layers together:
-  - Express routing in `server/src/api.ts`
-  - Firebase Hosting rewrites in `firebase.json`
-  - Vite proxy config in `client/vite.config.ts` / `client/vite.config.js`
+    - Express routing in `server/src/api.ts`
+    - Firebase Hosting rewrites in `firebase.json`
+    - Vite proxy config in `client/vite.config.ts` / `client/vite.config.js`

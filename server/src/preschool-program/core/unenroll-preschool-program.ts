@@ -9,7 +9,7 @@ import { MailClient } from '@/sendgrid/MailClient'
 import { SquareClient } from '@/square/core/square-client'
 import { logError, throwTrpcError } from '@/utilities'
 
-import type { InvoiceStatus } from 'square/api'
+import type { Square } from 'square'
 
 export async function unenrollPreschoolProgram(input: UnenrollPreschoolProgramParams) {
     await Promise.all(
@@ -49,7 +49,13 @@ export async function unenrollPreschoolProgram(input: UnenrollPreschoolProgramPa
                     )
                 }
 
-                const uncancellableStatuses: InvoiceStatus[] = ['DRAFT', 'PAID', 'REFUNDED', 'CANCELED', 'FAILED']
+                const uncancellableStatuses: Square.InvoiceStatus[] = [
+                    'DRAFT',
+                    'PAID',
+                    'REFUNDED',
+                    'CANCELED',
+                    'FAILED',
+                ]
                 if (!uncancellableStatuses.includes(existingInvoice.status)) {
                     await square.invoices.cancel({
                         invoiceId: existingInvoice.id,

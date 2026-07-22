@@ -1,6 +1,6 @@
 import { FULL_TERM_DISCOUNT_PERCENTAGE, FULL_TERM_DISCOUNT_UID } from './preschool-program-v2-config'
 
-import type { Order, OrderLineItem } from 'square/api'
+import type { Square } from 'square'
 
 type Discount = {
     discountType: 'percentage' | 'price'
@@ -38,7 +38,7 @@ export function calculateRefundCents(netPaidCents: bigint, repricedRemainingTota
 }
 
 /** Reprices active order lines and removes full-term eligibility when any discounted term line was cancelled. */
-export function repriceRemainingOrder(order: Order, remainingLineItemIdentifiers: Set<string>) {
+export function repriceRemainingOrder(order: Square.Order, remainingLineItemIdentifiers: Set<string>) {
     const remainingLineItems = (order.lineItems || []).filter((lineItem) =>
         remainingLineItemIdentifiers.has(lineItem.metadata?.['lineItemIdentifier'] || '')
     )
@@ -66,7 +66,7 @@ export function repriceRemainingOrder(order: Order, remainingLineItemIdentifiers
 }
 
 /** Recalculates the original discount code against a new post-term-discount subtotal. */
-function getRepricedDiscountCodeAmountCents(order: Order, discountedSubtotalCents: number) {
+function getRepricedDiscountCodeAmountCents(order: Square.Order, discountedSubtotalCents: number) {
     const discountCodeType = order.metadata?.['discountCodeType']
     const discountCodeAmount = Number.parseFloat(order.metadata?.['discountCodeAmount'] || '')
 
@@ -80,12 +80,12 @@ function getRepricedDiscountCodeAmountCents(order: Order, discountedSubtotalCent
 }
 
 /** Reports whether a Square line item received the preschool full-term discount. */
-function hasFullTermDiscountApplied(lineItem: OrderLineItem) {
+function hasFullTermDiscountApplied(lineItem: Square.OrderLineItem) {
     return lineItem.appliedDiscounts?.some((discount) => discount.discountUid === FULL_TERM_DISCOUNT_UID) ?? false
 }
 
 /** Returns a Square line item's undiscounted base amount as a JavaScript number of cents. */
-function getLineItemBaseAmountCents(lineItem: OrderLineItem) {
+function getLineItemBaseAmountCents(lineItem: Square.OrderLineItem) {
     return Number(lineItem.basePriceMoney?.amount ?? BigInt(0))
 }
 

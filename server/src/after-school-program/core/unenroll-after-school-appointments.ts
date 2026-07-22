@@ -1,6 +1,5 @@
 import type { AfterSchoolEnrolment, UnenrollAfterSchoolParams } from 'fizz-kidz'
 
-
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
@@ -8,7 +7,7 @@ import { MailClient } from '@/sendgrid/MailClient'
 import { SquareClient } from '@/square/core/square-client'
 import { throwTrpcError } from '@/utilities'
 
-import type { InvoiceStatus } from 'square/api'
+import type { Square } from 'square'
 
 export async function unenrollAfterSchoolAppointments(input: UnenrollAfterSchoolParams) {
     await Promise.all(
@@ -50,7 +49,13 @@ export async function unenrollAfterSchoolAppointments(input: UnenrollAfterSchool
                         { input }
                     )
 
-                const UNCANCELLABLE_STATUSES: InvoiceStatus[] = ['DRAFT', 'PAID', 'REFUNDED', 'CANCELED', 'FAILED']
+                const UNCANCELLABLE_STATUSES: Square.InvoiceStatus[] = [
+                    'DRAFT',
+                    'PAID',
+                    'REFUNDED',
+                    'CANCELED',
+                    'FAILED',
+                ]
                 if (!UNCANCELLABLE_STATUSES.includes(existingInvoice.status)) {
                     await square.invoices.cancel({
                         invoiceId: existingInvoice.id,

@@ -2,14 +2,13 @@ import { logger } from 'firebase-functions/v2'
 
 import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 
-
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import type { AcuityWebhookData } from '@/acuity/functions/acuity.webhook'
 import { MailClient } from '@/sendgrid/MailClient'
 import { SquareClient } from '@/square/core/square-client'
 import { logError } from '@/utilities'
 
-import type { Order } from 'square/api'
+import type { Square } from 'square'
 
 export async function processPlayLabRefund(data: AcuityWebhookData) {
     const acuity = await AcuityClient.getInstance()
@@ -33,7 +32,7 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
     ) as string
 
     const square = await SquareClient.getInstance()
-    let order: Order
+    let order: Square.Order
 
     try {
         const result = await square.orders.get({ orderId })

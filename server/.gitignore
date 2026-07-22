@@ -4,6 +4,7 @@ lib/
 lib-tsc/
 coverage
 .nyc_output/
+.eslintcache
 src/scienceProgram/data/
 tsconfig.tsbuildinfo
 firebase-debug.log

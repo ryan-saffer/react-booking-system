@@ -10,7 +10,10 @@ import { env } from '@/init'
 import type { ClientStatus } from '@/utilities/types'
 
 import type { Emails } from './types'
-import type { MailService } from '@sendgrid/mail'
+
+// This type query is erased; SendGrid is loaded only by #initialise's dynamic import.
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+type MailService = typeof import('@sendgrid/mail')
 
 type Options = {
     /**

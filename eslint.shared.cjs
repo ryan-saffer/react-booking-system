@@ -16,6 +16,8 @@ module.exports = {
         ],
 
         '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-empty-object-type': 'off',
+        '@typescript-eslint/no-unused-vars': ['error', { caughtErrors: 'none' }],
 
         // Import ordering: externals -> fizz-kidz -> internal aliases -> locals
         'import/order': [

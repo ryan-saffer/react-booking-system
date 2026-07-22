@@ -2,7 +2,7 @@ import { strictEqual } from 'assert'
 
 import { calculateRefundCents, repriceRemainingOrder } from './preschool-program-v2-pricing'
 
-import type { Order, OrderLineItem } from 'square/api'
+import type { Square } from 'square'
 
 function makeLineItem({
     id,
@@ -12,7 +12,7 @@ function makeLineItem({
     id: string
     amount: number
     isFullTermDiscount: boolean
-}): OrderLineItem {
+}): Square.OrderLineItem {
     return {
         uid: id,
         name: `Line ${id}`,
@@ -20,15 +20,15 @@ function makeLineItem({
         basePriceMoney: { amount: BigInt(amount), currency: 'AUD' },
         metadata: { lineItemIdentifier: id },
         appliedDiscounts: isFullTermDiscount ? [{ discountUid: 'full-term-discount' }] : undefined,
-    } as OrderLineItem
+    } as Square.OrderLineItem
 }
 
-function makeOrder(lineItems: OrderLineItem[], metadata: Record<string, string> = {}): Order {
+function makeOrder(lineItems: Square.OrderLineItem[], metadata: Record<string, string> = {}): Square.Order {
     return {
         id: 'order-1',
         lineItems,
         metadata,
-    } as Order
+    } as Square.Order
 }
 
 describe('processPreschoolProgramV2Refund pricing helpers', () => {

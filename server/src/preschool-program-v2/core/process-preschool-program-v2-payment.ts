@@ -12,6 +12,7 @@ import {
 import { getDiscountCodeAmountCents } from './preschool-program-v2-pricing'
 
 import type { BookPreschoolProgramV2Props } from './book-preschool-program-v2'
+import type { Square } from 'square'
 
 /** Creates and pays the Square order, applying discounts before gift-card and card tenders. */
 export async function processPreschoolProgramV2Payment(
@@ -96,7 +97,8 @@ export async function processPreschoolProgramV2Payment(
 
     if (orderTotal === BigInt(0)) {
         await square.orders.pay({ orderId: order!.id!, paymentIds: [], idempotencyKey })
-        return { order: order!, paymentReceipt: receiptUrl }
+        const paidOrder: Square.Order = order!
+        return { order: paidOrder, paymentReceipt: receiptUrl }
     }
 
     hasGiftCard: if (input.giftCardId) {
@@ -183,5 +185,6 @@ export async function processPreschoolProgramV2Payment(
             throw err
         })
 
-    return { order: order!, paymentReceipt: receiptUrl }
+    const paidOrder: Square.Order = order!
+    return { order: paidOrder, paymentReceipt: receiptUrl }
 }

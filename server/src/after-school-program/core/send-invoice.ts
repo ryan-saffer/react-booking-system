@@ -5,6 +5,8 @@ import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
 import { SquareClient } from '@/square/core/square-client'
 import { throwTrpcError } from '@/utilities'
 
+import type { Square } from 'square'
+
 export async function sendInvoice(input: {
     firstName: string
     lastName: string
@@ -124,12 +126,14 @@ export async function sendInvoice(input: {
             orderId: order.id,
         })
 
+    const publishedInvoice: Square.Invoice = invoice
+
     await square.invoices.publish({
         invoiceId: invoice.id,
         version: invoice.version,
     })
 
-    return invoice
+    return publishedInvoice
 }
 
 function buildAfterSchoolInvoiceNumber(referenceId: string, orderId: string) {

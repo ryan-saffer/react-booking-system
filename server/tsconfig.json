@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "baseUrl": "./",
         "module": "commonjs",
         "noImplicitReturns": false,
         "noUnusedLocals": true,
@@ -11,6 +10,8 @@
         "allowJs": true,
         "resolveJsonModule": true,
         "esModuleInterop": true,
+        "skipLibCheck": true,
+        "types": ["*"],
         "paths": {
             "fizz-kidz": ["./fizz-kidz/src"],
             "@/*": ["./src/*"]

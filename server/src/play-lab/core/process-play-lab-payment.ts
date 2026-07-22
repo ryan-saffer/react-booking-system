@@ -5,6 +5,7 @@ import { env } from '../../init'
 import { SquareClient } from '../../square/core/square-client'
 
 import type { BookPlayLabProps } from './book-play-lab'
+import type { Square } from 'square'
 
 /**
  * Process a play lab payment according to the following steps:
@@ -68,7 +69,8 @@ export async function processPaylabPayment(
     // if its free, simply process the payment
     if (order?.totalMoney?.amount === BigInt(0)) {
         await squareClient.orders.pay({ orderId: order!.id!, paymentIds: [], idempotencyKey })
-        return { paymentReceipt: receiptUrl, order: order! }
+        const paidOrder: Square.Order = order
+        return { paymentReceipt: receiptUrl, order: paidOrder }
     }
 
     // if there is a gift card, use it first
@@ -164,8 +166,9 @@ export async function processPaylabPayment(
             throw err
         })
 
+    const paidOrder: Square.Order = order!
     return {
-        order: order!,
+        order: paidOrder,
         paymentReceipt: receiptUrl,
     }
 }

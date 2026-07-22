@@ -13,7 +13,7 @@ import { throwTrpcError } from '@/utilities'
 import { getPreschoolProgramInvoiceCatalogObjectId } from './preschool-program-invoice-config'
 import { sendPreschoolProgramInvoice } from './send-preschool-program-invoice'
 
-import type { InvoiceStatus } from 'square/api'
+import type { Square } from 'square'
 
 export async function sendPreschoolProgramInvoices(input: SendPreschoolProgramInvoiceParams[]) {
     const invoiceStatusMap: InvoiceStatusMap = {}
@@ -54,7 +54,13 @@ export async function sendPreschoolProgramInvoices(input: SendPreschoolProgramIn
                         )
                     }
 
-                    const uncancellableStatuses: InvoiceStatus[] = ['DRAFT', 'PAID', 'REFUNDED', 'CANCELED', 'FAILED']
+                    const uncancellableStatuses: Square.InvoiceStatus[] = [
+                        'DRAFT',
+                        'PAID',
+                        'REFUNDED',
+                        'CANCELED',
+                        'FAILED',
+                    ]
                     if (!uncancellableStatuses.includes(existingInvoice.status)) {
                         await square.invoices.cancel({
                             invoiceId: existingInvoice.id,
