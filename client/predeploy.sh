@@ -9,12 +9,20 @@ mkdir -p "$OUTDIR"
 if [ "$GCLOUD_PROJECT" = 'booking-system-6435d' ]; then
     cp client/apple-certs/apple-developer-merchantid-domain-association-dev \
         "$OUTDIR/apple-developer-merchantid-domain-association"
-    cd client && npm run build:dev
+    if [ "${FIZZ_KIDZ_PREBUILT:-false}" = 'true' ]; then
+        npm --prefix client run build:dev:prebuilt
+    else
+        npm --prefix client run build:dev
+    fi
     exit 0
 elif [ "$GCLOUD_PROJECT" = 'bookings-prod' ]; then
     cp client/apple-certs/apple-developer-merchantid-domain-association-prod \
         "$OUTDIR/apple-developer-merchantid-domain-association"
-    cd client && npm run build:prod
+    if [ "${FIZZ_KIDZ_PREBUILT:-false}" = 'true' ]; then
+        npm --prefix client run build:prod:prebuilt
+    else
+        npm --prefix client run build:prod
+    fi
     exit 0
 else
     echo "firebase project $GCLOUD_PROJECT not recognized"

@@ -1,182 +1,274 @@
 name: Deploy
 
 on:
-  push:
-    branches: [develop, main]
-    paths:
-      - "client/**"
-      - "server/**"
-      - "firebase.json"
-      - ".firebaserc"
-      - "client/predeploy.sh"
-      - ".github/workflows/pipeline.yml"
+    push:
+        branches: [develop, main]
+        paths:
+            - 'client/**'
+            - 'server/**'
+            - 'firebase.json'
+            - '.firebaserc'
+            - 'client/predeploy.sh'
+            - '.github/workflows/pipeline.yml'
 
-  # Manual trigger from the Actions tab
-  workflow_dispatch:
+    # Manual trigger from the Actions tab
+    workflow_dispatch:
 
 concurrency:
-  group: deploy-${{ github.ref_name }}
-  cancel-in-progress: false
+    group: deploy-${{ github.ref_name }}
+    cancel-in-progress: false
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    # Use GitHub Environments so env-scoped secrets/approvals apply
-    # Map branches to environments
-    environment: ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
-    permissions:
-      contents: read
+    deploy:
+        runs-on: ubuntu-latest
+        # Use GitHub Environments so env-scoped secrets/approvals apply
+        # Map branches to environments
+        environment: ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
+        permissions:
+            contents: read
 
-    env:
-      # Only deploy to prod on pushes to main. All other contexts (PRs, manual PR runs,
-      # pushes to develop, manual branch refs) deploy to dev.
-      PROJECT_ID: ${{ github.ref_name == 'main' && 'bookings-prod' || 'booking-system-6435d' }}
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: ".nvmrc"
-          cache: "npm"
-          cache-dependency-path: |
-            client/package-lock.json
-            server/package-lock.json
-            server/fizz-kidz/package-lock.json
-
-      - name: Create server .env from SERVER_ENV_FILE
         env:
-          SERVER_ENV_FILE: ${{ vars.SERVER_ENV_FILE }}
-        run: |
-          if [ "${{ github.ref_name }}" = 'main' ]; then
-            printf '%s' "$SERVER_ENV_FILE" > server/.env.prod
-            printf '%s' "$SERVER_ENV_FILE" > server/.env.bookings-prod
-            echo "Wrote server prod env files"
-          else
-            printf '%s' "$SERVER_ENV_FILE" > server/.env
-            printf '%s' "$SERVER_ENV_FILE" > server/.env.booking-system-6435d
-            echo "Wrote server dev env files"
-          fi
+            # Only deploy to prod on pushes to main. All other contexts (PRs, manual PR runs,
+            # pushes to develop, manual branch refs) deploy to dev.
+            PROJECT_ID: ${{ github.ref_name == 'main' && 'bookings-prod' || 'booking-system-6435d' }}
 
-      - name: Create client .env from CLIENT_ENV_FILE
-        env:
-          CLIENT_ENV_FILE: ${{ vars.CLIENT_ENV_FILE }}
-        run: |
-          if [ "${{ github.ref_name }}" = 'main' ]; then
-            printf '%s' "$CLIENT_ENV_FILE" > client/.env.prod
-            echo "Wrote client/.env.prod"
-          else
-            printf '%s' "$CLIENT_ENV_FILE" > client/.env
-            echo "Wrote client/.env"
-          fi
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
-      # setup-node caches npm's downloaded package archives, but npm ci still recreates
-      # node_modules. Cache each installed dependency tree separately so an unchanged
-      # package can skip npm ci entirely. Exact keys prevent stale dependencies, while
-      # the OS, architecture, and Node version protect native binaries such as canvas.
-      - name: Cache dependencies (fizz-kidz)
-        id: cache-fizz-kidz-dependencies
-        uses: actions/cache@v4
-        with:
-          path: server/fizz-kidz/node_modules
-          key: fizz-kidz-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.nvmrc', 'server/fizz-kidz/package-lock.json') }}
+            # Pushes deploy only the affected Firebase target. Manual runs intentionally
+            # deploy both targets so they remain useful as full recovery deployments.
+            - name: Detect deployment targets
+              id: changes
+              uses: dorny/paths-filter@v3
+              with:
+                  filters: |
+                      hosting:
+                        - 'client/**'
+                        - 'server/fizz-kidz/**'
+                        - 'firebase.json'
+                        - '.firebaserc'
+                        - '.github/workflows/pipeline.yml'
+                      functions:
+                        - 'server/**'
+                        - 'firebase.json'
+                        - '.firebaserc'
+                        - '.github/workflows/pipeline.yml'
 
-      - name: Cache dependencies (server)
-        id: cache-server-dependencies
-        uses: actions/cache@v4
-        with:
-          path: server/node_modules
-          key: server-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.nvmrc', 'server/package-lock.json') }}
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: 'npm'
+                  cache-dependency-path: |
+                      client/package-lock.json
+                      server/package-lock.json
+                      server/fizz-kidz/package-lock.json
 
-      - name: Cache dependencies (client)
-        id: cache-client-dependencies
-        uses: actions/cache@v4
-        with:
-          path: client/node_modules
-          key: client-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.nvmrc', 'client/package-lock.json') }}
+            - name: Create server .env from SERVER_ENV_FILE
+              env:
+                  SERVER_ENV_FILE: ${{ vars.SERVER_ENV_FILE }}
+              run: |
+                  if [ "${{ github.ref_name }}" = 'main' ]; then
+                    printf '%s' "$SERVER_ENV_FILE" > server/.env.prod
+                    printf '%s' "$SERVER_ENV_FILE" > server/.env.bookings-prod
+                    echo "Wrote server prod env files"
+                  else
+                    printf '%s' "$SERVER_ENV_FILE" > server/.env
+                    printf '%s' "$SERVER_ENV_FILE" > server/.env.booking-system-6435d
+                    echo "Wrote server dev env files"
+                  fi
 
-      # Ensure local package builds have their toolchains
-      - name: Install dependencies (fizz-kidz)
-        if: steps.cache-fizz-kidz-dependencies.outputs.cache-hit != 'true'
-        run: npm ci --prefer-offline --no-audit --no-fund
-        working-directory: server/fizz-kidz
+            - name: Create client .env from CLIENT_ENV_FILE
+              env:
+                  CLIENT_ENV_FILE: ${{ vars.CLIENT_ENV_FILE }}
+              run: |
+                  if [ "${{ github.ref_name }}" = 'main' ]; then
+                    printf '%s' "$CLIENT_ENV_FILE" > client/.env.prod
+                    echo "Wrote client/.env.prod"
+                  else
+                    printf '%s' "$CLIENT_ENV_FILE" > client/.env
+                    echo "Wrote client/.env"
+                  fi
 
-      # The two largest installs are independent, so run cache misses concurrently on
-      # the same runner. A cache hit still skips only its corresponding installation.
-      - name: Install dependencies (server and client)
-        if: steps.cache-server-dependencies.outputs.cache-hit != 'true' || steps.cache-client-dependencies.outputs.cache-hit != 'true'
-        env:
-          SERVER_CACHE_HIT: ${{ steps.cache-server-dependencies.outputs.cache-hit }}
-          CLIENT_CACHE_HIT: ${{ steps.cache-client-dependencies.outputs.cache-hit }}
-        run: |
-          server_pid=
-          client_pid=
+            # setup-node caches npm's downloaded package archives, but npm ci still recreates
+            # node_modules. Cache each installed dependency tree separately so an unchanged
+            # package can skip npm ci entirely. Exact keys prevent stale dependencies, while
+            # the OS, architecture, and Node version protect native binaries such as canvas.
+            - name: Cache dependencies (fizz-kidz)
+              id: cache-fizz-kidz-dependencies
+              uses: actions/cache@v4
+              with:
+                  path: server/fizz-kidz/node_modules
+                  key: fizz-kidz-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.nvmrc', 'server/fizz-kidz/package-lock.json') }}
 
-          if [ "$SERVER_CACHE_HIT" != "true" ]; then
-            # Production uses @sparticuz/chromium and CI does not launch a browser.
-            # Skip Puppeteer's separate Chrome download; local installs remain unchanged.
-            PUPPETEER_SKIP_DOWNLOAD=true npm --prefix server ci --prefer-offline --no-audit --no-fund &
-            server_pid=$!
-          fi
+            - name: Cache dependencies (server)
+              id: cache-server-dependencies
+              uses: actions/cache@v4
+              with:
+                  path: server/node_modules
+                  key: server-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.nvmrc', 'server/package-lock.json') }}
 
-          if [ "$CLIENT_CACHE_HIT" != "true" ]; then
-            npm --prefix client ci --prefer-offline --no-audit --no-fund &
-            client_pid=$!
-          fi
+            - name: Cache dependencies (client)
+              id: cache-client-dependencies
+              uses: actions/cache@v4
+              with:
+                  path: client/node_modules
+                  key: client-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.nvmrc', 'client/package-lock.json') }}
 
-          status=0
-          if [ -n "$server_pid" ] && ! wait "$server_pid"; then
-            echo "Server dependency installation failed"
-            status=1
-          fi
-          if [ -n "$client_pid" ] && ! wait "$client_pid"; then
-            echo "Client dependency installation failed"
-            status=1
-          fi
-          exit "$status"
+            # Content-based ESLint and TypeScript metadata remains valid across checkouts.
+            # A per-commit key restores the latest branch cache and saves updated metadata.
+            - name: Cache build metadata
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      client/.eslintcache
+                      client/tsconfig.tsbuildinfo
+                      client/tsconfig.node.tsbuildinfo
+                      server/.eslintcache
+                      server/tsconfig.tsbuildinfo
+                      server/fizz-kidz/tsconfig.tsbuildinfo
+                  key: build-metadata-${{ runner.os }}-${{ runner.arch }}-${{ github.ref_name }}-${{ github.sha }}
+                  restore-keys: |
+                      build-metadata-${{ runner.os }}-${{ runner.arch }}-${{ github.ref_name }}-
 
-      # Client tests resolve fizz-kidz directly to its source, so they can run safely
-      # alongside the server tests while the server test script builds that package.
-      - name: Run server and client tests
-        run: |
-          # Prefix concurrent output so failures remain attributable when logs interleave.
-          (
-            set -o pipefail
-            npm --prefix server test 2>&1 | sed -u 's/^/[server] /'
-          ) &
-          server_test_pid=$!
-          (
-            set -o pipefail
-            npm --prefix client test 2>&1 | sed -u 's/^/[client] /'
-          ) &
-          client_test_pid=$!
+            # Ensure local package builds have their toolchains
+            - name: Install dependencies (fizz-kidz)
+              if: steps.cache-fizz-kidz-dependencies.outputs.cache-hit != 'true'
+              run: npm ci --prefer-offline --no-audit --no-fund
+              working-directory: server/fizz-kidz
 
-          status=0
-          if ! wait "$server_test_pid"; then
-            echo "::error title=Server tests failed::See the [server]-prefixed output in this step."
-            status=1
-          fi
-          if ! wait "$client_test_pid"; then
-            echo "::error title=Client tests failed::See the [client]-prefixed output in this step."
-            status=1
-          fi
-          exit "$status"
+            # The two largest installs are independent, so run cache misses concurrently on
+            # the same runner. A cache hit still skips only its corresponding installation.
+            - name: Install dependencies (server and client)
+              if: steps.cache-server-dependencies.outputs.cache-hit != 'true' || steps.cache-client-dependencies.outputs.cache-hit != 'true'
+              env:
+                  SERVER_CACHE_HIT: ${{ steps.cache-server-dependencies.outputs.cache-hit }}
+                  CLIENT_CACHE_HIT: ${{ steps.cache-client-dependencies.outputs.cache-hit }}
+              run: |
+                  server_pid=
+                  client_pid=
 
-      - name: Install Firebase CLI
-        run: npm i -g firebase-tools
+                  if [ "$SERVER_CACHE_HIT" != "true" ]; then
+                    npm --prefix server ci --prefer-offline --no-audit --no-fund &
+                    server_pid=$!
+                  fi
 
-      - name: Deploy Functions and Hosting
-        env:
-          GCLOUD_PROJECT: ${{ env.PROJECT_ID }}
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: |
-          firebase deploy \
-            --only functions,hosting \
-            --project "$PROJECT_ID" \
-            --token "$FIREBASE_TOKEN" \
-            --non-interactive \
-            --force
+                  if [ "$CLIENT_CACHE_HIT" != "true" ]; then
+                    npm --prefix client ci --prefer-offline --no-audit --no-fund &
+                    client_pid=$!
+                  fi
+
+                  status=0
+                  if [ -n "$server_pid" ] && ! wait "$server_pid"; then
+                    echo "Server dependency installation failed"
+                    status=1
+                  fi
+                  if [ -n "$client_pid" ] && ! wait "$client_pid"; then
+                    echo "Client dependency installation failed"
+                    status=1
+                  fi
+                  exit "$status"
+
+            # Client tests resolve fizz-kidz directly to its source, so they can run safely
+            # alongside the server tests while the server test script builds that package.
+            - name: Run server and client tests
+              run: |
+                  # Prefix concurrent output so failures remain attributable when logs interleave.
+                  (
+                    set -o pipefail
+                    npm --prefix server test 2>&1 | sed -u 's/^/[server] /'
+                  ) &
+                  server_test_pid=$!
+                  (
+                    set -o pipefail
+                    npm --prefix client test 2>&1 | sed -u 's/^/[client] /'
+                  ) &
+                  client_test_pid=$!
+
+                  status=0
+                  if ! wait "$server_test_pid"; then
+                    echo "::error title=Server tests failed::See the [server]-prefixed output in this step."
+                    status=1
+                  fi
+                  if ! wait "$client_test_pid"; then
+                    echo "::error title=Client tests failed::See the [client]-prefixed output in this step."
+                    status=1
+                  fi
+                  exit "$status"
+
+            # Local firebase deploy continues to use the full hooks in firebase.json. CI
+            # builds once here, in parallel where possible, then removes those hooks only
+            # from its generated config to avoid rebuilding the same artifacts at deploy.
+            - name: Build deployment artifacts
+              env:
+                  DEPLOY_HOSTING: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.hosting == 'true' }}
+                  DEPLOY_FUNCTIONS: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.functions == 'true' }}
+                  GCLOUD_PROJECT: ${{ env.PROJECT_ID }}
+              run: |
+                  npm --prefix server/fizz-kidz run build
+
+                  hosting_build_pid=
+                  functions_build_pid=
+
+                  if [ "$DEPLOY_HOSTING" = "true" ]; then
+                    (
+                      set -o pipefail
+                      FIZZ_KIDZ_PREBUILT=true sh ./client/predeploy.sh 2>&1 | sed -u 's/^/[hosting] /'
+                    ) &
+                    hosting_build_pid=$!
+                  fi
+
+                  if [ "$DEPLOY_FUNCTIONS" = "true" ]; then
+                    (
+                      set -o pipefail
+                      npm --prefix server run build:prebuilt 2>&1 | sed -u 's/^/[functions] /'
+                    ) &
+                    functions_build_pid=$!
+                  fi
+
+                  status=0
+                  if [ -n "$hosting_build_pid" ] && ! wait "$hosting_build_pid"; then
+                    echo "::error title=Hosting build failed::See the [hosting]-prefixed output in this step."
+                    status=1
+                  fi
+                  if [ -n "$functions_build_pid" ] && ! wait "$functions_build_pid"; then
+                    echo "::error title=Functions build failed::See the [functions]-prefixed output in this step."
+                    status=1
+                  fi
+                  exit "$status"
+
+            - name: Install Firebase CLI
+              run: npm i -g firebase-tools
+
+            - name: Deploy Firebase targets
+              env:
+                  DEPLOY_HOSTING: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.hosting == 'true' }}
+                  DEPLOY_FUNCTIONS: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.functions == 'true' }}
+                  GCLOUD_PROJECT: ${{ env.PROJECT_ID }}
+                  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+              run: |
+                  if [ "$DEPLOY_HOSTING" = "true" ] && [ "$DEPLOY_FUNCTIONS" = "true" ]; then
+                    targets="functions,hosting"
+                  elif [ "$DEPLOY_FUNCTIONS" = "true" ]; then
+                    targets="functions"
+                  elif [ "$DEPLOY_HOSTING" = "true" ]; then
+                    targets="hosting"
+                  else
+                    echo "No Firebase targets changed"
+                    exit 0
+                  fi
+
+                  # Artifacts were built above. Removing hooks from this generated config
+                  # affects CI only; local firebase deploy still runs every predeploy hook.
+                  jq 'del(.hosting.predeploy, .functions.predeploy)' firebase.json > firebase.ci.json
+
+                  firebase deploy \
+                    --config firebase.ci.json \
+                    --only "$targets" \
+                    --project "$PROJECT_ID" \
+                    --token "$FIREBASE_TOKEN" \
+                    --non-interactive \
+                    --force

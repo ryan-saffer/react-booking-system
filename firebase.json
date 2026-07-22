@@ -1,58 +1,70 @@
 {
-  "hosting": {
-    "public": "client/dist",
-    "rewrites": [
-      {
-        "source": "/api{,/**}",
-        "function": {
-          "functionId": "api",
-          "region": "australia-southeast1"
-        }
-      },
-      {
-        "source": "/forms{,/**}",
-        "function": {
-          "functionId": "api",
-          "region": "australia-southeast1"
-        }
-      },
-      {
-        "source": "/invite/**",
-        "destination": "/invitation.html"
-      },
-      {
-        "source": "/invitation/**",
-        "destination": "/invitation.html"
-      },
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ],
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "predeploy": ["sh ./client/predeploy.sh"]
-  },
-  "emulators": {
-    "functions": {
-      "port": 5001
-    },
-    "firestore": {
-      "port": 8080
-    },
     "hosting": {
-      "port": 5002
+        "public": "client/dist",
+        "rewrites": [
+            {
+                "source": "/api{,/**}",
+                "function": {
+                    "functionId": "api",
+                    "region": "australia-southeast1"
+                }
+            },
+            {
+                "source": "/forms{,/**}",
+                "function": {
+                    "functionId": "api",
+                    "region": "australia-southeast1"
+                }
+            },
+            {
+                "source": "/invite/**",
+                "destination": "/invitation.html"
+            },
+            {
+                "source": "/invitation/**",
+                "destination": "/invitation.html"
+            },
+            {
+                "source": "**",
+                "destination": "/index.html"
+            }
+        ],
+        "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+        "predeploy": ["sh ./client/predeploy.sh"]
     },
-    "ui": {
-      "enabled": true,
-      "port": 4000
+    "emulators": {
+        "functions": {
+            "port": 5001
+        },
+        "firestore": {
+            "port": 8080
+        },
+        "hosting": {
+            "port": 5002
+        },
+        "ui": {
+            "enabled": true,
+            "port": 4000
+        },
+        "singleProjectMode": true,
+        "pubsub": {
+            "port": 8085
+        }
     },
-    "singleProjectMode": true,
-    "pubsub": {
-      "port": 8085
+    "functions": {
+        "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run build"],
+        "source": "server",
+        "ignore": [
+            "node_modules",
+            ".git",
+            "firebase-debug.log",
+            "firebase-debug.*.log",
+            "pubsub-debug.log",
+            "ui-debug.log",
+            "coverage/**",
+            "lib-tsc/**",
+            "src/**",
+            "**/*.tsbuildinfo"
+        ]
     }
-  },
-  "functions": {
-    "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run build"],
-    "source": "server"
-  }
 }

@@ -5,7 +5,7 @@ import path from 'path'
 import chromium from '@sparticuz/chromium'
 import { DateTime } from 'luxon'
 import Mustache from 'mustache'
-import puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer-core'
 
 import { addOrdinalSuffix, getStudioAddress } from 'fizz-kidz'
 import type { GenerateInvitation, InvitationOption } from 'fizz-kidz'
@@ -17,7 +17,7 @@ import { projectId } from '@/init'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { isUsingEmulator } from '@/utilities'
 
-import type { Browser } from 'puppeteer'
+import type { Browser } from 'puppeteer-core'
 
 export async function generateInvitation(input: GenerateInvitation) {
     // serialise back into a date
@@ -28,7 +28,11 @@ export async function generateInvitation(input: GenerateInvitation) {
 
     try {
         if (isUsingEmulator()) {
-            browser = await puppeteer.launch()
+            browser = await puppeteer.launch(
+                process.env.PUPPETEER_EXECUTABLE_PATH
+                    ? { executablePath: process.env.PUPPETEER_EXECUTABLE_PATH }
+                    : { channel: 'chrome' }
+            )
         } else {
             browser = await puppeteer.launch({
                 args: chromium.args,

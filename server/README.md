@@ -113,3 +113,5 @@ npm run serve
 ```
 
 This command (from `server/package.json`) typically builds the server code (including the `fizz-kidz` module) in watch mode and starts the Firebase emulators for Functions and Pub/Sub.
+
+Invitation generation in the emulator uses an installed Google Chrome rather than downloading a separate browser with Puppeteer. If Chrome is installed in a non-standard location, set `PUPPETEER_EXECUTABLE_PATH` to its executable before starting the emulators. Production continues to use `@sparticuz/chromium`.
