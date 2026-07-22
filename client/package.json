@@ -58,7 +58,6 @@
         "firebase": "^10.6.0",
         "fizz-kidz": "file:../server/fizz-kidz",
         "fuse.js": "^7.3.0",
-        "googleapis": "^39.2.0",
         "lucide-react": "^0.562.0",
         "luxon": "^3.4.3",
         "mixpanel-browser": "^2.45.0",

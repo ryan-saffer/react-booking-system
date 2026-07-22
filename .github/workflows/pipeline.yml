@@ -74,18 +74,70 @@ jobs:
             echo "Wrote client/.env"
           fi
 
+      # setup-node caches npm's downloaded package archives, but npm ci still recreates
+      # node_modules. Cache each installed dependency tree separately so an unchanged
+      # package can skip npm ci entirely. Exact keys prevent stale dependencies, while
+      # the OS, architecture, and Node version protect native binaries such as canvas.
+      - name: Cache dependencies (fizz-kidz)
+        id: cache-fizz-kidz-dependencies
+        uses: actions/cache@v4
+        with:
+          path: server/fizz-kidz/node_modules
+          key: fizz-kidz-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.nvmrc', 'server/fizz-kidz/package-lock.json') }}
+
+      - name: Cache dependencies (server)
+        id: cache-server-dependencies
+        uses: actions/cache@v4
+        with:
+          path: server/node_modules
+          key: server-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.nvmrc', 'server/package-lock.json') }}
+
+      - name: Cache dependencies (client)
+        id: cache-client-dependencies
+        uses: actions/cache@v4
+        with:
+          path: client/node_modules
+          key: client-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.nvmrc', 'client/package-lock.json') }}
+
       # Ensure local package builds have their toolchains
       - name: Install dependencies (fizz-kidz)
-        run: npm ci
+        if: steps.cache-fizz-kidz-dependencies.outputs.cache-hit != 'true'
+        run: npm ci --prefer-offline --no-audit --no-fund
         working-directory: server/fizz-kidz
 
-      - name: Install dependencies (server)
-        run: npm ci
-        working-directory: server
+      # The two largest installs are independent, so run cache misses concurrently on
+      # the same runner. A cache hit still skips only its corresponding installation.
+      - name: Install dependencies (server and client)
+        if: steps.cache-server-dependencies.outputs.cache-hit != 'true' || steps.cache-client-dependencies.outputs.cache-hit != 'true'
+        env:
+          SERVER_CACHE_HIT: ${{ steps.cache-server-dependencies.outputs.cache-hit }}
+          CLIENT_CACHE_HIT: ${{ steps.cache-client-dependencies.outputs.cache-hit }}
+        run: |
+          server_pid=
+          client_pid=
 
-      - name: Install dependencies (client)
-        run: npm ci
-        working-directory: client
+          if [ "$SERVER_CACHE_HIT" != "true" ]; then
+            # Production uses @sparticuz/chromium and CI does not launch a browser.
+            # Skip Puppeteer's separate Chrome download; local installs remain unchanged.
+            PUPPETEER_SKIP_DOWNLOAD=true npm --prefix server ci --prefer-offline --no-audit --no-fund &
+            server_pid=$!
+          fi
+
+          if [ "$CLIENT_CACHE_HIT" != "true" ]; then
+            npm --prefix client ci --prefer-offline --no-audit --no-fund &
+            client_pid=$!
+          fi
+
+          status=0
+          if [ -n "$server_pid" ] && ! wait "$server_pid"; then
+            echo "Server dependency installation failed"
+            status=1
+          fi
+          if [ -n "$client_pid" ] && ! wait "$client_pid"; then
+            echo "Client dependency installation failed"
+            status=1
+          fi
+          exit "$status"
 
       - name: Run client tests
         run: npm test
