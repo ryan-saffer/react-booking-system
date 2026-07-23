@@ -31,6 +31,24 @@ PIDS=()
 LABELS=()
 LOGS=()
 
+if [[ -t 1 && -z ${NO_COLOR:-} && ${TERM:-dumb} != dumb ]]; then
+    GREEN=$'\033[32m'
+    RED=$'\033[31m'
+    CYAN=$'\033[36m'
+    YELLOW=$'\033[33m'
+    BOLD=$'\033[1m'
+    DIM=$'\033[2m'
+    RESET=$'\033[0m'
+else
+    GREEN=''
+    RED=''
+    CYAN=''
+    YELLOW=''
+    BOLD=''
+    DIM=''
+    RESET=''
+fi
+
 cleanup() {
     for pid in "${PIDS[@]}"; do
         kill "$pid" 2>/dev/null || true
@@ -64,9 +82,24 @@ start_task() {
 }
 
 wait_for_tasks() {
+    local phase=$1
     local statuses=()
     local failed=0
     local index
+    local frame=0
+    local started_at=$SECONDS
+    local spinner=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
+
+    if [[ -t 1 ]]; then
+        while tasks_running; do
+            printf '\r\033[2K  %b%s%b %s' "$CYAN" "${spinner[$frame]}" "$RESET" "$phase"
+            frame=$(((frame + 1) % ${#spinner[@]}))
+            sleep 0.08
+        done
+        printf '\r\033[2K'
+    else
+        printf '  • %s...\n' "$phase"
+    fi
 
     for index in "${!PIDS[@]}"; do
         wait "${PIDS[$index]}"
@@ -76,12 +109,36 @@ wait_for_tasks() {
     for index in "${!PIDS[@]}"; do
         if [[ ${statuses[$index]} -ne 0 ]]; then
             failed=1
-            printf '\n%s failed (exit code %s):\n' "${LABELS[$index]}" "${statuses[$index]}"
-            cat "${LOGS[$index]}"
         fi
     done
 
+    if [[ $failed -ne 0 ]]; then
+        printf '  %b✗%b %s %bfailed%b\n' "$RED" "$RESET" "$phase" "$RED" "$RESET"
+        for index in "${!PIDS[@]}"; do
+            if [[ ${statuses[$index]} -eq 0 ]]; then
+                continue
+            fi
+            printf '\n%b%s%b %b(exit code %s)%b\n' "$YELLOW" "${LABELS[$index]}" "$RESET" "$DIM" "${statuses[$index]}" "$RESET"
+            cat "${LOGS[$index]}"
+            printf '\n'
+        done
+    fi
+
+    if [[ $failed -eq 0 ]]; then
+        printf '  %b✓%b %s %b(%ss)%b\n' "$GREEN" "$RESET" "$phase" "$DIM" "$((SECONDS - started_at))" "$RESET"
+    fi
+
     return "$failed"
+}
+
+tasks_running() {
+    local pid
+    for pid in "${PIDS[@]}"; do
+        if kill -0 "$pid" 2>/dev/null; then
+            return 0
+        fi
+    done
+    return 1
 }
 
 format_changed_files() {
@@ -112,26 +169,26 @@ format_changed_files() {
     fi
 }
 
-reset_tasks
-printf 'Formatting changed files...\n'
-start_task "Prettier" "$ROOT" format_changed_files
-wait_for_tasks || exit 1
+VERIFY_STARTED_AT=$SECONDS
+
+printf '\n%b%s%b\n\n' "$BOLD" 'Fizz Kidz verification' "$RESET"
 
 reset_tasks
-printf 'Linting client and server...\n'
+start_task "Prettier" "$ROOT" format_changed_files
+wait_for_tasks "Formatting changed files" || exit 1
+
+reset_tasks
 start_task "Client lint" "$ROOT/client" npm run lint
 start_task "Server lint" "$ROOT/server" npm run lint
-wait_for_tasks || exit 1
+wait_for_tasks "Linting client and server" || exit 1
 
 reset_tasks
-printf 'Typechecking client, server, and shared code...\n'
 start_task "Typecheck" "$ROOT/client" npm run ts:check
-wait_for_tasks || exit 1
+wait_for_tasks "Typechecking all packages" || exit 1
 
 reset_tasks
-printf 'Testing client and server...\n'
 start_task "Client tests" "$ROOT/client" npm test
 start_task "Server tests" "$ROOT/server" npm test
-wait_for_tasks || exit 1
+wait_for_tasks "Testing client and server" || exit 1
 
-printf 'All checks passed.\n'
+printf '\n%b%b✨ All checks passed%b %b(%ss)%b\n\n' "$BOLD" "$GREEN" "$RESET" "$DIM" "$((SECONDS - VERIFY_STARTED_AT))" "$RESET"
