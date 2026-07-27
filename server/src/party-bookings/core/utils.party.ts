@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 
-import type { Addition, BaseBooking } from 'fizz-kidz'
+import type { Addition, BaseBooking, Booking, Studio } from 'fizz-kidz'
 import { ADDITIONS, CREATIONS } from 'fizz-kidz'
 
 import { buildHostedPaperformUrl } from '@/paperforms/core/hosted-paperform-url'
@@ -76,4 +76,8 @@ export function getUpcoming(day: DayOfTheWeek) {
 
     const nextDate = today.plus({ days: daysUntilNext })
     return nextDate.toJSDate()
+}
+
+export function canOrderCake(type: Booking['type'], studio: Studio) {
+  return type === 'studio' && studio !== 'geelong'
 }

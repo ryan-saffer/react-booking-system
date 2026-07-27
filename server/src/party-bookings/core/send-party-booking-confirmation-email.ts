@@ -19,7 +19,7 @@ import { env } from '@/init'
 import { MailClient } from '@/sendgrid/MailClient'
 import { isUsingEmulator } from '@/utilities'
 
-import { getCakeFormUrl } from './utils.party'
+import { canOrderCake, getCakeFormUrl } from './utils.party'
 
 type SendPartyBookingConfirmationEmailInput = {
     bookingId: string
@@ -90,7 +90,7 @@ export async function sendPartyBookingConfirmationEmail({
             useRsvpSystem: booking.useRsvpSystem || false,
             invitationsUrl,
             includesFood: booking.includesFood,
-            canOrderCake: booking.type === 'studio' && booking.location !== 'geelong',
+            canOrderCake: canOrderCake(booking.type, booking.location),
             cakeFormUrl: getCakeFormUrl(bookingId),
         },
         { subject, replyTo: studioContactEmail }

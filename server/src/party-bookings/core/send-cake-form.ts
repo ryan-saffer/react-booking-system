@@ -4,7 +4,7 @@ import { timestampConverter } from '@/firebase/firestore-converters'
 import { FirestoreRefs } from '@/firebase/FirestoreRefs'
 import { MailClient } from '@/sendgrid/MailClient'
 
-import { getCakeFormUrl, getUpcoming } from './utils.party'
+import { canOrderCake, getCakeFormUrl, getUpcoming } from './utils.party'
 
 /**
  *  Runs every Tuesday.
@@ -29,12 +29,12 @@ export async function sendCakeForms() {
     // filter out bookings that have already ordered a cake or take home bag
     const bookings = querySnapshot.docs.filter((doc) => {
         const booking = doc.data() as Booking
-        const excluded = booking.location === 'geelong' || booking.type === 'mobile'
+        const eligible = canOrderCake(booking.type, booking.location)
         const alreadyOrderedSomething =
             !!booking.cake ||
             Object.keys(booking.takeHomeBags || {}).length > 0 ||
             Object.keys(booking.products || {}).length > 0
-        return !alreadyOrderedSomething && !excluded
+        return eligible && !alreadyOrderedSomething
     })
 
     const mailClient = await MailClient.getInstance()

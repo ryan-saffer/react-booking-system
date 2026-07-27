@@ -22,7 +22,7 @@ import { MailClient } from '@/sendgrid/MailClient'
 import { isUsingEmulator, logError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
-import { getCakeFormUrl } from './utils.party'
+import { canOrderCake, getCakeFormUrl } from './utils.party'
 
 export async function updatePartyBooking(input: { bookingId: string; booking: Booking }) {
     const { bookingId, booking } = input
@@ -122,7 +122,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
                     invitationsUrl,
                     includesFood: booking.includesFood,
-                    canOrderCake: booking.type === 'studio',
+                    canOrderCake: canOrderCake(booking.type, booking.location),
                     cakeFormUrl: getCakeFormUrl(bookingId),
                     useRsvpSystem: booking.useRsvpSystem || false,
                 },
