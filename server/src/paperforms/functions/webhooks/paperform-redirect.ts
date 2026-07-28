@@ -120,8 +120,8 @@ partyFormRedirect.get('/party-form/payment-link', async (req, res) => {
     const cakeServing = responses.getFieldValue('cake_served')
     const cakeCandles = responses.getFieldValue('cake_candles')
 
-    const takeHomeBags = responses.getFieldValue('take_home_bags')
-    const products = responses.getFieldValue('products')
+    const takeHomeBags = responses.getFieldValue('take_home_bags') ?? []
+    const products = responses.getFieldValue('products') ?? []
 
     const host = getApplicationDomain(env, isUsingEmulator())
 
@@ -248,7 +248,7 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
     try {
         const claim = await DatabaseClient.claimPartyFormSubmissionProcessing(submissionId, bookingId)
         if (!claim.shouldProcess) {
-            res.redirect(303, claim.status === 'failed' ? ERROR_REDIRECT : SUCCESS_REDIRECT)
+            res.redirect(303, claim.status === 'completed' ? SUCCESS_REDIRECT : ERROR_REDIRECT)
             return
         }
     } catch (err) {
@@ -257,53 +257,55 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
         return
     }
 
-    // Square automatically removes tracked inventory quantities.
-    // Since these are ordered through the supplier, we don't want to change the inventory levels - so adjust it back here.
-    const takeHomeBags = responses.getFieldValue('take_home_bags')
-    const products = responses.getFieldValue('products')
-    if (takeHomeBags.length > 0 || products.length > 0) {
-        const booking = await DatabaseClient.getPartyBooking(bookingId)
-        const locationId = getSquareLocationId(env === 'prod' ? booking.location : 'test')
-        const square = await SquareClient.getInstance()
-        const takeHomeBagChanges: Square.InventoryChange[] = takeHomeBags.map((item) => ({
-            type: 'ADJUSTMENT',
-            adjustment: {
-                catalogObjectId: mapTakeHomeBagToSquareVariation(env, item.SKU as TakeHomeBagType),
-                locationId,
-                quantity: item.quantity.toString(),
-                fromState: 'NONE',
-                toState: 'IN_STOCK',
-                occurredAt: new Date().toISOString(),
-            },
-        }))
-        const productsChanges: Square.InventoryChange[] = products.map((product) => ({
-            type: 'ADJUSTMENT',
-            adjustment: {
-                catalogObjectId: mapProductToSquareVariation(env, product.SKU as ProductType),
-                locationId,
-                quantity: product.quantity.toString(),
-                fromState: 'NONE',
-                toState: 'IN_STOCK',
-                occurredAt: new Date().toISOString(),
-            },
-        }))
-        try {
-            await square.inventory.batchCreateChanges({
-                idempotencyKey: randomUUID(),
-                changes: [...takeHomeBagChanges, ...productsChanges],
-            })
-        } catch (err) {
-            logError('Error adjusting inventory for square item during party form payment', err, {
-                bookingId,
-                submissionId,
-            })
-        }
-    }
-
-    // Handle the complete form submission (mapping, database updates, emails, etc.)
     try {
+        // Square automatically removes tracked inventory quantities.
+        // Since these are ordered through the supplier, we don't want to change the inventory levels - so adjust it back here.
+        const takeHomeBags = responses.getFieldValue('take_home_bags') ?? []
+        const products = responses.getFieldValue('products') ?? []
+        if (takeHomeBags.length > 0 || products.length > 0) {
+            const booking = await DatabaseClient.getPartyBooking(bookingId)
+            const locationId = getSquareLocationId(env === 'prod' ? booking.location : 'test')
+            const square = await SquareClient.getInstance()
+            const takeHomeBagChanges: Square.InventoryChange[] = takeHomeBags.map((item) => ({
+                type: 'ADJUSTMENT',
+                adjustment: {
+                    catalogObjectId: mapTakeHomeBagToSquareVariation(env, item.SKU as TakeHomeBagType),
+                    locationId,
+                    quantity: item.quantity.toString(),
+                    fromState: 'NONE',
+                    toState: 'IN_STOCK',
+                    occurredAt: new Date().toISOString(),
+                },
+            }))
+            const productsChanges: Square.InventoryChange[] = products.map((product) => ({
+                type: 'ADJUSTMENT',
+                adjustment: {
+                    catalogObjectId: mapProductToSquareVariation(env, product.SKU as ProductType),
+                    locationId,
+                    quantity: product.quantity.toString(),
+                    fromState: 'NONE',
+                    toState: 'IN_STOCK',
+                    occurredAt: new Date().toISOString(),
+                },
+            }))
+            try {
+                await square.inventory.batchCreateChanges({
+                    idempotencyKey: randomUUID(),
+                    changes: [...takeHomeBagChanges, ...productsChanges],
+                })
+            } catch (err) {
+                logError('Error adjusting inventory for square item during party form payment', err, {
+                    bookingId,
+                    submissionId,
+                })
+            }
+        }
+
+        // Handle the complete form submission (mapping, database updates, emails, etc.)
         await handlePartyFormSubmission(responses)
+        await DatabaseClient.completePartyFormSubmissionProcessing(submissionId)
     } catch (err) {
+        logError('Error processing party form submission', err, { submissionId, bookingId })
         try {
             await DatabaseClient.failPartyFormSubmissionProcessing(submissionId, err)
         } catch (innerErr) {
@@ -311,13 +313,6 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
         }
         res.redirect(303, ERROR_REDIRECT)
         return
-    }
-
-    try {
-        await DatabaseClient.completePartyFormSubmissionProcessing(submissionId)
-    } catch (err) {
-        // Processing already completed; this is only used to prevent duplicate runs.
-        logError('Error marking party form submission processing as completed', err, { submissionId, bookingId })
     }
 
     res.redirect(303, SUCCESS_REDIRECT)

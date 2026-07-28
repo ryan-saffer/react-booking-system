@@ -34,7 +34,7 @@ export async function handlePartyFormSubmission(responses: PaperformSubmission<P
         }
     } catch (err) {
         logError('error handling party form submission', err, { responses })
-        return
+        throw err
     }
 
     const mailClient = await MailClient.getInstance()

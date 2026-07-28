@@ -95,7 +95,7 @@ export class PartyFormMapper {
                   ] as const)
 
         const creations = creationKeys.reduce(
-            (acc, curr) => [...acc, ...this.responses.getFieldValue(curr)],
+            (acc, curr) => [...acc, ...(this.responses.getFieldValue(curr) ?? [])],
             [] as string[]
         )
 
@@ -133,12 +133,14 @@ export class PartyFormMapper {
             creation3: creations.length > 2 ? creations[2] : undefined,
             funFacts: this.responses.getFieldValue('fun_facts'),
             questions: this.responses.getFieldValue('questions'),
-            takeHomeBags: this.responses
-                .getFieldValue('take_home_bags')
-                .reduce((acc, { SKU, quantity }) => ({ ...acc, [SKU]: quantity }), {}),
-            products: this.responses
-                .getFieldValue('products')
-                .reduce((acc, { SKU, quantity }) => ({ ...acc, [SKU]: quantity }), {}),
+            takeHomeBags:
+                this.responses
+                    .getFieldValue('take_home_bags')
+                    ?.reduce((acc, { SKU, quantity }) => ({ ...acc, [SKU]: quantity }), {}) ?? {},
+            products:
+                this.responses
+                    .getFieldValue('products')
+                    ?.reduce((acc, { SKU, quantity }) => ({ ...acc, [SKU]: quantity }), {}) ?? {},
         }
 
         return booking
@@ -176,7 +178,7 @@ export class PartyFormMapper {
      * This will lookup each addition and return the key, or throw an error if it can't find one.
      */
     #mapAdditionFormValuesToAdditionKeys() {
-        const formValues = this.responses.getFieldValue('additions')
+        const formValues = this.responses.getFieldValue('additions') ?? []
         const additions = formValues.map((formValue) => {
             const addition = ObjectEntries(ADDITIONS).find(
                 ([, additionKey]) => formValue === additionKey.displayValueWithPrice

@@ -41,8 +41,8 @@ export type PartyForm = {
     cake_served: 'cup' | 'waffle_cones' | 'bring_own_bowls'
     cake_candles: 'include_candles' | 'bring_own_candles'
     cake_message: string
-    take_home_bags: { SKU: string; quantity: number }[]
-    products: { SKU: string; quantity: number }[]
+    take_home_bags?: { SKU: string; quantity: number }[]
+    products?: { SKU: string; quantity: number }[]
     fun_facts: string
     questions: string
 }
