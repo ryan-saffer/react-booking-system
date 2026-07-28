@@ -8,7 +8,7 @@ import {
 function JobListings() {
   return (
     <Accordion type="multiple" className="rounded-2xl border">
-      <AccordionItem value="1" className="px-4">
+      {/*<AccordionItem value="1" className="px-4">
         <AccordionTrigger className="font-bold">Area Manager</AccordionTrigger>
         <AccordionContent className="text-base">
           <strong>Position Overview:</strong>
@@ -210,7 +210,7 @@ function JobListings() {
           vibrant network of Fizz Kidz party studios, making a positive impact
           on children's lives while driving business success.
         </AccordionContent>
-      </AccordionItem>
+      </AccordionItem>*/}
       {/* <AccordionItem value="2" className="px-4">
         <AccordionTrigger className="font-bold">
           Social Media & Content Creator

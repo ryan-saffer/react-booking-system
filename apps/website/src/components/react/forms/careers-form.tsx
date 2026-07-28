@@ -213,7 +213,7 @@ function CareersForm() {
               >
                 <SelectValue placeholder="Select role" />
                 <SelectContent>
-                  <SelectItem value="area-manager">Area Manager</SelectItem>
+                  {/*<SelectItem value="area-manager">Area Manager</SelectItem>*/}
                   {/* <SelectItem value="social-media">
                     Social Media & Content Creator
                   </SelectItem>
