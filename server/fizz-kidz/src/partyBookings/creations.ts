@@ -47,7 +47,7 @@ const FAIRY_CREATIONS = {
     fairyBathBombs: 'Fairy Bath Bombs',
     marshmallowSlime: 'Marshmallow Slime',
     fairyHairShimmer: 'Fairy Hair Shimmer',
-    glowCrowns: 'Glow Crowns',
+    sparkleCrowns: 'Sparkle Crowns',
 } as const
 
 const FLUID_BEAR_CREATIONS = {
@@ -71,7 +71,7 @@ const UNICORN_CREATIONS = {
     unicornSoap: 'Unicorn Soap',
     unicornBathBombsWithHorns: 'Unicorn Bath Bombs (With horns!)',
     unicornCloudSlime: 'Unicorn Cloud Slime',
-    glowCrowns: 'Glow Crowns',
+    sparkleCrowns: 'Sparkle Crowns',
 } as const
 
 const TIE_DYE_CREATIONS = {
@@ -90,7 +90,7 @@ const TAYLOR_SWIFT_CREATIONS = {
     loverGlitterFacePaint: "'Lover' Glitter Face Paint",
     glitterFaceShimmer: 'Glitter Face Shimmer',
     sparklingLipBalm: 'Sparkling Lip Balm',
-    glowCrowns: 'Glow Crowns',
+    sparkleCrowns: 'Sparkle Crowns',
     charmKeyrings: 'Charm Keyrings',
 } as const
 
@@ -102,7 +102,7 @@ const K_POP_POWER_CREATIONS = {
     heroPowerChargers: 'Hero Power Chargers',
     moonBeamBracelets: 'Moon Beam Bracelets',
     charmKeyrings: 'Charm Keyrings',
-    glowCrowns: 'Glow Crowns',
+    sparkleCrowns: 'Sparkle Crowns',
 } as const
 
 export const CREATION_PACKAGES = {
@@ -172,6 +172,7 @@ const DEPRECATED_CREATIONS = {
     glitterHairGel: 'Glitter Hair Gel',
     glitterSlime: 'Glitter Slime',
     glitterSoap: 'Glitter Soap',
+    glowCrowns: 'Glow Crowns',
     goldSlime: 'Gold Slime',
     hendrixGlitterShine: 'Huntrix Glitter Shine',
     instantSnowSlime: 'Instant Snow Slime',
