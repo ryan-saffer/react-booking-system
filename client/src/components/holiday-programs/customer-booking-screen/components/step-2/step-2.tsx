@@ -4,10 +4,10 @@ import React, { Fragment, useState } from 'react'
 
 import { PhoneRule, SimpleTextRule } from '@utils/formUtils'
 
+import { useCart } from '../../state/cart-store'
 import CancellationPolicyModal from './cancellation-policy-modal'
 import { ChildForm } from './child-form'
 import TermsAndConditionsModal from './terms-and-conditions-modal'
-import { useCart } from '../../state/cart-store'
 
 import type { Form as TForm } from '../../pages/customer-booking-page'
 import type { FormInstance } from 'antd'

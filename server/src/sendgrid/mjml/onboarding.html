@@ -2,28 +2,20 @@
     <mj-head>
         <mj-attributes>
             <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
-            <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px"
-                font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+            <mj-text
+                font-weight="400"
+                font-size="16px"
+                color="#000000"
+                line-height="24px"
+                font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+            ></mj-text>
         </mj-attributes>
-        <mj-style inline="inline">
-            .text-link {
-            color: #5e6ebf
-            }
-        </mj-style>
-        <mj-style inline="inline">
-            .footer-link {
-            color: #888888
-            }
-        </mj-style>
-        <mj-style>
-            .btn-block a {
-            display: block !important;
-            }
-        </mj-style>
-
+        <mj-style inline="inline"> .text-link { color: #5e6ebf } </mj-style>
+        <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
+        <mj-style> .btn-block a { display: block !important; } </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
-        <mj-section background-color="#eec73b" padding-bottom='0px'>
+        <mj-section background-color="#eec73b" padding-bottom="0px">
             <mj-column width="100%">
                 <mj-spacer height="30px" />
                 <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
@@ -38,10 +30,7 @@
         </mj-section>
         <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
             <mj-column width="100%">
-                <mj-text color="#637381" font-size="16px">
-                    Hi
-                    {{employeeName}},
-                </mj-text>
+                <mj-text color="#637381" font-size="16px"> Hi {{employeeName}}, </mj-text>
                 <mj-text color="#637381" font-size="16px">
                     We are so excited to welcome you to the Fizz Kidz team!
                 </mj-text>
@@ -49,9 +38,19 @@
                     To onboard you into our system, and roster you on for your first shift, we need some details from
                     you. Please click on the link below to get started. The form will include a link to your contract.
                 </mj-text>
-                <mj-button css-class="btn-block" background-color="#9ecc47" padding="20px" align="center"
-                    color="#ffffff" font-size="17px" font-weight="bold" href="{{ formUrl }}" width='100%'
-                    css-class="btn-block" border="1px #9ecc47 solid">
+                <mj-button
+                    css-class="btn-block"
+                    background-color="#9ecc47"
+                    padding="20px"
+                    align="center"
+                    color="#ffffff"
+                    font-size="17px"
+                    font-weight="bold"
+                    href="{{ formUrl }}"
+                    width="100%"
+                    css-class="btn-block"
+                    border="1px #9ecc47 solid"
+                >
                     Onboarding Form ↗️
                 </mj-button>
             </mj-column>
@@ -59,15 +58,9 @@
                 <mj-text color="#637381" font-size="16px">
                     If you have any questions or issues, just reply to this email.
                 </mj-text>
-                <mj-text color="#637381" font-size="16px">
-                    We look forward to seeing you in the studios soon.
-                </mj-text>
-                <mj-text color="#637381" font-size="16px">
-                    Have a fizzing day!
-                </mj-text>
-                <mj-text color="#637381" font-size="16px">
-                    {{ senderName }}
-                </mj-text>
+                <mj-text color="#637381" font-size="16px"> We look forward to seeing you in the studios soon. </mj-text>
+                <mj-text color="#637381" font-size="16px"> Have a fizzing day! </mj-text>
+                <mj-text color="#637381" font-size="16px"> {{ senderName }} </mj-text>
             </mj-column>
         </mj-section>
         <mj-wrapper full-width="full-width">
@@ -75,9 +68,12 @@
                 <mj-group>
                     <mj-column width="100%" padding-right="0">
                         <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
-                            <a class="footer-link"
-                                href="mailto:info@fizzkidz.com.au">info@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
-                                class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
+                            <a class="footer-link" href="mailto:info@fizzkidz.com.au">info@fizzkidz.com.au</a
+                            >&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
+                                class="footer-link"
+                                href="https://www.fizzkidz.com.au"
+                                >www.fizzkidz.com.au</a
+                            >
                         </mj-text>
                     </mj-column>
                 </mj-group>

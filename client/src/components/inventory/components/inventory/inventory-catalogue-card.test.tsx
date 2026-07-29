@@ -4,8 +4,8 @@ import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { InventoryCatalogueCard } from './inventory-catalogue-card'
 import { useInventoryStore } from '../../state/inventory-store'
+import { InventoryCatalogueCard } from './inventory-catalogue-card'
 
 import type { ClientInventoryItem, ClientInventoryStockLevel } from '../../utils/inventory.types'
 import type { ReactNode } from 'react'

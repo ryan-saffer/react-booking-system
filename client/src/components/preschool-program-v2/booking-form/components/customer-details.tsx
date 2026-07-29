@@ -28,11 +28,11 @@ import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
 import { cn } from '@utils/tailwind'
 
-import { PreschoolProgramCancellationPolicy } from './cancellation-policy'
-import { PreschoolProgramTermsAndConditions } from './terms-and-conditions'
 import { useCart } from '../state/cart-store'
 import { useBookingForm, type PreschoolProgramV2BookingForm } from '../state/form-schema'
 import { useFormStage } from '../state/form-stage-store'
+import { PreschoolProgramCancellationPolicy } from './cancellation-policy'
+import { PreschoolProgramTermsAndConditions } from './terms-and-conditions'
 
 import type { DateTime } from 'luxon'
 

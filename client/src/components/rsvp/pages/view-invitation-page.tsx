@@ -48,7 +48,7 @@ export function ViewInvitationPage() {
         )
 
         return () => unsub()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [id])
 
     function canManageRsvps(invitation: InvitationsV2.Invitation) {

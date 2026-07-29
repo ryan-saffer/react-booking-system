@@ -72,7 +72,7 @@ export async function updateSlingWages() {
 
         const body: UpdateWagesBody = []
         logger.log(`Fetching Xero info for ${xeroUser.firstName} ${xeroUser.lastName}`)
-        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+        // oxlint-disable-next-line typescript/no-non-null-asserted-optional-chain
         const employee = (await xero.payrollAUApi.getEmployee('', xeroUser.employeeID!)).body.employees?.[0]!
         const ordinaryRate = employee.payTemplate?.earningsLines?.find(
             (line) => line.earningsRateID === OrdindayEarningsRateMap[studio]

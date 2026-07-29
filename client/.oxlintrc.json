@@ -1,0 +1,38 @@
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "plugins": ["typescript", "react"],
+    "categories": {
+        "correctness": "error"
+    },
+    "env": {
+        "browser": true,
+        "es2020": true
+    },
+    "ignorePatterns": ["dist", "vite.config.d.ts"],
+    "options": {
+        "reportUnusedDisableDirectives": "error"
+    },
+    "rules": {
+        "no-duplicate-imports": "off",
+        "react/exhaustive-deps": "warn",
+        "react/only-export-components": [
+            "error",
+            {
+                "allowConstantExport": true,
+                "customHOCs": ["WithConfirmationDialog", "WithErrorDialog"]
+            }
+        ],
+        "react/rules-of-hooks": "error",
+        "typescript/ban-ts-comment": "error",
+        "typescript/consistent-type-imports": [
+            "error",
+            {
+                "prefer": "type-imports",
+                "fixStyle": "separate-type-imports"
+            }
+        ],
+        "typescript/no-empty-object-type": "off",
+        "typescript/no-explicit-any": "off",
+        "typescript/no-unused-vars": ["error", { "caughtErrors": "none" }]
+    }
+}

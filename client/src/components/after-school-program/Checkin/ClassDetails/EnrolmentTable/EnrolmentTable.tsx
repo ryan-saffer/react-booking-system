@@ -16,7 +16,6 @@ import styles from './EnrolmentTable.module.css'
 import type { EnrolmentsMap } from '..'
 import type { ColumnsType } from 'antd/es/table'
 
-
 export const BREAKPOINT_MD = 420
 export const BREAKPOINT_LG = 540
 
@@ -152,7 +151,7 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
             },
         })
         return cols
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [appointments, width])
 
     const data = useMemo<TableData[]>(

@@ -17,7 +17,6 @@ import { ChildExpandedDetails } from '../components/child-expanded-details'
 import { ChildRow } from '../components/child-row'
 import { useParams } from '../hooks/use-params'
 
-
 export function PlayLabSessionAttendancePage() {
     const trpc = useTRPC()
     const params = useParams()

@@ -10,8 +10,19 @@
                 font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
             ></mj-text>
         </mj-attributes>
-        <mj-style inline="inline"> .text-link { color: #5e6ebf } .pre-wrap { white-space: pre-wrap; } </mj-style>
-        <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
+        <mj-style inline="inline">
+            .text-link {
+                color: #5e6ebf;
+            }
+            .pre-wrap {
+                white-space: pre-wrap;
+            }
+        </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+                color: #888888;
+            }
+        </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
         <mj-section background-color="#EEC73A" padding-bottom="0px">
@@ -30,25 +41,23 @@
         <mj-wrapper padding-top="0" padding-bottom="0">
             <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
                 <mj-column width="100%">
-                    <mj-text font-size="16px"> Hi {{parentName}}, </mj-text>
+                    <mj-text font-size="16px"> Hi {{ parentName }}, </mj-text>
                     <mj-text font-size="16px">
-                        Yay! {{childName}} is all booked into the Fizz Kidz Preschool Program and we can't wait to
+                        Yay! {{ childName }} is all booked into the Fizz Kidz Preschool Program and we can't wait to
                         welcome them ✨
                     </mj-text>
                     <mj-text font-size="16px">
-                        {{childName}}'s first session is completely free, a chance for them to come along, immerse
+                        {{ childName }}'s first session is completely free, a chance for them to come along, immerse
                         themselves in the program, and enjoy everything the program has to offer 💫 After they attend,
                         we'll check in to see if you'd like to continue for the rest of the term. If so, we'll send
-                        through the term invoice and enrol {{childName}} - nice and easy 😊
+                        through the term invoice and enrol {{ childName }} - nice and easy 😊
                     </mj-text>
                     <mj-text font-size="16px">
-                        If you do continue, your facilitator will be there each week to warmly welcome {{childName}}
+                        If you do continue, your facilitator will be there each week to warmly welcome {{ childName }}
                         into the studio. You're welcome to drop off (if you like), and we'll make sure they have the
                         best time, every single session ✨
                     </mj-text>
-                    <mj-text font-size="16px">
-                        You'll find the term dates below for your reference.
-                    </mj-text>
+                    <mj-text font-size="16px"> You'll find the term dates below for your reference. </mj-text>
                 </mj-column>
                 <mj-column width="100%">
                     <mj-text
@@ -61,7 +70,7 @@
                         Program
                     </mj-text>
                     <mj-text text-transform="capitalize" font-size="14px" padding-top="0">
-                        {{className}}
+                        {{ className }}
                     </mj-text>
                 </mj-column>
                 <mj-column width="100%">
@@ -74,9 +83,7 @@
                     >
                         Location
                     </mj-text>
-                    <mj-text font-size="14px" padding-top="0" mj-class="pre-wrap">
-                        {{{location}}}
-                    </mj-text>
+                    <mj-text font-size="14px" padding-top="0" mj-class="pre-wrap"> {{{location}}} </mj-text>
                 </mj-column>
                 <mj-column width="100%">
                     <mj-text
@@ -111,9 +118,7 @@
                         at all, just reply to this email or give us a call on
                         <a href="tel:+61390598144">(03) 9059 8144</a>.
                     </mj-text>
-                    <mj-text font-size="16px">
-                        We can't wait to see {{childName}} in the studio soon!
-                    </mj-text>
+                    <mj-text font-size="16px"> We can't wait to see {{ childName }} in the studio soon! </mj-text>
                     <mj-text font-size="16px"> The Fizz Kidz Team </mj-text>
                 </mj-column>
             </mj-section>

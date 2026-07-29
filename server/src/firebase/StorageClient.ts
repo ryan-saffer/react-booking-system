@@ -1,7 +1,6 @@
 import type { ClientStatus } from '../utilities/types'
 import type { Storage } from 'firebase-admin/storage'
 
-
 export class StorageClient {
     private static instance: StorageClient
     #status: ClientStatus = 'not-initialised'

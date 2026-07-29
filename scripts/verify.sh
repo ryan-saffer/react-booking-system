@@ -159,13 +159,13 @@ format_changed_files() {
     )
 
     if [[ ${#client_files[@]} -gt 0 ]]; then
-        "$ROOT/client/node_modules/.bin/prettier" --config "$ROOT/client/.prettierrc" --write --ignore-unknown "${client_files[@]}"
+        "$ROOT/client/node_modules/.bin/oxfmt" --config "$ROOT/client/.oxfmtrc.json" "${client_files[@]}"
     fi
     if [[ ${#server_files[@]} -gt 0 ]]; then
-        "$ROOT/client/node_modules/.bin/prettier" --config "$ROOT/server/.prettierrc" --write --ignore-unknown "${server_files[@]}"
+        "$ROOT/server/node_modules/.bin/oxfmt" --config "$ROOT/server/.oxfmtrc.json" "${server_files[@]}"
     fi
     if [[ ${#root_files[@]} -gt 0 ]]; then
-        "$ROOT/client/node_modules/.bin/prettier" --config "$ROOT/server/.prettierrc" --write --ignore-unknown "${root_files[@]}"
+        "$ROOT/client/node_modules/.bin/oxfmt" --config "$ROOT/server/.oxfmtrc.json" "${root_files[@]}"
     fi
 }
 
@@ -174,7 +174,7 @@ VERIFY_STARTED_AT=$SECONDS
 printf '\n%b%s%b\n\n' "$BOLD" 'Fizz Kidz verification' "$RESET"
 
 reset_tasks
-start_task "Prettier" "$ROOT" format_changed_files
+start_task "Oxfmt" "$ROOT" format_changed_files
 wait_for_tasks "Formatting changed files" || exit 1
 
 reset_tasks

@@ -11,9 +11,21 @@
             ></mj-text>
         </mj-attributes>
         <mj-style inline="inline">
-            .text-link { color: #5e6ebf } .footer-link { color: #888888 } .underline { text-decoration: underline; }
+            .text-link {
+                color: #5e6ebf;
+            }
+            .footer-link {
+                color: #888888;
+            }
+            .underline {
+                text-decoration: underline;
+            }
         </mj-style>
-        <mj-style> .btn-block a { display: block !important; } </mj-style>
+        <mj-style>
+            .btn-block a {
+                display: block !important;
+            }
+        </mj-style>
         <mj-font name="Lilita One" href="https://fonts.googleapis.com/css2?family=Lilita+One" />
     </mj-head>
 
@@ -38,7 +50,7 @@
         </mj-section>
         <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="12px">
             <mj-column width="100%">
-                <mj-text color="#637381" font-size="16px"> Hi {{name}}, </mj-text>
+                <mj-text color="#637381" font-size="16px"> Hi {{ name }}, </mj-text>
                 <mj-text color="#637381" font-size="16px">
                     Welcome to Fizz Kidz! How fun - you have a unique discount code to use.
                 </mj-text>
@@ -46,9 +58,9 @@
                     Your code gives you <span class="underline">10% off our upcoming holiday programs</span> at any Fizz
                     Kidz Studio you like!
                 </mj-text>
-                <mj-text font-size="24px" align="center" padding="24px">{{code}}</mj-text>
+                <mj-text font-size="24px" align="center" padding="24px">{{ code }}</mj-text>
                 <mj-text color="#637381" font-size="16px">
-                    The discount code will expire on {{expiryDate}}. So book this week!
+                    The discount code will expire on {{ expiryDate }}. So book this week!
                 </mj-text>
                 <mj-button
                     css-class="btn-block"

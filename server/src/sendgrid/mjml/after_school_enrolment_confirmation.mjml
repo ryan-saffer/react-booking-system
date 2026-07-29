@@ -10,8 +10,19 @@
                 font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
             ></mj-text>
         </mj-attributes>
-        <mj-style inline="inline"> .text-link { color: #5e6ebf } .pre-wrap { white-space: pre-wrap; } </mj-style>
-        <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
+        <mj-style inline="inline">
+            .text-link {
+                color: #5e6ebf;
+            }
+            .pre-wrap {
+                white-space: pre-wrap;
+            }
+        </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+                color: #888888;
+            }
+        </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
         <mj-section background-color="#4bc5d9" padding-bottom="0px">
@@ -102,15 +113,15 @@
                         {{#inStudio}} We are excited to soon introduce you to your Science Facilitator. They will be
                         there each week to take {{ childName }} through this exciting journey. If there is anything
                         specific you would like us to know about your child, please let us know, via email or call us
-                        anytime. {{/inStudio}} {{^inStudio}} Please ask {{ childName }} to meet us at the {{ location
-                        }}. Prep students will be picked up from their classrooms. {{/inStudio}}
+                        anytime. {{/inStudio}} {{^inStudio}} Please ask {{ childName }} to meet us at the
+                        {{ location }}. Prep students will be picked up from their classrooms. {{/inStudio}}
                     </mj-text>
                 </mj-column>
                 <mj-column width="100%">
                     <mj-text color="#637381" font-size="16px">
                         For all new students, we will be in touch with you after the first week to see if you would like
-                        to continue for the term after your free trial session. The term fee is ${{ price }} for a {{
-                        numberOfWeeks }} week program of hands-on fun!
+                        to continue for the term after your free trial session. The term fee is ${{ price }} for a
+                        {{ numberOfWeeks }} week program of hands-on fun!
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
                         If you would like more information about the program

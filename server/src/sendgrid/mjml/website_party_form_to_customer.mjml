@@ -11,11 +11,29 @@
             ></mj-text>
         </mj-attributes>
         <mj-style inline="inline">
-            .text-link { color: #5e6ebf } .table { font-family: 'trebuchet ms', arial, sans-serif; border-collapse:
-            collapse; width: 100%; } .table td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; } .table
-            tr:nth-child(even) { background-color: #f3f4f6; }
+            .text-link {
+                color: #5e6ebf;
+            }
+            .table {
+                font-family: 'trebuchet ms', arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+            .table td,
+            th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+            .table tr:nth-child(even) {
+                background-color: #f3f4f6;
+            }
         </mj-style>
-        <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+                color: #888888;
+            }
+        </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
         <mj-section background-color="#4bc5d9" padding-bottom="0px">
@@ -59,49 +77,49 @@
 
                         <tr>
                             <td><strong>Name:</strong></td>
-                            <td>{{name}}</td>
+                            <td>{{ name }}</td>
                         </tr>
 
                         <tr>
                             <td><strong>Email:</strong></td>
-                            <td>{{email}}</td>
+                            <td>{{ email }}</td>
                         </tr>
 
                         <tr>
                             <td><strong>Phone number:</strong></td>
-                            <td>{{contactNumber}}</td>
+                            <td>{{ contactNumber }}</td>
                         </tr>
 
                         <tr>
                             <td><strong>Which location are you interested in?:</strong></td>
-                            <td>{{location}}</td>
+                            <td>{{ location }}</td>
                         </tr>
 
                         {{#suburb}}
                         <tr>
                             <td><strong>Which suburb do you live in?:</strong></td>
-                            <td>{{suburb}}</td>
+                            <td>{{ suburb }}</td>
                         </tr>
                         {{/suburb}}
 
                         <tr>
                             <td><strong>Preferred Date and Time:</strong></td>
-                            <td>{{preferredDateAndTime}}</td>
+                            <td>{{ preferredDateAndTime }}</td>
                         </tr>
 
                         <tr>
                             <td><strong>Preferred Party Theme:</strong></td>
-                            <td>{{partyTheme}}</td>
+                            <td>{{ partyTheme }}</td>
                         </tr>
 
                         <tr>
                             <td><strong>Enquiry:</strong></td>
-                            <td>{{enquiry}}</td>
+                            <td>{{ enquiry }}</td>
                         </tr>
 
                         <tr>
                             <td><strong>How did you hear about us:</strong></td>
-                            <td>{{reference}}</td>
+                            <td>{{ reference }}</td>
                         </tr>
                     </mj-table>
                 </mj-column>

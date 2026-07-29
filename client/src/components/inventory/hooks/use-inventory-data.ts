@@ -3,7 +3,6 @@ import { useDeferredValue } from 'react'
 
 import { useTRPC } from '@utils/trpc'
 
-import { useInventoryLocation } from './use-inventory-location'
 import { useInventoryStore } from '../state/inventory-store'
 import { ALL_CATEGORIES } from '../utils/inventory.constants'
 import {
@@ -12,6 +11,7 @@ import {
     getStockStatusFilteredItems,
     getVisibleInventoryItems,
 } from '../utils/inventory.utils'
+import { useInventoryLocation } from './use-inventory-location'
 
 import type { ClientInventoryStockLevel } from '../utils/inventory.types'
 

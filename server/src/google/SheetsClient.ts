@@ -1,4 +1,3 @@
-
 import { getOAuth2Client } from './google-oauth'
 
 import type { ClientStatus } from '../utilities/types'

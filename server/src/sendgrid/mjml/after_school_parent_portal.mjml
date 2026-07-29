@@ -10,9 +10,21 @@
                 font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
             ></mj-text>
         </mj-attributes>
-        <mj-style inline="inline"> .text-link { color: #5e6ebf } </mj-style>
-        <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
-        <mj-style> .btn-block a { display: block !important; } </mj-style>
+        <mj-style inline="inline">
+            .text-link {
+                color: #5e6ebf;
+            }
+        </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+                color: #888888;
+            }
+        </mj-style>
+        <mj-style>
+            .btn-block a {
+                display: block !important;
+            }
+        </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
         <mj-section background-color="#4bc5d9" padding-bottom="0px">

@@ -32,7 +32,7 @@ export type AppErrorCode =
  * This class just exists to ensure only custom errors can be thrown by throwCustomTrpcError()
  */
 export abstract class CustomTrpcError extends Error {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // oxlint-disable-next-line typescript/ban-ts-comment
     // @ts-ignore
     // ← this private field makes the class nominal
     private readonly _customTrpcErrorBrand!: void

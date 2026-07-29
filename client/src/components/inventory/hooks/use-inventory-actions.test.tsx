@@ -3,8 +3,8 @@
 import { act, renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { useInventoryActions } from './use-inventory-actions'
 import { useInventoryStore } from '../state/inventory-store'
+import { useInventoryActions } from './use-inventory-actions'
 
 import type {
     InventoryItemFormValues,

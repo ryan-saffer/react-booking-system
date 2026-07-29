@@ -76,7 +76,7 @@ export function useRsvps(invitation: InvitationsV2.Invitation) {
         })
 
         return () => unsub()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [invitation.bookingId])
 
     return rsvps

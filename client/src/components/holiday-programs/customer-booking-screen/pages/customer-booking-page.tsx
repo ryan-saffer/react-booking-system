@@ -119,7 +119,7 @@ export const CustomerBookingPage = () => {
             form.resetFields([`${klass.id}-checkbox`])
         })
         clearCart()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [selectedStudio])
 
     const handleClassSelectionChange = (klass: AcuityTypes.Client.Class) => {

@@ -1,6 +1,5 @@
 import '/fonts/LilitaOne-Regular.ttf'
 import '/fonts/Gotham-Light.otf'
-
 import { Suspense, lazy } from 'react'
 import { Navigate, RouterProvider, createBrowserRouter, useParams, useSearchParams } from 'react-router-dom'
 

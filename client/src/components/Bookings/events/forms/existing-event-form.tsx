@@ -9,17 +9,16 @@ import type { Event } from 'fizz-kidz'
 
 import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
 import EditFormButtons from '@components/Bookings/shared/edit-form-buttons'
-import type { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import WithConfirmationDialog from '@components/Dialogs/ConfirmationDialog'
-import type { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
+import type { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import WithErrorDialog from '@components/Dialogs/ErrorDialog'
+import type { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
 import { combineDateAndTime } from '@utils/dateUtils'
 import { useTRPC } from '@utils/trpc'
 
 import BaseEventForm from './base-event-form'
 
 import type { Form } from './base-event-form'
-
 
 type Props = {
     event: Event

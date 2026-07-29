@@ -1,4 +1,3 @@
-
 import { projectId } from '../init'
 
 import type { ClientStatus } from '../utilities/types'

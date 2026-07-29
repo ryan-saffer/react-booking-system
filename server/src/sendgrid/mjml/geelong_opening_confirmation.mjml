@@ -10,8 +10,16 @@
                 font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
             ></mj-text>
         </mj-attributes>
-        <mj-style inline="inline"> .text-link { color: #5e6ebf } </mj-style>
-        <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
+        <mj-style inline="inline">
+            .text-link {
+                color: #5e6ebf;
+            }
+        </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+                color: #888888;
+            }
+        </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
         <mj-section background-color="#eec73b" padding-bottom="0px">
@@ -29,7 +37,7 @@
         </mj-section>
         <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
             <mj-column width="100%">
-                <mj-text color="#637381" font-size="16px"> Hi {{parentName}}, </mj-text>
+                <mj-text color="#637381" font-size="16px"> Hi {{ parentName }}, </mj-text>
                 <mj-text color="#637381" font-size="16px">
                     We're delighted to confirm your booking into the Geelong Open Day! Below are the details of the
                     programs you have booked:.
@@ -51,9 +59,9 @@
                     Where
                 </mj-text>
                 <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
-                    {{location}}
+                    {{ location }}
                     <br />
-                    {{address}}
+                    {{ address }}
                 </mj-text>
             </mj-column>
             <mj-column width="100%">
@@ -68,7 +76,7 @@
                 </mj-text>
                 <mj-text color="#637381" font-size="14px" padding-top="0">
                     {{#bookings}}
-                    <p>{{datetime}} - <a href="{{confirmationPage}}">Change / Cancel</a></p>
+                    <p>{{ datetime }} - <a href="{{confirmationPage}}">Change / Cancel</a></p>
                     {{/bookings}}
                 </mj-text>
             </mj-column>

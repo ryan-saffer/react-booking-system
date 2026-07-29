@@ -1,5 +1,4 @@
 import '../load-env'
-
 import { DateTime } from 'luxon'
 import prompts from 'prompts'
 

@@ -2,9 +2,9 @@ import { Skeleton, Stack, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { useMemo } from 'react'
 
+import { useLocationFilter } from '../location-filter/location-filter.hook'
 import EventPanel from './event-panel'
 import { useEvents } from './use-events'
-import { useLocationFilter } from '../location-filter/location-filter.hook'
 
 const PREFIX = 'Events'
 

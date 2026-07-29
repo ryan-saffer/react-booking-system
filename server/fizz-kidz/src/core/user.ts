@@ -1,6 +1,6 @@
+import type { PartialRecord } from '..'
 import type { Role } from './role'
 import type { StudioOrMaster } from './studio'
-import type { PartialRecord } from '..'
 
 type BaseUser = {
     uid: string

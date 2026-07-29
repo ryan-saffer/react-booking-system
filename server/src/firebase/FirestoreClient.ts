@@ -1,7 +1,6 @@
 import type { ClientStatus } from '../utilities/types'
 import type { Firestore } from 'firebase-admin/firestore'
 
-
 export class FirestoreClient {
     private static instance: FirestoreClient
     #status: ClientStatus = 'not-initialised'

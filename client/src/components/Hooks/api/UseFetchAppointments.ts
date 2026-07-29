@@ -55,7 +55,7 @@ const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
         return () => {
             isCurrent = false
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [appointmentTypeId, calendarId, classId, classTime])
 
     return appointments

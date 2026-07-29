@@ -1,9 +1,9 @@
 import { type StudioOrTest } from 'fizz-kidz/src/core/studio'
+import type { Studio } from 'fizz-kidz/src/core/studio'
 
 import { capitalise } from './stringUtilities'
 
 import type { Booking } from '../partyBookings/booking'
-import type { Studio } from 'fizz-kidz/src/core/studio'
 
 export function getStudioAddress(location: Studio) {
     switch (location) {

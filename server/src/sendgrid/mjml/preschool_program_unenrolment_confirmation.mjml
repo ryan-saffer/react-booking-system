@@ -10,7 +10,11 @@
                 font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
             ></mj-text>
         </mj-attributes>
-        <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+                color: #888888;
+            }
+        </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
         <mj-section background-color="#EEC73A" padding-bottom="0px">
@@ -29,16 +33,15 @@
         <mj-wrapper padding-top="0" padding-bottom="0">
             <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
                 <mj-column width="100%">
-                    <mj-text color="#637381" font-size="16px"> Hi {{parentName}}, </mj-text>
+                    <mj-text color="#637381" font-size="16px"> Hi {{ parentName }}, </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        Just confirming that {{childName}} has now been unenrolled from our {{className}}
+                        Just confirming that {{ childName }} has now been unenrolled from our {{ className }}
                     </mj-text>
                 </mj-column>
                 <mj-column width="100%">
                     <mj-text color="#637381" font-size="16px">
-                        If you would like {{childName}} to attend a causal session, feel free to reply to this email or
-                        give us a call on
-                        <a href="tel:+61390598144">(03) 9059 8144</a>.
+                        If you would like {{ childName }} to attend a causal session, feel free to reply to this email
+                        or give us a call on <a href="tel:+61390598144">(03) 9059 8144</a>.
                     </mj-text>
                     <mj-text color="#637381" font-size="16px"> We hope to see you again soon! </mj-text>
                     <mj-text color="#637381" font-size="16px"> The Fizz Kidz Team ✨ </mj-text>

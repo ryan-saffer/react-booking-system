@@ -132,7 +132,7 @@ export function SignInPage() {
                         </form>
                     </Form>
                 </div>
-                <div className="flex h-12 flex-col  items-center justify-center gap-2">
+                <div className="flex h-12 flex-col items-center justify-center gap-2">
                     <p className="text-center text-[13px] text-[#747686]">
                         Don't have an account?{' '}
                         <span className="font-medium text-[#B14594] hover:underline">

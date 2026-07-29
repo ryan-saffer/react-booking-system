@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components -- shadcn sidebar exports its companion hook from the component module. */
+/* oxlint-disable react/only-export-components -- shadcn sidebar exports its companion hook from the component module. */
 
 import { useIsMobile } from '@hooks/use-mobile'
 import { Slot } from '@radix-ui/react-slot'

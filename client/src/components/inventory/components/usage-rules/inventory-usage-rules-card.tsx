@@ -15,13 +15,13 @@ import {
 } from '@ui-components/dialog'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@ui-components/table'
 
-import { UsageRuleForm } from './usage-rule-form'
 import { useInventoryActions } from '../../hooks/use-inventory-actions'
 import { useInventoryUsageRules } from '../../hooks/use-inventory-usage-rules'
 import { useInventoryStore } from '../../state/inventory-store'
 import { primaryButtonClass } from '../../utils/inventory.constants'
 import { defaultUsageRuleFormValues } from '../../utils/inventory.form-schemas'
 import { getUsageRuleNameLabel, getUsageRuleTypeLabel } from '../../utils/inventory.usage-rules'
+import { UsageRuleForm } from './usage-rule-form'
 
 export function InventoryUsageRulesCard() {
     const { canEdit, isLoading, usageRules } = useInventoryUsageRules()

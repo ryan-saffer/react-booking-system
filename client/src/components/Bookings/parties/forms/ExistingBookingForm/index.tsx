@@ -1,5 +1,4 @@
 import 'typeface-roboto'
-
 import {
     Box,
     Checkbox,
@@ -43,10 +42,10 @@ import type { FirestoreBooking, FormBooking, PartyLostReason, WithId } from 'fiz
 
 import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
 import EditFormButtons from '@components/Bookings/shared/edit-form-buttons'
-import type { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import WithConfirmationDialog from '@components/Dialogs/ConfirmationDialog'
-import type { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
+import type { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import WithErrorDialog from '@components/Dialogs/ErrorDialog'
+import type { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
 import { useConfirm } from '@components/Hooks/confirmation-dialog.tsx/use-confirmation-dialog'
 import { useTRPC } from '@utils/trpc'
 

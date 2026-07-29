@@ -17,11 +17,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@ui-components/tabs'
 import { cn } from '@utils/tailwind'
 import { useTRPC } from '@utils/trpc'
 
-import { ContinueButton } from './continue-button'
-import { PricingStructure } from './pricing-structure'
 import { TERM_LENGTH, useCart, type LocalAcuityClass } from '../../../state/cart-store'
 import { useBookingForm } from '../../../state/form-schema'
 import { useFormStage } from '../../../state/form-stage-store'
+import { ContinueButton } from './continue-button'
+import { PricingStructure } from './pricing-structure'
 
 export function CasualProgramSelector() {
     const trpc = useTRPC()

@@ -8,8 +8,6 @@ import useFirebase from '@components/Hooks/context/UseFirebase'
 
 import type { MouseEvent } from 'react'
 
-
-
 export const EmployeeWWCCButton = ({ employee }: { employee: Employee }) => {
     const firebase = useFirebase()
     const [showModal, setShowModal] = useState(false)

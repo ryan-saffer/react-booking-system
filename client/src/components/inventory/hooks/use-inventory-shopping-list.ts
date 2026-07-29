@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query'
 import { useOrg } from '@components/Session/use-org'
 import { useTRPC } from '@utils/trpc'
 
-import { useInventoryLocation } from './use-inventory-location'
 import { useInventoryStore } from '../state/inventory-store'
+import { useInventoryLocation } from './use-inventory-location'
 
 export function useInventoryShoppingList() {
     const trpc = useTRPC()

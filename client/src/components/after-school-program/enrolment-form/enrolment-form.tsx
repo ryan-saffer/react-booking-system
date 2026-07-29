@@ -100,7 +100,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
         } else {
             form.setValue('waitingList', undefined)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [isSuccess])
 
     // needed to close date picker when date is chosen
@@ -414,7 +414,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                 <FormField
                                     control={form.control}
                                     name={`main.children.${idx}.anaphylaxisPlan` as const}
-                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                                    // oxlint-disable-next-line typescript/no-unused-vars
                                     render={({ field: { value, onChange, ...fieldProps } }) => (
                                         <FormItem>
                                             <FormLabel>
@@ -666,7 +666,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                 <Button
                     type="submit"
                     disabled={submitting}
-                    className="bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-400  font-semibold"
+                    className="bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-400 font-semibold"
                 >
                     {submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Enrol'}
                 </Button>

@@ -309,7 +309,7 @@ async function getAndCacheXeroUser(userId: string, cache: XeroUserCache, studio:
     if (cachedUser) return cachedUser
 
     const xero = await XeroClient.getInstance(studio)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+    // oxlint-disable-next-line typescript/no-non-null-asserted-optional-chain
     const employee = (await xero.payrollAUApi.getEmployee('', userId)).body.employees?.[0]!
     cache[userId] = employee
     return employee

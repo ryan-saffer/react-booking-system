@@ -1,5 +1,5 @@
-import { assertNever } from './assert-never'
 import { getFranchiseOrMaster, type Studio } from '../core/studio'
+import { assertNever } from './assert-never'
 
 export function getCustomerContactInfo() {
     return {

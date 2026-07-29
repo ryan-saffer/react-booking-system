@@ -15,7 +15,6 @@ import type { SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
 import type { MenuProps } from 'antd'
 import type { MenuItemType } from 'antd/es/menu/interface'
 
-
 const PREFIX = 'ChildDetails'
 
 const classes = {
@@ -110,7 +109,7 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
             items,
             onClick: ({ key }) => handleMenuClick(key as MenuKey),
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [appointment])
 
     return (

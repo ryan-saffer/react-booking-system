@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { useInventoryStore } from './inventory-store'
 import { ALL_CATEGORIES } from '../utils/inventory.constants'
+import { useInventoryStore } from './inventory-store'
 
 import type { ClientInventoryItem, ClientInventoryStockLevel, ClientInventoryUsageRule } from '../utils/inventory.types'
 

@@ -22,7 +22,7 @@ export function StudioSelector({ studios }: Props) {
                 value={selectedStudio || undefined}
                 onValueChange={(value) => setSelectedStudio(value as StudioOrTest)}
             >
-                <FormLabel className="text-lg flex items-center">
+                <FormLabel className="flex items-center text-lg">
                     <MapPin className="mr-2 h-5 w-5 text-violet-800" />
                     Which studio would you like to attend?
                 </FormLabel>

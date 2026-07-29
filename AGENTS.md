@@ -22,26 +22,26 @@ This guide orients you to the codebase and points to the authoritative README fi
 ## Start Here: README Index
 
 - Repository overview: [README.md](README.md)
-  - Monorepo structure, client/server overview, tRPC interaction, setup, dev scripts, deployment with Firebase.
+    - Monorepo structure, client/server overview, tRPC interaction, setup, dev scripts, deployment with Firebase.
 - Client app: [client/README.md](client/README.md)
-  - Tech stack, routing model, UI libraries, state management (Zustand/Context), tRPC client setup, development workflow.
+    - Tech stack, routing model, UI libraries, state management (Zustand/Context), tRPC client setup, development workflow.
 - Server app: [server/README.md](server/README.md)
-  - Function types (tRPC routers, webhooks, Pub/Sub), structure, lazy SDK pattern, local development with emulators.
+    - Function types (tRPC routers, webhooks, Pub/Sub), structure, lazy SDK pattern, local development with emulators.
 - Firebase persistence boundary: [server/src/firebase/README.md](server/src/firebase/README.md)
-  - `DatabaseClient` should stay as a thin Firestore access layer; business workflows belong in feature `core` modules.
+    - `DatabaseClient` should stay as a thin Firestore access layer; business workflows belong in feature `core` modules.
 - Core module: [server/fizz-kidz/README.md](server/fizz-kidz/README.md)
-  - Purpose, structure, build/use as local dependency for shared types and logic.
+    - Purpose, structure, build/use as local dependency for shared types and logic.
 - Invitations & RSVP: client flow [client/src/components/rsvp/README.md](client/src/components/rsvp/README.md); server lifecycle [server/src/party-bookings/core/rsvp/README.md](server/src/party-bookings/core/rsvp/README.md).
 - Holiday Programs (customer booking screen): [client/src/components/holiday-programs/customer-booking-screen/README.md](client/src/components/holiday-programs/customer-booking-screen/README.md)
-  - Booking flow, Square order/payment, discounts, direct Acuity scheduling, refunds, limitations.
+    - Booking flow, Square order/payment, discounts, direct Acuity scheduling, refunds, limitations.
 - Scripts: [scripts/readme.md](scripts/readme.md)
-  - CSV export for parties, `GOOGLE_APPLICATION_CREDENTIALS` usage, run instructions, HubSpot import note.
+    - CSV export for parties, `GOOGLE_APPLICATION_CREDENTIALS` usage, run instructions, HubSpot import note.
 
 ## Quick Start
 
 1. Install dependencies:
-   - `cd server && npm install && cd ..`
-   - `cd client && npm install && cd ..`
+    - `cd server && npm install && cd ..`
+    - `cd client && npm install && cd ..`
 2. Run client (Vite): `cd client && npm start`
 3. Run server (emulators): `cd server && npm run serve`
 4. Deploy: see Deployment in [README.md](README.md) and [server/README.md](server/README.md).
@@ -63,8 +63,8 @@ This guide orients you to the codebase and points to the authoritative README fi
 
 ## Verification Workflow
 
-- After making changes, always run verification in this order for the files or package touched: Prettier, then lint, then typecheck.
-- For client changes, prefer running the local client formatter directly so it uses the repo plugin setup (for example from `client/`: `./node_modules/.bin/prettier --write <files>`).
+- After making changes, always run verification in this order for the files or package touched: Oxfmt, then Oxlint, then typecheck.
+- For client changes, prefer running the local client formatter directly so it uses the repo configuration (for example from `client/`: `./node_modules/.bin/oxfmt <files>`).
 - Do not leave formatting-only diffs for the user to discover on save; format changed files before finishing.
 - If lint/typecheck output includes unrelated pre-existing warnings elsewhere in the repo, call that out clearly instead of treating them as part of the current change.
 

@@ -296,7 +296,7 @@ class Client {
         await this.#updateDocument(FirestoreRefs.eventSlot(eventId, slotId), event)
 
         // then update all siblings, except for the id, times and calendarEventId
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // oxlint-disable-next-line typescript/no-unused-vars
         const { id, startTime, endTime, calendarEventId, ...rest } = event
         const slots = await (await FirestoreRefs.eventSlots(eventId)).get()
         const siblings = slots.docs.filter((it) => it.id !== slotId)

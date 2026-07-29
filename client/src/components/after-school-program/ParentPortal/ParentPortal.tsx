@@ -9,10 +9,10 @@ import useMixpanel from '@components/Hooks/context/UseMixpanel'
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
 
+import Loader from '../../Shared/Loader'
 import ClassManager from './ClassManager/ClassManager'
 import EnrolmentSummary from './EnrolmentSummary/EnrolmentSummary'
 import PickupPeople from './PickupPeople/PickupPeople'
-import Loader from '../../Shared/Loader'
 
 const PREFIX = 'ParentPortal'
 
@@ -70,7 +70,7 @@ const ParentPortal: React.FC = () => {
                 appointment_id: id,
             })
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [service.status])
 
     switch (service.status) {

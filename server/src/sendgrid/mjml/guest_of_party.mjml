@@ -11,10 +11,24 @@
             ></mj-text>
         </mj-attributes>
         <mj-style inline="inline">
-            .text-link { color: #5e6ebf } .footer-link { color: #888888 } .bold { font-weight: 900; } .underline {
-            text-decoration: underline; }
+            .text-link {
+                color: #5e6ebf;
+            }
+            .footer-link {
+                color: #888888;
+            }
+            .bold {
+                font-weight: 900;
+            }
+            .underline {
+                text-decoration: underline;
+            }
         </mj-style>
-        <mj-style> .btn-block a { display: block !important; } </mj-style>
+        <mj-style>
+            .btn-block a {
+                display: block !important;
+            }
+        </mj-style>
         <mj-font name="Lilita One" href="https://fonts.googleapis.com/css2?family=Lilita+One" />
     </mj-head>
 
@@ -39,7 +53,7 @@
         </mj-section>
         <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="12px">
             <mj-column width="100%">
-                <mj-text color="#637381" font-size="16px"> Hi {{name}}, </mj-text>
+                <mj-text color="#637381" font-size="16px"> Hi {{ name }}, </mj-text>
                 <mj-text color="#637381" font-size="16px">
                     We hope your child had the best time at their Fizz Kidz party the other day!
                 </mj-text>
