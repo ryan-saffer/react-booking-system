@@ -1,13 +1,14 @@
-/// <reference lib="dom" />
-import type { firestore } from 'firebase-admin' // https://stackoverflow.com/a/51275905/7870403
 import type { Studio } from 'fizz-kidz/src/core/studio'
 
-import type { CakeFlavours } from './CakeFlavours'
+import { addOrdinalSuffix, combineStrings } from '../utilities/stringUtilities'
+
 import type { Addition } from './additions'
+import type { CakeFlavours } from './CakeFlavours'
 import type { Creation } from './creations'
 import type { ProductType } from './products'
 import type { TakeHomeBagType } from './take-home-bags'
-import { addOrdinalSuffix, combineStrings } from '../utilities/stringUtilities'
+/// <reference lib="dom" />
+import type { firestore } from 'firebase-admin' // https://stackoverflow.com/a/51275905/7870403
 
 type AdditionKeyValues = Record<Addition, boolean>
 

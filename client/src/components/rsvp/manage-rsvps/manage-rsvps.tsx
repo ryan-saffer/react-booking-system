@@ -13,15 +13,15 @@ import { Switch } from '@ui-components/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { cn } from '@utils/tailwind'
 
-import { EditInvitationDialog } from './edit-invitation-dialog'
-import { HostRsvpDialog } from './host-rsvp-dialog'
-import { ShareInvitaitonDialog } from './share-invitation-dialog'
 import { useInvitation } from '../hooks/use-invitation'
 import { useRsvpTable } from '../hooks/use-rsvp-table'
 import { useRsvps } from '../hooks/use-rsvps'
+import { EditInvitationDialog } from './edit-invitation-dialog'
+import { HostRsvpDialog } from './host-rsvp-dialog'
+import { ShareInvitaitonDialog } from './share-invitation-dialog'
 
-import type { RsvpRow } from './columns'
 import type { UseRsvpTableProps } from '../hooks/use-rsvp-table'
+import type { RsvpRow } from './columns'
 import type { ReactNode } from 'react'
 
 const emptyState: UseRsvpTableProps = {

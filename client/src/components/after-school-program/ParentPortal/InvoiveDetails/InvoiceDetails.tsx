@@ -7,9 +7,8 @@ import type { AfterSchoolEnrolment } from 'fizz-kidz'
 
 import { useTRPC } from '@utils/trpc'
 
-import InvoiceStatistic from './InvoiceStatistic'
 import Loader from '../../../Shared/Loader'
-
+import InvoiceStatistic from './InvoiceStatistic'
 
 const PREFIX = 'InvoiceDetails'
 

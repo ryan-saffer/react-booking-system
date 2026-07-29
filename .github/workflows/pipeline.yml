@@ -119,16 +119,14 @@ jobs:
                   path: client/node_modules
                   key: client-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.nvmrc', 'client/package-lock.json') }}
 
-            # Content-based ESLint and TypeScript metadata remains valid across checkouts.
-            # A per-commit key restores the latest branch cache and saves updated metadata.
+            # TypeScript metadata remains valid across checkouts. A per-commit key restores
+            # the latest branch cache and saves updated metadata.
             - name: Cache build metadata
               uses: actions/cache@v4
               with:
                   path: |
-                      client/.eslintcache
                       client/tsconfig.tsbuildinfo
                       client/tsconfig.node.tsbuildinfo
-                      server/.eslintcache
                       server/tsconfig.tsbuildinfo
                       server/fizz-kidz/tsconfig.tsbuildinfo
                   key: build-metadata-${{ runner.os }}-${{ runner.arch }}-${{ github.ref_name }}-${{ github.sha }}

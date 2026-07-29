@@ -11,7 +11,6 @@ import { useEnrolmentForm } from './form-schema'
 import { ProgramCard } from './program-card'
 import { useSelectedProgram } from './use-selected-program'
 
-
 const PROGRAMS = [
     {
         program: 'science',

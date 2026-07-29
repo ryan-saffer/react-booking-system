@@ -4,8 +4,8 @@ import { toast } from 'sonner'
 import { useConfirm } from '@components/Hooks/confirmation-dialog.tsx/use-confirmation-dialog'
 import { useTRPC } from '@utils/trpc'
 
-import { useInventoryLocation } from './use-inventory-location'
 import { useInventoryStore } from '../state/inventory-store'
+import { useInventoryLocation } from './use-inventory-location'
 
 import type {
     InventoryItemFormValues,

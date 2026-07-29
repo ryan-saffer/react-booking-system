@@ -79,5 +79,5 @@ export function getUpcoming(day: DayOfTheWeek) {
 }
 
 export function canOrderCake(type: Booking['type'], studio: Studio) {
-  return type === 'studio' && studio !== 'geelong'
+    return type === 'studio' && studio !== 'geelong'
 }

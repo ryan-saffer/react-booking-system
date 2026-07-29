@@ -54,7 +54,7 @@ export const ChooseInvitationPage = () => {
                     </div>
                 </div>
                 <section>
-                    <div className="mb-4 mt-0 grid max-w-5xl grid-cols-1 gap-x-12 gap-y-8 md:grid-cols-2  xl:grid-cols-3">
+                    <div className="mb-4 mt-0 grid max-w-5xl grid-cols-1 gap-x-12 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
                         {Invitations.map((it) => (
                             <Link
                                 to="create"

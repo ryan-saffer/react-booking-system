@@ -1,10 +1,11 @@
-/* eslint-disable no-undef */
+/* oxlint-disable no-undef */
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+
+import { sentryEsbuildPlugin } from '@sentry/esbuild-plugin'
 import dotenv from 'dotenv'
 import { build, context } from 'esbuild'
-import { sentryEsbuildPlugin } from '@sentry/esbuild-plugin'
 
 function isProdProject() {
     try {
@@ -33,7 +34,7 @@ const plugins = isWatch
     ? []
     : [
           sentryEsbuildPlugin({
-              // eslint-disable-next-line no-undef
+              // oxlint-disable-next-line no-undef
               authToken: process.env.SENTRY_AUTH_TOKEN,
               org: 'fizz-kidz',
               project: 'server',

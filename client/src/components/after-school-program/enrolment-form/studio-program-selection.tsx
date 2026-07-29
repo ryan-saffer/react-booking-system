@@ -16,7 +16,6 @@ import { useEnrolmentForm } from './form-schema'
 import { ProgramCard } from './program-card'
 import { useSelectedProgram } from './use-selected-program'
 
-
 export function StudioProgramSelection() {
     const trpc = useTRPC()
     const form = useEnrolmentForm()

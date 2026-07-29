@@ -152,7 +152,7 @@ export function LoginDialog({ open }: { open: boolean }) {
                         </Button>
                     </form>
                 </Form>
-                <div className="flex h-12 flex-col  items-center justify-center gap-2">
+                <div className="flex h-12 flex-col items-center justify-center gap-2">
                     <p className="text-center text-[13px] text-[#747686]">
                         {mode === 'create' ? 'Already have an account?' : "Don't have an account?"}{' '}
                         <button

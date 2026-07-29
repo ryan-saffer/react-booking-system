@@ -8,8 +8,6 @@ import useFirebase from '@components/Hooks/context/UseFirebase'
 
 import type { MouseEvent } from 'react'
 
-
-
 type Props = { employee: Employee }
 
 const EmployeeVerificationButton: React.FC<Props> = ({ employee }) => {

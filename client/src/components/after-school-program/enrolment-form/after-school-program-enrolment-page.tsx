@@ -6,7 +6,6 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
-
 import Root from '@components/Shared/Root'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
@@ -21,7 +20,6 @@ import { StudioProgramSelection } from './studio-program-selection'
 import { useSelectedProgram } from './use-selected-program'
 
 import type { z } from 'zod'
-
 
 export function AfterSchoolProgramEnrolmentPage() {
     const trpc = useTRPC()

@@ -12,7 +12,6 @@ import { Input } from '@ui-components/input'
 import { Separator } from '@ui-components/separator'
 import { useTRPC } from '@utils/trpc'
 
-
 const FormSchema = z.object({
     firstname: z.string().min(3, { message: 'First name must be at least 3 characters long.' }),
     lastname: z.string().min(3, { message: 'Last name must be at least 3 characters long.' }),

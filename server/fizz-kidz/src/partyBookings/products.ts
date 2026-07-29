@@ -1,7 +1,7 @@
 export const PRODUCTS = {
     bathBombKit: {
         displayValue: 'Bath Bomb Kit',
-        label: 'Bath Bomb Kit', 
+        label: 'Bath Bomb Kit',
         helperText: 'Number of bath bomb kits purchased',
     },
     soapMakingKit: {
@@ -11,7 +11,7 @@ export const PRODUCTS = {
     },
     stringSlimeKit: {
         displayValue: 'String Slime Kit',
-        label: 'String Slime Kit', 
+        label: 'String Slime Kit',
         helperText: 'Number of string slime kits purchased',
     },
     superSlimeKit: {

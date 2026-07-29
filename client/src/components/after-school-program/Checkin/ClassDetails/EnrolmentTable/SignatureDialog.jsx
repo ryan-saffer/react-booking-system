@@ -1,8 +1,6 @@
-import React, { useState } from 'react'
-import SignatureCanvas from 'react-signature-canvas'
-
 import { TextField } from '@mui/material'
 import Button from '@mui/material/Button'
+import { red } from '@mui/material/colors'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -11,10 +9,11 @@ import DialogTitle from '@mui/material/DialogTitle'
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
-import { red } from '@mui/material/colors'
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles'
+import React, { useState } from 'react'
+import SignatureCanvas from 'react-signature-canvas'
 
-const PREFIX = 'SignatureDialog';
+const PREFIX = 'SignatureDialog'
 
 const classes = {
     signatureCanvas: `${PREFIX}-signatureCanvas`,
@@ -22,8 +21,8 @@ const classes = {
     dialogContent: `${PREFIX}-dialogContent`,
     formControl: `${PREFIX}-formControl`,
     error: `${PREFIX}-error`,
-    dialogActions: `${PREFIX}-dialogActions`
-};
+    dialogActions: `${PREFIX}-dialogActions`,
+}
 
 const StyledDialog = styled(Dialog)({
     [`& .${classes.signatureCanvas}`]: {
@@ -53,11 +52,9 @@ const StyledDialog = styled(Dialog)({
     [`& .${classes.dialogActions}`]: {
         paddingTop: 0,
     },
-});
+})
 
 const SignatureDialog = (props) => {
-
-
     var sigPad = {}
 
     const { pickupPeople } = props
@@ -191,7 +188,7 @@ const SignatureDialog = (props) => {
                 </Button>
             </DialogActions>
         </StyledDialog>
-    );
+    )
 }
 
 export default SignatureDialog

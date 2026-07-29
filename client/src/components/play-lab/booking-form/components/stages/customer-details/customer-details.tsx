@@ -28,11 +28,10 @@ import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
 import { cn } from '@utils/tailwind'
 
-
-import { CancellationPolicy } from './cancellation-policy'
-import { TermsAndConditions } from './terms-and-conditions'
 import { useBookingForm, type PlayLabBookingForm } from '../../../state/form-schema'
 import { useFormStage } from '../../../state/form-stage-store'
+import { CancellationPolicy } from './cancellation-policy'
+import { TermsAndConditions } from './terms-and-conditions'
 
 import type { DateTime } from 'luxon'
 

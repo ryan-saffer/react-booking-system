@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query'
 import { Result } from 'antd'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
@@ -11,12 +11,10 @@ import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import SkeletonRows from '@components/Shared/SkeletonRows'
 import { useTRPC } from '@utils/trpc'
 
-
 import { EnrolmentsTable } from './EnrolmentsTable/EnrolmentsTable'
 
-
 export const AfterSchoolProgramInvoicing: React.FC = () => {
-    const trpc = useTRPC();
+    const trpc = useTRPC()
     const firebase = useFirebase()
     const { height } = useWindowDimensions()
 
@@ -26,12 +24,14 @@ export const AfterSchoolProgramInvoicing: React.FC = () => {
 
     const [enrolmentsService, setEnrolmentsService] = useState<Service<AfterSchoolEnrolment[]>>({ status: 'loading' })
 
-    const { data: appointmentTypes } = useQuery(trpc.acuity.getAppointmentTypes.queryOptions({
-        category:
-            import.meta.env.VITE_ENV === 'prod'
-                ? ['Science Club', 'Art Program']
-                : ['TEST', 'TEST-science', 'TEST-art'],
-    }))
+    const { data: appointmentTypes } = useQuery(
+        trpc.acuity.getAppointmentTypes.queryOptions({
+            category:
+                import.meta.env.VITE_ENV === 'prod'
+                    ? ['Science Club', 'Art Program']
+                    : ['TEST', 'TEST-science', 'TEST-art'],
+        })
+    )
 
     useEffect(() => {
         const enrolmentsQuery = query(
@@ -51,7 +51,7 @@ export const AfterSchoolProgramInvoicing: React.FC = () => {
         })
 
         return () => unsubscribe()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [appointmentTypeId])
 
     switch (enrolmentsService.status) {

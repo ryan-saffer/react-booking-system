@@ -52,7 +52,7 @@ const useEmployees = () => {
         })
 
         return unsubscribe
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [currentOrg, studioKey])
 
     return { employees: employees ?? [], loading }

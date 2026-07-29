@@ -9,7 +9,6 @@ import { useDateNavigation } from '@components/Bookings/date-navigation/date-nav
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useOrg } from '@components/Session/use-org'
 
-
 import { useLocationFilter } from '../location-filter/location-filter.hook'
 
 export function usePartyBookings() {
@@ -95,7 +94,7 @@ export function usePartyBookings() {
         }
 
         return () => unsubscribe()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [date, currentOrg])
 
     return bookings

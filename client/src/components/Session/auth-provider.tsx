@@ -76,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             unsubDb()
             unsubAuth()
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [])
 
     return <AuthUserContext value={authUser}>{children}</AuthUserContext>

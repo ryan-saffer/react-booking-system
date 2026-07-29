@@ -10,8 +10,10 @@
         "build:watch": "concurrently \"npm --prefix fizz-kidz run build:watch\" \"npm run ts:check -- --watch\" \"npm run copy-files\" \"npm run bundle -- --watch\"",
         "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.mjml src/**/*.png src/**/*.ttf lib",
         "deploy": "firebase deploy --only functions",
+        "format": "oxfmt .",
+        "format:check": "oxfmt --check .",
+        "lint": "oxlint src",
         "ts:check": "tsc --noEmit",
-        "lint": "eslint -c .eslintrc.json --ext .ts src --cache --cache-strategy content",
         "logs": "firebase functions:log",
         "serve": "concurrently \"npm run build:watch\" \"firebase emulators:start --only functions,pubsub --inspect-functions\"",
         "shell": "firebase functions:shell",
@@ -61,19 +63,17 @@
         "@types/qrcode": "^1.5.5",
         "@types/request": "^2.48.8",
         "@types/stripe": "^7.13.23",
-        "@typescript-eslint/eslint-plugin": "^8.65.0",
-        "@typescript-eslint/parser": "^8.65.0",
         "@typescript/native": "npm:typescript@^7.0.2",
         "concurrently": "^8.2.1",
         "copyfiles": "^2.4.1",
         "csv-parse": "^5.3.0",
         "esbuild": "0.19.4",
-        "eslint": "^8.57.1",
-        "eslint-plugin-import": "^2.32.0",
         "firebase-functions-test": "^0.1.7",
         "mocha": "^10.2.0",
         "mockdate": "^3.0.5",
         "nyc": "^15.1.0",
+        "oxfmt": "^0.61.0",
+        "oxlint": "^1.76.0",
         "prompts": "^2.4.2",
         "ts-node": "^10.9.1",
         "tsconfig-paths": "^4.2.0",
@@ -82,10 +82,5 @@
     },
     "engines": {
         "node": "20"
-    },
-    "importSort": {
-        ".ts, .tsx, .js, .jsx": {
-            "style": "import-sort-style-module-scoped"
-        }
     }
 }

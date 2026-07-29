@@ -8,8 +8,8 @@ import React, { useMemo, useState } from 'react'
 
 import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
 
-import type { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import WithConfirmationDialog from '@components/Dialogs/ConfirmationDialog'
+import type { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import { useConfirmWithCheckbox } from '@components/Hooks/confirmation-dialog-with-checkbox.tsx/use-confirmation-dialog-with-checkbox'
 import useErrorDialog from '@components/Hooks/UseErrorDialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'

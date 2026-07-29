@@ -7,8 +7,12 @@
             <mj-column padding="0px" />
         </mj-attributes>
         <mj-style>
-            .card { border: 1px solid #E2E8F0; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 25px
-            rgba(83, 38, 129, 0.08); }
+            .card {
+                border: 1px solid #e2e8f0;
+                border-radius: 20px;
+                background: #ffffff;
+                box-shadow: 0 10px 25px rgba(83, 38, 129, 0.08);
+            }
         </mj-style>
     </mj-head>
     <mj-body background-color="#F7F1FF" width="600px">
@@ -42,8 +46,8 @@
                         Your invitation has been created!
                     </mj-text>
                     <mj-text align="center" padding-bottom="10px">
-                        Hey {{parentName}}, your invitation is live and ready to share. Track RSVPs, share the link, or
-                        download a print-ready copy below - guests can always RSVP by scanning the QR code.
+                        Hey {{ parentName }}, your invitation is live and ready to share. Track RSVPs, share the link,
+                        or download a print-ready copy below - guests can always RSVP by scanning the QR code.
                     </mj-text>
 
                     <mj-button

@@ -7,7 +7,12 @@
             <mj-column padding="0px" />
         </mj-attributes>
         <mj-style>
-            .list-row { border-bottom: 1px solid #E2E8F0; padding: 10px 0; } .list-row:last-child { border-bottom: none;
+            .list-row {
+                border-bottom: 1px solid #e2e8f0;
+                padding: 10px 0;
+            }
+            .list-row:last-child {
+                border-bottom: none;
             }
         </mj-style>
     </mj-head>
@@ -44,10 +49,10 @@
                         New RSVP Received
                     </mj-text>
                     <mj-text align="center" font-size="22px" font-weight="700" color="#0f172a" padding-bottom="12px">
-                        {{parentName}} just replied for {{childrenNames}}
+                        {{ parentName }} just replied for {{ childrenNames }}
                     </mj-text>
                     <mj-text align="center" padding-bottom="10px">
-                        Here's the latest update for {{birthdayChildName}}'s party. If you need to adjust their RSVP,
+                        Here's the latest update for {{ birthdayChildName }}'s party. If you need to adjust their RSVP,
                         you can
                         <a href="{{invitationUrl}}">manage it here.</a>
                     </mj-text>
@@ -63,7 +68,7 @@
                         </tr>
                         {{#children}}
                         <tr class="list-row">
-                            <td style="padding: 8px 4px; font-weight: 600; word-break: break-word">{{childName}}</td>
+                            <td style="padding: 8px 4px; font-weight: 600; word-break: break-word">{{ childName }}</td>
                             <td style="padding: 8px 4px">
                                 {{#isAttending}}
                                 <span
@@ -101,7 +106,7 @@
                                     overflow-wrap: anywhere;
                                 "
                             >
-                                {{#allergies}}{{allergies}}{{/allergies}}{{^allergies}}None{{/allergies}}
+                                {{#allergies}}{{ allergies }}{{/allergies}}{{^allergies}}None{{/allergies}}
                             </td>
                         </tr>
                         {{/children}}

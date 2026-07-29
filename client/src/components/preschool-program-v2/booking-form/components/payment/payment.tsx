@@ -16,11 +16,11 @@ import { Button } from '@ui-components/button'
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { useTRPC } from '@utils/trpc'
 
-import { DiscountInput } from './discount-input'
-import { GiftCardInput } from './gift-card-input'
 import { FULL_TERM_DISCOUNT_PERCENTAGE, useCart } from '../../state/cart-store'
 import { useBookingForm } from '../../state/form-schema'
 import { useFormStage } from '../../state/form-stage-store'
+import { DiscountInput } from './discount-input'
+import { GiftCardInput } from './gift-card-input'
 
 export function Payment() {
     const trpc = useTRPC()

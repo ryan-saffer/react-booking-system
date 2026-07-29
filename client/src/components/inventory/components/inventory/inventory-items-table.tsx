@@ -10,7 +10,12 @@ import { getOrgName } from '@utils/studioUtils'
 import { cn } from '@utils/tailwind'
 
 import { secondaryButtonClass } from '../../utils/inventory.constants'
-import { formatCategory, formatQualitativeLevel, formatQuantityUnit, getIsRunningLow } from '../../utils/inventory.utils'
+import {
+    formatCategory,
+    formatQualitativeLevel,
+    formatQuantityUnit,
+    getIsRunningLow,
+} from '../../utils/inventory.utils'
 import { InventorySectionHeading } from '../shared/inventory-section-heading'
 
 import type { ClientInventoryItem, ClientInventoryStockLevel, StockActionType } from '../../utils/inventory.types'

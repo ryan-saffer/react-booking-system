@@ -9,7 +9,6 @@ import { AcuityConstants } from 'fizz-kidz'
 
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 
-
 import { BREAKPOINT_MD } from './EnrolmentTable'
 import SignatureDialog from './SignatureDialog'
 

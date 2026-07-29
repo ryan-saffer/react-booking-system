@@ -1,5 +1,5 @@
-import type { StudioOrTest } from '../core/studio'
 import type { InvoiceStatusMap } from '../after-school-program/invoicing'
+import type { StudioOrTest } from '../core/studio'
 
 export type CreatePreschoolProgramEnrolmentParams = Pick<
     PreschoolProgramEnrolment,

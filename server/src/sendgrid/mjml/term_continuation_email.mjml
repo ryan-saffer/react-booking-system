@@ -10,9 +10,21 @@
                 font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
             ></mj-text>
         </mj-attributes>
-        <mj-style inline="inline"> .text-link { color: #5e6ebf } </mj-style>
-        <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
-        <mj-style> .btn-block a { display: block !important; } </mj-style>
+        <mj-style inline="inline">
+            .text-link {
+                color: #5e6ebf;
+            }
+        </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+                color: #888888;
+            }
+        </mj-style>
+        <mj-style>
+            .btn-block a {
+                display: block !important;
+            }
+        </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
         <mj-section background-color="#4bc5d9" padding-bottom="0px">
@@ -33,8 +45,8 @@
                 <mj-column width="100%">
                     <mj-text color="#637381" font-size="16px"> Hi {{ parentName }}, </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        We had such a fantastic time during the first week of Science Club, and we hope that {{
-                        childName }} did too! Just to confirm, below are the details of the class:
+                        We had such a fantastic time during the first week of Science Club, and we hope that
+                        {{ childName }} did too! Just to confirm, below are the details of the class:
                     </mj-text>
                     <mj-text
                         align="center"
@@ -48,8 +60,8 @@
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
                         We would love for {{ childName }} to join us for the whole term program! Please let us know if
-                        you would like to continue with the rest of the term, in which case we will see {{ childName }}
-                        next week!<br /><br />
+                        you would like to continue with the rest of the term, in which case we will see
+                        {{ childName }} next week!<br /><br />
                         The fee for the term is ${{ price }}.<br /><br />
                         Otherwise, if you would prefer not to continue, we will unenroll {{ childName }} from the class.
                     </mj-text>

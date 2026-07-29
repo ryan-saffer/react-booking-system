@@ -28,6 +28,7 @@ Orders include metadata for `classId` and a `lineItemIdentifier` to support accu
 ### Processing Payment
 
 When the customer presses 'Confirm and pay', the server:
+
 - Creates/updates a Square Order with line items and any discount.
 - Charges the payment via Square using the provided token and buyer verification token.
 - Immediately books the programs into Acuity with `paid: true`, attaching the Square `orderId` and the `lineItemIdentifier` on the appointment for traceability.
@@ -52,5 +53,5 @@ If a customer cancels via Acuity, the Acuity webhook triggers server logic to id
 
 ## Known Limitations
 
--   If someone books in for the day, then cancels on of the two appointments, they will still be seen as 'allday'.
--   Conversely, if someone books in a program, and later returns to book in the other program on that day, it will not mark both programs as 'allday'.
+- If someone books in for the day, then cancels on of the two appointments, they will still be seen as 'allday'.
+- Conversely, if someone books in a program, and later returns to book in the other program on that day, it will not mark both programs as 'allday'.

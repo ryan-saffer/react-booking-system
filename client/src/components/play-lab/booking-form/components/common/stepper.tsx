@@ -16,7 +16,7 @@ export function Stepper() {
             {steps.map((step, idx) => (
                 <Fragment key={idx}>
                     {/* Step */}
-                    <div className="flex  flex-1 items-center ">
+                    <div className="flex flex-1 items-center">
                         <div
                             className={cn(
                                 'flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-[#AC4390] bg-white text-sm text-[#AC4390] sm:h-8 sm:w-8 sm:text-base',

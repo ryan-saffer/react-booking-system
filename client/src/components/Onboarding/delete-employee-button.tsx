@@ -8,7 +8,6 @@ import useFirebase from '@components/Hooks/context/UseFirebase'
 
 import type { MouseEvent } from 'react'
 
-
 type Props = { employee: Employee }
 
 export const DeleteEmployeeButton: React.FC<Props> = ({ employee }) => {

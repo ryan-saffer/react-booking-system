@@ -15,12 +15,11 @@ import { Button } from '@ui-components/button'
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { useTRPC } from '@utils/trpc'
 
-import { DiscountInput } from './discount-input'
-import { GiftCardInput } from './gift-card-input'
 import { useCart, type LocalAcuityClass } from '../../../state/cart-store'
 import { useBookingForm } from '../../../state/form-schema'
 import { useFormStage } from '../../../state/form-stage-store'
-
+import { DiscountInput } from './discount-input'
+import { GiftCardInput } from './gift-card-input'
 
 export function Payment() {
     const trpc = useTRPC()
@@ -240,7 +239,7 @@ export function Payment() {
                                     {discount.description}
                                     {!discount.isMultiSessionDiscount && (
                                         <Button
-                                            className="ml-2 min-h-0 border border-transparent p-1 hover:border-green-800  hover:bg-green-200/80"
+                                            className="ml-2 min-h-0 border border-transparent p-1 hover:border-green-800 hover:bg-green-200/80"
                                             variant="ghost"
                                             onClick={() => removeDiscount(form.getValues().children.length)}
                                         >
@@ -261,7 +260,7 @@ export function Payment() {
                                     <CreditCardIcon className="mr-2 h-5 w-5" />
                                     Gift Card (${(giftCard.balanceRemainingCents / 100).toFixed(2)} remaining)
                                     <Button
-                                        className="ml-2 min-h-0 border border-transparent p-1 hover:border-blue-800  hover:bg-blue-200/80"
+                                        className="ml-2 min-h-0 border border-transparent p-1 hover:border-blue-800 hover:bg-blue-200/80"
                                         variant="ghost"
                                         onClick={() => clearGiftCard(form.getValues().children.length)}
                                     >

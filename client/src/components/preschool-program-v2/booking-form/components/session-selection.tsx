@@ -18,11 +18,11 @@ import { Separator } from '@ui-components/separator'
 import { cn } from '@utils/tailwind'
 import { useTRPC } from '@utils/trpc'
 
-import { StudioSelector } from './studio-selector'
 import { FULL_TERM_DISCOUNT_PERCENTAGE, useCart, type LocalAcuityClass } from '../state/cart-store'
 import { useBookingForm } from '../state/form-schema'
 import { useFormStage } from '../state/form-stage-store'
 import { groupClasses, type SessionGroup } from '../state/session-grouping'
+import { StudioSelector } from './studio-selector'
 
 const TERM_LOOKBACK_MONTHS = 6
 

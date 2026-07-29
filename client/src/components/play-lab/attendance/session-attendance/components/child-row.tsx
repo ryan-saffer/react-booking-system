@@ -14,7 +14,6 @@ import { useTRPC } from '@utils/trpc'
 
 import { useParams } from '../hooks/use-params'
 
-
 export function ChildRow({ appointment }: { appointment: AcuityTypes.Api.Appointment }) {
     const trpc = useTRPC()
     const params = useParams()

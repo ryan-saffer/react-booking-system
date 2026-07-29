@@ -71,7 +71,7 @@ export function useEvents<T extends Event['$type']>(
 
         fetchEvents()
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [date])
 
     return events as any

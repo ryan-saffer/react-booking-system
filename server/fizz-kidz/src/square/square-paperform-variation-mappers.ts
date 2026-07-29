@@ -1,7 +1,8 @@
+import { assertNever } from '../utilities/assert-never'
+
 import type { PartyForm } from '../paperform'
 import type { ProductType } from '../partyBookings/products'
 import type { TakeHomeBagType } from '../partyBookings/take-home-bags'
-import { assertNever } from '../utilities/assert-never'
 
 export function mapCakeSizeToSquareVariation(env: 'prod' | 'dev', size: PartyForm['cake_size']) {
     if (env === 'prod') {

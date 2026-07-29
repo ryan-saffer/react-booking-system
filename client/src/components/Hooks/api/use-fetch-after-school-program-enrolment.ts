@@ -3,9 +3,8 @@ import { useContext, useEffect, useState } from 'react'
 
 import type { AfterSchoolEnrolment, Service } from 'fizz-kidz'
 
-import type Firebase from '@components/Firebase'
 import { FirebaseContext } from '@components/Firebase'
-
+import type Firebase from '@components/Firebase'
 
 const useFetchAfterSchoolProgramEnrolment = (id: string) => {
     const firebase = useContext(FirebaseContext) as Firebase
@@ -27,7 +26,7 @@ const useFetchAfterSchoolProgramEnrolment = (id: string) => {
         }
 
         fetchEnrolment()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [])
 
     return service

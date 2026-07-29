@@ -7,8 +7,7 @@ import { cn } from '@utils/tailwind'
 import { buttonVariants } from './button-variants'
 
 export interface ButtonProps
-    extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-        VariantProps<typeof buttonVariants> {
+    extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
     asChild?: boolean
 }
 

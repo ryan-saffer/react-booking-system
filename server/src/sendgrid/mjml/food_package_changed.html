@@ -1,62 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+    <head>
+        <base target="_top" />
+    </head>
 
-<head>
-    <base target="_top">
-</head>
+    <body>
+        <p>A parent has changed their choice of food package.</p>
+        <p>This email is to warn you in case of a last minute change!</p>
+        <table style="border-collapse: collapse">
+            <tr>
+                <td style="border: 1px solid black; padding: 8px; font-weight: 600">Parent</td>
+                <td style="border: 1px solid black; padding: 8px">{{ parentName }}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 8px; font-weight: 600">Parent Email</td>
+                <td style="border: 1px solid black; padding: 8px">
+                    <a href="mailto:{{ parentEmail }}">{{ parentEmail }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 8px; font-weight: 600">Parent Phone</td>
+                <td style="border: 1px solid black; padding: 8px">
+                    <a href="tel:{{ parentMobile }}">{{ parentMobile }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 8px; font-weight: 600">Child</td>
+                <td style="border: 1px solid black; padding: 8px">{{ childName }}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 8px; font-weight: 600">Date / Time</td>
+                <td style="border: 1px solid black; padding: 8px">{{ dateTime }}</td>
+            </tr>
+        </table>
 
-<body>
-    <p>A parent has changed their choice of food package.</p>
-    <p>This email is to warn you in case of a last minute change!</p>
-    <table style="border-collapse: collapse">
-        <tr>
-            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Parent</td>
-            <td style="border: 1px solid black; padding: 8px;">{{ parentName }}</td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Parent Email</td>
-            <td style="border: 1px solid black; padding: 8px;"><a href="mailto:{{ parentEmail }}">{{ parentEmail }}</a>
-            </td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Parent Phone</td>
-            <td style="border: 1px solid black; padding: 8px;"><a href="tel:{{ parentMobile }}">{{ parentMobile }}</a>
-            </td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Child</td>
-            <td style="border: 1px solid black; padding: 8px;">{{ childName }}</td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Date / Time</td>
-            <td style="border: 1px solid black; padding: 8px;">{{ dateTime }}</td>
-        </tr>
-    </table>
-
-    <table style="border-collapse: collapse; margin-top: 24px">
-        <tr>
-            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Previous selection</td>
-            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">New selection</td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid black; padding: 8px;">
-                {{#oldIncludesFood}}
-                Food included
-                {{/oldIncludesFood}}
-                {{^oldIncludesFood}}
-                Self-catered
-                {{/oldIncludesFood}}
-            </td>
-            <td style="border: 1px solid black; padding: 8px;">
-                {{#newIncludesFood}}
-                Food included
-                {{/newIncludesFood}}
-                {{^newIncludesFood}}
-                Self-catered
-                {{/newIncludesFood}}
-            </td>
-        </tr>
-    </table>
-</body>
-
+        <table style="border-collapse: collapse; margin-top: 24px">
+            <tr>
+                <td style="border: 1px solid black; padding: 8px; font-weight: 600">Previous selection</td>
+                <td style="border: 1px solid black; padding: 8px; font-weight: 600">New selection</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 8px">
+                    {{#oldIncludesFood}} Food included {{/oldIncludesFood}} {{^oldIncludesFood}} Self-catered
+                    {{/oldIncludesFood}}
+                </td>
+                <td style="border: 1px solid black; padding: 8px">
+                    {{#newIncludesFood}} Food included {{/newIncludesFood}} {{^newIncludesFood}} Self-catered
+                    {{/newIncludesFood}}
+                </td>
+            </tr>
+        </table>
+    </body>
 </html>

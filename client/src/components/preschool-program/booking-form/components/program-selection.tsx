@@ -4,8 +4,8 @@ import type { AcuityTypes } from 'fizz-kidz'
 
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 
-import { ProgramCard } from './program-card'
 import { useEnrolmentStore } from '../state/enrolment-store'
+import { ProgramCard } from './program-card'
 
 type Props = {
     programs: AcuityTypes.Api.AppointmentType[]

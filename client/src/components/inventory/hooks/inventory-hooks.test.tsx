@@ -3,10 +3,10 @@
 import { renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { useInventoryStore } from '../state/inventory-store'
 import { useInventoryLocation } from './use-inventory-location'
 import { useInventoryShoppingList } from './use-inventory-shopping-list'
 import { useInventoryUsageRules } from './use-inventory-usage-rules'
-import { useInventoryStore } from '../state/inventory-store'
 
 const queryOptions = vi.fn((input: unknown, options?: unknown) => ({ input, options }))
 const useQuery = vi.fn()

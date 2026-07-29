@@ -7,8 +7,8 @@ import { holidayProgramsRouter } from '@/holiday-programs/functions/trpc/trpc.ho
 import { inventoryRouter } from '@/inventory/functions/trpc/trpc.inventory'
 import { partiesRouter } from '@/party-bookings/functions/trpc/trpc.parties'
 import { playLabRouter } from '@/play-lab/functions/trpc/trpc.play-lab'
-import { preschoolProgramRouter } from '@/preschool-program/functions/trpc/trpc.preschool-program'
 import { preschoolProgramV2Router } from '@/preschool-program-v2/functions/trpc/trpc.preschool-program-v2'
+import { preschoolProgramRouter } from '@/preschool-program/functions/trpc/trpc.preschool-program'
 import { reportsRouter } from '@/reports/functions/trpc/trpc.reports'
 import { staffRouter } from '@/staff/functions/trpc/trpc.staffRouter'
 

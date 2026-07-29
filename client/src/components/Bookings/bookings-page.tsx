@@ -1,7 +1,6 @@
 import { Chip } from '@mui/material'
 import { useState } from 'react'
 
-
 import { DateNavigation } from './date-navigation/date-navigation'
 import Incursions from './events/incursions'
 import { FilterContextProvider } from './location-filter/location-filter.provider'
@@ -10,14 +9,7 @@ import { PartiesAndEvents } from './parties-and-events'
 
 type Tab = 'parties' | 'incursions'
 
-const PREFILL_QUERY_KEYS = [
-    'parentName',
-    'parentEmail',
-    'parentMobile',
-    'type',
-    'location',
-    'zohoDealId',
-]
+const PREFILL_QUERY_KEYS = ['parentName', 'parentEmail', 'parentMobile', 'type', 'location', 'zohoDealId']
 
 const hasPrefillQueryParams = (searchParams: URLSearchParams) => {
     return PREFILL_QUERY_KEYS.some((key) => !!searchParams.get(key)?.trim())

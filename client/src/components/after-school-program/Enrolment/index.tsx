@@ -14,7 +14,6 @@ import Footer from './Footer'
 import Loading from './Loading'
 import { Error as ErrorResult, Success } from './Result'
 
-
 const PREFIX = 'EnrolmentPage'
 
 const classes = {
@@ -69,7 +68,7 @@ export const EnrolmentPage = () => {
 
     useEffect(() => {
         mutate({ id: appointmentId, continuingWithTerm })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [])
 
     // Mixpanel Tracking
@@ -93,7 +92,7 @@ export const EnrolmentPage = () => {
                 continuing_with_term: continuingWithTerm,
             })
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // oxlint-disable-next-line react/exhaustive-deps
     }, [isSuccess, isError])
 
     return (

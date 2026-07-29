@@ -7,9 +7,9 @@ import type { AfterSchoolEnrolment } from 'fizz-kidz'
 import useErrorDialog from '@components/Hooks/UseErrorDialog'
 import { useTRPC } from '@utils/trpc'
 
+import Loader from '../../../Shared/Loader'
 import AppointmentRow from './AppointmentRow'
 import styles from './ClassManager.module.css'
-import Loader from '../../../Shared/Loader'
 
 type Props = {
     appointment: AfterSchoolEnrolment

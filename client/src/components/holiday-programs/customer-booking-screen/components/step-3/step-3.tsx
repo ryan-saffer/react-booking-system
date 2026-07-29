@@ -15,10 +15,10 @@ import { SQUARE_APPLICATION_ID } from '@constants/square'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { useTRPC } from '@utils/trpc'
 
+import { useCart } from '../../state/cart-store'
 import BookingSummary from './booking-summary'
 import DiscountInput from './discount-input'
 import { GiftCardInput } from './gift-card-input'
-import { useCart } from '../../state/cart-store'
 
 import type { Form } from '../../pages/customer-booking-page'
 

@@ -33,7 +33,7 @@ function DashboardContentShell() {
                     aria-label="Toggle dashboard navigation"
                 />
                 <Link to="/dashboard" preventScrollReset={true} className="hidden cursor-pointer sm:block">
-                    <img src="/fizz-logo.png" className=" h-12" />
+                    <img src="/fizz-logo.png" className="h-12" />
                 </Link>
                 <div className="absolute right-4 pr-4">
                     <div className="flex h-full items-center justify-center gap-4">

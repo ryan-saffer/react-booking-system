@@ -7,7 +7,6 @@ import { useTRPC } from '@utils/trpc'
 
 import { markdownComponents } from './markdown-components'
 
-
 export const HolidayCreationsPage = () => {
     const trpc = useTRPC()
     const { data, isPending, isSuccess } = useQuery(trpc.creations.getHolidayProgramCreations.queryOptions())

@@ -3,8 +3,8 @@
 import { renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { useInventoryData } from './use-inventory-data'
 import { useInventoryStore } from '../state/inventory-store'
+import { useInventoryData } from './use-inventory-data'
 
 import type { ClientInventoryItem, ClientInventoryStockLevel } from '../utils/inventory.types'
 

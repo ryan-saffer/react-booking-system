@@ -16,7 +16,6 @@ import styles from './after-school-program-class-selection.module.css'
 
 import type { SelectChangeEvent } from '@mui/material'
 
-
 const PREV_CLASSES_CACHE_KEY = 'show-previous-classes'
 
 type Props = {
