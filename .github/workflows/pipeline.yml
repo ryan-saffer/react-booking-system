@@ -106,7 +106,7 @@ jobs:
                   fi
 
             - name: Install dependencies
-              run: vp install --frozen-lockfile
+              run: vp install --frozen-lockfile --prefer-offline
 
             - name: Check formatting, lint, and types
               run: vp check
