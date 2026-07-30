@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vite-plus/test'
 
 import { filterAttendanceClassesForCurrentTerms, groupClasses, TERM_BOUNDARY_GAP_DAYS } from './session-grouping'
 

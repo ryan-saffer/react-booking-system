@@ -1,5 +1,6 @@
 import { deepStrictEqual, strictEqual } from 'assert'
-import { createRequire } from 'module'
+
+import { beforeAll, beforeEach, describe, it, vi } from 'vite-plus/test'
 
 import { AcuityConstants, STUDIOS } from 'fizz-kidz'
 import type { AcuityTypes } from 'fizz-kidz'
@@ -59,46 +60,24 @@ class MockAcuityClient {
 
 const mockAcuityClient = new MockAcuityClient()
 let mergeAcuityWithStoryblok = async (classes: MockClass[]) => classes
-const testRequire = createRequire(
-    `${process.cwd()}/src/reports/core/__tests__/generate-holiday-program-capacity-report.test.ts`
-)
-
-testRequire.cache[testRequire.resolve('@/init')] = {
-    id: testRequire.resolve('@/init'),
-    filename: testRequire.resolve('@/init'),
-    loaded: true,
-    exports: { env: 'dev' },
-    children: [],
-    paths: [],
-} as unknown as NodeJS.Module
-
-testRequire.cache[testRequire.resolve('@/acuity/core/acuity-client')] = {
-    id: testRequire.resolve('@/acuity/core/acuity-client'),
-    filename: testRequire.resolve('@/acuity/core/acuity-client'),
-    loaded: true,
-    exports: {
-        AcuityClient: {
-            getInstance: async () => mockAcuityClient,
-        },
+vi.mock('@/init', () => ({ env: 'dev' }))
+vi.mock('@/acuity/core/acuity-client', () => ({
+    AcuityClient: {
+        getInstance: async () => mockAcuityClient,
     },
-    children: [],
-    paths: [],
-} as unknown as NodeJS.Module
+}))
+vi.mock('@/acuity/core/merge-storyblok-with-acuity', () => ({
+    mergeAcuityWithStoryblok: (classes: MockClass[]) => mergeAcuityWithStoryblok(classes),
+}))
 
-testRequire.cache[testRequire.resolve('@/acuity/core/merge-storyblok-with-acuity')] = {
-    id: testRequire.resolve('@/acuity/core/merge-storyblok-with-acuity'),
-    filename: testRequire.resolve('@/acuity/core/merge-storyblok-with-acuity'),
-    loaded: true,
-    exports: {
-        mergeAcuityWithStoryblok: (classes: MockClass[]) => mergeAcuityWithStoryblok(classes),
-    },
-    children: [],
-    paths: [],
-} as unknown as NodeJS.Module
+let generateHolidayProgramCapacityReport: typeof HolidayProgramCapacityReportModule.generateHolidayProgramCapacityReport
+let generateHolidayProgramCapacityReportInputSchema: typeof HolidayProgramCapacityReportModule.generateHolidayProgramCapacityReportInputSchema
 
-const { generateHolidayProgramCapacityReport, generateHolidayProgramCapacityReportInputSchema } = testRequire(
-    '../generate-holiday-program-capacity-report'
-) as typeof HolidayProgramCapacityReportModule
+beforeAll(async () => {
+    const reportModule = await import('../generate-holiday-program-capacity-report')
+    generateHolidayProgramCapacityReport = reportModule.generateHolidayProgramCapacityReport
+    generateHolidayProgramCapacityReportInputSchema = reportModule.generateHolidayProgramCapacityReportInputSchema
+})
 
 describe('generateHolidayProgramCapacityReport', () => {
     beforeEach(() => {

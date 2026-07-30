@@ -1,6 +1,7 @@
 import { strictEqual } from 'assert'
 
 import MockDate from 'mockdate'
+import { describe, it } from 'vite-plus/test'
 
 import { getUpcoming } from './utils.party'
 

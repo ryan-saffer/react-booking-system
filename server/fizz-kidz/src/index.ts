@@ -1,24 +1,31 @@
 //#region Bookings
-export { ADDITIONS, PROD_ADDITIONS, Addition } from './partyBookings/additions'
+export { ADDITIONS, PROD_ADDITIONS } from './partyBookings/additions'
+export type { Addition } from './partyBookings/additions'
 export { CakeFlavours } from './partyBookings/CakeFlavours'
 export {
     ACTIVE_CREATIONS,
-    ActiveCreation,
-    Creation,
     CREATION_PACKAGE_DISPLAY_NAMES,
     CREATION_PACKAGES,
     CREATIONS,
     PARTY_PACKAGE_COLOURS,
+} from './partyBookings/creations'
+export type {
+    ActiveCreation,
+    Creation,
     CreationInstructionGroup,
     CreationInstructions,
     PartyPackageColour,
 } from './partyBookings/creations'
-export { TAKE_HOME_BAGS, TakeHomeBagType } from './partyBookings/take-home-bags'
-export { PRODUCTS, ProductType } from './partyBookings/products'
+export { TAKE_HOME_BAGS } from './partyBookings/take-home-bags'
+export type { TakeHomeBagType } from './partyBookings/take-home-bags'
+export { PRODUCTS } from './partyBookings/products'
+export type { ProductType } from './partyBookings/products'
 export * from './core/studio'
-export { ASSIGNABLE_ROLES, Role, ROLES } from './core/role'
-export { AuthUser, StaffUser, CustomerUser } from './core/user'
-export { Permission, RolePermissionMap } from './core/permission'
+export { ASSIGNABLE_ROLES, ROLES } from './core/role'
+export type { Role } from './core/role'
+export type { AuthUser, CustomerUser, StaffUser } from './core/user'
+export { RolePermissionMap } from './core/permission'
+export type { Permission } from './core/permission'
 export * from './partyBookings/booking'
 export { FormBookingFields, BookingFields } from './partyBookings/booking'
 export * from './partyBookings/Invitations'

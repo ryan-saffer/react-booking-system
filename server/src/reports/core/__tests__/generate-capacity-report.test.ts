@@ -1,5 +1,7 @@
 import { deepStrictEqual, rejects, strictEqual } from 'assert'
 
+import { afterEach, describe, it } from 'vite-plus/test'
+
 import { STUDIOS, type FirestoreBooking, type StudioOrMaster } from 'fizz-kidz'
 
 import { mockDatabaseClient, resetDatabaseClientMock } from '@/__mocks__/database-client.mock'

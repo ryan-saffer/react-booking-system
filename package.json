@@ -1,0 +1,46 @@
+{
+    "name": "fizz-kidz-portal",
+    "version": "1.1.0",
+    "private": true,
+    "type": "module",
+    "packageManager": "npm@10.8.2",
+    "engines": {
+        "node": "22.23.2"
+    },
+    "workspaces": [
+        "client",
+        "server",
+        "server/fizz-kidz"
+    ],
+    "scripts": {
+        "build": "vp build",
+        "check": "vp check",
+        "client": "VP_CLIENT_ONLY=true vp dev",
+        "client:prod": "VP_CLIENT_ONLY=true vp dev --mode prod",
+        "dev": "vp dev",
+        "server": "vp run server:prepare && vp run server:watch",
+        "server:prepare": "npm --workspace functions run dev:build",
+        "server:watch": "vp exec concurrently --kill-others --kill-timeout 3000 --names server:types,shared:types,server:build,firebase --prefix-colors blue,magenta,cyan,yellow --pad-prefix \"npm --workspace functions run dev:typecheck\" \"npm --workspace fizz-kidz run dev:typecheck\" \"npm --workspace functions run dev:build:watch\" \"\\\"${VP_HOME:-$HOME/.vite-plus}/bin/vp\\\" env exec npm exec -- firebase emulators:start --only functions,pubsub --inspect-functions\"",
+        "test": "vp test --run",
+        "verify": "vp check --fix && vp test --run"
+    },
+    "devDependencies": {
+        "@sentry/vite-plugin": "^4.6.1",
+        "@types/node": "^22.19.0",
+        "@typescript/native": "npm:typescript@^7.0.2",
+        "@vitejs/plugin-react": "^5.2.0",
+        "@vitest/coverage-v8": "4.1.10",
+        "@vitest/ui": "4.1.10",
+        "babel-plugin-react-compiler": "^1.0.0",
+        "concurrently": "^9.2.4",
+        "firebase-tools": "15.24.0",
+        "jsdom": "^29.1.1",
+        "typescript": "npm:@typescript/typescript6@^6.0.2",
+        "vite": "npm:@voidzero-dev/vite-plus-core@0.2.6",
+        "vite-plus": "0.2.6"
+    },
+    "overrides": {
+        "vite": "npm:@voidzero-dev/vite-plus-core@0.2.6",
+        "vitest": "4.1.10"
+    }
+}

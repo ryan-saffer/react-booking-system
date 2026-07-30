@@ -39,12 +39,13 @@ This guide orients you to the codebase and points to the authoritative README fi
 
 ## Quick Start
 
-1. Install dependencies:
-    - `cd server && npm install && cd ..`
-    - `cd client && npm install && cd ..`
-2. Run client (Vite): `cd client && npm start`
-3. Run server (emulators): `cd server && npm run serve`
-4. Deploy: see Deployment in [README.md](README.md) and [server/README.md](server/README.md).
+1. Install Vite+: `curl -fsSL https://vite.plus | bash`
+2. Install dependencies from the repository root: `vp install`
+3. Enable repository hooks and agent integration: `vp config`
+4. Run the client and Firebase emulators: `vp dev` (or use `npm run client` and `npm run server` in separate terminals)
+5. Verify changes: `vp check`, then `vp test --run`
+6. Build all deployment artifacts: `vp build`
+7. Deploy: see Deployment in [README.md](README.md) and [server/README.md](server/README.md).
 
 ## Conventions & Patterns
 
@@ -57,14 +58,14 @@ This guide orients you to the codebase and points to the authoritative README fi
 
 ## Routing Notes
 
-- Customer-facing/server-owned browser paths must be kept in sync across three places: the Express app in `server/src/api.ts`, Firebase Hosting rewrites in `firebase.json`, and the Vite dev proxy in `client/vite.config.ts` / `client/vite.config.js`.
+- Customer-facing/server-owned browser paths must be kept in sync across three places: the Express app in `server/src/api.ts`, Firebase Hosting rewrites in `firebase.json`, and the Vite dev proxy in the root `vite.config.ts`.
 - If you add a top-level path that should hit the backend before the SPA renders (for example `/forms/**`), add a Firebase Hosting rewrite for production and a Vite proxy entry for local development. Otherwise the route may work in one environment and silently fall through to the client in the other.
 - The current durable backend-owned form entrypoints live under `/forms/**`; the client `/form` route is an implementation detail behind that redirect layer.
 
 ## Verification Workflow
 
-- After making changes, always run verification in this order for the files or package touched: Oxfmt, then Oxlint, then typecheck.
-- For client changes, prefer running the local client formatter directly so it uses the repo configuration (for example from `client/`: `./node_modules/.bin/oxfmt <files>`).
+- After making changes, run `vp check` from the repository root; it runs Oxfmt, Oxlint, type-aware linting, and TypeScript checks in order.
+- Run `vp test --run` after changes that affect behavior and `vp build` after build configuration changes.
 - Do not leave formatting-only diffs for the user to discover on save; format changed files before finishing.
 - If lint/typecheck output includes unrelated pre-existing warnings elsewhere in the repo, call that out clearly instead of treating them as part of the current change.
 
@@ -72,13 +73,13 @@ This guide orients you to the codebase and points to the authoritative README fi
 
 - Add a new API surface: create a feature folder in `server/src/<feature>/`, define or extend a tRPC router, and register it with `appRouter` so it flows through the `api` function.
 - Webhooks/PubSub: place routers/handlers under `server/src/<feature>/functions/`; webhooks are mounted from `server/src/api.ts`, while Pub/Sub tasks publish/listen on the shared `background` topic via `server/src/pubsub.ts`.
-- Add a server-owned frontend entrypoint: mount the Express route in `server/src/api.ts`, add the matching Hosting rewrite in `firebase.json`, and add a Vite proxy entry if the path should also work during `client/npm start`.
+- Add a server-owned frontend entrypoint: mount the Express route in `server/src/api.ts`, add the matching Hosting rewrite in `firebase.json`, and add a Vite proxy entry if the path should also work during `vp dev`.
 - Scripts: check `scripts/` and its README for required env (e.g., `GOOGLE_APPLICATION_CREDENTIALS`).
 
 ## Troubleshooting Pointers
 
-- Types not found in client: ensure `server/fizz-kidz` builds; client scripts typically trigger this.
-- Emulator issues: re-run `npm run serve` in `server/` after building `fizz-kidz`.
+- Types not found in the client: run `vp check` and verify the `fizz-kidz` alias in the root `vite.config.ts` and client `tsconfig.json`.
+- Emulator issues: stop stale Firebase processes, then restart `vp dev` from the repository root.
 
 ## Keeping This Guide Current
 

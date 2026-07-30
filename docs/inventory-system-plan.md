@@ -823,11 +823,9 @@ The exact indexes can be added when Firestore reports them, but these query shap
 
 For implementation stages, run verification in this order:
 
-1. Prettier on changed files.
-2. Server lint.
-3. `npm --prefix server/fizz-kidz run build`.
-4. `npm --prefix server run ts:check`.
-5. For client stages, run client lint and typecheck as well.
+1. `vp check`.
+2. `vp test --run`.
+3. `vp build` when shared or build configuration changes.
 
 Recommended tests once stock movement logic exists:
 

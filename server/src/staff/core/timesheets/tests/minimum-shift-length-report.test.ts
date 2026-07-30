@@ -1,5 +1,7 @@
 import { deepStrictEqual, strictEqual } from 'assert'
 
+import { describe, it } from 'vite-plus/test'
+
 import type { Timesheet, User } from '@/sling/sling.types'
 
 import { getShiftsUnderMinimumShiftLengthForTimesheets } from '../minimum-shift-length-report'

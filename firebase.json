@@ -62,7 +62,6 @@
             "pubsub-debug.log",
             "ui-debug.log",
             "coverage/**",
-            "lib-tsc/**",
             "src/**",
             "**/*.tsbuildinfo"
         ]

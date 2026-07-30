@@ -50,7 +50,8 @@ export class AcuityClient {
 
     async #initialise() {
         this.#status = 'initialising'
-        const acuity = await import('acuityscheduling')
+        const acuityModule = await import('acuityscheduling')
+        const acuity = ('default' in acuityModule ? acuityModule.default : acuityModule) as typeof acuityModule
         this.#client = acuity.basic({
             userId: process.env.ACUITY_USER_ID,
             apiKey: process.env.ACUITY_API_KEY,

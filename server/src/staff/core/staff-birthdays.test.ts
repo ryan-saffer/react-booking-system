@@ -1,6 +1,7 @@
 import { deepStrictEqual, strictEqual } from 'assert'
 
 import { DateTime } from 'luxon'
+import { describe, it } from 'vite-plus/test'
 import { EmployeeStatus } from 'xero-node/dist/gen/model/payroll-au/employeeStatus'
 import { EmploymentBasis } from 'xero-node/dist/gen/model/payroll-au/employmentBasis'
 

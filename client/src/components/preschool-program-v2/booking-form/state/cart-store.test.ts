@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vite-plus/test'
 
 import { FULL_TERM_DISCOUNT_PERCENTAGE, type LocalAcuityClass, useCart } from './cart-store'
 

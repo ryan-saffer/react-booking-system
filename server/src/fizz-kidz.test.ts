@@ -6,6 +6,8 @@
 
 import { strictEqual } from 'assert'
 
+import { describe, it } from 'vite-plus/test'
+
 import { addOrdinalSuffix } from 'fizz-kidz'
 
 describe('Fizz Kidz Utilities', () => {

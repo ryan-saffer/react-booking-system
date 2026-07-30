@@ -37,9 +37,9 @@ The module is organized by feature or domain within its `src/` directory:
 
 ## Build and Usage
 
-- **Build:** The `fizz-kidz` module has its own `package.json` and build process (typically `npm run build` within `server/fizz-kidz/`). This compiles the TypeScript code into JavaScript.
+- **Build:** Run `vp pack` from this directory, or `vp build` from the repository root. tsdown emits ESM and declarations to `lib/`.
 - **Usage:**
     - **Server-Side:** The main `server/` application (containing Firebase Functions) lists `fizz-kidz` as a local file dependency in its `package.json` (e.g., `"fizz-kidz": "file:fizz-kidz"`). This allows server functions to import and use the compiled code from this module.
-    - **Client-Side:** The `client/` application also references `fizz-kidz` in its `package.json` (e.g., `"fizz-kidz": "file:../server/fizz-kidz"`) and its build scripts often trigger a build of the `fizz-kidz` module. This is primarily for accessing shared types to ensure consistency between client and server, and potentially some utility functions if needed.
+    - **Client-Side:** The client resolves the workspace package directly to `server/fizz-kidz/src` through the root Vite+ and TypeScript aliases. This provides shared runtime code and types without a separate development build.
 
 This module is critical for maintaining consistency and reducing code duplication across the Fizz Kidz Portal.

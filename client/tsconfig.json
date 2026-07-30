@@ -13,6 +13,7 @@
             "@drawables/*": ["./src/drawables/*"],
             "@utils/*": ["./src/utilities/*"],
             "@hooks/*": ["./src/components/Hooks/*"],
+            "@/*": ["../server/src/*"],
             "fizz-kidz": ["../server/fizz-kidz/src"]
         },
 
@@ -33,6 +34,5 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src/"],
-    "references": [{ "path": "./tsconfig.node.json" }, { "path": "../server" }, { "path": "../server/fizz-kidz" }]
+    "include": ["src/", "../server/declarations/index.d.ts", "../server/src/environment.d.ts"]
 }

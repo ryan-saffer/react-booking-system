@@ -1,6 +1,7 @@
 import { strictEqual, throws } from 'assert'
 
 import { DateTime } from 'luxon'
+import { describe, it } from 'vite-plus/test'
 
 import type { Timesheet } from '@/sling/sling.types'
 

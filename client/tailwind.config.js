@@ -1,11 +1,16 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import autoprefixer from 'autoprefixer'
 import backgroundPatterns from 'tailwindcss-bg-patterns'
 import { scopedPreflightStyles } from 'tailwindcss-scoped-preflight'
 
+const clientDir = path.dirname(fileURLToPath(import.meta.url))
+
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: ['class'],
-    content: ['./index.html', './src/**/*.{ts,tsx, js, jsx}'],
+    content: [path.join(clientDir, '*.html'), path.join(clientDir, 'src/**/*.{ts,tsx,js,jsx}')],
     prefix: '',
     theme: {
         container: {

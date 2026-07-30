@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vite-plus/test'
 
 import { PRICING_STRUCTURE, type LocalAcuityClass, useCart } from './cart-store'
 

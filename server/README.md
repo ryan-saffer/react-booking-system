@@ -89,7 +89,7 @@ Functions exported from `server/src/index.ts` are deployed via Firebase. The cur
 
 ## Installation
 
-Before running `npm install` the following packages must be installed using homebrew:
+Before running `vp install` the following packages must be installed using Homebrew:
 
 ```sh
 brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman python-setuptools
@@ -100,8 +100,7 @@ This is needed for installation of the [canvas library](https://github.com/Autom
 You can then install dependencies by running:
 
 ```sh
-npm install canvas --build-from-source
-npm install
+vp install -- --build-from-source=canvas
 ```
 
 ## Run Locally
@@ -109,9 +108,11 @@ npm install
 To run the server functions locally for development, Firebase emulators are used:
 
 ```bash
-npm run serve
+npm run server
 ```
 
-This command (from `server/package.json`) typically builds the server code (including the `fizz-kidz` module) in watch mode and starts the Firebase emulators for Functions and Pub/Sub.
+Run this from the repository root. It watches the Functions bundle and server TypeScript projects, then starts the Functions and Pub/Sub emulators. Use `vp dev` instead to start the complete client and server stack in one terminal.
+
+The Functions bundle resolves `fizz-kidz` directly to its source, so the single bundle watcher rebuilds after changes in either `server/src` or `server/fizz-kidz/src`. It does not watch client files. Separate TypeScript watchers report server and shared-core type errors without producing another build artifact.
 
 Invitation generation in the emulator uses an installed Google Chrome rather than downloading a separate browser with Puppeteer. If Chrome is installed in a non-standard location, set `PUPPETEER_EXECUTABLE_PATH` to its executable before starting the emulators. Production continues to use `@sparticuz/chromium`.

@@ -1,11 +1,17 @@
 */node_modules/*
 */dist/*
+/node_modules/
+/.vite/
 
 */.firebase/*
 .firebase/
 /firebase-debug.log
+/firebase-debug.*.log
+/pubsub-debug.log
+/ui-debug.log
 
 .idea/
+.run/
 
 .env*
 *credentials.*

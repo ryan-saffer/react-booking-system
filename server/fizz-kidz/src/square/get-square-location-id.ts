@@ -1,5 +1,4 @@
-import { type StudioOrTest } from 'fizz-kidz/src/core/studio'
-
+import { type StudioOrTest } from '../core/studio'
 import { assertNever } from '../utilities/assert-never'
 
 export function getSquareLocationId(studio: StudioOrTest) {

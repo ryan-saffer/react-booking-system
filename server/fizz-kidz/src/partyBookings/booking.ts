@@ -1,7 +1,6 @@
-import type { Studio } from 'fizz-kidz/src/core/studio'
-
 import { addOrdinalSuffix, combineStrings } from '../utilities/stringUtilities'
 
+import type { Studio } from '../core/studio'
 import type { Addition } from './additions'
 import type { CakeFlavours } from './CakeFlavours'
 import type { Creation } from './creations'

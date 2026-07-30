@@ -1,3 +1,5 @@
+import { vi } from 'vite-plus/test'
+
 import type {
     Booking,
     FirestoreBooking,
@@ -73,29 +75,38 @@ type MockDatabaseClient = {
     deleteInventoryUsageRule: (ruleId: string) => Promise<void>
 }
 
-const unmockedMethod = (methodName: string) => async () => {
-    throw new Error(`DatabaseClient.${methodName} mock has not been configured for this test.`)
-}
+const databaseClientMocks = vi.hoisted(() => {
+    const unmockedMethod = (methodName: string) => async () => {
+        throw new Error(`DatabaseClient.${methodName} mock has not been configured for this test.`)
+    }
 
-export const mockDatabaseClient: MockDatabaseClient = {
-    getPartyBookingsForCapacityReport: unmockedMethod('getPartyBookingsForCapacityReport'),
-    listPartyBookingsForInventoryShoppingList: unmockedMethod('listPartyBookingsForInventoryShoppingList'),
-    createInventoryItemId: unmockedMethod('createInventoryItemId'),
-    setInventoryDocuments: unmockedMethod('setInventoryDocuments'),
-    getInventoryItem: unmockedMethod('getInventoryItem'),
-    listInventoryItems: unmockedMethod('listInventoryItems'),
-    updateInventoryItem: unmockedMethod('updateInventoryItem'),
-    deleteInventoryDocuments: unmockedMethod('deleteInventoryDocuments'),
-    getInventoryStockLevel: unmockedMethod('getInventoryStockLevel'),
-    updateInventoryStockLevel: unmockedMethod('updateInventoryStockLevel'),
-    listInventoryStockLevels: unmockedMethod('listInventoryStockLevels'),
-    listInventoryStockMovements: unmockedMethod('listInventoryStockMovements'),
-    runInventoryStockMovementTransaction: unmockedMethod('runInventoryStockMovementTransaction'),
-    listInventoryUsageRules: unmockedMethod('listInventoryUsageRules'),
-    createInventoryUsageRuleId: unmockedMethod('createInventoryUsageRuleId'),
-    getInventoryUsageRule: unmockedMethod('getInventoryUsageRule'),
-    deleteInventoryUsageRule: unmockedMethod('deleteInventoryUsageRule'),
-}
+    const mockDatabaseClient: MockDatabaseClient = {
+        getPartyBookingsForCapacityReport: unmockedMethod('getPartyBookingsForCapacityReport'),
+        listPartyBookingsForInventoryShoppingList: unmockedMethod('listPartyBookingsForInventoryShoppingList'),
+        createInventoryItemId: unmockedMethod('createInventoryItemId'),
+        setInventoryDocuments: unmockedMethod('setInventoryDocuments'),
+        getInventoryItem: unmockedMethod('getInventoryItem'),
+        listInventoryItems: unmockedMethod('listInventoryItems'),
+        updateInventoryItem: unmockedMethod('updateInventoryItem'),
+        deleteInventoryDocuments: unmockedMethod('deleteInventoryDocuments'),
+        getInventoryStockLevel: unmockedMethod('getInventoryStockLevel'),
+        updateInventoryStockLevel: unmockedMethod('updateInventoryStockLevel'),
+        listInventoryStockLevels: unmockedMethod('listInventoryStockLevels'),
+        listInventoryStockMovements: unmockedMethod('listInventoryStockMovements'),
+        runInventoryStockMovementTransaction: unmockedMethod('runInventoryStockMovementTransaction'),
+        listInventoryUsageRules: unmockedMethod('listInventoryUsageRules'),
+        createInventoryUsageRuleId: unmockedMethod('createInventoryUsageRuleId'),
+        getInventoryUsageRule: unmockedMethod('getInventoryUsageRule'),
+        deleteInventoryUsageRule: unmockedMethod('deleteInventoryUsageRule'),
+    }
+
+    return { mockDatabaseClient, unmockedMethod }
+})
+
+vi.mock('@/firebase/DatabaseClient', () => ({ DatabaseClient: databaseClientMocks.mockDatabaseClient }))
+
+export const mockDatabaseClient = databaseClientMocks.mockDatabaseClient
+const { unmockedMethod } = databaseClientMocks
 
 export function resetDatabaseClientMock() {
     mockDatabaseClient.getPartyBookingsForCapacityReport = unmockedMethod('getPartyBookingsForCapacityReport')
@@ -118,14 +129,3 @@ export function resetDatabaseClientMock() {
     mockDatabaseClient.getInventoryUsageRule = unmockedMethod('getInventoryUsageRule')
     mockDatabaseClient.deleteInventoryUsageRule = unmockedMethod('deleteInventoryUsageRule')
 }
-
-const databaseClientModulePath = require.resolve('@/firebase/DatabaseClient')
-
-require.cache[databaseClientModulePath] = {
-    id: databaseClientModulePath,
-    filename: databaseClientModulePath,
-    loaded: true,
-    exports: { DatabaseClient: mockDatabaseClient },
-    children: [],
-    paths: [],
-} as unknown as NodeJS.Module

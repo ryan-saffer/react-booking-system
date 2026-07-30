@@ -63,10 +63,12 @@ The client-side code is organized within `client/src/`:
 To run the client application in development mode:
 
 ```bash
-npm start
+npm run client
 ```
 
-This command (as defined in `client/package.json`) typically builds the shared `fizz-kidz` module (from `../server/fizz-kidz`), runs the TypeScript checker, and starts the Vite development server with hot reloading.
+Run this from the repository root. The root `vite.config.ts` owns the client configuration and resolves the shared `fizz-kidz` source directly.
+
+Use `npm run client:prod` to run the local client against the production backend and Firebase project.
 
 ## Deployment
 

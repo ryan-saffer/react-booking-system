@@ -1,4 +1,4 @@
-import type { StudioOrTest } from 'fizz-kidz/src/core/studio'
+import type { StudioOrTest } from '../core/studio'
 
 export type ScheduleAfterSchoolEnrolmentParams = Pick<
     AfterSchoolEnrolment,

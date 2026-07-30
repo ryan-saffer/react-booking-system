@@ -1,8 +1,11 @@
 {
-    "files": [],
-    "references": [
-        { "path": "./server/fizz-kidz" },
-        { "path": "./server" },
-        { "path": "./client" }
-    ]
+    "compilerOptions": {
+        "lib": ["ES2020"],
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "skipLibCheck": true,
+        "strict": true,
+        "types": ["node"]
+    },
+    "files": ["vite.config.ts"]
 }

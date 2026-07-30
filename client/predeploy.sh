@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e # Exist immediately if a command exits with a non-zero status
+set -e # Exit immediately if a command exits with a non-zero status
 
 # For Apple Pay payments with Square, the cert must be deployed at client/public/.well-known/apple-develop-merchantid-domain-association
 # To achieve this, at predeploy, place the appropriate dev/prod file at this location which has been verified in the Square dashboard
@@ -9,20 +9,12 @@ mkdir -p "$OUTDIR"
 if [ "$GCLOUD_PROJECT" = 'booking-system-6435d' ]; then
     cp client/apple-certs/apple-developer-merchantid-domain-association-dev \
         "$OUTDIR/apple-developer-merchantid-domain-association"
-    if [ "${FIZZ_KIDZ_PREBUILT:-false}" = 'true' ]; then
-        npm --prefix client run build:dev:prebuilt
-    else
-        npm --prefix client run build:dev
-    fi
+    VP_SKIP_SERVER_BUILD=true vp build --mode dev
     exit 0
 elif [ "$GCLOUD_PROJECT" = 'bookings-prod' ]; then
     cp client/apple-certs/apple-developer-merchantid-domain-association-prod \
         "$OUTDIR/apple-developer-merchantid-domain-association"
-    if [ "${FIZZ_KIDZ_PREBUILT:-false}" = 'true' ]; then
-        npm --prefix client run build:prod:prebuilt
-    else
-        npm --prefix client run build:prod
-    fi
+    VP_SKIP_SERVER_BUILD=true vp build --mode prod
     exit 0
 else
     echo "firebase project $GCLOUD_PROJECT not recognized"

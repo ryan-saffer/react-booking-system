@@ -1,5 +1,7 @@
 import { strictEqual } from 'assert'
 
+import { describe, it } from 'vite-plus/test'
+
 import { ANAPHYLAXIS_PLAN_PREFIXES, isValidAnaphylaxisPlanPath } from './anaphylaxis-plan-path'
 
 describe('anaphylaxis plan paths', () => {

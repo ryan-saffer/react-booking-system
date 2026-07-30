@@ -1,7 +1,7 @@
-// import { ObjectKeys } from '../utilities'
-import { StudioOrTest } from '../core/studio'
 import { ObjectKeys } from '../utilities'
 import { StoreCalendars, TestCalendarId } from './constants/Calendars'
+
+import type { StudioOrTest } from '../core/studio'
 
 export function retrieveForm(client: any, formId: any) {
     return client.forms.find((form: any) => form.id === formId)?.values

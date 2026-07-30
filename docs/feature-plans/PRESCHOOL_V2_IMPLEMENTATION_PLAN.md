@@ -304,13 +304,10 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
 
 ## Stage 13: Verification Checklist
 
-1. Run Prettier on changed client/server/shared files.
-2. Run `npm --prefix client run lint`.
-3. Run `npm --prefix client run ts:check`.
-4. Run `npm --prefix server run lint`.
-5. Run `npm --prefix server run ts:check`.
-6. Run `npm --prefix server/fizz-kidz run build` if shared code changes.
-7. Manually test:
+1. Run `vp check`.
+2. Run `vp test --run`.
+3. Run `vp build` when shared or build configuration changes.
+4. Manually test:
    - Studio selection.
    - Session grouping by weekday/time.
    - Single ad-hoc session checkout.

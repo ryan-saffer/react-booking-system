@@ -7,6 +7,3 @@ export * from './api'
 
 // PubSub dispatcher
 export * from './pubsub'
-
-// Sentry's esbuild proxy module re-exports default; provide one to avoid warnings.
-export default {}

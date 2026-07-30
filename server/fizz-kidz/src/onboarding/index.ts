@@ -1,4 +1,4 @@
-import type { Studio, StudioOrMaster } from 'fizz-kidz/src/core/studio'
+import type { Studio, StudioOrMaster } from '../core/studio'
 
 interface BaseEmployee {
     id: string

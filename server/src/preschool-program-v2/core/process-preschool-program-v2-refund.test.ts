@@ -1,5 +1,7 @@
 import { strictEqual } from 'assert'
 
+import { describe, it } from 'vite-plus/test'
+
 import { calculateRefundCents, repriceRemainingOrder } from './preschool-program-v2-pricing'
 
 import type { Square } from 'square'

@@ -1,5 +1,7 @@
 import { strictEqual } from 'assert'
 
+import { describe, it } from 'vite-plus/test'
+
 import { getDiscountCodeAmountCents } from './preschool-program-v2-pricing'
 
 import type { BookPreschoolProgramV2Props } from './book-preschool-program-v2'

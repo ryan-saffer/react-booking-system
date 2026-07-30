@@ -1,6 +1,7 @@
 import { deepStrictEqual, ok, rejects, strictEqual } from 'assert'
 
 import { FieldValue } from 'firebase-admin/firestore'
+import { afterEach, describe, it } from 'vite-plus/test'
 
 import { getInventoryStockLevelId, STUDIOS } from 'fizz-kidz'
 import type {

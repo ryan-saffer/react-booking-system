@@ -1,5 +1,7 @@
 import { deepStrictEqual, strictEqual } from 'assert'
 
+import { describe, it } from 'vite-plus/test'
+
 import type { PartyForm } from 'fizz-kidz'
 
 import { PaperformSubmission } from '@/paperforms/core/paperform-client'

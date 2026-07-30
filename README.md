@@ -24,7 +24,7 @@ The Fizz Kidz Portal is an internal management system streamlining Fizz Kidz ope
 The client-side application handles the user interface and interaction.
 
 - **Framework:** [React](https://react.dev/).
-- **Build Tool:** [Vite](https://vitejs.dev/) for fast development and optimized builds (see `client/vite.config.ts`).
+- **Toolchain:** [Vite+](https://viteplus.dev/) unifies Vite, Vitest, Oxlint, Oxfmt, Rolldown, and tsdown (see `vite.config.ts`).
 - **Routing:** [React Router DOM](https://reactrouter.com/) for client-side routing (see `client/src/app.tsx`).
 - **API Consumption:** Uses [tRPC](https://trpc.io/) to communicate with the server.
     - tRPC client initialized in `client/src/utilities/trpc.ts`.
@@ -56,51 +56,54 @@ A monorepo co-locating client and server:
 
 ## Setup and Installation
 
-1.  **Clone repo.**
-2.  **Install server dependencies:** `cd server && npm install && cd ..`
-3.  **Install client dependencies:** `cd client && npm install && cd ..`
-    _Note: Client builds depend on `../server/fizz-kidz`. Ensure its dependencies are installed._
+1. **Clone the repository.**
+2. **Install Vite+:** `curl -fsSL https://vite.plus | bash`, then open a new shell.
+3. **Install the workspace:** `vp install` from the repository root.
+4. **Enable repository hooks and agent integration:** `vp config`.
 
 ## Development
 
-Run all client and server linting, typechecking, and tests from either `client/` or `server/`:
+Run the complete local stack from the repository root:
 
 ```bash
-npm run verify
+vp dev
 ```
 
-From the repository root, use `./scripts/verify.sh`. The command formats changed files, then runs linting, typechecking, and tests. It prints phase progress, successful completion, or output from failed checks.
+This starts the client on `localhost:3000`, watches the Functions bundle, and starts the Firebase Functions and Pub/Sub emulators. Set `VP_CLIENT_ONLY=true` to start only the client.
 
-**Client:**
+To keep client and server logs in separate terminals, run these commands from the repository root:
 
-Start the client dev server (hot reloading): `cd client && npm start`
+```bash
+# Terminal 1
+npm run client
 
-- This builds `server/fizz-kidz` (watch), runs TS checker (watch), and starts Vite dev server (e.g., `localhost:5173`).
-- Vite proxies both `/api` and `/forms` to the local Functions emulator. If you add another backend-owned browser route, update `client/vite.config.ts` (and the generated `vite.config.js`) so local development matches production routing.
+# Terminal 2
+npm run server
+```
 
-Other client scripts (`client/package.json`):
+The server-only command watches the Functions bundle and server TypeScript projects, then starts the Functions and Pub/Sub emulators without starting Vite's client dev server. The Functions bundle directly includes `server/fizz-kidz/src`, so either server or shared-core changes trigger a backend rebuild. Client-only files are outside that dependency graph and do not rebuild the backend.
 
-- `build:dev`: Development build.
-- `build:prod`: Production build (to `client/dist`).
-- `lint`: Lint client code.
-- `ts:check`: Check types with TypeScript compiler.
+To run the local client against the production backend and Firebase project without starting local emulators:
 
-**Server:**
+```bash
+npm run client:prod
+```
 
-Run server locally with Firebase emulators: `cd server && npm run serve`
+Use the unified quality and build commands:
 
-- This builds server code (incl. `fizz-kidz`) (watch) and starts Firebase emulators (Functions, Pub/Sub) for local testing.
+```bash
+vp check
+vp test --run
+vp build
+```
 
-Other server scripts (`server/package.json`):
+`vp check` runs Oxfmt, Oxlint, type-aware linting, and TypeScript checks. `vp test` runs the client and server Vitest projects. `vp build` builds `server/fizz-kidz`, bundles Firebase Functions to `server/lib`, and builds the client to `client/dist`.
 
-- `build`: Production build of server functions (to `server/lib`).
-- `lint`: Lint server code.
-- `logs`: Fetch Firebase functions logs.
-- `test`: Run server-side tests (requires `fizz-kidz` build).
+The project compiler is TypeScript 7 (`vp exec tsc --version`). The `typescript6` compatibility package is retained only for tsdown's declaration-generation JS API; Vite+ checks and dev watchers use the TypeScript 7 toolchain.
 
 ## Environment Configuration
 
-- Client: use `vite --mode dev|prod` to choose which file to load (`client/.env` by default; merges `client/.env.prod` for prod builds).
+- Client: use `vp dev --mode dev|prod` or `vp build --mode dev|prod` (`client/.env` by default; merges `client/.env.prod` for prod builds).
 - Server: uses `dotenv` with `server/src/load-env.ts` to read the Firebase project id and load `server/.env` (dev) or `server/.env.prod` (prod).
 - GitHub: the workflow writes the correct env file(s) from Environment variable SERVER_ENV_FILE and CLIENT_ENV_FILE before build/deploy.
 
@@ -122,11 +125,10 @@ Deployed using Firebase.
     - `functions` `predeploy` script in `firebase.json` (`npm --prefix "$RESOURCE_DIR" run build`) builds server code.
     - Deploy via Firebase CLI:
         ```bash
-        cd server && npm run deploy
-        # Or from root: firebase deploy --only functions
+        vp exec firebase deploy --only functions
         ```
 
-See `firebase.json`, `client/package.json`, `server/package.json` for detailed configurations.
+See `vite.config.ts`, `server/vite.config.ts`, and `firebase.json` for detailed configurations.
 
 ## Routing Contract
 
@@ -135,4 +137,4 @@ See `firebase.json`, `client/package.json`, `server/package.json` for detailed c
 - When adding another backend-owned browser route, update all three layers together:
     - Express routing in `server/src/api.ts`
     - Firebase Hosting rewrites in `firebase.json`
-    - Vite proxy config in `client/vite.config.ts` / `client/vite.config.js`
+    - Vite proxy config in the root `vite.config.ts`

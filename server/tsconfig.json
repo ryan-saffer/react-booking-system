@@ -3,7 +3,6 @@
         "module": "commonjs",
         "noImplicitReturns": false,
         "noUnusedLocals": true,
-        "outDir": "lib-tsc", // needed for 'composite', and esbuild will use 'lib', so this is only for type checking
         "sourceMap": true,
         "strict": true,
         "target": "es2020",
@@ -16,10 +15,7 @@
             "fizz-kidz": ["./fizz-kidz/src"],
             "@/*": ["./src/*"]
         },
-        "composite": true,
         "noErrorTruncation": true
     },
-    "compileOnSave": true,
-    "include": ["src", "src/environment.d.ts", "declarations/index.d.ts"],
-    "references": [{ "path": "fizz-kidz" }]
+    "include": ["src", "src/environment.d.ts", "declarations/index.d.ts"]
 }
