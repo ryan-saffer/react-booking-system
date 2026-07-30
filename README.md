@@ -32,34 +32,36 @@ The client-side application handles the user interface and interaction.
 
 - **Framework:** [React](https://react.dev/).
 - **Toolchain:** [Vite+](https://viteplus.dev/) unifies Vite, Vitest, Oxlint, Oxfmt, Rolldown, and tsdown (see `vite.config.ts`).
-- **Routing:** [React Router DOM](https://reactrouter.com/) for client-side routing (see `client/src/app.tsx`).
+- **Routing:** [React Router DOM](https://reactrouter.com/) for client-side routing (see `apps/client/src/app.tsx`).
 - **API Consumption:** Uses [tRPC](https://trpc.io/) to communicate with the server.
-    - tRPC client initialized in `client/src/utilities/trpc.ts`.
-    - Enables type-safe API calls from React components (see `client/src/app.tsx` and its children).
+    - tRPC client initialized in `apps/client/src/utilities/trpc.ts`.
+    - Enables type-safe API calls from React components (see `apps/client/src/app.tsx` and its children).
 
 ## Server
 
 The server-side application handles business logic, data processing, and API provision using [Node.js](https://nodejs.org/) and [TypeScript](https://www.typescriptlang.org/).
 
-- **Main Entry:** `server/src/index.ts` exports modules for various application features (e.g., acuity, events, party bookings).
-- **Core Logic:** Shared business logic, types, and utilities reside in `server/fizz-kidz/src/index.ts`.
+- **Main Entry:** `apps/server/src/index.ts` exports modules for various application features (e.g., acuity, events, party bookings).
+- **Core Logic:** Shared business logic, types, and utilities reside in `packages/core/src/index.ts`.
 - **API with tRPC:**
     - Exposes a tRPC API for client consumption.
-    - Comprises multiple feature-specific routers (e.g., `partiesRouter`, `eventsRouter`) consolidated into `appRouter` (`server/src/trpc/trpc.app-router.ts`), which defines the full API surface.
-    - The entire router is mounted on a single Express app inside `server/src/api.ts`, which serves the `/api/trpc` endpoint from one [Firebase Function](https://firebase.google.com/docs/functions) alongside related HTTPS webhooks.
-- **Background Jobs:** Scheduled/background tasks share one Pub/Sub topic (`background`) and are dispatched from `server/src/pubsub.ts` based on message name.
+    - Comprises multiple feature-specific routers (e.g., `partiesRouter`, `eventsRouter`) consolidated into `appRouter` (`apps/server/src/trpc/trpc.app-router.ts`), which defines the full API surface.
+    - The entire router is mounted on a single Express app inside `apps/server/src/api.ts`, which serves the `/api/trpc` endpoint from one [Firebase Function](https://firebase.google.com/docs/functions) alongside related HTTPS webhooks.
+- **Background Jobs:** Scheduled/background tasks share one Pub/Sub topic (`background`) and are dispatched from `apps/server/src/pubsub.ts` based on message name.
 
 ## tRPC Interaction
 
-[tRPC](https://trpc.io/) enables type-safe client-server communication. By sharing TypeScript types directly (via `AppRouter` from `server/src/trpc/trpc.app-router.ts` imported into `client/src/utilities/trpc.ts`), the client calls server procedures with full type-checking and autocompletion. This boosts developer experience and cuts integration errors, eliminating manual schema sync or code generation.
+[tRPC](https://trpc.io/) enables type-safe client-server communication. By sharing TypeScript types directly (via `AppRouter` from `apps/server/src/trpc/trpc.app-router.ts` imported into `apps/client/src/utilities/trpc.ts`), the client calls server procedures with full type-checking and autocompletion. This boosts developer experience and cuts integration errors, eliminating manual schema sync or code generation.
 
 ## Project Structure
 
-A monorepo co-locating client and server:
+A monorepo using the conventional `apps/` (deployables) and `packages/` (shared libraries) layout:
 
-- **`client/`**: React frontend.
-- **`server/`**: Node.js backend (tRPC API definitions, Firebase Functions).
-- **`server/fizz-kidz/`**: Shared core logic, types, and utilities. Located in `server/` for Firebase Functions compatibility, ensuring it's packaged as a local dependency for server deployment. Built separately, used by server and client build processes.
+- **`apps/client/`**: React frontend.
+- **`apps/server/`**: Node.js backend (tRPC API definitions, Firebase Functions).
+- **`packages/core/`**: Shared logic, types, and utilities, published locally as `@fizz-kidz/core`. Consumed from source by both the client and the Functions bundle, so it needs no separate build to run or deploy the app.
+
+Deployable applications live under `apps/`; shared libraries live under `packages/`.
 
 ## Setup and Installation
 
@@ -88,7 +90,7 @@ npm run client
 npm run server
 ```
 
-The server-only command watches the Functions bundle and server TypeScript projects, then starts the Functions and Pub/Sub emulators without starting Vite's client dev server. The Functions bundle directly includes `server/fizz-kidz/src`, so either server or shared-core changes trigger a backend rebuild. Client-only files are outside that dependency graph and do not rebuild the backend.
+The server-only command watches the Functions bundle and server TypeScript projects, then starts the Functions and Pub/Sub emulators without starting Vite's client dev server. The Functions bundle directly includes `packages/core/src`, so either server or shared-module changes trigger a backend rebuild. Client-only files are outside that dependency graph and do not rebuild the backend.
 
 To run the local client against the production backend and Firebase project without starting local emulators:
 
@@ -108,11 +110,11 @@ That runs `vp check --fix && vp test --run`: it formats and applies safe lint fi
 
 The individual commands are also available:
 
-| Command         | Wraps           | Purpose                                                                                                        |
-| --------------- | --------------- | -------------------------------------------------------------------------------------------------------------- |
-| `npm run check` | `vp check`      | Formatting, Oxlint, type-aware lint, and TypeScript checks. Read-only.                                         |
-| `npm test`      | `vp test --run` | Runs the client and server Vitest projects once and exits.                                                     |
-| `npm run build` | `vp build`      | Builds `server/fizz-kidz`, bundles Firebase Functions to `server/lib`, and builds the client to `client/dist`. |
+| Command         | Wraps           | Purpose                                                                                                                 |
+| --------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `npm run check` | `vp check`      | Formatting, Oxlint, type-aware lint, and TypeScript checks. Read-only.                                                  |
+| `npm test`      | `vp test --run` | Runs the client and server Vitest projects once and exits.                                                              |
+| `npm run build` | `vp build`      | Builds `@fizz-kidz/core`, bundles Firebase Functions to `apps/server/lib`, and builds the client to `apps/client/dist`. |
 
 Notes:
 
@@ -124,8 +126,8 @@ The project compiler is TypeScript 7 (`vp exec tsc --version`). The `typescript6
 
 ## Environment Configuration
 
-- Client: use `vp dev --mode dev|prod` or `vp build --mode dev|prod` (`client/.env` by default; merges `client/.env.prod` for prod builds).
-- Server: uses `dotenv` with `server/src/load-env.ts` to read the Firebase project id and load `server/.env` (dev) or `server/.env.prod` (prod).
+- Client: use `vp dev --mode dev|prod` or `vp build --mode dev|prod` (`apps/client/.env` by default; merges `apps/client/.env.prod` for prod builds).
+- Server: uses `dotenv` with `apps/server/src/load-env.ts` to read the Firebase project id and load `apps/server/.env` (dev) or `apps/server/.env.prod` (prod).
 - GitHub: the workflow writes the correct env file(s) from Environment variable SERVER_ENV_FILE and CLIENT_ENV_FILE before build/deploy.
 
 ## Deployment
@@ -133,29 +135,29 @@ The project compiler is TypeScript 7 (`vp exec tsc --version`). The `typescript6
 Deployed using Firebase.
 
 - **Client (Firebase Hosting):**
-    - Client app built to static assets (`client/dist/`).
+    - Client app built to static assets (`apps/client/dist/`).
     - Served by Firebase Hosting.
     - `firebase.json` defines hosting config (URL rewrites, `predeploy` script: `sh ./client/predeploy.sh`).
     - Backend-owned browser paths must be explicitly rewritten here. Today that includes `/api/**` and `/forms/**`.
 - **Server (Firebase Functions):**
     - The Express-based `api` Firebase Function exposes `/api/trpc` for tRPC along with `/api/webhooks/*` endpoints.
     - It also handles durable browser entrypoints under `/forms/**`, which then redirect to the current client implementation.
-    - The client sends all tRPC requests to this single function URL (see `client/src/components/root/root.tsx` for tRPC client `fetch` logic).
-    - Background jobs use the `background` Pub/Sub topic, handled centrally by `server/src/pubsub.ts`.
-    - `firebase.json` specifies `server/` as functions source.
+    - The client sends all tRPC requests to this single function URL (see `apps/client/src/components/root/root.tsx` for tRPC client `fetch` logic).
+    - Background jobs use the `background` Pub/Sub topic, handled centrally by `apps/server/src/pubsub.ts`.
+    - `firebase.json` specifies `apps/server/` as functions source.
     - `functions` `predeploy` script in `firebase.json` (`npm --prefix "$RESOURCE_DIR" run build`) builds server code.
     - Deploy via Firebase CLI:
         ```bash
         vp exec firebase deploy --only functions
         ```
 
-See `vite.config.ts`, `server/vite.config.ts`, and `firebase.json` for detailed configurations.
+See `vite.config.ts`, `apps/server/vite.config.ts`, and `firebase.json` for detailed configurations.
 
 ## Routing Contract
 
 - Use clean backend-owned URLs for long-lived external/customer-facing links when you want future frontend changes to stay backward compatible.
 - In this repo, `/forms/**` is the durable public form entrypoint and `/form` is the current client-side implementation behind it.
 - When adding another backend-owned browser route, update all three layers together:
-    - Express routing in `server/src/api.ts`
+    - Express routing in `apps/server/src/api.ts`
     - Firebase Hosting rewrites in `firebase.json`
     - Vite proxy config in the root `vite.config.ts`

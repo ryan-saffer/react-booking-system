@@ -1,6 +1,6 @@
 {
     "hosting": {
-        "public": "client/dist",
+        "public": "apps/client/dist",
         "rewrites": [
             {
                 "source": "/api{,/**}",
@@ -30,7 +30,7 @@
             }
         ],
         "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-        "predeploy": ["sh ./client/predeploy.sh"]
+        "predeploy": ["sh ./apps/client/predeploy.sh"]
     },
     "emulators": {
         "functions": {
@@ -53,7 +53,7 @@
     },
     "functions": {
         "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run build"],
-        "source": "server",
+        "source": "apps/server",
         "ignore": [
             "node_modules",
             ".git",
@@ -61,8 +61,8 @@
             "firebase-debug.*.log",
             "pubsub-debug.log",
             "ui-debug.log",
-            "coverage/**",
-            "src/**",
+            "**/coverage/**",
+            "**/src/**",
             "**/*.tsbuildinfo"
         ]
     }

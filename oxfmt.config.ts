@@ -15,8 +15,8 @@ export default defineConfig({
     sortImports: {
         customGroups: [
             {
-                groupName: 'fizz-kidz',
-                elementNamePattern: ['fizz-kidz', 'fizz-kidz/**'],
+                groupName: 'core',
+                elementNamePattern: ['@fizz-kidz/**'],
             },
             {
                 groupName: 'internal-aliases',
@@ -33,7 +33,7 @@ export default defineConfig({
         groups: [
             'builtin',
             'external',
-            'fizz-kidz',
+            'core',
             'internal-aliases',
             ['parent', 'sibling', 'index', 'style', 'side_effect_style'],
             'type',
@@ -45,8 +45,8 @@ export default defineConfig({
     sortPackageJson: false,
     overrides: [
         {
-            files: ['client/**/*.{js,jsx,ts,tsx,html}'],
-            options: { sortTailwindcss: { config: './client/tailwind.config.js' } },
+            files: ['apps/client/**/*.{js,jsx,ts,tsx,html}'],
+            options: { sortTailwindcss: { config: './apps/client/tailwind.config.js' } },
         },
     ],
 })

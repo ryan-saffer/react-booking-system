@@ -4,8 +4,8 @@ on:
     push:
         branches: [develop, main]
         paths:
-            - 'client/**'
-            - 'server/**'
+            - 'apps/client/**'
+            - 'apps/server/**'
             - 'package.json'
             - 'package-lock.json'
             - 'vite.config.ts'
@@ -14,7 +14,7 @@ on:
             - '.node-version'
             - 'firebase.json'
             - '.firebaserc'
-            - 'client/predeploy.sh'
+            - 'apps/client/predeploy.sh'
             - '.github/workflows/pipeline.yml'
 
     # Manual trigger from the Actions tab
@@ -53,8 +53,8 @@ jobs:
                   base: ${{ github.ref }}
                   filters: |
                       hosting:
-                        - 'client/**'
-                        - 'server/fizz-kidz/**'
+                        - 'apps/client/**'
+                        - 'packages/core/**'
                         - 'package.json'
                         - 'package-lock.json'
                         - 'vite.config.ts'
@@ -65,7 +65,7 @@ jobs:
                         - '.firebaserc'
                         - '.github/workflows/pipeline.yml'
                       functions:
-                        - 'server/**'
+                        - 'apps/server/**'
                         - 'package.json'
                         - 'package-lock.json'
                         - 'vite.config.ts'
@@ -91,9 +91,9 @@ jobs:
               with:
                   path: |
                       node_modules
-                      client/node_modules
-                      server/node_modules
-                      server/fizz-kidz/node_modules
+                      apps/client/node_modules
+                      apps/server/node_modules
+                      packages/core/node_modules
                   key: dependencies-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.node-version', 'package.json', 'package-lock.json') }}
 
             - name: Create server .env from SERVER_ENV_FILE
@@ -101,12 +101,12 @@ jobs:
                   SERVER_ENV_FILE: ${{ vars.SERVER_ENV_FILE }}
               run: |
                   if [ "${{ github.ref_name }}" = 'main' ]; then
-                    printf '%s' "$SERVER_ENV_FILE" > server/.env.prod
-                    printf '%s' "$SERVER_ENV_FILE" > server/.env.bookings-prod
+                    printf '%s' "$SERVER_ENV_FILE" > apps/server/.env.prod
+                    printf '%s' "$SERVER_ENV_FILE" > apps/server/.env.bookings-prod
                     echo "Wrote server prod env files"
                   else
-                    printf '%s' "$SERVER_ENV_FILE" > server/.env
-                    printf '%s' "$SERVER_ENV_FILE" > server/.env.booking-system-6435d
+                    printf '%s' "$SERVER_ENV_FILE" > apps/server/.env
+                    printf '%s' "$SERVER_ENV_FILE" > apps/server/.env.booking-system-6435d
                     echo "Wrote server dev env files"
                   fi
 
@@ -115,11 +115,11 @@ jobs:
                   CLIENT_ENV_FILE: ${{ vars.CLIENT_ENV_FILE }}
               run: |
                   if [ "${{ github.ref_name }}" = 'main' ]; then
-                    printf '%s' "$CLIENT_ENV_FILE" > client/.env.prod
-                    echo "Wrote client/.env.prod"
+                    printf '%s' "$CLIENT_ENV_FILE" > apps/client/.env.prod
+                    echo "Wrote apps/client/.env.prod"
                   else
-                    printf '%s' "$CLIENT_ENV_FILE" > client/.env
-                    echo "Wrote client/.env"
+                    printf '%s' "$CLIENT_ENV_FILE" > apps/client/.env
+                    echo "Wrote apps/client/.env"
                   fi
 
             - name: Install dependencies
@@ -142,12 +142,11 @@ jobs:
                   GCLOUD_PROJECT: ${{ env.PROJECT_ID }}
               run: |
                   if [ "$DEPLOY_HOSTING" = "true" ]; then
-                    sh ./client/predeploy.sh
+                    sh ./apps/client/predeploy.sh
                   fi
 
                   if [ "$DEPLOY_FUNCTIONS" = "true" ]; then
-                    (cd server/fizz-kidz && vp pack)
-                    (cd server && vp pack)
+                    (cd apps/server && vp pack)
                   fi
 
             - name: Deploy Firebase targets

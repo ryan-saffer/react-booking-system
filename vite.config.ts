@@ -9,9 +9,9 @@ import { defineConfig } from 'vite-plus'
 import fmtConfig from './oxfmt.config'
 
 const workspaceDir = process.cwd()
-const clientDir = path.join(workspaceDir, 'client')
-const serverDir = path.join(workspaceDir, 'server')
-const fizzKidzDir = path.join(serverDir, 'fizz-kidz')
+const clientDir = path.join(workspaceDir, 'apps/client')
+const serverDir = path.join(workspaceDir, 'apps/server')
+const coreDir = path.join(workspaceDir, 'packages/core')
 const vpBin = path.join(workspaceDir, 'node_modules', 'vite-plus', 'bin', 'vp')
 const npmBin = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const processCleanups = new Set<() => void>()
@@ -24,12 +24,12 @@ const clientAliases = {
     '@drawables': path.join(clientDir, 'src/drawables'),
     '@utils': path.join(clientDir, 'src/utilities'),
     '@hooks': path.join(clientDir, 'src/components/Hooks'),
-    'fizz-kidz': path.join(fizzKidzDir, 'src'),
+    '@fizz-kidz/core': path.join(coreDir, 'src'),
 }
 
 const serverAliases = {
     '@': path.join(serverDir, 'src'),
-    'fizz-kidz': path.join(fizzKidzDir, 'src'),
+    '@fizz-kidz/core': path.join(coreDir, 'src'),
 }
 
 function resolveAppVersion(env: Record<string, string>) {
@@ -151,7 +151,7 @@ function workspaceBuildPlugin(): Plugin {
                 return
             }
 
-            runVp(['pack'], fizzKidzDir)
+            runVp(['pack'], coreDir)
             runVp(['pack'], serverDir)
         },
     }
@@ -293,7 +293,7 @@ export default defineConfig(({ command, mode }) => {
                       org: 'fizz-kidz',
                       project: 'client',
                       authToken: env.SENTRY_AUTH_TOKEN,
-                      sourcemaps: { filesToDeleteAfterUpload: ['./client/dist/**/*.map'] },
+                      sourcemaps: { filesToDeleteAfterUpload: ['./apps/client/dist/**/*.map'] },
                   })
                 : undefined,
         ],
@@ -322,12 +322,12 @@ export default defineConfig(({ command, mode }) => {
             plugins: ['typescript'],
             categories: { correctness: 'error' },
             ignorePatterns: [
-                'client/dist/**',
-                'client/coverage/**',
-                'server/lib/**',
-                'server/coverage/**',
-                'server/fizz-kidz/lib/**',
-                'server/fizz-kidz/lib-tsc/**',
+                'apps/client/dist/**',
+                'apps/client/coverage/**',
+                'apps/server/lib/**',
+                'apps/server/coverage/**',
+                'packages/core/lib/**',
+                'packages/core/lib-tsc/**',
             ],
             options: {
                 reportUnusedDisableDirectives: 'error',
@@ -355,7 +355,7 @@ export default defineConfig(({ command, mode }) => {
             },
             overrides: [
                 {
-                    files: ['client/**/*.{js,jsx,ts,tsx}'],
+                    files: ['apps/client/**/*.{js,jsx,ts,tsx}'],
                     plugins: ['typescript', 'react'],
                     env: { browser: true, es2020: true },
                     rules: {
@@ -371,7 +371,7 @@ export default defineConfig(({ command, mode }) => {
                     },
                 },
                 {
-                    files: ['server/**/*.{js,mjs,ts}'],
+                    files: ['apps/server/**/*.{js,mjs,ts}'],
                     plugins: ['typescript'],
                     env: { es2020: true, node: true },
                     rules: {
@@ -404,7 +404,7 @@ export default defineConfig(({ command, mode }) => {
                     },
                 },
                 {
-                    files: ['client/**/*.test.{jsx,tsx}'],
+                    files: ['apps/client/**/*.test.{jsx,tsx}'],
                     plugins: ['typescript', 'react', 'vitest'],
                     env: { browser: true, vitest: true },
                 },
