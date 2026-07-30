@@ -9,7 +9,8 @@ This guide orients you to the codebase and points to the authoritative README fi
 ## What This App Is
 
 - Fizz Kidz Portal: an internal operations platform.
-- Frontend in React (Vite, React Router, shadcn/ui). Backend on Firebase Functions with tRPC. Shared core module in `server/fizz-kidz` for types and business logic.
+- Frontend in React (Vite+, React Router, shadcn/ui). Backend on Firebase Functions with tRPC. Shared core module in `server/fizz-kidz` for types and business logic.
+- Toolchain is Vite+ (`vp`): Vite/Rolldown, Vitest, Oxlint, Oxfmt, tsdown, TypeScript 7, on Node 22 pinned by `.node-version`.
 - Key integrations: Acuity (scheduling), Square (payments — all payments except B2B invoices, which are sent via Xero), Mixpanel, SendGrid (MJML), Zoho, Storyblok, Xero, Sling.
 
 ## Repository Layout
@@ -36,15 +37,18 @@ This guide orients you to the codebase and points to the authoritative README fi
     - Booking flow, Square order/payment, discounts, direct Acuity scheduling, refunds, limitations.
 - Scripts: [scripts/readme.md](scripts/readme.md)
     - CSV export for parties, `GOOGLE_APPLICATION_CREDENTIALS` usage, run instructions, HubSpot import note.
+- Feature plans and design docs: [docs/](docs/)
+    - Longer-lived implementation plans, e.g. [docs/inventory-system-plan.md](docs/inventory-system-plan.md) and [docs/feature-plans/](docs/feature-plans/). Treat these as working documents, not architecture references.
+- Acuity auto-enrolment notes: [server/src/acuity/auto-enrolment.MD](server/src/acuity/auto-enrolment.MD)
 
 ## Quick Start
 
 1. Install Vite+: `curl -fsSL https://vite.plus | bash`
 2. Install dependencies from the repository root: `vp install`
 3. Enable repository hooks and agent integration: `vp config`
-4. Run the client and Firebase emulators: `vp dev` (or use `npm run client` and `npm run server` in separate terminals)
-5. Verify changes: `vp check`, then `vp test --run`
-6. Build all deployment artifacts: `vp build`
+4. Run the client and Firebase emulators: `npm run dev` (or use `npm run client` and `npm run server` in separate terminals)
+5. Verify changes: `npm run verify` (`vp check --fix && vp test --run`)
+6. Build all deployment artifacts: `npm run build`
 7. Deploy: see Deployment in [README.md](README.md) and [server/README.md](server/README.md).
 
 ## Conventions & Patterns
@@ -64,8 +68,10 @@ This guide orients you to the codebase and points to the authoritative README fi
 
 ## Verification Workflow
 
-- After making changes, run `vp check` from the repository root; it runs Oxfmt, Oxlint, type-aware linting, and TypeScript checks in order.
-- Run `vp test --run` after changes that affect behavior and `vp build` after build configuration changes.
+- Run `npm run verify` from the repository root to check and test in one step; it runs `vp check --fix && vp test --run`.
+- To check without modifying files, run `vp check` on its own; it runs Oxfmt, Oxlint, type-aware linting, and TypeScript checks in order. CI uses this form.
+- `vp check` does not run tests. Run `vp test --run` after changes that affect behavior, and `vp build` after build configuration changes.
+- Scope tests while iterating with `vp test --run --project client` or `--project server`.
 - Do not leave formatting-only diffs for the user to discover on save; format changed files before finishing.
 - If lint/typecheck output includes unrelated pre-existing warnings elsewhere in the repo, call that out clearly instead of treating them as part of the current change.
 

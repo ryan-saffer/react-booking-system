@@ -12,8 +12,11 @@ This directory contains the backend Node.js application for the Fizz Kidz Portal
     - [Webhook Handlers](#webhook-handlers)
     - [Pub/Sub Functions](#pubsub-functions)
 - [Key Design Patterns](#key-design-patterns)
+    - [DatabaseClient Boundary](#databaseclient-boundary)
     - [Lazy Instantiation of SDK Clients](#lazy-instantiation-of-sdk-clients)
-- [Development](#development)
+- [Installation](#installation)
+- [Run Locally](#run-locally)
+- [Testing](#testing)
 
 ## Overview
 
@@ -89,18 +92,10 @@ Functions exported from `server/src/index.ts` are deployed via Firebase. The cur
 
 ## Installation
 
-Before running `vp install` the following packages must be installed using Homebrew:
+There are no server-specific installation steps. Install the whole workspace from the repository root:
 
 ```sh
-brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman python-setuptools
-```
-
-This is needed for installation of the [canvas library](https://github.com/Automattic/node-canvas?tab=readme-ov-file#installation) on macOS with Apple Silicon.
-
-You can then install dependencies by running:
-
-```sh
-vp install -- --build-from-source=canvas
+vp install
 ```
 
 ## Run Locally
@@ -116,3 +111,20 @@ Run this from the repository root. It watches the Functions bundle and server Ty
 The Functions bundle resolves `fizz-kidz` directly to its source, so the single bundle watcher rebuilds after changes in either `server/src` or `server/fizz-kidz/src`. It does not watch client files. Separate TypeScript watchers report server and shared-core type errors without producing another build artifact.
 
 Invitation generation in the emulator uses an installed Google Chrome rather than downloading a separate browser with Puppeteer. If Chrome is installed in a non-standard location, set `PUPPETEER_EXECUTABLE_PATH` to its executable before starting the emulators. Production continues to use `@sparticuz/chromium`.
+
+## Testing
+
+Server tests are Vitest files matching `server/src/**/*.test.ts`. They are registered as the `server` Vitest project in the root `vite.config.ts`, so run them from the repository root rather than from this directory:
+
+```bash
+# whole suite once (client + server)
+npm test
+
+# watch mode while developing
+vp test
+
+# only the server project
+vp test --run --project server
+```
+
+Use `npm run verify` to run the checks and the full suite together before finishing a change.

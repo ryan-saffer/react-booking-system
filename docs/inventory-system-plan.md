@@ -26,8 +26,7 @@ The first implementation stage should only create the backend capability to defi
 - [x] Move inventory operation schemas into core modules so tRPC and server functions share the same input type.
 - [x] Standardise inventory discriminated union keys with the `$` prefix.
 - [x] Register the inventory router in `server/src/trpc/trpc.app-router.ts`.
-- [x] Run shared package build, server lint, and server typecheck.
-- [x] Run client lint and client typecheck for the inventory page.
+- [x] Run `vp check` across the workspace (formatting, lint, type-aware lint, and TypeScript for client, server, and shared core).
 - [ ] Add tests for stock movement transactions and permission checks.
 - [ ] Create an initial seed/admin script for party-food inventory items if needed.
 - [x] Build the inventory page for creating items and viewing current stock by location.

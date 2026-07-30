@@ -1,13 +1,13 @@
 # How to generate csv of birthday parties
 
-First export the variable inside `.env` to your path:
+First point `GOOGLE_APPLICATION_CREDENTIALS` at the service account key for the environment you want. Run these from the `scripts/` directory:
 
 ```sh
 # prod
-export GOOGLE_APPLICATION_CREDENTIALS="/Users/rsaffer/workspace/react-booking-system/scripts/bookings-prod.json"
+export GOOGLE_APPLICATION_CREDENTIALS="$(pwd)/bookings-prod.json"
 
 # dev
-export GOOGLE_APPLICATION_CREDENTIALS="/Users/rsaffer/workspace/react-booking-system/scripts/booking-system-6435d-firebase-adminsdk-km04g-9bdbdeb0e2.json"
+export GOOGLE_APPLICATION_CREDENTIALS="$(pwd)/bookings-dev.json"
 ```
 
 > The file has been excluded from git. If lost, regenerate it from Firebase Console (choose python) - https://console.firebase.google.com/u/1/project/bookings-prod/settings/serviceaccounts/adminsdk

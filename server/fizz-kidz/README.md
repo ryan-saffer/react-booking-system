@@ -39,7 +39,7 @@ The module is organized by feature or domain within its `src/` directory:
 
 - **Build:** Run `vp pack` from this directory, or `vp build` from the repository root. tsdown emits ESM and declarations to `lib/`.
 - **Usage:**
-    - **Server-Side:** The main `server/` application (containing Firebase Functions) lists `fizz-kidz` as a local file dependency in its `package.json` (e.g., `"fizz-kidz": "file:fizz-kidz"`). This allows server functions to import and use the compiled code from this module.
+    - **Server-Side:** The main `server/` application (containing Firebase Functions) lists `fizz-kidz` as a local file dependency in its `package.json` (`"fizz-kidz": "file:fizz-kidz"`), which keeps the package resolvable during a Firebase deploy. The Functions bundle itself does not consume `lib/`: `server/vite.config.ts` aliases `fizz-kidz` to `fizz-kidz/src` and sets `deps.alwaysBundle: ['fizz-kidz']`, so the shared code is inlined from source into `server/lib`.
     - **Client-Side:** The client resolves the workspace package directly to `server/fizz-kidz/src` through the root Vite+ and TypeScript aliases. This provides shared runtime code and types without a separate development build.
 
 This module is critical for maintaining consistency and reducing code duplication across the Fizz Kidz Portal.

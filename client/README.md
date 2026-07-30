@@ -11,11 +11,13 @@ This directory contains the frontend React application for the Fizz Kidz Portal.
 - [State Management](#state-management)
 - [API Communication](#api-communication)
 - [Development](#development)
+- [Testing](#testing)
+- [Deployment](#deployment)
 
 ## Key Technologies
 
 - **Framework:** React
-- **Build Tool:** Vite
+- **Toolchain:** [Vite+](https://viteplus.dev/) (Vite/Rolldown build, Vitest tests, Oxlint, Oxfmt), configured in the root `vite.config.ts`
 - **Routing:** React Router DOM
 - **UI:** shadcn/ui (with Tailwind CSS & Radix UI). Material UI (MUI) and Ant Design are present but are being phased out.
 - **State Management:** Zustand (preferred), React Context
@@ -69,6 +71,23 @@ npm run client
 Run this from the repository root. The root `vite.config.ts` owns the client configuration and resolves the shared `fizz-kidz` source directly.
 
 Use `npm run client:prod` to run the local client against the production backend and Firebase project.
+
+## Testing
+
+Client tests are Vitest files matching `client/src/**/*.test.{ts,tsx}`, using jsdom and Testing Library. They are registered as the `client` Vitest project in the root `vite.config.ts`, so run them from the repository root rather than from this directory:
+
+```bash
+# whole suite once (client + server)
+npm test
+
+# watch mode while developing
+vp test
+
+# only the client project
+vp test --run --project client
+```
+
+Use `npm run verify` to run the checks and the full suite together before finishing a change.
 
 ## Deployment
 

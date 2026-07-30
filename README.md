@@ -18,6 +18,13 @@ The Fizz Kidz Portal is an internal management system streamlining Fizz Kidz ope
 - [Client](#client)
 - [Server](#server)
 - [tRPC Interaction](#trpc-interaction)
+- [Project Structure](#project-structure)
+- [Setup and Installation](#setup-and-installation)
+- [Development](#development)
+- [Verification](#verification)
+- [Environment Configuration](#environment-configuration)
+- [Deployment](#deployment)
+- [Routing Contract](#routing-contract)
 
 ## Client
 
@@ -66,10 +73,10 @@ A monorepo co-locating client and server:
 Run the complete local stack from the repository root:
 
 ```bash
-vp dev
+npm run dev
 ```
 
-This starts the client on `localhost:3000`, watches the Functions bundle, and starts the Firebase Functions and Pub/Sub emulators. Set `VP_CLIENT_ONLY=true` to start only the client.
+This wraps `vp dev`. It starts the client on `localhost:3000`, watches the Functions bundle, and starts the Firebase Functions and Pub/Sub emulators. Set `VP_CLIENT_ONLY=true` to start only the client.
 
 To keep client and server logs in separate terminals, run these commands from the repository root:
 
@@ -89,15 +96,29 @@ To run the local client against the production backend and Firebase project with
 npm run client:prod
 ```
 
-Use the unified quality and build commands:
+## Verification
+
+Vite+ is a single toolchain, but checking and testing remain separate operations. To verify everything before finishing a change, run one command from the repository root:
 
 ```bash
-vp check
-vp test --run
-vp build
+npm run verify
 ```
 
-`vp check` runs Oxfmt, Oxlint, type-aware linting, and TypeScript checks. `vp test` runs the client and server Vitest projects. `vp build` builds `server/fizz-kidz`, bundles Firebase Functions to `server/lib`, and builds the client to `client/dist`.
+That runs `vp check --fix && vp test --run`: it formats and applies safe lint fixes, then validates formatting, lint, type-aware lint, and TypeScript, and finally runs the whole test suite once.
+
+The individual commands are also available:
+
+| Command         | Wraps           | Purpose                                                                                                        |
+| --------------- | --------------- | -------------------------------------------------------------------------------------------------------------- |
+| `npm run check` | `vp check`      | Formatting, Oxlint, type-aware lint, and TypeScript checks. Read-only.                                         |
+| `npm test`      | `vp test --run` | Runs the client and server Vitest projects once and exits.                                                     |
+| `npm run build` | `vp build`      | Builds `server/fizz-kidz`, bundles Firebase Functions to `server/lib`, and builds the client to `client/dist`. |
+
+Notes:
+
+- Use `vp test` (without `--run`) for watch mode while developing.
+- CI deliberately runs `vp check` rather than `npm run verify`, because `--fix` modifies files.
+- Run `npm run build` after changing build configuration.
 
 The project compiler is TypeScript 7 (`vp exec tsc --version`). The `typescript6` compatibility package is retained only for tsdown's declaration-generation JS API; Vite+ checks and dev watchers use the TypeScript 7 toolchain.
 
