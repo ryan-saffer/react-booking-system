@@ -16,6 +16,7 @@ This directory contains the backend Node.js application for the Fizz Kidz Portal
     - [Lazy Instantiation of SDK Clients](#lazy-instantiation-of-sdk-clients)
 - [Installation](#installation)
 - [Run Locally](#run-locally)
+- [Operational Scripts](#operational-scripts)
 - [Testing](#testing)
 
 ## Overview
@@ -111,6 +112,20 @@ Run this from the repository root. It watches the Functions bundle and server Ty
 The Functions bundle resolves `fizz-kidz` directly to its source, so the single bundle watcher rebuilds after changes in either `server/src` or `server/fizz-kidz/src`. It does not watch client files. Separate TypeScript watchers report server and shared-core type errors without producing another build artifact.
 
 Invitation generation in the emulator uses an installed Google Chrome rather than downloading a separate browser with Puppeteer. If Chrome is installed in a non-standard location, set `PUPPETEER_EXECUTABLE_PATH` to its executable before starting the emulators. Production continues to use `@sparticuz/chromium`.
+
+## Operational Scripts
+
+One-off maintenance and reporting tasks live in `server/src/_scripts/`. `main.ts` presents an interactive picker of the available scripts:
+
+```bash
+# dev Firebase project (booking-system-6435d)
+npm --workspace functions run script:dev
+
+# production Firebase project (bookings-prod)
+npm --workspace functions run script:prod
+```
+
+These run through `tsx`, which executes the TypeScript directly and honours the `fizz-kidz` and `@/*` path aliases in `server/tsconfig.json`. They transpile without type checking, so rely on `vp check` for type safety. They talk to the real Firebase project named in the script, so prefer `script:dev` unless you specifically need production data.
 
 ## Testing
 
