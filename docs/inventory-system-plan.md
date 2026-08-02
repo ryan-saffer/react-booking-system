@@ -11,23 +11,22 @@ The first implementation stage should only create the backend capability to defi
 - [x] Review the area-manager stocktake spreadsheet and capture relevant design implications.
 - [x] Update the plan for consumables-only inventory.
 - [x] Update the plan for exact quantity tracking and qualitative stock levels.
-- [x] Add shared inventory types and constants in `server/fizz-kidz/src/inventory/index.ts`.
-- [x] Export inventory types from `server/fizz-kidz/src/index.ts`.
-- [x] Add inventory permissions to `server/fizz-kidz/src/core/permission.ts`.
-- [x] Add typed Firestore refs for inventory collections in `server/src/firebase/FirestoreRefs.ts`.
+- [x] Add shared inventory types and constants in `packages/core/src/inventory/index.ts`.
+- [x] Export inventory types from `packages/core/src/index.ts`.
+- [x] Add inventory permissions to `packages/core/src/core/permission.ts`.
+- [x] Add typed Firestore refs for inventory collections in `apps/server/src/firebase/FirestoreRefs.ts`.
 - [x] Add `DatabaseClient` inventory item, stock-level, and stock-movement methods.
 - [x] Make inventory item creation also create initial location stock records.
 - [x] Implement transaction-backed stock movement writes.
 - [x] Add global hard delete for inventory items, including all studio stock levels and movement history.
 - [x] Add studio-scoped used/unused tracking via `InventoryStockLevel.stocked`.
-- [x] Add `server/src/inventory/core` utilities for inventory operations.
+- [x] Add `apps/server/src/inventory/core` utilities for inventory operations.
 - [x] Add an `inventory` tRPC router with zod input validation.
 - [x] Move inventory auth and permission checks into inventory-scoped tRPC procedures.
 - [x] Move inventory operation schemas into core modules so tRPC and server functions share the same input type.
 - [x] Standardise inventory discriminated union keys with the `$` prefix.
-- [x] Register the inventory router in `server/src/trpc/trpc.app-router.ts`.
-- [x] Run shared package build, server lint, and server typecheck.
-- [x] Run client lint and client typecheck for the inventory page.
+- [x] Register the inventory router in `apps/server/src/trpc/trpc.app-router.ts`.
+- [x] Run `vp check` across the workspace (formatting, lint, type-aware lint, and TypeScript for client, server, and shared core).
 - [ ] Add tests for stock movement transactions and permission checks.
 - [ ] Create an initial seed/admin script for party-food inventory items if needed.
 - [x] Build the inventory page for creating items and viewing current stock by location.
@@ -41,16 +40,16 @@ The first implementation stage should only create the backend capability to defi
 
 Inventory should follow the current repository architecture instead of becoming a separate subsystem with different conventions.
 
-- Shared domain types belong in `server/fizz-kidz/src` and are exported from `server/fizz-kidz/src/index.ts`.
-- Typed Firestore collection/document references belong in `server/src/firebase/FirestoreRefs.ts`.
-- Low-level database reads/writes belong in `server/src/firebase/DatabaseClient.ts`.
-- Feature/business operations belong in `server/src/<feature>/core`.
-- tRPC routers belong in `server/src/<feature>/functions/trpc` and are registered in `server/src/trpc/trpc.app-router.ts`.
-- The client consumes the server router through the existing typed tRPC client in `client/src/utilities/trpc.ts`.
+- Shared domain types belong in `packages/core/src` and are exported from `packages/core/src/index.ts`.
+- Typed Firestore collection/document references belong in `apps/server/src/firebase/FirestoreRefs.ts`.
+- Low-level database reads/writes belong in `apps/server/src/firebase/DatabaseClient.ts`.
+- Feature/business operations belong in `apps/server/src/<feature>/core`.
+- tRPC routers belong in `apps/server/src/<feature>/functions/trpc` and are registered in `apps/server/src/trpc/trpc.app-router.ts`.
+- The client consumes the server router through the existing typed tRPC client in `apps/client/src/utilities/trpc.ts`.
 
 ## Design Principles
 
-- Keep `server/fizz-kidz` as the source of truth for shared inventory types.
+- Keep `core` as the source of truth for shared inventory types.
 - Keep Firestore writes behind `DatabaseClient` and inventory core functions.
 - Do not update stock quantities directly from tRPC handlers or UI code.
 - Every stock quantity change should write an immutable stock movement record.
@@ -65,11 +64,11 @@ Inventory should follow the current repository architecture instead of becoming 
 
 Add a new shared module:
 
-- `server/fizz-kidz/src/inventory/index.ts`
+- `packages/core/src/inventory/index.ts`
 
 Export it from:
 
-- `server/fizz-kidz/src/index.ts`
+- `packages/core/src/index.ts`
 
 Recommended initial types:
 
@@ -468,10 +467,10 @@ type InventoryShoppingListLine = {
 
 ### Files To Change
 
-- Add `server/fizz-kidz/src/inventory/index.ts`.
-- Update `server/fizz-kidz/src/index.ts` to export inventory types.
-- Update `server/src/firebase/FirestoreRefs.ts` with inventory refs.
-- Update `server/src/firebase/DatabaseClient.ts` with inventory database methods.
+- Add `packages/core/src/inventory/index.ts`.
+- Update `packages/core/src/index.ts` to export inventory types.
+- Update `apps/server/src/firebase/FirestoreRefs.ts` with inventory refs.
+- Update `apps/server/src/firebase/DatabaseClient.ts` with inventory database methods.
 
 ### `FirestoreRefs` Additions
 
@@ -494,7 +493,7 @@ export function getInventoryStockLevelId(location: Studio, itemId: string) {
 }
 ```
 
-This helper can live in `server/fizz-kidz/src/inventory/index.ts` if the client also needs to reason about IDs, or beside `FirestoreRefs` if it is server-only. Prefer shared only if the client has a concrete need.
+This helper can live in `packages/core/src/inventory/index.ts` if the client also needs to reason about IDs, or beside `FirestoreRefs` if it is server-only. Prefer shared only if the client has a concrete need.
 
 ### `DatabaseClient` Additions
 
@@ -556,13 +555,13 @@ Start with simple query shapes. Add pagination only when the UI needs it.
 
 Create:
 
-- `server/src/inventory/core/create-inventory-item.ts`
-- `server/src/inventory/core/update-inventory-item.ts`
-- `server/src/inventory/core/list-inventory-items.ts`
-- `server/src/inventory/core/list-inventory-stock.ts`
-- `server/src/inventory/core/adjust-inventory-stock.ts`
-- `server/src/inventory/core/list-inventory-stock-movements.ts`
-- `server/src/inventory/core/inventory-permissions.ts`
+- `apps/server/src/inventory/core/create-inventory-item.ts`
+- `apps/server/src/inventory/core/update-inventory-item.ts`
+- `apps/server/src/inventory/core/list-inventory-items.ts`
+- `apps/server/src/inventory/core/list-inventory-stock.ts`
+- `apps/server/src/inventory/core/adjust-inventory-stock.ts`
+- `apps/server/src/inventory/core/list-inventory-stock-movements.ts`
+- `apps/server/src/inventory/core/inventory-permissions.ts`
 
 Core functions should contain business rules that should not live in tRPC handlers, such as:
 
@@ -589,11 +588,11 @@ export async function listInventoryStockMovements(
 
 Create:
 
-- `server/src/inventory/functions/trpc/trpc.inventory.ts`
+- `apps/server/src/inventory/functions/trpc/trpc.inventory.ts`
 
 Register in:
 
-- `server/src/trpc/trpc.app-router.ts`
+- `apps/server/src/trpc/trpc.app-router.ts`
 
 Recommended router surface:
 
@@ -612,15 +611,15 @@ Use `zod` for runtime input validation in this new router. Older routers sometim
 
 Example validation module:
 
-- `server/src/inventory/functions/trpc/inventory.schema.ts`
+- `apps/server/src/inventory/functions/trpc/inventory.schema.ts`
 
-Validation should use shared constants from `fizz-kidz`, for example `INVENTORY_CATEGORIES`, `INVENTORY_UNITS`, and `STUDIOS`, so runtime validators and TypeScript types cannot drift.
+Validation should use shared constants from `core`, for example `INVENTORY_CATEGORIES`, `INVENTORY_UNITS`, and `STUDIOS`, so runtime validators and TypeScript types cannot drift.
 
 ## Permissions
 
 Update:
 
-- `server/fizz-kidz/src/core/permission.ts`
+- `packages/core/src/core/permission.ts`
 
 Add permissions:
 
@@ -651,8 +650,8 @@ Recommended server check:
 
 Current party food/addition data lives in:
 
-- `server/fizz-kidz/src/partyBookings/booking.ts`
-- `server/fizz-kidz/src/partyBookings/additions.ts`
+- `packages/core/src/partyBookings/booking.ts`
+- `packages/core/src/partyBookings/additions.ts`
 
 Initial party-food candidates from `PROD_ADDITIONS`:
 
@@ -678,9 +677,9 @@ Do not build this in the initial backend stage. Plan for it after the tRPC surfa
 
 Likely files:
 
-- `client/src/components/inventory/inventory-page.tsx`
-- `client/src/components/inventory/components/inventory-stock-table.tsx`
-- `client/src/components/inventory/components/inventory-location-filter.tsx`
+- `apps/client/src/components/inventory/inventory-page.tsx`
+- `apps/client/src/components/inventory/components/inventory-stock-table.tsx`
+- `apps/client/src/components/inventory/components/inventory-location-filter.tsx`
 
 Route:
 
@@ -801,8 +800,8 @@ Usage rules should support party additions first. Later they can support creatio
 
 ## Type Safety Strategy
 
-- Define shared domain types and runtime constants in `server/fizz-kidz`.
-- Export all inventory types from `server/fizz-kidz/src/index.ts`.
+- Define shared domain types and runtime constants in `core`.
+- Export all inventory types from `packages/core/src/index.ts`.
 - Use those types in `FirestoreRefs`, `DatabaseClient`, server core functions, tRPC handlers, and client UI.
 - Use `zod` in new tRPC routers for runtime input validation.
 - Build zod enums from shared constants so static and runtime definitions stay aligned.
@@ -823,11 +822,9 @@ The exact indexes can be added when Firestore reports them, but these query shap
 
 For implementation stages, run verification in this order:
 
-1. Prettier on changed files.
-2. Server lint.
-3. `npm --prefix server/fizz-kidz run build`.
-4. `npm --prefix server run ts:check`.
-5. For client stages, run client lint and typecheck as well.
+1. `vp check`.
+2. `vp test --run`.
+3. `vp build` when shared or build configuration changes.
 
 Recommended tests once stock movement logic exists:
 
@@ -841,11 +838,11 @@ Recommended tests once stock movement logic exists:
 
 ## Suggested Implementation Order
 
-1. Add shared inventory types/constants to `server/fizz-kidz`.
+1. Add shared inventory types/constants to `core`.
 2. Add Firestore refs for inventory collections.
 3. Add `DatabaseClient` item and stock methods, including transactional stock movement writes.
 4. Add inventory permissions to shared role/permission types.
-5. Add `server/src/inventory/core` functions.
+5. Add `apps/server/src/inventory/core` functions.
 6. Add `inventory` tRPC router and register it in `appRouter`.
 7. Add a small seed/admin script only if needed to create initial party-food inventory items.
 8. Build the inventory page.
