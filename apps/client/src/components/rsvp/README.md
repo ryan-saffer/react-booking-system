@@ -5,24 +5,24 @@ This folder contains the client-side experience for the invitation + RSVP flow.
 ## Entry Links
 
 - Canonical public/share link: `https://bookings.fizzkidz.com.au/invite/:invitationId`
-    - This is the guest-facing URL used in the share dialog and in invitation QR codes.
-    - `invitationId` is stable once linked, so previously shared links and printed invites keep working after edits.
+  - This is the guest-facing URL used in the share dialog and in invitation QR codes.
+  - `invitationId` is stable once linked, so previously shared links and printed invites keep working after edits.
 - Canonical host entry link: `https://bookings.fizzkidz.com.au/api/webhooks/invitation/:bookingId`
-    - This is for the booking owner/host journey only.
-    - It resolves to either the existing invitation or the create/design flow.
+  - This is for the booking owner/host journey only.
+  - It resolves to either the existing invitation or the create/design flow.
 - Canonical app routes:
-    - `https://bookings.fizzkidz.com.au/invite/:invitationId`
-    - `https://bookings.fizzkidz.com.au/invite/:invitationId/rsvp`
+  - `https://bookings.fizzkidz.com.au/invite/:invitationId`
+  - `https://bookings.fizzkidz.com.au/invite/:invitationId/rsvp`
 
 ## Legacy Links
 
 - The host entry route remains long-term:
-    - `https://bookings.fizzkidz.com.au/api/webhooks/invitation/:bookingId`
+  - `https://bookings.fizzkidz.com.au/api/webhooks/invitation/:bookingId`
 - Legacy public sharing of booking-based invite links is still supported until `2026-06-06`.
 - That legacy public sharing includes:
-    - `https://bookings.fizzkidz.com.au/api/webhooks/invitation/:bookingId`
-    - `https://australia-southeast1-bookings-prod.cloudfunctions.net/api/api/webhooks/invitation/:bookingId`
-    - `https://australia-southeast1-booking-system-6435d.cloudfunctions.net/api/api/webhooks/invitation/:bookingId`
+  - `https://bookings.fizzkidz.com.au/api/webhooks/invitation/:bookingId`
+  - `https://australia-southeast1-bookings-prod.cloudfunctions.net/api/api/webhooks/invitation/:bookingId`
+  - `https://australia-southeast1-booking-system-6435d.cloudfunctions.net/api/api/webhooks/invitation/:bookingId`
 - After `2026-06-06`, the route still stays for hosts, but the old public-sharing support assumptions can be removed along with the `/invitation/v2` compatibility route.
 
 ## Routing & Views
