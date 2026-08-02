@@ -86,17 +86,27 @@
                             <td>{{ email }}</td>
                         </tr>
 
-                        {{#contactNumber}}
                         <tr>
                             <td><strong>Best contact number:</strong></td>
                             <td>{{ contactNumber }}</td>
                         </tr>
-                        {{/contactNumber}}
 
                         <tr>
-                            <td><strong>Company / Organisation:</strong></td>
-                            <td>{{ company }}</td>
+                            <td><strong>Organisation:</strong></td>
+                            <td>{{ organisation }}</td>
                         </tr>
+
+                        <tr>
+                            <td><strong>Estimated number of attendees:</strong></td>
+                            <td>{{ numberOfAttendees }}</td>
+                        </tr>
+
+                        {{#budget}}
+                        <tr>
+                            <td><strong>Budget:</strong></td>
+                            <td>{{ budget }}</td>
+                        </tr>
+                        {{/budget}}
 
                         <tr>
                             <td><strong>Preferred Date and Time:</strong></td>
@@ -107,6 +117,13 @@
                             <td><strong>Enquiry:</strong></td>
                             <td>{{ enquiry }}</td>
                         </tr>
+
+                        {{#reference}}
+                        <tr>
+                            <td><strong>How you heard about us:</strong></td>
+                            <td>{{ reference }}</td>
+                        </tr>
+                        {{/reference}}
                     </mj-table>
                 </mj-column>
             </mj-section>

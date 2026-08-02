@@ -67,7 +67,6 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
             setConditionalTextValue('')
             setConditionalTextError(false)
             setFormError(false)
-            setConfirmButton('')
             setConfirmCallback(() => {})
         }
 

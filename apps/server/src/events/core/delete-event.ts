@@ -3,9 +3,22 @@ import type { Event } from '@fizz-kidz/core'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
 import { throwTrpcError } from '../../utilities'
+import { ZohoClient } from '../../zoho/zoho-client'
 
 export async function deleteEvent(event: Event) {
     try {
+        const slots = await DatabaseClient.getEventSlots<'standard' | 'incursion'>(event.eventId)
+        const isLastSlot = slots.length === 1
+
+        if (event.zohoDealId) {
+            await new ZohoClient().deleteB2BEventSession({
+                dealId: event.zohoDealId,
+                startTime: new Date(event.startTime),
+                remainingSessionCount: Math.max(0, slots.length - 1),
+                isLastSlot,
+            })
+        }
+
         const calendarClient = await CalendarClient.getInstance()
         await calendarClient.deleteEvent(event.calendarEventId, { eventType: 'events' })
         await DatabaseClient.deleteEventBooking(event.eventId, event.id)

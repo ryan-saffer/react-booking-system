@@ -61,6 +61,9 @@ export type Form = {
     }[]
     notes: string
     invoiceUrl?: string
+    zohoDealId?: string
+    numberOfAttendees?: string
+    numberOfStudentsPerSession?: string
     numberOfChildren?: string
     location?: string
     parking?: string
@@ -167,31 +170,69 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                     </FormControl>
                 </Grid>
                 {type === 'incursion' && (
-                    <Grid item xs={12}>
-                        <FormControl fullWidth>
-                            <InputLabel>Module</InputLabel>
+                    <>
+                        <Grid item xs={12}>
+                            <FormControl fullWidth>
+                                <InputLabel>Module</InputLabel>
+                                <Controller
+                                    name="module"
+                                    control={control}
+                                    rules={{ required: true }}
+                                    render={({ field }) => (
+                                        <Select
+                                            {...field}
+                                            label="module"
+                                            disabled={disabled}
+                                            error={!!errors.module}
+                                            classes={{ root: classes.disabled }}
+                                        >
+                                            {ObjectKeys(ModuleNameMap).map((key) => (
+                                                <MenuItem value={key} key={key}>
+                                                    {ModuleNameMap[key]}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    )}
+                                />
+                                {errors.module && <FormHelperText error={true}>Module is required</FormHelperText>}
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
                             <Controller
-                                name="module"
+                                name="numberOfStudentsPerSession"
                                 control={control}
-                                rules={{ required: true }}
                                 render={({ field }) => (
-                                    <Select
+                                    <TextField
                                         {...field}
-                                        label="module"
+                                        label="Number of students per session"
+                                        fullWidth
+                                        variant="outlined"
+                                        autoComplete="off"
                                         disabled={disabled}
-                                        error={!!errors.module}
                                         classes={{ root: classes.disabled }}
-                                    >
-                                        {ObjectKeys(ModuleNameMap).map((key) => (
-                                            <MenuItem value={key} key={key}>
-                                                {ModuleNameMap[key]}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
+                                    />
                                 )}
                             />
-                            {errors.module && <FormHelperText error={true}>Module is required</FormHelperText>}
-                        </FormControl>
+                        </Grid>
+                    </>
+                )}
+                {type === 'standard' && (
+                    <Grid item xs={12} sm={6}>
+                        <Controller
+                            name="numberOfAttendees"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label="Number of attendees"
+                                    fullWidth
+                                    variant="outlined"
+                                    autoComplete="off"
+                                    disabled={disabled}
+                                    classes={{ root: classes.disabled }}
+                                />
+                            )}
+                        />
                     </Grid>
                 )}
                 <Grid item xs={12} sm={6}>
@@ -520,6 +561,8 @@ const DateTimePicker = ({
     helperText: { date: string; time: string }
     disabled: boolean
 }) => {
+    const { setValue } = useFormContext<Form>()
+
     return (
         <>
             <Grid item xs={12} sm={6} md={3}>
@@ -530,6 +573,15 @@ const DateTimePicker = ({
                     render={({ field }) => (
                         <DatePicker
                             {...field}
+                            onChange={(value) => {
+                                field.onChange(value)
+                                if (type === 'start') {
+                                    setValue(`slots.${idx}.endDate`, value, {
+                                        shouldDirty: true,
+                                        shouldValidate: true,
+                                    })
+                                }
+                            }}
                             slotProps={{
                                 textField: {
                                     error: errors.date,

@@ -3,6 +3,7 @@ import type { Event } from '@fizz-kidz/core'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
 import { throwTrpcError } from '../../utilities'
+import { ZohoClient } from '../../zoho/zoho-client'
 
 export async function updateEvent(event: Event) {
     // parse strings back into date
@@ -41,6 +42,14 @@ export async function updateEvent(event: Event) {
                 )
             )
         )
+
+        if (event.zohoDealId) {
+            await new ZohoClient().updateB2BDealFromEvent({
+                dealId: event.zohoDealId,
+                event,
+                slots: [event, ...siblings],
+            })
+        }
     } catch (err) {
         console.log(err)
         throwTrpcError('INTERNAL_SERVER_ERROR', `error updating event with id ${event.id}`, err)

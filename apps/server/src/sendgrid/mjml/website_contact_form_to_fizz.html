@@ -63,17 +63,54 @@
                 <td><strong>Preferred Date and Time:</strong></td>
                 <td>{{preferredDateAndTime}}</td>
             </tr>
-            {{/preferredDateAndTime}}
+            {{/preferredDateAndTime}} {{#school}}
+            <tr>
+                <td><strong>School:</strong></td>
+                <td>{{school}}</td>
+            </tr>
+            {{/school}} {{#organisation}}
+            <tr>
+                <td><strong>Organisation:</strong></td>
+                <td>{{organisation}}</td>
+            </tr>
+            {{/organisation}} {{#module}}
+            <tr>
+                <td><strong>Science module:</strong></td>
+                <td>{{module}}</td>
+            </tr>
+            {{/module}} {{#numberOfSessions}}
+            <tr>
+                <td><strong>Number of sessions:</strong></td>
+                <td>{{numberOfSessions}}</td>
+            </tr>
+            {{/numberOfSessions}} {{#numberOfStudentsPerSession}}
+            <tr>
+                <td><strong>Number of students per session:</strong></td>
+                <td>{{numberOfStudentsPerSession}}</td>
+            </tr>
+            {{/numberOfStudentsPerSession}} {{#numberOfAttendees}}
+            <tr>
+                <td><strong>Estimated number of attendees:</strong></td>
+                <td>{{numberOfAttendees}}</td>
+            </tr>
+            {{/numberOfAttendees}} {{#budget}}
+            <tr>
+                <td><strong>Budget:</strong></td>
+                <td>{{budget}}</td>
+            </tr>
+            {{/budget}}
 
             <tr>
                 <td><strong>Enquiry:</strong></td>
                 <td>{{enquiry}}</td>
             </tr>
 
+            {{#reference}}
             <tr>
                 <td><strong>How did you hear about us:</strong></td>
                 <td>{{reference}}</td>
             </tr>
+            {{/reference}}
         </table>
     </body>
 </html>

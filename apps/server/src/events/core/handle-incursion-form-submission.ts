@@ -13,6 +13,8 @@ import {
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
+import { logError } from '@/utilities'
+import { ZohoClient } from '@/zoho/zoho-client'
 
 export async function handleIncursionFormSubmission(response: PaperFormResponse<IncursionForm>) {
     const eventId = getQuestionValue(response, 'id')
@@ -41,6 +43,7 @@ export async function handleIncursionFormSubmission(response: PaperFormResponse<
         organisation,
         address,
         numberOfChildren,
+        numberOfStudentsPerSession: numberOfChildren,
         location,
         parking,
         expectedLearning,
@@ -50,6 +53,17 @@ export async function handleIncursionFormSubmission(response: PaperFormResponse<
     } satisfies IncursionEvent
 
     await DatabaseClient.updateEventBooking(eventId, firstSlot.id, updatedSlot)
+
+    if (firstSlot.zohoDealId) {
+        try {
+            await new ZohoClient().updateB2BIncursionStudentCount(firstSlot.zohoDealId, numberOfChildren)
+        } catch (err) {
+            logError(`Zoho sync failed while updating B2B incursion '${eventId}'`, err, {
+                eventId,
+                zohoDealId: firstSlot.zohoDealId,
+            })
+        }
+    }
 
     const slots = await DatabaseClient.getEventSlots<'incursion'>(eventId)
 

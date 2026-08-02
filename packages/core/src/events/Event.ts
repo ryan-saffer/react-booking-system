@@ -16,16 +16,19 @@ type BaseEvent = {
     notes: string
     calendarEventId: string
     invoiceUrl?: string
+    zohoDealId?: string
 }
 
 export type StandardEvent = BaseEvent & {
     $type: 'standard'
+    numberOfAttendees?: string
 }
 
 type BaseIncursionEvent = BaseEvent & {
     $type: 'incursion'
     module: ScienceModule
     incursionFormSent: boolean
+    numberOfStudentsPerSession?: string
 }
 
 type IncursionEventFormIncomplete = BaseIncursionEvent & {

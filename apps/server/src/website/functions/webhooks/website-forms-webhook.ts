@@ -208,7 +208,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                                             ? ''
                                             : formData.location || '',
                                     suburb: formData.suburb,
-                                    reference: formData.reference,
+                                    reference: formData.reference ?? 'other',
                                     partyTheme: formData.partyTheme,
                                     enquiry: formData.enquiry,
                                 })
@@ -225,13 +225,52 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                                 })
                                 break
                             }
-                            case service === 'activation' || service === 'incursion': {
-                                await zohoClient.addBasicB2BContact({
+                            case service === 'incursion': {
+                                const contactId = await zohoClient.createB2BContact({
                                     firstName,
                                     lastName,
                                     email: formData.email,
                                     mobile: formData.contactNumber,
-                                    service: service === 'activation' ? 'activation_event' : 'incursion',
+                                    service: 'incursion',
+                                })
+                                await zohoClient.createB2BDeal({
+                                    firstName,
+                                    lastName,
+                                    email: formData.email,
+                                    mobile: formData.contactNumber,
+                                    contactId,
+                                    organisationName: formData.school || '',
+                                    service: 'Incursion',
+                                    preferredDateAndTime: formData.preferredDateAndTime || '',
+                                    ...(formData.module && { module: ModuleDisplayValueMap[formData.module] }),
+                                    numberOfSessions: formData.numberOfSessions,
+                                    numberOfStudentsPerSession: formData.numberOfStudentsPerSession,
+                                    enquiry: formData.enquiry,
+                                    reference: formData.reference,
+                                })
+                                break
+                            }
+                            case service === 'activation': {
+                                const contactId = await zohoClient.createB2BContact({
+                                    firstName,
+                                    lastName,
+                                    email: formData.email,
+                                    mobile: formData.contactNumber,
+                                    service: 'activation_event',
+                                })
+                                await zohoClient.createB2BDeal({
+                                    firstName,
+                                    lastName,
+                                    email: formData.email,
+                                    mobile: formData.contactNumber,
+                                    contactId,
+                                    organisationName: formData.organisation || '',
+                                    service: 'Activation / Event',
+                                    preferredDateAndTime: formData.preferredDateAndTime || '',
+                                    numberOfAttendees: formData.numberOfAttendees,
+                                    budget: formData.budget,
+                                    enquiry: formData.enquiry,
+                                    reference: formData.reference,
                                 })
                                 break
                             }
@@ -254,11 +293,20 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                         enquiry: formData.enquiry,
                         ...(formData.location && { location: LocationDisplayValueMap[formData.location] }),
                         preferredDateAndTime: formData.preferredDateAndTime,
+                        school: formData.school,
+                        organisation: formData.organisation,
+                        module: formData.module ? ModuleDisplayValueMap[formData.module] : undefined,
+                        numberOfSessions: formData.numberOfSessions,
+                        numberOfStudentsPerSession: formData.numberOfStudentsPerSession,
+                        numberOfAttendees: formData.numberOfAttendees,
+                        budget: formData.budget,
                         suburb: formData.suburb,
                         reference:
                             formData.reference === 'other' && formData.referenceOther
                                 ? formData.referenceOther
-                                : ReferenceDisplayValueMap[formData.reference],
+                                : formData.reference
+                                  ? ReferenceDisplayValueMap[formData.reference]
+                                  : undefined,
                     },
                     {
                         bccBookings: false,
@@ -276,11 +324,20 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                         enquiry: formData.enquiry,
                         ...(formData.location && { location: LocationDisplayValueMap[formData.location] }),
                         preferredDateAndTime: formData.preferredDateAndTime,
+                        school: formData.school,
+                        organisation: formData.organisation,
+                        module: formData.module ? ModuleDisplayValueMap[formData.module] : undefined,
+                        numberOfSessions: formData.numberOfSessions,
+                        numberOfStudentsPerSession: formData.numberOfStudentsPerSession,
+                        numberOfAttendees: formData.numberOfAttendees,
+                        budget: formData.budget,
                         suburb: formData.suburb,
                         reference:
                             formData.reference === 'other' && formData.referenceOther
                                 ? formData.referenceOther
-                                : ReferenceDisplayValueMap[formData.reference],
+                                : formData.reference
+                                  ? ReferenceDisplayValueMap[formData.reference]
+                                  : undefined,
                     },
                     {
                         subject: `${ServiceDisplayValueMap[formData.service]} - ${formData.name}`,
@@ -310,14 +367,29 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                     description: 'event enquiry sync',
                     formId,
                     requestBody,
-                    task: () =>
-                        zohoClient.addBasicB2BContact({
+                    task: async () => {
+                        const contactId = await zohoClient.createB2BContact({
                             firstName,
                             lastName,
                             email: formData.email,
+                            mobile: formData.contactNumber,
                             service: 'activation_event',
-                            company: formData.company,
-                        }),
+                        })
+                        await zohoClient.createB2BDeal({
+                            firstName,
+                            lastName,
+                            email: formData.email,
+                            mobile: formData.contactNumber,
+                            contactId,
+                            organisationName: formData.organisation,
+                            service: 'Activation / Event',
+                            preferredDateAndTime: formData.preferredDateAndTime,
+                            numberOfAttendees: formData.numberOfAttendees,
+                            budget: formData.budget,
+                            enquiry: formData.enquiry,
+                            reference: formData.reference,
+                        })
+                    },
                 })
 
                 await mailClient.sendEmail(
@@ -327,9 +399,12 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                         name: formData.name,
                         email: formData.email,
                         contactNumber: formData.contactNumber,
-                        company: formData.company,
+                        organisation: formData.organisation,
                         preferredDateAndTime: formData.preferredDateAndTime,
+                        numberOfAttendees: formData.numberOfAttendees,
+                        budget: formData.budget,
                         enquiry: formData.enquiry,
+                        reference: formData.reference ? ReferenceDisplayValueMap[formData.reference] : undefined,
                     },
                     {
                         bccBookings: false,
@@ -342,9 +417,12 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                         name: formData.name,
                         email: formData.email,
                         contactNumber: formData.contactNumber,
-                        company: formData.company,
+                        organisation: formData.organisation,
                         preferredDateAndTime: formData.preferredDateAndTime,
+                        numberOfAttendees: formData.numberOfAttendees,
+                        budget: formData.budget,
                         enquiry: formData.enquiry,
+                        reference: formData.reference ? ReferenceDisplayValueMap[formData.reference] : undefined,
                     },
                     {
                         subject: `Event - ${formData.name}`,
@@ -356,7 +434,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                     distinct_id: formData.email,
                     form: 'event',
                     service: 'activation',
-                    reference: undefined,
+                    reference: formData.reference,
                 })
 
                 break
@@ -370,15 +448,30 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                     description: 'incursion enquiry sync',
                     formId,
                     requestBody,
-                    task: () =>
-                        zohoClient.addBasicB2BContact({
+                    task: async () => {
+                        const contactId = await zohoClient.createB2BContact({
                             firstName,
                             lastName,
                             email: formData.email,
                             mobile: formData.contactNumber,
                             service: 'incursion',
-                            company: formData.school,
-                        }),
+                        })
+                        await zohoClient.createB2BDeal({
+                            firstName,
+                            lastName,
+                            email: formData.email,
+                            mobile: formData.contactNumber,
+                            contactId,
+                            organisationName: formData.school,
+                            service: 'Incursion',
+                            preferredDateAndTime: formData.preferredDateAndTime,
+                            module: ModuleDisplayValueMap[formData.module],
+                            numberOfSessions: formData.numberOfSessions,
+                            numberOfStudentsPerSession: formData.numberOfStudentsPerSession,
+                            enquiry: formData.enquiry,
+                            reference: formData.reference,
+                        })
+                    },
                 })
 
                 await mailClient.sendEmail(
@@ -391,7 +484,10 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                         contactNumber: formData.contactNumber,
                         preferredDateAndTime: formData.preferredDateAndTime,
                         module: ModuleDisplayValueMap[formData.module],
+                        numberOfSessions: formData.numberOfSessions,
+                        numberOfStudentsPerSession: formData.numberOfStudentsPerSession,
                         enquiry: formData.enquiry,
+                        reference: formData.reference ? ReferenceDisplayValueMap[formData.reference] : undefined,
                     },
                     {
                         bccBookings: false,
@@ -407,7 +503,10 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                         contactNumber: formData.contactNumber,
                         preferredDateAndTime: formData.preferredDateAndTime,
                         module: ModuleDisplayValueMap[formData.module],
+                        numberOfSessions: formData.numberOfSessions,
+                        numberOfStudentsPerSession: formData.numberOfStudentsPerSession,
                         enquiry: formData.enquiry,
+                        reference: formData.reference ? ReferenceDisplayValueMap[formData.reference] : undefined,
                     },
                     {
                         subject: `Incursion - ${formData.name}, ${formData.school}`,

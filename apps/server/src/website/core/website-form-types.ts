@@ -21,18 +21,28 @@ export type Form = {
         location?: ContactFormLocationOption
         suburb?: string
         preferredDateAndTime?: string
+        school?: string
+        organisation?: string
+        module?: IncursionFormModuleOption
+        numberOfSessions?: string
+        numberOfStudentsPerSession?: string
+        numberOfAttendees?: string
+        budget?: string
         partyTheme?: PartyTheme
         enquiry: string
-        reference: ReferenceOption
+        reference?: ReferenceOption
         referenceOther?: string
     }
     event: {
         name: string
         email: string
-        contactNumber?: string
-        company: string
+        contactNumber: string
+        organisation: string
         preferredDateAndTime: string
+        numberOfAttendees: string
+        budget?: string
         enquiry: string
+        reference?: ReferenceOption
     }
     incursion: {
         name: string
@@ -41,7 +51,10 @@ export type Form = {
         contactNumber: string
         preferredDateAndTime: string
         module: IncursionFormModuleOption
+        numberOfSessions: string
+        numberOfStudentsPerSession: string
         enquiry: string
+        reference?: ReferenceOption
     }
     careers: {
         name: string

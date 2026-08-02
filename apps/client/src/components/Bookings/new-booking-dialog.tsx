@@ -53,6 +53,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 
 type Props = {
     open: boolean
+    initialBookingType?: 'party' | 'event'
     onBookingCreated: (date?: Date) => void
 }
 
@@ -65,10 +66,10 @@ const Transition = React.forwardRef(
     ) => <Slide direction="up" ref={ref} {...props} />
 )
 
-const NewBookingDialog: React.FC<Props> = ({ open, onBookingCreated }) => {
+const NewBookingDialog: React.FC<Props> = ({ open, initialBookingType = 'party', onBookingCreated }) => {
     // used to ensure form mounts on each open. See https://github.com/reactjs/react-modal/issues/106#issuecomment-546658885
     const [key, setKey] = useState(0)
-    const [value, setValue] = useState(0)
+    const [value, setValue] = useState(initialBookingType === 'event' ? 1 : 0)
 
     const { setDate } = useDateNavigation()
 

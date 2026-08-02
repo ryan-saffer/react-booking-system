@@ -488,8 +488,15 @@ export type Emails = {
         location?: string
         suburb?: string
         preferredDateAndTime?: string
+        school?: string
+        organisation?: string
+        module?: string
+        numberOfSessions?: string
+        numberOfStudentsPerSession?: string
+        numberOfAttendees?: string
+        budget?: string
         enquiry: string
-        reference: string
+        reference?: string
     }
 
     websiteContactFormToFizz: {
@@ -500,26 +507,39 @@ export type Emails = {
         location?: string
         suburb?: string
         preferredDateAndTime?: string
+        school?: string
+        organisation?: string
+        module?: string
+        numberOfSessions?: string
+        numberOfStudentsPerSession?: string
+        numberOfAttendees?: string
+        budget?: string
         enquiry: string
-        reference: string
+        reference?: string
     }
 
     websiteEventFormToCustomer: {
         name: string
         email: string
-        contactNumber?: string
-        company: string
+        contactNumber: string
+        organisation: string
         preferredDateAndTime: string
+        numberOfAttendees: string
+        budget?: string
         enquiry: string
+        reference?: string
     }
 
     websiteEventFormToFizz: {
         name: string
         email: string
-        contactNumber?: string
-        company: string
+        contactNumber: string
+        organisation: string
         preferredDateAndTime: string
+        numberOfAttendees: string
+        budget?: string
         enquiry: string
+        reference?: string
     }
 
     websiteIncurionFormToCustomer: {
@@ -529,7 +549,10 @@ export type Emails = {
         contactNumber: string
         preferredDateAndTime: string
         module: string
+        numberOfSessions: string
+        numberOfStudentsPerSession: string
         enquiry: string
+        reference?: string
     }
 
     websiteIncurionFormToFizz: {
@@ -539,7 +562,10 @@ export type Emails = {
         contactNumber: string
         preferredDateAndTime: string
         module: string
+        numberOfSessions: string
+        numberOfStudentsPerSession: string
         enquiry: string
+        reference?: string
     }
 
     websiteCareersFormToCustomer: {

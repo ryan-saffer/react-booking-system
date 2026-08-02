@@ -59,9 +59,26 @@
             </tr>
 
             <tr>
+                <td><strong>Number of sessions:</strong></td>
+                <td>{{numberOfSessions}}</td>
+            </tr>
+
+            <tr>
+                <td><strong>Number of students per session:</strong></td>
+                <td>{{numberOfStudentsPerSession}}</td>
+            </tr>
+
+            <tr>
                 <td><strong>Enquiry:</strong></td>
                 <td>{{enquiry}}</td>
             </tr>
+
+            {{#reference}}
+            <tr>
+                <td><strong>How they heard about us:</strong></td>
+                <td>{{reference}}</td>
+            </tr>
+            {{/reference}}
         </table>
     </body>
 </html>

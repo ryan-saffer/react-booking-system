@@ -9,9 +9,6 @@ import { useState } from 'react'
 import { Outlet, ScrollRestoration } from 'react-router-dom'
 import { Toaster } from 'sonner'
 
-import { getApplicationDomain } from '@fizz-kidz/core'
-
-import { useEmulators } from '@components/Firebase/firebase'
 import { FirebaseProvider } from '@components/Firebase/firebase-provider'
 import { ConfirmationDialogWithCheckboxProvider } from '@components/Hooks/confirmation-dialog-with-checkbox.tsx/confirmation-dialog-with-checkbox.provider'
 import { ConfirmationDialogProvider } from '@components/Hooks/confirmation-dialog.tsx/confirmation-dialog.provider'
@@ -56,14 +53,12 @@ const antdTheme: ThemeConfig = {
 function InnerRoot() {
     const firebase = useFirebase()
 
-    const domain = getApplicationDomain(import.meta.env.VITE_ENV, useEmulators)
-
     const [queryClient] = useState(() => new QueryClient())
     const [trpcClient] = useState(() =>
         createTRPCClient<AppRouter>({
             links: [
                 httpBatchLink({
-                    url: `${domain}/api/trpc`,
+                    url: '/api/trpc',
                     async headers() {
                         // first try refresh the users token - this means when returning to the app
                         // after a while, it will refresh the token and work nicely.

@@ -6,7 +6,8 @@ import { ModuleIncursionMap, ModuleNameMap } from '@fizz-kidz/core'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { CalendarClient } from '@/google/CalendarClient'
 import { MailClient } from '@/sendgrid/MailClient'
-import { throwTrpcError } from '@/utilities'
+import { logError, throwTrpcError } from '@/utilities'
+import { ZohoClient } from '@/zoho/zoho-client'
 
 export type CreateEvent = {
     event: WithoutId<DistributiveOmit<Event, 'eventId' | 'startTime' | 'endTime' | 'calendarEventId'>>
@@ -65,6 +66,40 @@ export async function createEvent({ event, slots, sendConfirmationEmail, emailMe
                 return DatabaseClient.updateEventBooking(eventId, slotId, { calendarEventId })
             })
         )
+
+        try {
+            const zohoDealId = await new ZohoClient().confirmB2BDeal({
+                dealId: event.zohoDealId,
+                firstName: event.contactName.split(' ')[0],
+                lastName: event.contactName.split(' ').slice(1).join(' '),
+                email: event.contactEmail,
+                mobile: event.contactNumber,
+                eventName: event.eventName,
+                organisationName: event.organisation,
+                studio: event.studio,
+                bookingId: eventId,
+                address: event.address,
+                price: event.price,
+                slots,
+                type: event.$type,
+                notes: event.notes,
+                ...(event.$type === 'standard'
+                    ? { numberOfAttendees: event.numberOfAttendees }
+                    : {
+                          module: event.module,
+                          numberOfStudentsPerSession: event.numberOfStudentsPerSession,
+                      }),
+            })
+
+            if (!event.zohoDealId) {
+                await DatabaseClient.updateEventBooking(eventId, slotIds[0], { zohoDealId })
+            }
+        } catch (err) {
+            logError(`Zoho sync failed while confirming B2B event booking '${eventId}'`, err, {
+                eventId,
+                zohoDealId: event.zohoDealId,
+            })
+        }
     } catch (err) {
         throwTrpcError('INTERNAL_SERVER_ERROR', 'error creating event booking', err)
     }

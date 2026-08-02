@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 
-import type { Booking, PartyLostReason, Studio, StudioOrTest } from '@fizz-kidz/core'
-import { capitalise, getApplicationDomain } from '@fizz-kidz/core'
+import type { Booking, Event, PartyLostReason, ScienceModule, Studio, StudioOrTest } from '@fizz-kidz/core'
+import { capitalise, getApplicationDomain, ModuleIncursionMap, ModuleNameMap } from '@fizz-kidz/core'
 
 import { env } from '@/init'
 import { isUsingEmulator } from '@/utilities'
@@ -30,6 +30,21 @@ const HOLIDAY_PROGRAM_PIPELINE = 'Holiday Program Pipeline'
 const HOLIDAY_PROGRAM_STAGE = 'Holiday Program Booking'
 const HOLIDAY_PROGRAM_SUBFORM = 'Holiday_Program'
 const HOLIDAY_PROGRAM_DEAL_LAYOUT_ID = '76392000009097844'
+const B2B_PIPELINE = 'B2B Pipeline'
+const B2B_STAGE = 'Qualification'
+const B2B_CONFIRMED_BOOKING_STAGE = 'Confirmed Booking'
+const B2B_LOST_BOOKING_STAGE = 'Lost Booking'
+const B2B_SESSIONS_SUBFORM = 'Sessions'
+const B2B_DEAL_LAYOUT_ID = '76392000011684198'
+const B2B_CONTACT_LAYOUT_ID = '76392000012338191'
+const LAMI_OWNER_ID = '76392000000333090'
+const ZOHO_REFERENCE_VALUE_MAP = {
+    ...ReferenceDisplayValueMap,
+    google: 'Google search',
+} satisfies Record<ReferenceOption, string>
+
+const toZohoB2BModule = (module: string) =>
+    module === 'Earth, Weather and Sustainability' ? 'Earth, Water and Sustainability' : module
 
 function isDuplicateChildLinkingError(err: unknown) {
     const zohoError = err as ZohoRequestError
@@ -155,6 +170,112 @@ export class ZohoClient {
         return DateTime.fromISO(date, { zone: 'Australia/Melbourne' }).toISODate()
     }
 
+    #formatDuration(startTime: Date, endTime: Date) {
+        const totalMinutes = Math.max(0, Math.round((endTime.getTime() - startTime.getTime()) / 60_000))
+        const hours = Math.floor(totalMinutes / 60)
+        const minutes = totalMinutes % 60
+        const parts = [
+            hours > 0 ? `${hours} ${hours === 1 ? 'hour' : 'hours'}` : '',
+            minutes > 0 ? `${minutes} mins` : '',
+        ].filter(Boolean)
+
+        return parts.join(' ') || '0 mins'
+    }
+
+    #getB2BSessionRows({
+        slots,
+        module,
+        attendeeCount,
+        existingSessions = [],
+    }: {
+        slots: { startTime: Date; endTime: Date }[]
+        module?: ScienceModule
+        attendeeCount?: string
+        existingSessions?: { id?: string }[]
+    }) {
+        const sortedSlots = [...slots].sort((a, b) => a.startTime.getTime() - b.startTime.getTime())
+
+        return sortedSlots.map((slot, index) => ({
+            ...(existingSessions[index]?.id ? { id: existingSessions[index].id } : {}),
+            Date_Time: this.#toDateTimeISO(slot.startTime.toISOString()),
+            Duration: this.#formatDuration(slot.startTime, slot.endTime),
+            Module: module ? ModuleNameMap[module] : null,
+            Attendees: attendeeCount?.trim() || null,
+        }))
+    }
+
+    async #getB2BBookingFields({
+        firstName,
+        lastName,
+        email,
+        mobile,
+        eventName,
+        organisationName,
+        studio,
+        bookingId,
+        address,
+        price,
+        slots,
+        type,
+        module,
+        numberOfAttendees,
+        numberOfStudentsPerSession,
+        notes,
+        existingSessions = [],
+    }: WithBaseProps<{
+        eventName: string
+        organisationName: string
+        studio: Studio
+        bookingId: string
+        address: string
+        price: string
+        slots: { startTime: Date; endTime: Date }[]
+        type: 'standard' | 'incursion'
+        module?: ScienceModule
+        numberOfAttendees?: string
+        numberOfStudentsPerSession?: string
+        notes: string
+        existingSessions?: { id?: string }[]
+    }>) {
+        const service = type === 'incursion' ? 'Incursion' : 'Activation / Event'
+        const attendeeCount = type === 'incursion' ? numberOfStudentsPerSession : numberOfAttendees
+        const contactId = await this.createB2BContact({
+            firstName,
+            lastName,
+            email,
+            mobile,
+            company: organisationName,
+            service: type === 'incursion' ? 'incursion' : 'activation_event',
+        })
+
+        return {
+            Layout: { id: B2B_DEAL_LAYOUT_ID },
+            Deal_Name: eventName.trim(),
+            Service: service,
+            Pipeline: B2B_PIPELINE,
+            Contact_Name: { id: contactId },
+            Stage: B2B_CONFIRMED_BOOKING_STAGE,
+            Customer_Type: 'B2B',
+            Email: email,
+            Phone: mobile || '',
+            Branch: capitalise(studio),
+            Price: price.trim() || null,
+            Address: address,
+            Booking_ID: bookingId,
+            Description: notes,
+            Number_of_Sessions: slots.length.toString(),
+            Module: type === 'incursion' && module ? toZohoB2BModule(ModuleIncursionMap[module]) : null,
+            Number_of_Attendees: type === 'standard' ? numberOfAttendees?.trim() || null : null,
+            Number_of_Students_Per_Session: type === 'incursion' ? numberOfStudentsPerSession?.trim() || null : null,
+            [B2B_SESSIONS_SUBFORM]: this.#getB2BSessionRows({
+                slots,
+                module: type === 'incursion' ? module : undefined,
+                attendeeCount,
+                existingSessions,
+            }),
+        }
+    }
+
     #getUniqueChildKey(parentContactId: string, childBirthdayISO: string) {
         return `${parentContactId}|${this.#toDateISO(childBirthdayISO)}`
     }
@@ -201,6 +322,8 @@ export class ZohoClient {
             service: Service
             customer_type: 'B2C' | 'B2B'
             branch?: string
+            layoutId?: string
+            ownerId?: string
             Party_Type?: 'Studio' | 'Mobile' | ''
             Party_Date?: string
             Company?: string
@@ -219,14 +342,27 @@ export class ZohoClient {
             Holiday_Program_Checked_In?: boolean
         }>
     ) {
-        const { firstName, lastName, email, mobile, service, customer_type, branch, optOutOfMarketing, ...rest } =
-            values
+        const {
+            firstName,
+            lastName,
+            email,
+            mobile,
+            service,
+            customer_type,
+            branch,
+            layoutId,
+            ownerId,
+            optOutOfMarketing,
+            ...rest
+        } = values
 
         const result = await this.#request({
             endpoint: 'Contacts/upsert',
             method: 'POST',
             data: [
                 {
+                    ...(layoutId ? { Layout: { id: layoutId } } : {}),
+                    ...(ownerId ? { Owner: ownerId } : {}),
                     First_Name: firstName,
                     Last_Name: lastName || 'N/A',
                     Phone: mobile || '',
@@ -673,17 +809,25 @@ export class ZohoClient {
         })
     }
 
-    addBasicB2BContact(props: WithBaseProps<{ service: 'incursion' | 'activation_event'; company?: string }>) {
+    createB2BContact(props: WithBaseProps<{ service: 'incursion' | 'activation_event'; company?: string }>) {
         const { service, company, ...baseProps } = props
 
+        return this.#upsertContact({
+            service: service === 'incursion' ? 'Incursion' : 'Activation / Event',
+            customer_type: 'B2B',
+            layoutId: B2B_CONTACT_LAYOUT_ID,
+            ownerId: LAMI_OWNER_ID,
+            ...(company ? { Company: company } : {}),
+            optOutOfMarketing: false,
+            ...baseProps,
+        })
+    }
+
+    addBasicB2BContact(props: WithBaseProps<{ service: 'incursion' | 'activation_event'; company?: string }>) {
+        const { company, ...baseProps } = props
+
         return Promise.all([
-            this.#upsertContact({
-                service: service === 'incursion' ? 'Incursion' : 'Activation / Event',
-                customer_type: 'B2B',
-                Company: company || '',
-                optOutOfMarketing: false,
-                ...baseProps,
-            }),
+            this.createB2BContact(props),
             this.createLead({
                 company: company || '',
                 source: 'Website Form',
@@ -691,6 +835,307 @@ export class ZohoClient {
                 ...baseProps,
             }),
         ])
+    }
+
+    createB2BDeal(
+        props: WithBaseProps<{
+            contactId: string
+            organisationName: string
+            service: 'Incursion' | 'Activation / Event'
+            preferredDateAndTime: string
+            module?: string
+            numberOfSessions?: string
+            numberOfStudentsPerSession?: string
+            numberOfAttendees?: string
+            budget?: string
+            enquiry: string
+            reference?: ReferenceOption
+        }>
+    ) {
+        return this.#request({
+            endpoint: 'Deals',
+            method: 'POST',
+            data: [
+                {
+                    Layout: { id: B2B_DEAL_LAYOUT_ID },
+                    Deal_Name: `[${props.service}] ${props.organisationName.trim()}`,
+                    Service: props.service,
+                    Pipeline: B2B_PIPELINE,
+                    Contact_Name: { id: props.contactId },
+                    Stage: B2B_STAGE,
+                    Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
+                    Customer_Type: 'B2B',
+                    Email: props.email,
+                    Phone: props.mobile || '',
+                    Preferred_Date_And_Time: props.preferredDateAndTime,
+                    ...(props.module ? { Module: toZohoB2BModule(props.module) } : {}),
+                    ...(props.numberOfSessions ? { Number_of_Sessions: props.numberOfSessions } : {}),
+                    ...(props.numberOfStudentsPerSession
+                        ? { Number_of_Students_Per_Session: props.numberOfStudentsPerSession }
+                        : {}),
+                    ...(props.numberOfAttendees ? { Number_of_Attendees: props.numberOfAttendees } : {}),
+                    ...(props.budget ? { Budget: props.budget } : {}),
+                    Description: props.enquiry,
+                    ...(props.reference ? { Lead_Source: ZOHO_REFERENCE_VALUE_MAP[props.reference] } : {}),
+                    Owner: LAMI_OWNER_ID,
+                    Closing_Date: DateTime.now().plus({ weeks: 3 }).setZone('Australia/Melbourne').toISODate(),
+                },
+            ],
+        })
+    }
+
+    async confirmB2BDeal({
+        dealId,
+        firstName,
+        lastName,
+        email,
+        mobile,
+        eventName,
+        organisationName,
+        studio,
+        bookingId,
+        address,
+        price,
+        slots,
+        type,
+        module,
+        numberOfAttendees,
+        numberOfStudentsPerSession,
+        notes,
+    }: WithBaseProps<{
+        dealId?: string
+        eventName: string
+        organisationName: string
+        studio: Studio
+        bookingId: string
+        address: string
+        price: string
+        slots: { startTime: Date; endTime: Date }[]
+        type: 'standard' | 'incursion'
+        module?: ScienceModule
+        numberOfAttendees?: string
+        numberOfStudentsPerSession?: string
+        notes: string
+    }>) {
+        const existingDeal = dealId ? await this.#getDeal(dealId) : null
+        if (dealId && !existingDeal) {
+            throw new Error(`Unable to find B2B deal '${dealId}' in Zoho`)
+        }
+
+        const existingSessions = Array.isArray(existingDeal?.[B2B_SESSIONS_SUBFORM])
+            ? (existingDeal[B2B_SESSIONS_SUBFORM] as { id?: string }[])
+            : []
+        const confirmedFields = await this.#getB2BBookingFields({
+            firstName,
+            lastName,
+            email,
+            mobile,
+            eventName,
+            organisationName,
+            studio,
+            bookingId,
+            address,
+            price,
+            slots,
+            type,
+            module,
+            numberOfAttendees,
+            numberOfStudentsPerSession,
+            notes,
+            existingSessions,
+        })
+
+        if (dealId) {
+            const result = await this.#request({
+                endpoint: 'Deals',
+                method: 'PUT',
+                data: [
+                    {
+                        id: dealId,
+                        ...confirmedFields,
+                        Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
+                    },
+                ],
+            })
+
+            if (result?.data?.[0]?.code !== 'SUCCESS') {
+                throw new Error(`${result.data[0].code} - ${result.data[0].message}`)
+            }
+
+            return dealId
+        }
+
+        const result = await this.#request({
+            endpoint: 'Deals',
+            method: 'POST',
+            data: [
+                {
+                    Owner: LAMI_OWNER_ID,
+                    Closing_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
+                    ...confirmedFields,
+                    Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
+                },
+            ],
+        })
+
+        if (result?.data?.[0]?.code !== 'SUCCESS') {
+            throw new Error(`${result.data[0].code} - ${result.data[0].message}`)
+        }
+
+        return result.data[0].details.id as string
+    }
+
+    async updateB2BDealFromEvent({
+        dealId,
+        event,
+        slots,
+    }: {
+        dealId: string
+        event: Event
+        slots: { startTime: Date; endTime: Date }[]
+    }) {
+        const deal = await this.#getDeal(dealId)
+        if (!deal) {
+            throw new Error(`Unable to find B2B deal '${dealId}' in Zoho`)
+        }
+
+        const existingSessions = Array.isArray(deal[B2B_SESSIONS_SUBFORM])
+            ? (deal[B2B_SESSIONS_SUBFORM] as { id?: string }[])
+            : []
+        const [firstName, ...lastNameParts] = event.contactName.trim().split(/\s+/)
+        const bookingFields = await this.#getB2BBookingFields({
+            firstName,
+            lastName: lastNameParts.join(' '),
+            email: event.contactEmail,
+            mobile: event.contactNumber,
+            eventName: event.eventName,
+            organisationName: event.organisation,
+            studio: event.studio,
+            bookingId: event.eventId,
+            address: event.address,
+            price: event.price,
+            slots,
+            type: event.$type,
+            module: event.$type === 'incursion' ? event.module : undefined,
+            numberOfAttendees: event.$type === 'standard' ? event.numberOfAttendees : undefined,
+            numberOfStudentsPerSession: event.$type === 'incursion' ? event.numberOfStudentsPerSession : undefined,
+            notes: event.notes,
+            existingSessions,
+        })
+        const result = await this.#request({
+            endpoint: 'Deals',
+            method: 'PUT',
+            data: [
+                {
+                    id: dealId,
+                    ...bookingFields,
+                },
+            ],
+        })
+
+        if (result?.data?.[0]?.code !== 'SUCCESS') {
+            throw new Error(`${result.data[0].code} - ${result.data[0].message}`)
+        }
+    }
+
+    async deleteB2BEventSession({
+        dealId,
+        startTime,
+        remainingSessionCount,
+        isLastSlot,
+    }: {
+        dealId: string
+        startTime: Date
+        remainingSessionCount: number
+        isLastSlot: boolean
+    }) {
+        const deal = await this.#getDeal(dealId)
+        if (!deal) {
+            throw new Error(`Unable to find B2B deal '${dealId}' in Zoho`)
+        }
+
+        const existingSessions = Array.isArray(deal[B2B_SESSIONS_SUBFORM])
+            ? (deal[B2B_SESSIONS_SUBFORM] as { id?: string; Date_Time?: string }[])
+            : []
+        const targetTime = startTime.getTime()
+        const matchingSession = existingSessions.find((session) => {
+            if (!session.Date_Time) return false
+            return DateTime.fromISO(session.Date_Time).toMillis() === targetTime
+        })
+
+        const sessionWasAlreadyRemoved =
+            !matchingSession?.id && deal.Number_of_Sessions === remainingSessionCount.toString()
+        if (!isLastSlot && !matchingSession?.id && !sessionWasAlreadyRemoved) {
+            throw new Error(`Unable to find session for B2B deal '${dealId}' at '${startTime.toISOString()}'`)
+        }
+
+        const result = await this.#request({
+            endpoint: 'Deals',
+            method: 'PUT',
+            data: [
+                {
+                    id: dealId,
+                    Number_of_Sessions: remainingSessionCount.toString(),
+                    ...(isLastSlot
+                        ? { [B2B_SESSIONS_SUBFORM]: [] }
+                        : matchingSession?.id
+                          ? {
+                                [B2B_SESSIONS_SUBFORM]: [
+                                    {
+                                        id: matchingSession.id,
+                                        _delete: null,
+                                    },
+                                ],
+                            }
+                          : {}),
+                    ...(isLastSlot && {
+                        Stage: B2B_LOST_BOOKING_STAGE,
+                        Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
+                    }),
+                },
+            ],
+        })
+
+        if (result?.data?.[0]?.code !== 'SUCCESS') {
+            throw new Error(`${result.data[0].code} - ${result.data[0].message}`)
+        }
+    }
+
+    async updateB2BIncursionStudentCount(dealId: string, numberOfStudentsPerSession: string) {
+        const normalizedCount = numberOfStudentsPerSession.trim()
+
+        const deal = await this.#getDeal(dealId)
+        if (!deal) {
+            throw new Error(`Unable to find B2B deal '${dealId}' in Zoho`)
+        }
+
+        const existingSessions = Array.isArray(deal[B2B_SESSIONS_SUBFORM])
+            ? (deal[B2B_SESSIONS_SUBFORM] as { id?: string }[])
+            : []
+        if (existingSessions.some((session) => !session.id)) {
+            throw new Error(`Unable to update sessions for B2B deal '${dealId}' because a session ID is missing`)
+        }
+
+        const result = await this.#request({
+            endpoint: 'Deals',
+            method: 'PUT',
+            data: [
+                {
+                    id: dealId,
+                    Number_of_Students_Per_Session: normalizedCount,
+                    ...(existingSessions.length > 0 && {
+                        [B2B_SESSIONS_SUBFORM]: existingSessions.map((session) => ({
+                            id: session.id,
+                            Attendees: normalizedCount,
+                        })),
+                    }),
+                },
+            ],
+        })
+
+        if (result?.data?.[0]?.code !== 'SUCCESS') {
+            throw new Error(`${result.data[0].code} - ${result.data[0].message}`)
+        }
     }
 
     createLead(props: WithBaseProps<{ company: string; source: string; optOutOfMarketing: boolean }>) {
@@ -704,7 +1149,7 @@ export class ZohoClient {
                     Email: props.email,
                     Phone: props.mobile || '',
                     Company: props.company,
-                    Owner: '76392000000333090', // Lami
+                    Owner: LAMI_OWNER_ID,
                     Lead_Source: props.source,
                     Lead_Status: 'New Lead',
                     Marketing_Campaign_Opt_Out: props.optOutOfMarketing,
@@ -746,9 +1191,9 @@ export class ZohoClient {
                         props.type === 'studio' ? 'Fizz Kidz Studio' : props.type === 'mobile' ? 'At-Home' : 'Other',
                     Branch: props.studio ? capitalise(props.studio) : '',
                     Suburb: props.suburb || '',
-                    Owner: '76392000000333090', // Lami
+                    Owner: LAMI_OWNER_ID,
                     Closing_Date: DateTime.now().plus({ weeks: 3 }).setZone('Australia/Melbourne').toISODate(),
-                    Lead_Source: ReferenceDisplayValueMap[props.reference],
+                    Lead_Source: ZOHO_REFERENCE_VALUE_MAP[props.reference],
                     Party_Theme: PartyThemeDisplayValueMap[props.partyTheme],
                     Description: props.enquiry,
                 },

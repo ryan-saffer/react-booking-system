@@ -31,13 +31,96 @@ const Root = styled('div')(({ theme }) => ({
         display: 'flex',
         justifyContent: 'flex-end',
         marginTop: 24,
+        position: 'relative',
     },
     [`& .${classes.success}`]: {
         marginTop: theme.spacing(3),
         backgroundColor: green[500],
     },
-    [`& .${classes.progress}`]: {},
+    [`& .${classes.progress}`]: {
+        position: 'absolute',
+        top: -6,
+        right: -6,
+        pointerEvents: 'none',
+    },
 }))
+
+const getQueryParam = (params: URLSearchParams, key: string) => params.get(key)?.trim() || undefined
+
+const getEventTypeFromUrl = (eventType: string | undefined): Form['type'] => {
+    switch (eventType?.toLowerCase()) {
+        case 'incursion':
+            return 'incursion'
+        case 'activation / event':
+        case 'activation and event':
+        case 'standard':
+            return 'standard'
+        default:
+            return ''
+    }
+}
+
+const getOrganisationFromUrl = (organisation: string | undefined, eventName: string | undefined) => {
+    return (organisation || eventName || '').replace(/^\[[^\]]+\]\s*/, '')
+}
+
+const getNotesFromUrl = (params: URLSearchParams) => {
+    const enquiry = getQueryParam(params, 'notes')
+    const details = [
+        ['Preferred date and time', getQueryParam(params, 'preferredDateAndTime')],
+        ['Module', getQueryParam(params, 'module')],
+        ['Number of sessions', getQueryParam(params, 'numberOfSessions')],
+        ['Number of students per session', getQueryParam(params, 'numberOfStudentsPerSession')],
+        ['Estimated number of attendees', getQueryParam(params, 'numberOfAttendees')],
+        ['Budget', getQueryParam(params, 'budget')],
+    ]
+        .filter((detail): detail is [string, string] => !!detail[1])
+        .map(([label, value]) => `${label}: ${value}`)
+
+    return [enquiry, ...details].filter(Boolean).join('\n')
+}
+
+const getInitialValues = (): Form => {
+    const defaultValues: Form = {
+        eventName: '',
+        contactName: '',
+        contactNumber: '',
+        contactEmail: '',
+        organisation: '',
+        studio: '',
+        address: '',
+        type: '',
+        module: '',
+        price: '',
+        slots: [],
+        notes: '',
+        invoiceUrl: '',
+        numberOfAttendees: '',
+        numberOfStudentsPerSession: '',
+    }
+
+    if (typeof window === 'undefined') {
+        return defaultValues
+    }
+
+    const params = new URLSearchParams(window.location.search)
+    if (getQueryParam(params, 'bookingType') !== 'event') {
+        return defaultValues
+    }
+
+    const eventName = getQueryParam(params, 'eventName')
+    return {
+        ...defaultValues,
+        eventName: eventName || '',
+        contactName: getQueryParam(params, 'contactName') || '',
+        contactNumber: getQueryParam(params, 'contactNumber') || '',
+        contactEmail: getQueryParam(params, 'contactEmail') || '',
+        organisation: getOrganisationFromUrl(getQueryParam(params, 'organisation'), eventName),
+        type: getEventTypeFromUrl(getQueryParam(params, 'eventType')),
+        notes: getNotesFromUrl(params),
+        zohoDealId: getQueryParam(params, 'zohoDealId'),
+    }
+}
 
 type Props = {
     onSuccess: (date: Date) => void
@@ -52,21 +135,7 @@ const InnerNewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
     const bookEventMutation = useMutation(trpc.events.createEvent.mutationOptions())
 
     const methods = useForm<Form>({
-        defaultValues: {
-            eventName: '',
-            contactName: '',
-            contactNumber: '',
-            contactEmail: '',
-            organisation: '',
-            studio: '',
-            address: '',
-            type: '',
-            module: '',
-            price: '',
-            slots: [],
-            notes: '',
-            invoiceUrl: '',
-        } satisfies Form,
+        defaultValues: getInitialValues(),
     })
 
     const {
@@ -133,13 +202,15 @@ const InnerNewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                     price: values.price,
                     notes: values.notes,
                     invoiceUrl: values.invoiceUrl,
+                    ...(values.zohoDealId && { zohoDealId: values.zohoDealId }),
                     ...(values.type === 'standard'
-                        ? { $type: 'standard' }
+                        ? { $type: 'standard', numberOfAttendees: values.numberOfAttendees }
                         : {
                               $type: 'incursion',
                               module: values.module as ScienceModule,
                               incursionFormSent: false,
                               $incursionFormCompleted: false,
+                              numberOfStudentsPerSession: values.numberOfStudentsPerSession,
                           }),
                 },
                 slots: values.slots.map((slot) => ({

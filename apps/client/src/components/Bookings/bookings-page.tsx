@@ -8,23 +8,34 @@ import NewBookingDialog from './new-booking-dialog'
 import { PartiesAndEvents } from './parties-and-events'
 
 type Tab = 'parties' | 'incursions'
+type NewBookingType = 'party' | 'event'
 
-const PREFILL_QUERY_KEYS = ['parentName', 'parentEmail', 'parentMobile', 'type', 'location', 'zohoDealId']
+const PARTY_PREFILL_QUERY_KEYS = ['parentName', 'parentEmail', 'parentMobile', 'type', 'location', 'zohoDealId']
 
 const hasPrefillQueryParams = (searchParams: URLSearchParams) => {
-    return PREFILL_QUERY_KEYS.some((key) => !!searchParams.get(key)?.trim())
+    return (
+        searchParams.get('bookingType') === 'event' ||
+        PARTY_PREFILL_QUERY_KEYS.some((key) => !!searchParams.get(key)?.trim())
+    )
+}
+
+const getInitialBookingType = (searchParams: URLSearchParams): NewBookingType => {
+    return searchParams.get('bookingType') === 'event' ? 'event' : 'party'
 }
 
 export const BookingsPage = () => {
+    const searchParams =
+        typeof window === 'undefined' ? new URLSearchParams() : new URLSearchParams(window.location.search)
+    const initialBookingType = getInitialBookingType(searchParams)
     const [openNewBooking, setOpenNewBooking] = useState(() => {
-        if (typeof window === 'undefined') {
-            return false
-        }
-
-        return hasPrefillQueryParams(new URLSearchParams(window.location.search))
+        return hasPrefillQueryParams(searchParams)
     })
 
-    const [selectedTab, setSelectedTab] = useState<Tab>('parties')
+    const [selectedTab, setSelectedTab] = useState<Tab>(() =>
+        initialBookingType === 'event' && searchParams.get('eventType')?.trim().toLowerCase() === 'incursion'
+            ? 'incursions'
+            : 'parties'
+    )
 
     return (
         <FilterContextProvider>
@@ -52,7 +63,11 @@ export const BookingsPage = () => {
                 </div>
                 {selectedTab === 'parties' && <PartiesAndEvents />}
                 {selectedTab === 'incursions' && <Incursions />}
-                <NewBookingDialog open={openNewBooking} onBookingCreated={() => setOpenNewBooking(false)} />
+                <NewBookingDialog
+                    open={openNewBooking}
+                    initialBookingType={initialBookingType}
+                    onBookingCreated={() => setOpenNewBooking(false)}
+                />
             </DateNavigation>
         </FilterContextProvider>
     )

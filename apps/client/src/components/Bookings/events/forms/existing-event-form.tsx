@@ -73,6 +73,8 @@ const InnerExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog
             ],
             notes: event.notes,
             invoiceUrl: event.invoiceUrl,
+            ...(event.$type === 'standard' && { numberOfAttendees: event.numberOfAttendees }),
+            ...(event.$type === 'incursion' && { numberOfStudentsPerSession: event.numberOfStudentsPerSession }),
             ...(event.$type === 'incursion' &&
                 event.$incursionFormCompleted && {
                     numberOfChildren: event.numberOfChildren,
@@ -114,7 +116,11 @@ const InnerExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog
                 endTime: combineDateAndTime(values.slots[0].endDate!, values.slots[0].endTime!),
                 notes: values.notes,
                 invoiceUrl: values.invoiceUrl,
-                ...(event.$type === 'incursion' && { module: values.module || event.module }),
+                ...(event.$type === 'standard' && { numberOfAttendees: values.numberOfAttendees }),
+                ...(event.$type === 'incursion' && {
+                    module: values.module || event.module,
+                    numberOfStudentsPerSession: values.numberOfStudentsPerSession,
+                }),
                 ...(event.$type === 'incursion' &&
                     event.$incursionFormCompleted && {
                         numberOfChildren: values.numberOfChildren,
