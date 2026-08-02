@@ -88,7 +88,7 @@ class InstagramClient {
             media_type: "VIDEO";
             thumbnail_url: string;
           }
-          | { media_type: "IMAGE" | "CAROUSEL_ALBUM" }
+        | { media_type: "IMAGE" | "CAROUSEL_ALBUM" }
       ))[];
     } catch (error) {
       console.error(error instanceof Error ? error.message : error);

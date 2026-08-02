@@ -45,6 +45,7 @@ function HolidayProgramDiscountDialogForm({
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (loading) return;
     setLoading(true);
 
     try {
@@ -79,63 +80,65 @@ function HolidayProgramDiscountDialogForm({
   return (
     <Form {...form}>
       <Toaster richColors closeButton />
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="m-auto mt-4 flex w-full min-w-[290px] max-w-3xl flex-col justify-center gap-4">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormControl>
-                  <Input placeholder="Name" {...field} />
-                </FormControl>
-                <FormMessage className="font-extrabold text-pink-600" />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormControl>
-                  <Input placeholder="Email" {...field} />
-                </FormControl>
-                <FormMessage className="font-extrabold text-pink-600" />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="joinMailingList"
-            render={({ field }) => (
-              <FormItem className="flex items-center justify-center space-x-3 space-y-0 rounded-md">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel className="font-thin">
-                    Keep me posted with Fizz Kidz news and promotions.
-                  </FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
-          <Button
-            className="bg-[#9044E2] p-6 font-lilita text-lg hover:bg-[#F6BA33] sm:text-2xl"
-            type="submit"
-            disabled={!form.watch("joinMailingList")}
-          >
-            {loading ? (
-              <LoaderCircle className="h-4 w-4 animate-spin" />
-            ) : (
-              "Yeah! Send me a discount code!"
-            )}
-          </Button>
-        </div>
+      <form onSubmit={form.handleSubmit(onSubmit)} aria-busy={loading}>
+        <fieldset disabled={loading} className="contents">
+          <div className="m-auto mt-4 flex w-full min-w-[290px] max-w-3xl flex-col justify-center gap-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <Input placeholder="Name" {...field} />
+                  </FormControl>
+                  <FormMessage className="font-extrabold text-pink-600" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <Input placeholder="Email" {...field} />
+                  </FormControl>
+                  <FormMessage className="font-extrabold text-pink-600" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="joinMailingList"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-center space-x-3 space-y-0 rounded-md">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="font-thin">
+                      Keep me posted with Fizz Kidz news and promotions.
+                    </FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <Button
+              className="bg-[#9044E2] p-6 font-lilita text-lg hover:bg-[#F6BA33] sm:text-2xl"
+              type="submit"
+              disabled={loading || !form.watch("joinMailingList")}
+            >
+              {loading ? (
+                <LoaderCircle className="h-4 w-4 animate-spin" />
+              ) : (
+                "Yeah! Send me a discount code!"
+              )}
+            </Button>
+          </div>
+        </fieldset>
       </form>
     </Form>
   );

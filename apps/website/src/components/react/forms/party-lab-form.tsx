@@ -93,6 +93,7 @@ function PartyLabForm() {
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(values: Form) {
+    if (loading) return;
     setLoading(true);
 
     try {
@@ -132,181 +133,21 @@ function PartyLabForm() {
   return (
     <Form {...form}>
       <Toaster richColors closeButton />
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your name *</FormLabel>
-              <FormControl>
-                <Input
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your email *</FormLabel>
-              <FormControl>
-                <Input
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="contactNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your best contact number *</FormLabel>
-              <FormControl>
-                <Input
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <SelectForm
-                label="Which location are you interested in?"
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <SelectValue />
-                <SelectContent>
-                  <SelectItem value="balwyn">Balwyn</SelectItem>
-                  <SelectItem value="cheltenham">Cheltenham</SelectItem>
-                  <SelectItem value="essendon">Essendon</SelectItem>
-                  <SelectItem value="geelong">Geelong</SelectItem>
-                  <SelectItem value="kingsville">Kingsville</SelectItem>
-                  <SelectItem value="malvern">Malvern</SelectItem>
-                </SelectContent>
-              </SelectForm>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="session"
-          render={({ field }) => (
-            <FormItem>
-              <SelectForm
-                label="Which session are you interested in?"
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <SelectValue />
-                <SelectContent>
-                  {SESSIONS.map((session) => (
-                    <SelectItem key={session} value={session}>
-                      {session}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </SelectForm>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="type"
-          render={({ field }) => (
-            <FormItem>
-              <SelectForm
-                label="Which type of session are you interested in?"
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <SelectValue />
-                <SelectContent>
-                  {SESSION_TYPES.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </SelectForm>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="enquiry"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Optional enquiry</FormLabel>
-              <FormControl>
-                <Textarea
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  rows={5}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="reference"
-          render={({ field }) => (
-            <FormItem>
-              <SelectForm
-                label="How did you hear about us?"
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-              >
-                <SelectValue />
-                <SelectContent>
-                  <SelectItem value="google">Google search</SelectItem>
-                  <SelectItem value="instagram">Instagram</SelectItem>
-                  <SelectItem value="word-of-mouth">Word of mouth</SelectItem>
-                  <SelectItem value="attended-fizz">
-                    Attended a Fizz Kidz experience
-                  </SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </SelectForm>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {form.watch("reference") === "other" && (
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4"
+        aria-busy={loading}
+      >
+        <fieldset disabled={loading} className="contents">
           <FormField
             control={form.control}
-            name="referenceOther"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Ooh interesting! Please share 🙏</FormLabel>
+                <FormLabel>Your name *</FormLabel>
                 <FormControl>
-                  <Textarea
+                  <Input
                     className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                    rows={2}
                     {...field}
                   />
                 </FormControl>
@@ -314,17 +155,184 @@ function PartyLabForm() {
               </FormItem>
             )}
           />
-        )}
-        <Button
-          className="!mt-8 w-full rounded-full bg-[#9044E2] hover:bg-[#a56ae6] focus-visible:outline-purple-500"
-          type="submit"
-        >
-          {loading ? (
-            <LoaderCircle className="h-4 w-4 animate-spin" />
-          ) : (
-            "Submit"
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Your email *</FormLabel>
+                <FormControl>
+                  <Input
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="contactNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Your best contact number *</FormLabel>
+                <FormControl>
+                  <Input
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="location"
+            render={({ field }) => (
+              <FormItem>
+                <SelectForm
+                  label="Which location are you interested in?"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  value={field.value}
+                >
+                  <SelectValue />
+                  <SelectContent>
+                    <SelectItem value="balwyn">Balwyn</SelectItem>
+                    <SelectItem value="cheltenham">Cheltenham</SelectItem>
+                    <SelectItem value="essendon">Essendon</SelectItem>
+                    <SelectItem value="geelong">Geelong</SelectItem>
+                    <SelectItem value="kingsville">Kingsville</SelectItem>
+                    <SelectItem value="malvern">Malvern</SelectItem>
+                  </SelectContent>
+                </SelectForm>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="session"
+            render={({ field }) => (
+              <FormItem>
+                <SelectForm
+                  label="Which session are you interested in?"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  value={field.value}
+                >
+                  <SelectValue />
+                  <SelectContent>
+                    {SESSIONS.map((session) => (
+                      <SelectItem key={session} value={session}>
+                        {session}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </SelectForm>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="type"
+            render={({ field }) => (
+              <FormItem>
+                <SelectForm
+                  label="Which type of session are you interested in?"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  value={field.value}
+                >
+                  <SelectValue />
+                  <SelectContent>
+                    {SESSION_TYPES.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </SelectForm>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="enquiry"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Optional enquiry</FormLabel>
+                <FormControl>
+                  <Textarea
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    rows={5}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="reference"
+            render={({ field }) => (
+              <FormItem>
+                <SelectForm
+                  label="How did you hear about us?"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectValue />
+                  <SelectContent>
+                    <SelectItem value="google">Google search</SelectItem>
+                    <SelectItem value="instagram">Instagram</SelectItem>
+                    <SelectItem value="word-of-mouth">Word of mouth</SelectItem>
+                    <SelectItem value="attended-fizz">
+                      Attended a Fizz Kidz experience
+                    </SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </SelectForm>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {form.watch("reference") === "other" && (
+            <FormField
+              control={form.control}
+              name="referenceOther"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ooh interesting! Please share 🙏</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                      rows={2}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           )}
-        </Button>
+          <Button
+            className="!mt-8 w-full rounded-full bg-[#9044E2] hover:bg-[#a56ae6] focus-visible:outline-purple-500"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? (
+              <LoaderCircle className="h-4 w-4 animate-spin" />
+            ) : (
+              "Submit"
+            )}
+          </Button>
+        </fieldset>
       </form>
     </Form>
   );
