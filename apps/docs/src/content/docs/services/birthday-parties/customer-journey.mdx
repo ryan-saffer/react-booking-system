@@ -1,0 +1,291 @@
+---
+title: Customer journey
+description: Timeline of every customer touchpoint from booking to the post-party follow up.
+---
+
+import {
+  Aside,
+  Badge,
+  Card,
+  CardGrid,
+  Steps,
+} from "@astrojs/starlight/components";
+
+<Aside type="tip" title="Use this guide end-to-end">
+  Keep this flow handy whenever you check in with a family so you can anticipate
+  what they have already received and what’s coming next.
+</Aside>
+
+## Journey at a glance
+
+<Card title="Booking confirmation" icon="open-book">
+  <p>
+    <Badge text="Email" variant="note" size="small" /> Sent instantly with the
+    booking summary, studio manager introduction, and cancellation policy.
+  </p>
+  <p>
+    Links to the party add-ons form (cakes hidden for at-home events),
+    invitation tool, FAQ doc, and the studio photos they selected.
+  </p>
+</Card>
+
+<Card title="Add-ons reminder" icon="information">
+  <p>
+    <Badge text="Email" variant="note" size="small" />{" "}
+    <Badge text="+7 days" variant="tip" size="small" /> Only sends if no cake or
+    take home bags were ordered and the Party Form hasn’t triggered yet.
+  </p>
+  <p>
+    Points families back to the add-ons form so they can lock in cakes
+    (in-studio only) and take home bags.
+  </p>
+</Card>
+
+<Card title="Party Form drop" icon="add-document">
+  <p>
+    <Badge text="Email" variant="note" size="small" />{" "}
+    <Badge text="Form" variant="tip" size="small" /> Arrives every Tuesday at
+    8:30 am for parties happening the following week (10–12 days away).
+  </p>
+  <p>
+    Captures guest counts, creations, food, and bespoke notes so the studio can
+    prep accurately.
+  </p>
+</Card>
+
+<Card title="Party Form reminder" icon="warning">
+  <p>
+    <Badge text="Email" variant="note" size="small" />{" "}
+    <Badge text="6 days out" variant="caution" size="small" /> Monday reminders
+    at 8:30 am for anyone who hasn’t submitted the Party Form yet.
+  </p>
+  <p>
+    Reinforces the deadline for the upcoming weekend to keep operations on
+    track.
+  </p>
+</Card>
+
+<Card title="Confirmation + prep tips" icon="approve-check-circle">
+  <p>
+    <Badge text="Email" variant="note" size="small" /> Sent immediately after
+    the Party Form with a summary of every choice and what’s been paid.
+  </p>
+  <p>
+    Includes day-of reminders: arrive 10 minutes early with cake plates
+    in-studio or prep a table plus power/water for at-home bookings.
+  </p>
+</Card>
+
+<Card title="Post-party review" icon="star">
+  <p>
+    <Badge text="Email" variant="note" size="small" />{" "}
+    <Badge text="Next day" variant="tip" size="small" /> Lands the day after the
+    celebration.
+  </p>
+  <p>
+    Thanks the family and links to our review form so they can share feedback
+    publicly or privately.
+  </p>
+</Card>
+
+## Deep dive timeline
+
+<Steps>
+  <ol>
+    <li>
+      <h3>
+        Booking confirmation <Badge text="Email" variant="note" size="small" />
+      </h3>
+      <p>
+        Sent automatically the moment a party is booked (both in-studio and
+        at-home) so families have an authoritative receipt.
+      </p>
+      <ul>
+        <li>
+          Recaps the booking details: date, time, studio, party type, and any
+          known inclusions.
+        </li>
+        <li>
+          Introduces the assigned studio manager as their single point of
+          contact going forward.
+        </li>
+        <li>Explains the cancellation policy up front to set expectations.</li>
+        <li>
+          Includes critical links:
+          <ul>
+            <li>
+              Party add-ons form used for birthday cakes (in-studio only) and
+              take home bags.
+            </li>
+            <li>The invitation tool so they can message guests immediately.</li>
+            <li>
+              FAQ document plus photos of the studio they booked to answer
+              common questions visually.
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h3>
+        Add-ons reminder <Badge text="Email" variant="note" size="small" />{" "}
+        <Badge text="+7 days" variant="tip" size="small" />
+      </h3>
+      <p>
+        Exactly one week after booking, we check whether the family has
+        purchased a cake or take home bags.
+      </p>
+      <ul>
+        <li>
+          If nothing has been ordered yet and the main Party Form email has not
+          gone out, send a reminder pointing back to the add-ons form.
+        </li>
+        <li>
+          The message reinforces that cakes are only available for in-studio
+          parties while take home bags are available for all.
+        </li>
+        <li>
+          Once the Party Form has been sent (meaning the party is imminent) this
+          reminder is suppressed to reduce inbox noise.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h3>
+        Party Form send + confirmation{" "}
+        <Badge text="Email" variant="note" size="small" />{" "}
+        <Badge text="Form" variant="tip" size="small" />{" "}
+        <Badge text="10–12 days out" variant="default" size="small" />
+      </h3>
+      <p>
+        Every Tuesday at 8:30 am, customers with parties happening the following
+        week (10–12 days away) receive the Party Form.
+      </p>
+      <ul>
+        <li>
+          Parent/guardian name and contact details so we know who is responsible
+          on the day.
+        </li>
+        <li>Child name and age to tailor the experience.</li>
+        <li>Expected number of kids attending for staffing and supplies.</li>
+        <li>
+          Selected creations and any premium upgrades so we can prepare the
+          right materials.
+        </li>
+        <li>
+          Additional food choices plus optional birthday cake requests (cakes
+          restricted to in-studio bookings).
+        </li>
+        <li>Take home bag quantities or themes.</li>
+        <li>Space to tell us about the child and ask any other questions.</li>
+      </ul>
+      <Aside type="caution" title="Payment & fulfilment rules">
+        Cake or take home bag purchases trigger an immediate payment screen at
+        the end of the Party Form. All other charges—price per head, extra food,
+        and premium creations—stay unpaid until the party concludes. At-home
+        parties never see cake options so we avoid unfulfillable orders.
+      </Aside>
+      <p>After submission, families receive a confirmation email that:</p>
+      <ul>
+        <li>Summarizes every selection so they can double-check details.</li>
+        <li>
+          Notes what has been pre-paid vs. what will be settled at the party.
+        </li>
+        <li>
+          Spells out next steps: arrive 10 minutes early and bring cake plates
+          for in-studio events, or set up a table with power and water access
+          for at-home parties.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h3>
+        Monday reminder for missing Party Forms{" "}
+        <Badge text="Email" variant="note" size="small" />{" "}
+        <Badge text="6 days out" variant="caution" size="small" />
+      </h3>
+      <p>
+        Six days later—Monday at 8:30 am—the system sends a nudge to parents who
+        still have not completed the Party Form for the upcoming weekend.
+      </p>
+      <ul>
+        <li>
+          Only the families who are missing submissions receive it, keeping
+          inboxes tidy.
+        </li>
+        <li>
+          It links back to the Party Form and reiterates why we need final
+          numbers to secure staff, supplies, and any food orders.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h3>
+        Post-party review request{" "}
+        <Badge text="Email" variant="note" size="small" />{" "}
+        <Badge text="Next day" variant="tip" size="small" />
+      </h3>
+      <p>
+        The day after the celebration, families receive a thank-you note asking
+        them to leave a review.
+      </p>
+      <ul>
+        <li>
+          Provides a direct review link plus an option to share private feedback
+          if something needs a manager follow-up.
+        </li>
+        <li>
+          Keeps the experience top-of-mind while memories (and photos) are still
+          fresh.
+        </li>
+      </ul>
+    </li>
+  </ol>
+</Steps>
+
+## Notification automation map
+
+Submitting or updating the Party Form also keeps internal teams in sync through targeted notifications:
+
+<CardGrid>
+  <Card title="Repeat submission guardrails" icon="information">
+    <p>
+      If a customer fills out the Party Form again after already submitting it,
+      email the studio manager with the discrepancies so they can confirm or
+      action any last-minute changes.
+    </p>
+  </Card>
+  <Card title="Food package changes" icon="warning">
+    <p>
+      Whenever the selected food package changes, alert the manager so they can
+      make sure the kitchen and suppliers can accommodate the update.
+    </p>
+  </Card>
+  <Card title="Creation count monitor" icon="puzzle">
+    <p>
+      If the customer requests more creations than the party length allows,
+      notify the manager to call the parent and agree on a realistic plan.
+    </p>
+  </Card>
+  <Card title="Parent question escalations" icon="open-book">
+    <p>
+      When parents leave questions in the form, email the manager with those
+      notes and set the parent’s email as the reply-to so they can respond
+      directly.
+    </p>
+  </Card>
+  <Card title="Cake orders" icon="add-document">
+    <p>
+      Each cake order triggers a message to{" "}
+      <code>orders@birthdaycakeshop.com.au</code> so the bakery can fulfil it on
+      time.
+    </p>
+  </Card>
+  <Card title="Take home bag orders" icon="approve-check-circle">
+    <p>
+      When take home bags are added, email the studio manager and{" "}
+      <code>orders@brithdaycakeshop.com.au</code> with the quantities and any
+      themes so fulfilment can begin.
+    </p>
+  </Card>
+</CardGrid>
