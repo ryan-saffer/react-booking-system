@@ -8,12 +8,12 @@ This directory contains the backend Node.js application for the Fizz Kidz Portal
 - [Core Technologies](#core-technologies)
 - [Project Structure](#project-structure)
 - [Function Types](#function-types)
-    - [tRPC Routers](#trpc-routers)
-    - [Webhook Handlers](#webhook-handlers)
-    - [Pub/Sub Functions](#pubsub-functions)
+  - [tRPC Routers](#trpc-routers)
+  - [Webhook Handlers](#webhook-handlers)
+  - [Pub/Sub Functions](#pubsub-functions)
 - [Key Design Patterns](#key-design-patterns)
-    - [DatabaseClient Boundary](#databaseclient-boundary)
-    - [Lazy Instantiation of SDK Clients](#lazy-instantiation-of-sdk-clients)
+  - [DatabaseClient Boundary](#databaseclient-boundary)
+  - [Lazy Instantiation of SDK Clients](#lazy-instantiation-of-sdk-clients)
 - [Installation](#installation)
 - [Run Locally](#run-locally)
 - [Operational Scripts](#operational-scripts)
@@ -40,9 +40,9 @@ Key directories within `apps/server/src/`:
 - **`index.ts`**: Main entry point that exports all deployable Firebase Functions.
 - **`trpc/`**: Contains tRPC configuration and the main `appRouter`, which aggregates all feature routers for the Express API.
 - **Feature-Specific Directories (e.g., `acuity/`, `party-bookings/`, `square/`, `staff/`):** Each directory typically encapsulates logic related to a specific domain or feature.
-    - `core/`: Often contains the main business logic.
-    - `functions/`: Houses Express routers and background handlers that are mounted within `apps/server/src/api.ts` or invoked by `apps/server/src/pubsub.ts`.
-    - `index.ts` (within each feature directory): Exports the functions to be included in the main `apps/server/src/index.ts`.
+  - `core/`: Often contains the main business logic.
+  - `functions/`: Houses Express routers and background handlers that are mounted within `apps/server/src/api.ts` or invoked by `apps/server/src/pubsub.ts`.
+  - `index.ts` (within each feature directory): Exports the functions to be included in the main `apps/server/src/index.ts`.
 - **`firebase/`**: Utilities for interacting with Firebase services (Firestore, Pub/Sub, Storage).
 - **`utilities/`**: General helper functions.
 
@@ -61,17 +61,17 @@ Functions exported from `apps/server/src/index.ts` are deployed via Firebase. Th
 
 - HTTPS webhook handlers are implemented as Express routers and mounted within `apps/server/src/api.ts` under `/api/webhooks/*`.
 - **Key Webhook Integrations:**
-    - **Acuity Scheduling (`acuity/functions/webhook.ts`):** Processes updates from Acuity, such as new appointments or cancellations. Notably, holiday program cancellations trigger Square refunds for the corresponding order line items.
-    - **Paperform (`paperforms/functions/webhooks/paperform.webhook.ts`):** Ingests new form submissions from Paperform.
-    - **Contact Form 7 (`contact-form-7/webhook/contact-form-7-webhook.ts`):** Receives submissions from Contact Form 7.
-    - **Invitation redirect (`party-bookings/functions/webhooks/invitation-redirect.ts`):** Single entry for invitation links that resolves the booking and redirects either to create or view/manage the invitation (see `party-bookings/core/rsvp/README.md`).
+  - **Acuity Scheduling (`acuity/functions/webhook.ts`):** Processes updates from Acuity, such as new appointments or cancellations. Notably, holiday program cancellations trigger Square refunds for the corresponding order line items.
+  - **Paperform (`paperforms/functions/webhooks/paperform.webhook.ts`):** Ingests new form submissions from Paperform.
+  - **Contact Form 7 (`contact-form-7/webhook/contact-form-7-webhook.ts`):** Receives submissions from Contact Form 7.
+  - **Invitation redirect (`party-bookings/functions/webhooks/invitation-redirect.ts`):** Single entry for invitation links that resolves the booking and redirects either to create or view/manage the invitation (see `party-bookings/core/rsvp/README.md`).
 
 ### Pub/Sub Functions
 
 - The `pubsub` export listens to the single `background` Pub/Sub topic and dispatches work based on the message `name` field (`apps/server/src/pubsub.ts`).
 - **Key Pub/Sub Tasks:**
-    - **Party Bookings (`party-bookings/core/...`):** Handles tasks like sending party confirmation forms, feedback emails, guest list emails, and reminder emails.
-    - **Paperform (`paperforms/functions/pubsub/paperform.pubsub.ts`):** Used for further processing of Paperform submissions after initial webhook ingestion (e.g., data transformation, notifications).
+  - **Party Bookings (`party-bookings/core/...`):** Handles tasks like sending party confirmation forms, feedback emails, guest list emails, and reminder emails.
+  - **Paperform (`paperforms/functions/pubsub/paperform.pubsub.ts`):** Used for further processing of Paperform submissions after initial webhook ingestion (e.g., data transformation, notifications).
 
 ## Key Design Patterns
 
@@ -86,9 +86,9 @@ Functions exported from `apps/server/src/index.ts` are deployed via Firebase. Th
 
 - To optimize for cold starts in the serverless Firebase Functions environment, heavy third-party SDK clients (e.g., for Square, Xero, Acuity) are instantiated lazily.
 - This pattern typically involves:
-    - Using a singleton approach for client instances (e.g., `SquareClient.getInstance()`).
-    - Dynamically importing the SDK (`await import('some-sdk')`) only when the client is first requested.
-    - This ensures that a function invocation doesn't pay the performance penalty of importing and parsing large SDKs unless that specific SDK is actually needed for the current operation. An example can be seen in `apps/server/src/square/core/square-client.ts`.
+  - Using a singleton approach for client instances (e.g., `SquareClient.getInstance()`).
+  - Dynamically importing the SDK (`await import('some-sdk')`) only when the client is first requested.
+  - This ensures that a function invocation doesn't pay the performance penalty of importing and parsing large SDKs unless that specific SDK is actually needed for the current operation. An example can be seen in `apps/server/src/square/core/square-client.ts`.
 
 ## Installation
 

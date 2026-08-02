@@ -17,32 +17,42 @@ This guide orients you to the codebase and points to the authoritative README fi
 
 - `apps/client/` – React frontend. Key: `src/app.tsx` (routes), `src/components/root/root.tsx` (providers + tRPC client), `src/utilities/trpc.ts` (tRPC types/client).
 - `apps/server/` – Firebase Functions (tRPC routers, webhooks, Pub/Sub). Key: `src/index.ts`, `src/trpc/*` (app router + adapter), feature dirs under `src/*`.
+- `apps/docs/` – Astro + Starlight staff/franchisee knowledge base, published to the web. Deployed by Netlify, not Firebase. Independent of the Vite+ toolchain and of `@fizz-kidz/core`. Not to be confused with the root `docs/` directory, which holds internal feature plans and design documents that are never published.
 - `packages/core/` – Shared module (types, constants, utilities, shared logic). Consumed from source by both client and server.
 - `scripts/` – Operational scripts (e.g., exports, maintenance utilities).
 
-There are three workspaces, declared as `apps/*` and `packages/*`. The directories are `apps/client`, `apps/server`, and `packages/core`. The two apps are named after their directories (`client`, `server`); the shared module is the scoped package `@fizz-kidz/core`. Apps are deployable and unscoped (`client`, `server`); shared packages are scoped (`@fizz-kidz/core`). Because no workspace nests inside another, `npm --workspace <name> ...` and `vp add <pkg> --filter <name>` target exactly one package.
+There are four workspaces, declared as `apps/*` and `packages/*`. The directories are `apps/client`, `apps/server`, `apps/docs`, and `packages/core`. The apps are named after their directories (`client`, `server`, `docs`); the shared module is the scoped package `@fizz-kidz/core`. Apps are deployable and unscoped; shared packages are scoped (`@fizz-kidz/core`). Because no workspace nests inside another, `npm --workspace <name> ...` and `vp add <pkg> --filter <name>` target exactly one package.
+
+## Deployment Boundaries
+
+Two independent deployment systems operate on this repository, and they must not trigger each other.
+
+- **Firebase (GitHub Actions, `.github/workflows/pipeline.yml`)** deploys `client` (Hosting) and `server` (Functions). Its trigger paths deliberately exclude `apps/docs/**` and `package-lock.json`, so docs changes never deploy Firebase.
+- **Netlify** deploys `apps/docs` as a separate Netlify site linked to this same repository. Its `netlify.toml` sets an `ignore` command scoped to `apps/docs`, so client/server changes never trigger a docs build or a docs deploy preview.
+
+When adding another Netlify-hosted app, give it its own `netlify.toml` with a directory-scoped `ignore` command, and leave it out of the pipeline trigger paths.
 
 Both `client` and `server` import the shared module as `@fizz-kidz/core`, resolved by alias rather than by a published package. The `@fizz-kidz/` scope is never published; it exists so an import is instantly identifiable as internal. The alias is declared in four places that must stay in sync: root `vite.config.ts` (client and server alias maps), `apps/server/vite.config.ts`, `apps/client/tsconfig.json`, and `apps/server/tsconfig.json`.
 
 ## Start Here: README Index
 
 - Repository overview: [README.md](README.md)
-    - Monorepo structure, client/server overview, tRPC interaction, setup, dev scripts, deployment with Firebase.
+  - Monorepo structure, client/server overview, tRPC interaction, setup, dev scripts, deployment with Firebase.
 - Client app: [client/README.md](apps/client/README.md)
-    - Tech stack, routing model, UI libraries, state management (Zustand/Context), tRPC client setup, development workflow.
+  - Tech stack, routing model, UI libraries, state management (Zustand/Context), tRPC client setup, development workflow.
 - Server app: [server/README.md](apps/server/README.md)
-    - Function types (tRPC routers, webhooks, Pub/Sub), structure, lazy SDK pattern, local development with emulators.
+  - Function types (tRPC routers, webhooks, Pub/Sub), structure, lazy SDK pattern, local development with emulators.
 - Firebase persistence boundary: [server/src/firebase/README.md](apps/server/src/firebase/README.md)
-    - `DatabaseClient` should stay as a thin Firestore access layer; business workflows belong in feature `core` modules.
+  - `DatabaseClient` should stay as a thin Firestore access layer; business workflows belong in feature `core` modules.
 - Core module: [core/README.md](packages/core/README.md)
-    - Purpose, structure, build/use as local dependency for shared types and logic.
+  - Purpose, structure, build/use as local dependency for shared types and logic.
 - Invitations & RSVP: client flow [client/src/components/rsvp/README.md](apps/client/src/components/rsvp/README.md); server lifecycle [server/src/party-bookings/core/rsvp/README.md](apps/server/src/party-bookings/core/rsvp/README.md).
 - Holiday Programs (customer booking screen): [client/src/components/holiday-programs/customer-booking-screen/README.md](apps/client/src/components/holiday-programs/customer-booking-screen/README.md)
-    - Booking flow, Square order/payment, discounts, direct Acuity scheduling, refunds, limitations.
+  - Booking flow, Square order/payment, discounts, direct Acuity scheduling, refunds, limitations.
 - Scripts: [scripts/readme.md](scripts/readme.md)
-    - CSV export for parties, `GOOGLE_APPLICATION_CREDENTIALS` usage, run instructions, HubSpot import note.
+  - CSV export for parties, `GOOGLE_APPLICATION_CREDENTIALS` usage, run instructions, HubSpot import note.
 - Feature plans and design docs: [docs/](docs/)
-    - Longer-lived implementation plans, e.g. [docs/inventory-system-plan.md](docs/inventory-system-plan.md) and [docs/feature-plans/](docs/feature-plans/). Treat these as working documents, not architecture references.
+  - Longer-lived implementation plans, e.g. [docs/inventory-system-plan.md](docs/inventory-system-plan.md) and [docs/feature-plans/](docs/feature-plans/). Treat these as working documents, not architecture references.
 - Acuity auto-enrolment notes: [server/src/acuity/auto-enrolment.MD](apps/server/src/acuity/auto-enrolment.MD)
 
 ## Quick Start

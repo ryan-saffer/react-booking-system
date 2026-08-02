@@ -29,7 +29,7 @@ The client-side code is organized within `apps/client/src/`:
 
 - **`app.tsx`**: Entry point for routing configuration.
 - **`components/`**: Contains all React components, further organized by feature (e.g., `Bookings/`, `HolidayPrograms/`) or shared functionality (e.g., `Shared/`, `Session/`).
-    - **`components/root/root.tsx`**: The root component of the application. It wraps all page content and is responsible for setting up global context providers, including the tRPC client, authentication, theming, and more.
+  - **`components/root/root.tsx`**: The root component of the application. It wraps all page content and is responsible for setting up global context providers, including the tRPC client, authentication, theming, and more.
 - **`ui-components/`**: Likely contains `shadcn/ui` components.
 - **`utilities/`**: Helper functions and utilities.
 - **`hooks/`**: Custom React hooks.
@@ -40,8 +40,8 @@ The client-side code is organized within `apps/client/src/`:
 - **React Router DOM:** Routing is handled using `react-router-dom`, with routes defined in `apps/client/src/app.tsx` using `createBrowserRouter`.
 - **Root Layout:** The `apps/client/src/components/root/root.tsx` component serves as the primary layout shell, providing essential contexts (like tRPC, Auth, Theming) to all routes via the `<Outlet />` mechanism.
 - **Dashboard vs. Public Routes:** The application has a clear distinction between:
-    - **Dashboard Routes:** Primarily under the `/dashboard` path, often utilizing `DashboardLayout` and `ProtectedRoute` for authenticated staff access.
-    - **Public Routes:** Accessible to all users, such as sign-in/sign-up pages, program enrolment forms (e.g., `/after-school-program-enrolment-form`), customer booking screens, and invitation views.
+  - **Dashboard Routes:** Primarily under the `/dashboard` path, often utilizing `DashboardLayout` and `ProtectedRoute` for authenticated staff access.
+  - **Public Routes:** Accessible to all users, such as sign-in/sign-up pages, program enrolment forms (e.g., `/after-school-program-enrolment-form`), customer booking screens, and invitation views.
 - **Lazy Loading:** All page components are lazy-loaded in `app.tsx` (using `React.lazy` and `Suspense`). This is a key optimization strategy for this Single Page Application (SPA), ensuring that users only download the code necessary for the parts of the portal they are interacting with, improving initial load times.
 
 ## UI Components
