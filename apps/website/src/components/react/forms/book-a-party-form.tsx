@@ -107,6 +107,7 @@ function BookAPartyForm() {
 
   const [loading, setLoading] = useState(false);
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (loading) return;
     setLoading(true);
 
     try {
@@ -152,89 +153,18 @@ function BookAPartyForm() {
   return (
     <Form {...form}>
       <Toaster richColors closeButton />
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your name *</FormLabel>
-              <FormControl>
-                <Input
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your email *</FormLabel>
-              <FormControl>
-                <Input
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="contactNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your best contact number *</FormLabel>
-              <FormControl>
-                <Input
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <SelectForm
-                label="Which location are you interested in?"
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <SelectValue />
-                <SelectContent>
-                  <SelectItem value="balwyn">Balwyn</SelectItem>
-                  <SelectItem value="cheltenham">Cheltenham</SelectItem>
-                  <SelectItem value="essendon">Essendon</SelectItem>
-                  <SelectItem value="geelong">Geelong</SelectItem>
-                  <SelectItem value="kingsville">Kingsville</SelectItem>
-                  <SelectItem value="malvern">Malvern</SelectItem>
-                  <SelectItem value="at-home">At Home</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </SelectForm>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {form.watch("location") === "at-home" && (
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4"
+        aria-busy={loading}
+      >
+        <fieldset disabled={loading} className="contents">
           <FormField
             control={form.control}
-            name="suburb"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Which suburb do you live in? *</FormLabel>
+                <FormLabel>Your name *</FormLabel>
                 <FormControl>
                   <Input
                     className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
@@ -245,107 +175,15 @@ function BookAPartyForm() {
               </FormItem>
             )}
           />
-        )}
-
-        <FormField
-          control={form.control}
-          name="preferredDateAndTime"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Preferred date and time *</FormLabel>
-              <FormControl>
-                <Input
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="partyTheme"
-          render={({ field }) => (
-            <FormItem>
-              <SelectForm
-                label="Which party theme are you interested in?"
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <SelectValue />
-                <SelectContent>
-                  <SelectItem value="glam">Glam Party</SelectItem>
-                  <SelectItem value="fluid-bears">Fluid Bears Party</SelectItem>
-                  <SelectItem value="kpop">Kpop Power Party</SelectItem>
-                  <SelectItem value="fairy">Fairy Party</SelectItem>
-                  <SelectItem value="safari">Jungle Safari Party</SelectItem>
-                  <SelectItem value="science">Science Party</SelectItem>
-                  <SelectItem value="slime">Slime Party</SelectItem>
-                  <SelectItem value="swiftie">Swiftie Party</SelectItem>
-                  <SelectItem value="tie-dye">Tie-Dye Party</SelectItem>
-                  <SelectItem value="own">My own theme</SelectItem>
-                  <SelectItem value="mix">A mix of the above</SelectItem>
-                </SelectContent>
-              </SelectForm>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="enquiry"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your enquiry *</FormLabel>
-              <FormControl>
-                <Textarea
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  rows={5}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="reference"
-          render={({ field }) => (
-            <FormItem>
-              <SelectForm
-                label="How did you hear about us?"
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-              >
-                <SelectValue />
-                <SelectContent>
-                  <SelectItem value="google">Google search</SelectItem>
-                  <SelectItem value="instagram">Instagram</SelectItem>
-                  <SelectItem value="word-of-mouth">Word of mouth</SelectItem>
-                  <SelectItem value="attended-fizz">
-                    Attended a Fizz Kidz experience
-                  </SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </SelectForm>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {form.watch("reference") === "other" && (
           <FormField
             control={form.control}
-            name="referenceOther"
+            name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Ooh interesting! Please share 🙏</FormLabel>
+                <FormLabel>Your email *</FormLabel>
                 <FormControl>
-                  <Textarea
+                  <Input
                     className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                    rows={2}
                     {...field}
                   />
                 </FormControl>
@@ -353,17 +191,189 @@ function BookAPartyForm() {
               </FormItem>
             )}
           />
-        )}
-        <Button
-          className="!mt-8 w-full rounded-full bg-[#9044E2] hover:bg-[#a56ae6] focus-visible:outline-purple-500"
-          type="submit"
-        >
-          {loading ? (
-            <LoaderCircle className="h-4 w-4 animate-spin" />
-          ) : (
-            "Submit"
+          <FormField
+            control={form.control}
+            name="contactNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Your best contact number *</FormLabel>
+                <FormControl>
+                  <Input
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="location"
+            render={({ field }) => (
+              <FormItem>
+                <SelectForm
+                  label="Which location are you interested in?"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  value={field.value}
+                >
+                  <SelectValue />
+                  <SelectContent>
+                    <SelectItem value="balwyn">Balwyn</SelectItem>
+                    <SelectItem value="cheltenham">Cheltenham</SelectItem>
+                    <SelectItem value="essendon">Essendon</SelectItem>
+                    <SelectItem value="geelong">Geelong</SelectItem>
+                    <SelectItem value="kingsville">Kingsville</SelectItem>
+                    <SelectItem value="malvern">Malvern</SelectItem>
+                    <SelectItem value="at-home">At Home</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </SelectForm>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {form.watch("location") === "at-home" && (
+            <FormField
+              control={form.control}
+              name="suburb"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Which suburb do you live in? *</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           )}
-        </Button>
+
+          <FormField
+            control={form.control}
+            name="preferredDateAndTime"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Preferred date and time *</FormLabel>
+                <FormControl>
+                  <Input
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="partyTheme"
+            render={({ field }) => (
+              <FormItem>
+                <SelectForm
+                  label="Which party theme are you interested in?"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  value={field.value}
+                >
+                  <SelectValue />
+                  <SelectContent>
+                    <SelectItem value="glam">Glam Party</SelectItem>
+                    <SelectItem value="fluid-bears">
+                      Fluid Bears Party
+                    </SelectItem>
+                    <SelectItem value="kpop">Kpop Power Party</SelectItem>
+                    <SelectItem value="fairy">Fairy Party</SelectItem>
+                    <SelectItem value="safari">Jungle Safari Party</SelectItem>
+                    <SelectItem value="science">Science Party</SelectItem>
+                    <SelectItem value="slime">Slime Party</SelectItem>
+                    <SelectItem value="swiftie">Swiftie Party</SelectItem>
+                    <SelectItem value="tie-dye">Tie-Dye Party</SelectItem>
+                    <SelectItem value="own">My own theme</SelectItem>
+                    <SelectItem value="mix">A mix of the above</SelectItem>
+                  </SelectContent>
+                </SelectForm>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="enquiry"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Your enquiry *</FormLabel>
+                <FormControl>
+                  <Textarea
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    rows={5}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="reference"
+            render={({ field }) => (
+              <FormItem>
+                <SelectForm
+                  label="How did you hear about us?"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectValue />
+                  <SelectContent>
+                    <SelectItem value="google">Google search</SelectItem>
+                    <SelectItem value="instagram">Instagram</SelectItem>
+                    <SelectItem value="word-of-mouth">Word of mouth</SelectItem>
+                    <SelectItem value="attended-fizz">
+                      Attended a Fizz Kidz experience
+                    </SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </SelectForm>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {form.watch("reference") === "other" && (
+            <FormField
+              control={form.control}
+              name="referenceOther"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ooh interesting! Please share 🙏</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                      rows={2}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+          <Button
+            className="!mt-8 w-full rounded-full bg-[#9044E2] hover:bg-[#a56ae6] focus-visible:outline-purple-500"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? (
+              <LoaderCircle className="h-4 w-4 animate-spin" />
+            ) : (
+              "Submit"
+            )}
+          </Button>
+        </fieldset>
       </form>
     </Form>
   );

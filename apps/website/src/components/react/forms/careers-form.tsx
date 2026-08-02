@@ -101,6 +101,7 @@ function CareersForm() {
 
   const handleCustomSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (loading) return;
     if (!file) {
       setUploadError({
         isError: true,
@@ -111,6 +112,7 @@ function CareersForm() {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (loading) return;
     if (!file) {
       return;
     }
@@ -151,228 +153,236 @@ function CareersForm() {
   return (
     <Form {...form}>
       <Toaster richColors closeButton />
-      <form onSubmit={handleCustomSubmit} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your name *</FormLabel>
-              <FormControl>
-                <Input
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your email *</FormLabel>
-              <FormControl>
-                <Input
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="contactNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your best contact number *</FormLabel>
-              <FormControl>
-                <Input
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="role"
-          render={({ field }) => (
-            <FormItem>
-              <SelectForm
-                label="Which role are you applying for? *"
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <SelectValue placeholder="Select role" />
-                <SelectContent>
-                  {/*<SelectItem value="area-manager">Area Manager</SelectItem>*/}
-                  {/* <SelectItem value="social-media">
+      <form
+        onSubmit={handleCustomSubmit}
+        className="space-y-4"
+        aria-busy={loading}
+      >
+        <fieldset disabled={loading} className="contents">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Your name *</FormLabel>
+                <FormControl>
+                  <Input
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Your email *</FormLabel>
+                <FormControl>
+                  <Input
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="contactNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Your best contact number *</FormLabel>
+                <FormControl>
+                  <Input
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <SelectForm
+                  label="Which role are you applying for? *"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  value={field.value}
+                >
+                  <SelectValue placeholder="Select role" />
+                  <SelectContent>
+                    {/*<SelectItem value="area-manager">Area Manager</SelectItem>*/}
+                    {/* <SelectItem value="social-media">
                     Social Media & Content Creator
                   </SelectItem>
                   <SelectItem value="manager">Studio Manager</SelectItem> */}
-                  {/* <SelectItem value="supervisor">Studio Supervisor</SelectItem> */}
-                  <SelectItem value="facilitator">
-                    Studio Facilitator
-                  </SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </SelectForm>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {form.watch("role") !== "area-manager" &&
-          form.watch("role") !== "social-media" && (
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <SelectForm
-                    label="Which location do you want to work at? *"
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    value={field.value}
-                  >
-                    <SelectValue placeholder="Select location" />
-                    <SelectContent>
-                      <SelectItem value="balwyn">Balwyn</SelectItem>
-                      <SelectItem value="cheltenham">Cheltenham</SelectItem>
-                      <SelectItem value="essendon">Essendon</SelectItem>
-                      <SelectItem value="geelong">Geelong</SelectItem>
-                      <SelectItem value="kingsville">Kingsville</SelectItem>
-                      <SelectItem value="malvern">Malvern</SelectItem>
-                    </SelectContent>
-                  </SelectForm>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
-        <FormField
-          control={form.control}
-          name="wwcc"
-          render={({ field }) => (
-            <FormItem>
-              <SelectForm
-                label="Do you have, or are willing to obtain, a Working With Children's Check? *"
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <SelectValue placeholder="Please answer" />
-                <SelectContent>
-                  <SelectItem value="yes">Yes</SelectItem>
-                  <SelectItem value="no">No</SelectItem>
-                </SelectContent>
-              </SelectForm>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="driversLicense"
-          render={({ field }) => (
-            <FormItem>
-              <SelectForm
-                label="Do you have a drivers license? (Having one is not required!) *"
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <SelectValue placeholder="Please answer" />
-                <SelectContent>
-                  <SelectItem value="yes">Yes</SelectItem>
-                  <SelectItem value="no">No</SelectItem>
-                </SelectContent>
-              </SelectForm>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="application"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Let us know why you would like to work at Fizz Kidz *
-              </FormLabel>
-              <FormControl>
-                <Textarea
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  rows={5}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div>
-          <Label className="font-semibold">
-            Please upload your Resume / CV *
-          </Label>
-          <UploadButton
-            className="mt-2 items-start ut-button:bg-[#9044E2]"
-            endpoint="resumeUploader"
-            onClientUploadComplete={(res) => {
-              // Do something with the response
-              setUploadError({ isError: false, message: "" });
-              setFile({ name: res[0].name, url: res[0].ufsUrl });
-            }}
-            onUploadError={(error: Error) => {
-              // Do something with the error.
-              setUploadError({ isError: true, message: error.message });
-            }}
+                    {/* <SelectItem value="supervisor">Studio Supervisor</SelectItem> */}
+                    <SelectItem value="facilitator">
+                      Studio Facilitator
+                    </SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </SelectForm>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {uploadError.isError && (
-            <p className="text-sm font-medium text-destructive">
-              {uploadError.message}
-            </p>
-          )}
-          {file && (
-            <ul className="list-disc pl-4">
-              <li>{file.name}</li>
-            </ul>
-          )}
-        </div>
-        <FormField
-          control={form.control}
-          name="reference"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>How did you hear about us? *</FormLabel>
-              <FormControl>
-                <Textarea
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  rows={2}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button
-          className="!mt-8 w-full rounded-full bg-[#9044E2] hover:bg-[#a56ae6] focus-visible:outline-purple-500"
-          type="submit"
-        >
-          {loading ? (
-            <LoaderCircle className="h-4 w-4 animate-spin" />
-          ) : (
-            "Submit"
-          )}
-        </Button>
+          {form.watch("role") !== "area-manager" &&
+            form.watch("role") !== "social-media" && (
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <SelectForm
+                      label="Which location do you want to work at? *"
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      value={field.value}
+                    >
+                      <SelectValue placeholder="Select location" />
+                      <SelectContent>
+                        <SelectItem value="balwyn">Balwyn</SelectItem>
+                        <SelectItem value="cheltenham">Cheltenham</SelectItem>
+                        <SelectItem value="essendon">Essendon</SelectItem>
+                        <SelectItem value="geelong">Geelong</SelectItem>
+                        <SelectItem value="kingsville">Kingsville</SelectItem>
+                        <SelectItem value="malvern">Malvern</SelectItem>
+                      </SelectContent>
+                    </SelectForm>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+          <FormField
+            control={form.control}
+            name="wwcc"
+            render={({ field }) => (
+              <FormItem>
+                <SelectForm
+                  label="Do you have, or are willing to obtain, a Working With Children's Check? *"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  value={field.value}
+                >
+                  <SelectValue placeholder="Please answer" />
+                  <SelectContent>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </SelectForm>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="driversLicense"
+            render={({ field }) => (
+              <FormItem>
+                <SelectForm
+                  label="Do you have a drivers license? (Having one is not required!) *"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  value={field.value}
+                >
+                  <SelectValue placeholder="Please answer" />
+                  <SelectContent>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </SelectForm>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="application"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Let us know why you would like to work at Fizz Kidz *
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    rows={5}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div>
+            <Label className="font-semibold">
+              Please upload your Resume / CV *
+            </Label>
+            <UploadButton
+              className="mt-2 items-start ut-button:bg-[#9044E2]"
+              disabled={loading}
+              endpoint="resumeUploader"
+              onClientUploadComplete={(res) => {
+                // Do something with the response
+                setUploadError({ isError: false, message: "" });
+                setFile({ name: res[0].name, url: res[0].ufsUrl });
+              }}
+              onUploadError={(error: Error) => {
+                // Do something with the error.
+                setUploadError({ isError: true, message: error.message });
+              }}
+            />
+            {uploadError.isError && (
+              <p className="text-sm font-medium text-destructive">
+                {uploadError.message}
+              </p>
+            )}
+            {file && (
+              <ul className="list-disc pl-4">
+                <li>{file.name}</li>
+              </ul>
+            )}
+          </div>
+          <FormField
+            control={form.control}
+            name="reference"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>How did you hear about us? *</FormLabel>
+                <FormControl>
+                  <Textarea
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    rows={2}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            className="!mt-8 w-full rounded-full bg-[#9044E2] hover:bg-[#a56ae6] focus-visible:outline-purple-500"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? (
+              <LoaderCircle className="h-4 w-4 animate-spin" />
+            ) : (
+              "Submit"
+            )}
+          </Button>
+        </fieldset>
       </form>
     </Form>
   );
