@@ -130,6 +130,11 @@ jobs:
               if: steps.cache-installed-dependencies.outputs.cache-hit != 'true'
               run: vp install --frozen-lockfile --prefer-offline
 
+            - name: Generate Astro types
+              run: |
+                  npm --workspace docs exec astro sync
+                  npm --workspace website exec astro sync
+
             - name: Check formatting, lint, and types
               run: vp check
 

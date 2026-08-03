@@ -135,7 +135,7 @@ The individual commands are also available:
 Notes:
 
 - Use `vp test` (without `--run`) for watch mode while developing.
-- Firebase CI runs `vp check` rather than `npm run verify`, because `verify` applies formatting fixes. Each Netlify build runs its own Astro check before building.
+- Firebase CI generates the ignored Astro type files before running `vp check`; it does not run `npm run verify`, because `verify` applies formatting fixes. Each Netlify build runs its own Astro check before building.
 - Run `npm run build` after changing build configuration.
 
 The project compiler is TypeScript 7 (`vp exec tsc --version`). The `typescript6` compatibility package is retained only for tsdown's declaration-generation JS API; Vite+ checks and dev watchers use the TypeScript 7 toolchain.
