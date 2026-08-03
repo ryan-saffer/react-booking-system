@@ -4,7 +4,7 @@ on:
     push:
         branches: [develop, main]
         paths:
-            - 'apps/client/**'
+            - 'apps/portal/**'
             - 'apps/server/**'
             - 'packages/core/**'
             - 'package.json'
@@ -14,7 +14,7 @@ on:
             - '.node-version'
             - 'firebase.json'
             - '.firebaserc'
-            - 'apps/client/predeploy.sh'
+            - 'apps/portal/predeploy.sh'
             - '.github/workflows/pipeline.yml'
 
     # Manual trigger from the Actions tab
@@ -56,7 +56,7 @@ jobs:
                   base: ${{ github.ref }}
                   filters: |
                       hosting:
-                        - 'apps/client/**'
+                        - 'apps/portal/**'
                         - 'packages/core/**'
                         - 'package.json'
                         - 'vite.config.ts'
@@ -93,7 +93,7 @@ jobs:
               with:
                   path: |
                       node_modules
-                      apps/client/node_modules
+                      apps/portal/node_modules
                       apps/docs/node_modules
                       apps/server/node_modules
                       apps/website/node_modules
@@ -114,16 +114,16 @@ jobs:
                     echo "Wrote server dev env files"
                   fi
 
-            - name: Create client .env from CLIENT_ENV_FILE
+            - name: Create portal .env from PORTAL_ENV_FILE
               env:
-                  CLIENT_ENV_FILE: ${{ vars.CLIENT_ENV_FILE }}
+                  PORTAL_ENV_FILE: ${{ vars.PORTAL_ENV_FILE || vars.CLIENT_ENV_FILE }}
               run: |
                   if [ "${{ github.ref_name }}" = 'main' ]; then
-                    printf '%s' "$CLIENT_ENV_FILE" > apps/client/.env.prod
-                    echo "Wrote apps/client/.env.prod"
+                    printf '%s' "$PORTAL_ENV_FILE" > apps/portal/.env.prod
+                    echo "Wrote apps/portal/.env.prod"
                   else
-                    printf '%s' "$CLIENT_ENV_FILE" > apps/client/.env
-                    echo "Wrote apps/client/.env"
+                    printf '%s' "$PORTAL_ENV_FILE" > apps/portal/.env
+                    echo "Wrote apps/portal/.env"
                   fi
 
             - name: Install dependencies
@@ -146,7 +146,7 @@ jobs:
                   GCLOUD_PROJECT: ${{ env.PROJECT_ID }}
               run: |
                   if [ "$DEPLOY_HOSTING" = "true" ]; then
-                    sh ./apps/client/predeploy.sh
+                    sh ./apps/portal/predeploy.sh
                   fi
 
                   if [ "$DEPLOY_FUNCTIONS" = "true" ]; then

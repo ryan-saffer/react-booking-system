@@ -27,14 +27,14 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
 ## Important Existing Patterns To Reuse
 
 - Holiday programs:
-  - `apps/client/src/components/holiday-programs/customer-booking-screen`
+  - `apps/portal/src/components/holiday-programs/customer-booking-screen`
   - `apps/server/src/holiday-programs/core/book-holiday-program.ts`
   - `apps/server/src/holiday-programs/core/process-holiday-program-payment.ts`
   - Acuity-as-source booking model.
   - Square order line item metadata for refunds.
   - Gift-card-first split tender payment flow.
 - Play Lab:
-  - `apps/client/src/components/play-lab/booking-form`
+  - `apps/portal/src/components/play-lab/booking-form`
   - `apps/server/src/play-lab/core/book-play-lab.ts`
   - `apps/server/src/play-lab/core/process-play-lab-payment.ts`
   - Modern shadcn staged booking form.
@@ -47,7 +47,7 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
 ## Important Risks
 
 - Do not delete or change the legacy preschool flow until the current term is fully finished.
-- Do not delete `apps/client/src/components/preschool-program/booking-form/utils/resolve-calendar-studio.ts` without moving it first; holiday programs imports it.
+- Do not delete `apps/portal/src/components/preschool-program/booking-form/utils/resolve-calendar-studio.ts` without moving it first; holiday programs imports it.
 - Current preschool attendance/invoicing depends on `preschoolProgramEnrolments`, Acuity appointment IDs, and Square invoice IDs.
 - If v2 supports cancellation/refunds, every appointment must store `ORDER_ID` and `LINE_ITEM_IDENTIFIER`.
 - Avoid Square order-level discounts for the full-term discount. Since bookings can mix full-term groups and ad-hoc sessions, full-term discounts must stay line-item scoped for refund/reconciliation.
@@ -56,14 +56,14 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
 
 - Done: Created this implementation plan at `PRESCHOOL_V2_IMPLEMENTATION_PLAN.md`.
 - Done: Added public placeholder route `/preschool-program-v2-booking`.
-- Done: Added placeholder page at `apps/client/src/components/preschool-program-v2/booking-form/pages/preschool-program-v2-booking-page.tsx`.
+- Done: Added placeholder page at `apps/portal/src/components/preschool-program-v2/booking-form/pages/preschool-program-v2-booking-page.tsx`.
 - Done: Added server tRPC namespace `preschoolProgramV2`.
 - Done: Added initial `preschoolProgramV2.checkGiftCardBalance` mutation.
 - Done: Added Acuity appointment type constants in `packages/core/src/acuity/constants/appointmentTypes.ts`:
   - `TEST_PRESCHOOL_PROGRAM: 94471769`.
   - `PRESCHOOL_PROGRAM: 94471796`.
-- Done: Rebuilt the shared `core` package so the new appointment constants are available to client and server imports.
-- Done: Added preschool-v2 client booking state shell:
+- Done: Rebuilt the shared `core` package so the new appointment constants are available to Portal and server imports.
+- Done: Added preschool-v2 Portal booking state shell:
   - Stage store.
   - Basic form schema.
   - Cart store with full-term discount tracking.
@@ -90,7 +90,7 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
 - Done: Added discount-code UI above gift cards. Percentage discount codes are calculated after full-term line-item discounts and sent to Square as fixed order-level discounts so receipts match checkout maths.
 - Done: Full-term booking now uses inferred term blocks split by 2-week-or-greater gaps, and the 20% option only appears/applies when the whole inferred term is still available and starts in the future.
 - Done: Added cancellation/refund webhook handling with full-term discount clawback logic.
-- Done: Added unit tests for preschool-v2 client cart pricing, inferred term grouping, server discount-code amount calculation, and server refund repricing/clawback helpers.
+- Done: Added unit tests for preschool-v2 Portal cart pricing, inferred term grouping, server discount-code amount calculation, and server refund repricing/clawback helpers.
 - Done: Replaced `/dashboard/preschool-program` with an Acuity-only preschool-v2 session selector and attendance screen.
 - Done: Attendance rows support sign in, undo sign in, sign out, and undo sign out through Acuity labels, with no Firestore enrolment dependency.
 - Done: Attendance rows show allergy/anaphylaxis/additional-information tags and expandable parent, emergency contact, allergy, and secure anaphylaxis-plan details.
@@ -121,8 +121,8 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
 
 ## Stage 2: Feature Scaffolding
 
-1. Done: Add client folder:
-   - `apps/client/src/components/preschool-program-v2/booking-form`.
+1. Done: Add Portal folder:
+   - `apps/portal/src/components/preschool-program-v2/booking-form`.
 2. Done: Add public route:
    - `/preschool-program-v2-booking`.
 3. Done: Add server folder:
@@ -148,7 +148,7 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
    - `lineItemIdentifier`.
    - Whether the line received the full-term discount.
 
-## Stage 4: Client Booking Flow
+## Stage 4: Portal Booking Flow
 
 1. In progress: Build a staged booking page using Play Lab as the template:
    - `program-selection`.
@@ -324,7 +324,7 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
    - Preschool dashboard session selection for master and franchise users.
    - Preschool child sign in, undo sign in, sign out, and undo sign out.
    - Preschool allergy/anaphylaxis badges and signed plan access.
-8. Done: Added client unit tests for:
+8. Done: Added Portal unit tests for:
    - Full-term discount totals.
    - Discount-code totals after full-term discounts.
    - Gift card application after discounts.

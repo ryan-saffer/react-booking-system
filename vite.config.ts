@@ -9,7 +9,7 @@ import { defineConfig } from 'vite-plus'
 import fmtConfig from './oxfmt.config'
 
 const workspaceDir = process.cwd()
-const clientDir = path.join(workspaceDir, 'apps/client')
+const portalDir = path.join(workspaceDir, 'apps/portal')
 const serverDir = path.join(workspaceDir, 'apps/server')
 const coreDir = path.join(workspaceDir, 'packages/core')
 const vpBin = path.join(workspaceDir, 'node_modules', 'vite-plus', 'bin', 'vp')
@@ -17,13 +17,13 @@ const npmBin = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const processCleanups = new Set<() => void>()
 let processCleanupRegistered = false
 
-const clientAliases = {
-    '@components': path.join(clientDir, 'src/components'),
-    '@ui-components': path.join(clientDir, 'src/ui-components/ui'),
-    '@constants': path.join(clientDir, 'src/constants'),
-    '@drawables': path.join(clientDir, 'src/drawables'),
-    '@utils': path.join(clientDir, 'src/utilities'),
-    '@hooks': path.join(clientDir, 'src/components/Hooks'),
+const portalAliases = {
+    '@components': path.join(portalDir, 'src/components'),
+    '@ui-components': path.join(portalDir, 'src/ui-components/ui'),
+    '@constants': path.join(portalDir, 'src/constants'),
+    '@drawables': path.join(portalDir, 'src/drawables'),
+    '@utils': path.join(portalDir, 'src/utilities'),
+    '@hooks': path.join(portalDir, 'src/components/Hooks'),
     '@fizz-kidz/core': path.join(coreDir, 'src'),
 }
 
@@ -182,7 +182,7 @@ function typeCheckWatchPlugin(): Plugin {
         name: 'typescript-watch',
         apply: 'serve',
         configureServer(viteServer) {
-            const projects = [path.join(clientDir, 'tsconfig.json')]
+            const projects = [path.join(portalDir, 'tsconfig.json')]
 
             children = projects.map((project) =>
                 spawn(
@@ -217,7 +217,7 @@ function firebaseEmulatorPlugin(): Plugin {
         name: 'firebase-emulators',
         apply: 'serve',
         configureServer(viteServer) {
-            if (process.env.VP_CLIENT_ONLY === 'true') {
+            if (process.env.VP_PORTAL_ONLY === 'true') {
                 return
             }
 
@@ -244,7 +244,7 @@ function firebaseEmulatorPlugin(): Plugin {
 
 export default defineConfig(({ command, mode }) => {
     const envMode = mode === 'production' ? 'prod' : mode === 'development' ? 'dev' : mode
-    const env = loadEnv(envMode, clientDir, '')
+    const env = loadEnv(envMode, portalDir, '')
     const { version, builtAt } = resolveAppVersion(env)
     const functionsApiTarget = `http://127.0.0.1:5001/${env.VITE_FIREBASE_PROJECT_ID}/australia-southeast1/api`
     const envDefinitions = Object.fromEntries(
@@ -254,8 +254,8 @@ export default defineConfig(({ command, mode }) => {
     )
 
     return {
-        root: clientDir,
-        envDir: clientDir,
+        root: portalDir,
+        envDir: portalDir,
         define: {
             ...envDefinitions,
             'import.meta.env.VITE_APP_VERSION': JSON.stringify(version),
@@ -268,14 +268,14 @@ export default defineConfig(({ command, mode }) => {
                 '/forms': { target: functionsApiTarget, changeOrigin: true },
             },
         },
-        resolve: { alias: clientAliases },
+        resolve: { alias: portalAliases },
         build: {
-            outDir: path.join(clientDir, 'dist'),
+            outDir: path.join(portalDir, 'dist'),
             sourcemap: true,
             rollupOptions: {
                 input: {
-                    index: path.join(clientDir, 'index.html'),
-                    invitation: path.join(clientDir, 'invitation.html'),
+                    index: path.join(portalDir, 'index.html'),
+                    invitation: path.join(portalDir, 'invitation.html'),
                 },
             },
         },
@@ -293,7 +293,7 @@ export default defineConfig(({ command, mode }) => {
                       org: 'fizz-kidz',
                       project: 'client',
                       authToken: env.SENTRY_AUTH_TOKEN,
-                      sourcemaps: { filesToDeleteAfterUpload: ['./apps/client/dist/**/*.map'] },
+                      sourcemaps: { filesToDeleteAfterUpload: ['./apps/portal/dist/**/*.map'] },
                   })
                 : undefined,
         ],
@@ -303,8 +303,8 @@ export default defineConfig(({ command, mode }) => {
                 {
                     extends: true,
                     test: {
-                        name: 'client',
-                        root: clientDir,
+                        name: 'portal',
+                        root: portalDir,
                         include: ['src/**/*.test.{ts,tsx,js,jsx}'],
                     },
                 },
@@ -322,8 +322,8 @@ export default defineConfig(({ command, mode }) => {
             plugins: ['typescript'],
             categories: { correctness: 'error' },
             ignorePatterns: [
-                'apps/client/dist/**',
-                'apps/client/coverage/**',
+                'apps/portal/dist/**',
+                'apps/portal/coverage/**',
                 'apps/server/lib/**',
                 'apps/server/coverage/**',
                 'apps/website/dist/**',
@@ -357,7 +357,7 @@ export default defineConfig(({ command, mode }) => {
             },
             overrides: [
                 {
-                    files: ['apps/client/**/*.{js,jsx,ts,tsx}'],
+                    files: ['apps/portal/**/*.{js,jsx,ts,tsx}'],
                     plugins: ['typescript', 'react'],
                     env: { browser: true, es2020: true },
                     rules: {
@@ -421,7 +421,7 @@ export default defineConfig(({ command, mode }) => {
                     },
                 },
                 {
-                    files: ['apps/client/**/*.test.{jsx,tsx}'],
+                    files: ['apps/portal/**/*.test.{jsx,tsx}'],
                     plugins: ['typescript', 'react', 'vitest'],
                     env: { browser: true, vitest: true },
                 },

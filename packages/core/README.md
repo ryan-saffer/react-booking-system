@@ -13,7 +13,7 @@ This directory contains the `@fizz-kidz/core` module, a crucial internal library
 The `@fizz-kidz/core` module serves as the central hub for common functionalities and data structures:
 
 - **Shared Business Logic:** Contains reusable functions and rules related to various aspects of the Fizz Kidz operations (e.g., bookings, scheduling, invoicing).
-- **Type Definitions:** Provides a single source of truth for TypeScript types used by both the server-side Firebase Functions and potentially by the client-side application (especially for data consistency).
+- **Type Definitions:** Provides a single source of truth for TypeScript types used by both the server-side Firebase Functions and the Portal (especially for data consistency).
 - **Constants & Enums:** Centralizes platform-wide constants, like service locations, roles, permissions, and specific configurations for third-party services.
 - **Utilities:** Offers helper functions for common tasks like date manipulation, string formatting, or interacting with third-party APIs in a standardized way.
 
@@ -42,7 +42,7 @@ The module is organized by feature or domain within its `src/` directory:
 - **Build:** Run `vp pack` from this directory, or `vp build` from the repository root. tsdown emits ESM and declarations to `lib/`.
 - **Usage:**
   - **Server-Side:** `apps/server/vite.config.ts` aliases `@fizz-kidz/core` to `../../packages/core/src` and sets `deps.alwaysBundle: ['@fizz-kidz/core']`, so this module is inlined from source into `apps/server/lib/index.js`. The deployed Functions artifact therefore has no runtime dependency on `@fizz-kidz/core`, and `apps/server/package.json` does not list it.
-  - **Client-Side:** The client resolves the workspace package directly to `packages/core/src` through the root Vite+ and TypeScript aliases. This provides shared runtime code and types without a separate development build.
+  - **Portal:** The Portal resolves the workspace package directly to `packages/core/src` through the root Vite+ and TypeScript aliases. This provides shared runtime code and types without a separate development build.
 
 Because both consumers read `src/` directly, the `lib/` output is not required to run or deploy the app. It exists so the package can be consumed as a normal ESM package with type declarations if that is ever needed.
 

@@ -1,4 +1,4 @@
-# Fizz Kidz Portal - Client Application
+# Fizz Kidz Portal
 
 This directory contains the frontend React application for the Fizz Kidz Portal.
 
@@ -25,7 +25,7 @@ This directory contains the frontend React application for the Fizz Kidz Portal.
 
 ## Project Structure
 
-The client-side code is organized within `apps/client/src/`:
+The Portal source is organized within `apps/portal/src/`:
 
 - **`app.tsx`**: Entry point for routing configuration.
 - **`components/`**: Contains all React components, further organized by feature (e.g., `Bookings/`, `HolidayPrograms/`) or shared functionality (e.g., `Shared/`, `Session/`).
@@ -37,8 +37,8 @@ The client-side code is organized within `apps/client/src/`:
 
 ## Routing
 
-- **React Router DOM:** Routing is handled using `react-router-dom`, with routes defined in `apps/client/src/app.tsx` using `createBrowserRouter`.
-- **Root Layout:** The `apps/client/src/components/root/root.tsx` component serves as the primary layout shell, providing essential contexts (like tRPC, Auth, Theming) to all routes via the `<Outlet />` mechanism.
+- **React Router DOM:** Routing is handled using `react-router-dom`, with routes defined in `apps/portal/src/app.tsx` using `createBrowserRouter`.
+- **Root Layout:** The `apps/portal/src/components/root/root.tsx` component serves as the primary layout shell, providing essential contexts (like tRPC, Auth, Theming) to all routes via the `<Outlet />` mechanism.
 - **Dashboard vs. Public Routes:** The application has a clear distinction between:
   - **Dashboard Routes:** Primarily under the `/dashboard` path, often utilizing `DashboardLayout` and `ProtectedRoute` for authenticated staff access.
   - **Public Routes:** Accessible to all users, such as sign-in/sign-up pages, program enrolment forms (e.g., `/after-school-program-enrolment-form`), customer booking screens, and invitation views.
@@ -56,39 +56,39 @@ The client-side code is organized within `apps/client/src/`:
 
 ## API Communication
 
-- The client communicates with the backend server via tRPC.
-- The tRPC client is configured in `apps/client/src/components/root/root.tsx` and made available to the component tree through a React Context provider. This setup enables type-safe API calls from anywhere in the application.
-- The client-side tRPC setup targets the single Express Firebase Function exposed at `/api/trpc` (implemented in `apps/server/src/api.ts`), batching requests through one endpoint.
+- The Portal communicates with the backend server via tRPC.
+- The tRPC client is configured in `apps/portal/src/components/root/root.tsx` and made available to the component tree through a React Context provider. This setup enables type-safe API calls from anywhere in the application.
+- The Portal's tRPC setup targets the single Express Firebase Function exposed at `/api/trpc` (implemented in `apps/server/src/api.ts`), batching requests through one endpoint.
 
 ## Development
 
-To run the client application in development mode:
+To run the Portal in development mode:
 
 ```bash
-npm run client
+npm run portal
 ```
 
-Run this from the repository root. The root `vite.config.ts` owns the client configuration and resolves the shared `@fizz-kidz/core` source directly.
+Run this from the repository root. The root `vite.config.ts` owns the Portal configuration and resolves the shared `@fizz-kidz/core` source directly.
 
-Use `npm run client:prod` to run the local client against the production backend and Firebase project.
+Use `npm run portal:prod` to run the local Portal against the production backend and Firebase project.
 
 ## Testing
 
-Client tests are Vitest files matching `apps/apps/client/src/**/*.test.{ts,tsx}`, using jsdom and Testing Library. They are registered as the `client` Vitest project in the root `vite.config.ts`, so run them from the repository root rather than from this directory:
+Portal tests are Vitest files matching `apps/portal/src/**/*.test.{ts,tsx}`, using jsdom and Testing Library. They are registered as the `portal` Vitest project in the root `vite.config.ts`, so run them from the repository root rather than from this directory:
 
 ```bash
-# whole suite once (client + server)
+# whole suite once (Portal + server)
 npm test
 
 # watch mode while developing
 vp test
 
-# only the client project
-vp test --run --project client
+# only the Portal project
+vp test --run --project portal
 ```
 
 Use `npm run verify` to run the checks and the full suite together before finishing a change.
 
 ## Deployment
 
-Client-only changes deploy Firebase Hosting without redeploying Functions. Changes to the shared `@fizz-kidz/core` package conservatively deploy both targets.
+Portal-only changes deploy Firebase Hosting without redeploying Functions. Changes to the shared `@fizz-kidz/core` package conservatively deploy both targets.

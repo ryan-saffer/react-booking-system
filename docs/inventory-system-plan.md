@@ -26,7 +26,7 @@ The first implementation stage should only create the backend capability to defi
 - [x] Move inventory operation schemas into core modules so tRPC and server functions share the same input type.
 - [x] Standardise inventory discriminated union keys with the `$` prefix.
 - [x] Register the inventory router in `apps/server/src/trpc/trpc.app-router.ts`.
-- [x] Run `vp check` across the workspace (formatting, lint, type-aware lint, and TypeScript for client, server, and shared core).
+- [x] Run `vp check` across the workspace (formatting, lint, type-aware lint, and TypeScript for Portal, server, and shared core).
 - [ ] Add tests for stock movement transactions and permission checks.
 - [ ] Create an initial seed/admin script for party-food inventory items if needed.
 - [x] Build the inventory page for creating items and viewing current stock by location.
@@ -45,7 +45,7 @@ Inventory should follow the current repository architecture instead of becoming 
 - Low-level database reads/writes belong in `apps/server/src/firebase/DatabaseClient.ts`.
 - Feature/business operations belong in `apps/server/src/<feature>/core`.
 - tRPC routers belong in `apps/server/src/<feature>/functions/trpc` and are registered in `apps/server/src/trpc/trpc.app-router.ts`.
-- The client consumes the server router through the existing typed tRPC client in `apps/client/src/utilities/trpc.ts`.
+- The Portal consumes the server router through the existing typed tRPC client in `apps/portal/src/utilities/trpc.ts`.
 
 ## Design Principles
 
@@ -493,7 +493,7 @@ export function getInventoryStockLevelId(location: Studio, itemId: string) {
 }
 ```
 
-This helper can live in `packages/core/src/inventory/index.ts` if the client also needs to reason about IDs, or beside `FirestoreRefs` if it is server-only. Prefer shared only if the client has a concrete need.
+This helper can live in `packages/core/src/inventory/index.ts` if the Portal also needs to reason about IDs, or beside `FirestoreRefs` if it is server-only. Prefer shared only if the Portal has a concrete need.
 
 ### `DatabaseClient` Additions
 
@@ -677,9 +677,9 @@ Do not build this in the initial backend stage. Plan for it after the tRPC surfa
 
 Likely files:
 
-- `apps/client/src/components/inventory/inventory-page.tsx`
-- `apps/client/src/components/inventory/components/inventory-stock-table.tsx`
-- `apps/client/src/components/inventory/components/inventory-location-filter.tsx`
+- `apps/portal/src/components/inventory/inventory-page.tsx`
+- `apps/portal/src/components/inventory/components/inventory-stock-table.tsx`
+- `apps/portal/src/components/inventory/components/inventory-location-filter.tsx`
 
 Route:
 
@@ -802,10 +802,10 @@ Usage rules should support party additions first. Later they can support creatio
 
 - Define shared domain types and runtime constants in `core`.
 - Export all inventory types from `packages/core/src/index.ts`.
-- Use those types in `FirestoreRefs`, `DatabaseClient`, server core functions, tRPC handlers, and client UI.
+- Use those types in `FirestoreRefs`, `DatabaseClient`, server core functions, tRPC handlers, and the Portal UI.
 - Use `zod` in new tRPC routers for runtime input validation.
 - Build zod enums from shared constants so static and runtime definitions stay aligned.
-- Avoid duplicating string unions in server and client code.
+- Avoid duplicating string unions in server and Portal code.
 - Keep Firestore document shapes explicit and typed. Do not store arbitrary `Record<string, unknown>` blobs for inventory documents.
 
 ## Firestore Indexes To Expect
