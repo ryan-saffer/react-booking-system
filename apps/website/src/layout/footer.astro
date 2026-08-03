@@ -1,10 +1,16 @@
 ---
 import { Image } from "astro:assets";
 import logo from "@/assets/images/logo-white.png";
+import { RECALL_URL, RECALL_LABEL } from "@/utils/constants";
 ---
 
-<footer id="footer" class="flex min-h-60 w-full justify-center bg-zinc-800 p-8">
-  <div class="flex w-full max-w-7xl items-center justify-between gap-8">
+<footer
+  id="footer"
+  class="flex min-h-60 w-full flex-col items-center bg-zinc-800 p-8"
+>
+  <div
+    class="flex w-full max-w-7xl flex-1 items-center justify-between gap-8"
+  >
     <div
       class="grid grid-cols-1 justify-between gap-6 text-white sm:grid-cols-2 xl:grid-cols-4"
     >
@@ -72,5 +78,18 @@ import logo from "@/assets/images/logo-white.png";
         class="h-48 w-fit object-contain"
       />
     </div>
+  </div>
+  <div class="mt-8 w-full max-w-7xl border-t border-zinc-700 pt-4">
+    <p class="text-xs text-gray-400">
+      Product safety recall: {RECALL_LABEL}.{" "}
+      <a
+        href={RECALL_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline underline-offset-2 hover:text-white"
+      >
+        View the recall notice
+      </a>
+    </p>
   </div>
 </footer>
