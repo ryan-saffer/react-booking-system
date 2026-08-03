@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import Image from "@/components/image.astro";
 
 import craftIcon from "@/assets/images/pages/preschool-program/schedule-icons/2.svg";
 import movementIcon from "@/assets/images/pages/preschool-program/schedule-icons/5.svg";
@@ -10,13 +10,7 @@ import teaIcon from "@/assets/images/pages/preschool-program/schedule-icons/3.sv
 import welcomeIcon from "@/assets/images/pages/preschool-program/schedule-icons/1.svg";
 
 type SlotIcon =
-  | "welcome"
-  | "craft"
-  | "tea"
-  | "science"
-  | "movement"
-  | "story"
-  | "pickup";
+  "welcome" | "craft" | "tea" | "science" | "movement" | "story" | "pickup";
 
 type Props = {
   time: string;

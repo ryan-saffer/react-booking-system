@@ -1,5 +1,6 @@
 ---
-import { Image } from "astro:assets";
+import Image from "@/components/image.astro";
+import type { ImageSource } from "@/types/images";
 
 import pinkBlob from "@/assets/images/blobs/pink-blob.png";
 import blueBlob from "@/assets/images/blobs/blue-blob.png";
@@ -9,7 +10,7 @@ import purpleBlob from "@/assets/images/blobs/purple-blob.png";
 import { cn } from "./react/lib/utils";
 
 type Props = {
-  image: ImageMetadata;
+  image: ImageSource;
   color: "pink" | "yellow" | "green" | "purple" | "blue" | "white" | "red";
   text?: string[];
   flippable?: boolean;

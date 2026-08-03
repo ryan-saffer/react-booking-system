@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { ChevronDown } from "lucide-react";
-import type { CustomImage } from "@/types/types";
 import { HoverTag } from "./tooltip-tag";
 import { cn } from "../lib/utils";
 
@@ -11,6 +10,7 @@ const PlayLabProgramCard = ({
   selected,
   queued,
   content,
+  image,
   backgroundColor,
   onClick,
   children,
@@ -20,8 +20,8 @@ const PlayLabProgramCard = ({
   selected: boolean;
   queued: boolean;
   backgroundColor: string;
+  image: ReactNode;
   content: {
-    img: CustomImage;
     color: string;
     title: string;
     subtitle: string;
@@ -58,12 +58,7 @@ const PlayLabProgramCard = ({
         onClick={onClick}
       >
         <div className="h-52 flex-shrink-0 overflow-hidden rounded-t-xl">
-          <img
-            src={content.img.image.src}
-            alt={content.img.alt}
-            width={500}
-            className="h-full w-full rounded-t-xl object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-          />
+          {image}
         </div>
         <div
           slot="content"

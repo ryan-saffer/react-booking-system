@@ -1,12 +1,13 @@
 ---
-import { Image } from "astro:assets";
+import Image from "@/components/image.astro";
+import type { ImageSource } from "@/types/images";
 import PrimaryButton from "./primary-button.astro";
 import { cn } from "./react/lib/utils";
 import blackWave from "@/assets/images/pages/parties/black-wave.svg";
 
 type Props = {
   partyPackage: string;
-  image: ImageMetadata;
+  image: ImageSource;
   imageAlt: string;
   caption?: string;
   hideLeftImage?: boolean;

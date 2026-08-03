@@ -1,20 +1,20 @@
 ---
 import Layout from "@/layout/Layout.astro";
-import { Image } from "astro:assets";
-import banngerGirl from "@/assets/images/pages/home/banner-girl.png";
+import Image from "@/components/image.astro";
+import { sbPagesHomeBannerGirlPng as banngerGirl } from "@/data/storyblok-images";
 import CardWithImage from "@/components/card-with-image.astro";
 
-import parties from "@/assets/images/pages/home/parties.jpg";
-import activations from "@/assets/images/pages/home/activations.jpg";
-import holidayPrograms from "@/assets/images/pages/home/holiday-programs.jpg";
-import incursions from "@/assets/images/pages/home/incursions.jpg";
-import energy from "@/assets/images/pages/home/energy.jpg";
+import { sbPagesHomePartiesJpg as parties } from "@/data/storyblok-images";
+import { sbPagesHomeActivationsJpg as activations } from "@/data/storyblok-images";
+import { sbPagesHomeHolidayProgramsJpg as holidayPrograms } from "@/data/storyblok-images";
+import { sbPagesHomeIncursionsJpg as incursions } from "@/data/storyblok-images";
+import { sbPagesHomeEnergyJpg as energy } from "@/data/storyblok-images";
 import { ChevronRight } from "lucide-react";
-import studio from "@/assets/images/pages/home/studio.png";
+import { sbPagesHomeStudioPng as studio } from "@/data/storyblok-images";
 import fizzFansBgTop from "@/assets/images/pages/home/fizz-fans-bg-top.svg";
 import fizzFansBgBottom from "@/assets/images/pages/home/fizz-fans-bg-bottom.svg";
 import star from "@/assets/images/pages/home/star.svg";
-import franchising from "@/assets/images/pages/home/franchising.png";
+import { sbPagesHomeFranchisingPng as franchising } from "@/data/storyblok-images";
 
 import location1 from "@/assets/images/pages/home/location-icon-1.svg";
 import location2 from "@/assets/images/pages/home/location-icon-2.svg";
@@ -23,7 +23,7 @@ import location4 from "@/assets/images/pages/home/location-icon-4.svg";
 import location5 from "@/assets/images/pages/home/location-icon-5.svg";
 import PartyThemes from "@/components/party-themes.astro";
 import ReviewsCarousel from "@/components/react/reviews-carousel";
-import preschool from "@/assets/images/pages/preschool-program/hero.jpg";
+import { sbPagesPreschoolProgramHeroJpg as preschool } from "@/data/storyblok-images";
 
 import graphics1 from "@/assets/svg/atom.svg";
 import graphics3 from "@/assets/svg/dots.svg";
@@ -228,8 +228,9 @@ const services = [
         <div class="relative h-full min-[1000px]:w-1/2">
           <Image
             loading="eager"
-            widths={[400, 530, 650]}
-            sizes="(max-width: 800px) 400px, (max-width: 800px) 530px, (max-width:1000px) 650px"
+            fetchpriority="high"
+            widths={[400, 530, 650, 852]}
+            sizes="(max-width: 460px) 400px, (max-width: 1000px) 530px, 650px"
             class="absolute bottom-0 right-0 z-40 h-[340px] w-auto object-cover min-[460px]:h-[300px] min-[750px]:h-[400px] min-[1000px]:h-[500px]"
             src={banngerGirl}
             alt="A girl smiling and holding a green bubbling volcano"
@@ -368,8 +369,8 @@ const services = [
         <div class="m-auto block max-w-[1380px] px-5 pt-8">
           <p class="mb-4 text-center font-lilita text-5xl">Fizz Fans</p>
           <p class="m-auto max-w-5xl text-center font-gotham text-2xl">
-            We've hosted over <strong>50,000 parties and events</strong> and are
-            incredibly good at what we do.
+            We've hosted over <strong>50,000 parties and events</strong> and are incredibly
+            good at what we do.
           </p>
           <div
             class="my-8 flex w-full flex-col items-center justify-center gap-8 md:flex-row"

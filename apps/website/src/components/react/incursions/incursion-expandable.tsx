@@ -30,9 +30,9 @@ const IncursionExpandable = ({
         {title}
       </h5>
       <div className="flex flex-col gap-4 p-4 min-[1000px]:flex-row">
-        {incursions.map((incursion, idx) => (
+        {incursions.map((incursion) => (
           <IncursionExpandableItem
-            key={idx}
+            key={incursion.title}
             content={incursion.content}
             image={incursion.image}
             title={incursion.title}

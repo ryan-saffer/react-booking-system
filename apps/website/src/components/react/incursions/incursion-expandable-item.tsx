@@ -5,10 +5,10 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 
-import type { CustomImage } from "@/types/types";
+import type { ReactNode } from "react";
 
 export type SingleIncursionProps = {
-  image: CustomImage;
+  image: ReactNode;
   title: string;
   content: string;
   curriculumLinks: { content: string; link?: { code: string; url: string } }[];
@@ -23,11 +23,7 @@ function IncursionExpandableItem({
 }: SingleIncursionProps & { color: string }) {
   return (
     <div className="flex flex-1 flex-col rounded-md shadow-lg">
-      <img
-        src={image.image.src}
-        alt={image.alt}
-        className="h-48 min-h-48 rounded-t-md object-cover"
-      />
+      {image}
       <div className="flex h-full flex-col justify-between rounded-b-md p-4">
         <div>
           <p className="mb-4 font-lilita text-lg" style={{ color }}>

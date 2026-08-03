@@ -45,7 +45,7 @@ export default defineConfig({
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**.storyblok.com",
+        hostname: "a-ap.storyblok.com",
       },
       {
         protocol: "https",

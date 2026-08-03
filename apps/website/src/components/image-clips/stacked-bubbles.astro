@@ -1,14 +1,15 @@
 ---
 // BlobPair.astro
 
-import { Image } from "astro:assets";
+import Image from "@/components/image.astro";
+import type { ImageSource } from "@/types/images";
 
 interface Props {
   /** First (top) image metadata */
-  imgTop: ImageMetadata;
+  imgTop: ImageSource;
   altTop: string;
   /** Second (bottom) image metadata */
-  imgBottom: ImageMetadata;
+  imgBottom: ImageSource;
   altBottom: string;
 }
 

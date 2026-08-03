@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import type { CustomImage } from "@/types/types";
+import type { ReactNode } from "react";
 import { IncursionModule } from "./incursion-module";
 // @ts-ignore
 import blueParachute from "@/assets/images/pages/in-schools/incursions/blue-parachute.svg";
@@ -14,19 +14,33 @@ import purpleLightbulb from "@/assets/images/pages/in-schools/incursions/purple-
 import yellowTube from "@/assets/images/pages/in-schools/incursions/yellow-tube.svg";
 
 type Props = {
-  chemicalImages: CustomImage[];
-  physicalImages: CustomImage[];
-  lightImages: CustomImage[];
-  earthImages: CustomImage[];
+  chemical1Image?: ReactNode;
+  chemical2Image?: ReactNode;
+  chemical3Image?: ReactNode;
+  physical1Image?: ReactNode;
+  physical2Image?: ReactNode;
+  light1Image?: ReactNode;
+  light2Image?: ReactNode;
+  earth1Image?: ReactNode;
+  earth2Image?: ReactNode;
+  earth3Image?: ReactNode;
+  earth4Image?: ReactNode;
 };
 
 export type Module = "chemical" | "physical" | "light" | "earth" | null;
 
 const IncursionModulesSection = ({
-  chemicalImages,
-  physicalImages,
-  lightImages,
-  earthImages,
+  chemical1Image,
+  chemical2Image,
+  chemical3Image,
+  physical1Image,
+  physical2Image,
+  light1Image,
+  light2Image,
+  earth1Image,
+  earth2Image,
+  earth3Image,
+  earth4Image,
 }: Props) => {
   const [isMobile, setIsMobile] = useState(true);
 
@@ -71,7 +85,7 @@ const IncursionModulesSection = ({
         onClick={() => handleModuleClicked("chemical")}
         incursions={[
           {
-            image: chemicalImages[0],
+            image: chemical1Image,
             title: "Marvellous Matter (Yr 3-6)",
             content:
               "In this incursion students will understand that there are three states of matter and discuss their observable properties. They will be able understand how states of matter can change by adding or removing heat.",
@@ -99,7 +113,7 @@ const IncursionModulesSection = ({
             ],
           },
           {
-            image: chemicalImages[1],
+            image: chemical2Image,
             title: "Radical Reactions (F - Yr 2)",
             content:
               "In this incursion students will understand chemical and physical reactions. They will also learn to identify the difference between reversible and irreversible changes. Students will also look closely at the properties of materials and the effect these might have during an experiment.",
@@ -127,7 +141,7 @@ const IncursionModulesSection = ({
             ],
           },
           {
-            image: chemicalImages[2],
+            image: chemical3Image,
             title: "Radical Reactions Adv (Yr 3-5)",
             content:
               "In this incursion students will understand the difference between a chemical and physical reaction. They will also learn to identify the difference between reversible and irreversible changes to chemicals and materials. Students will also look closely at the properties of materials and the effect these might have during an experiment.",
@@ -168,7 +182,7 @@ const IncursionModulesSection = ({
         onClick={() => handleModuleClicked("physical")}
         incursions={[
           {
-            image: physicalImages[0],
+            image: physical1Image,
             title: "Fabulous Forces (F- Yr 2)",
             content:
               "In this incursion students will understand that the way objects moves depends on a variety of factors. They will also loook at the effect of friction and investigate push and pull forces.",
@@ -195,7 +209,7 @@ const IncursionModulesSection = ({
             ],
           },
           {
-            image: physicalImages[1],
+            image: physical2Image,
             title: "Fabulous Forces Advances (Yr 3-5)",
             content:
               "In this incursion students will understand the effect of forces on an objects behaviour. We will look closely at contact and non contact forces and discuss how simple machines work. At the end of the incursion students will also be able to identity the difference between kinetic and potential energy.",
@@ -236,7 +250,7 @@ and Electricity"
         onClick={() => handleModuleClicked("light")}
         incursions={[
           {
-            image: lightImages[0],
+            image: light1Image,
             title: "Light & Sound Spectacular",
             content:
               "In this incursion students will understand how light and sound are produced, sensed and transmitted. Students will also explore the role light and sound play in our everyday lives.",
@@ -263,7 +277,7 @@ and Electricity"
             ],
           },
           {
-            image: lightImages[1],
+            image: light2Image,
             title: "Electrifying Electricity",
             content:
               "In this incursion students will understand how circuits work. They will dig deeper into different types of circuits, conductors and insulators. Students will also discuss the importance of renewable energy.",
@@ -304,7 +318,7 @@ and Electricity"
         onClick={() => handleModuleClicked("earth")}
         incursions={[
           {
-            image: earthImages[0],
+            image: earth1Image,
             title: "Living Things (F - yr 2)",
             content:
               "In this incursion students will understand the needs of living things. They will investigate habitats and wbat happens when habitats change. Students will also focus on the needs of plants and how they grow.",
@@ -324,7 +338,7 @@ and Electricity"
             ],
           },
           {
-            image: earthImages[1],
+            image: earth2Image,
             title: "Natural Disasters(Yr 3-5)",
             content:
               "In this incursion students will understand different types of natural disasters. We will look closely at key diasters and investigate how they occur and their effects on the earths surface.",
@@ -352,7 +366,7 @@ and Electricity"
             ],
           },
           {
-            image: earthImages[2],
+            image: earth3Image,
             title: "Wild and Wacky Weather (F- Yr 2)",
             content:
               "In this incursion students will understand how different types of weather patterns occur. Students will discover different changes in the sky and landscape and look at how the water cycle works.",
@@ -379,7 +393,7 @@ and Electricity"
             ],
           },
           {
-            image: earthImages[3],
+            image: earth4Image,
             title: "Sustainability Superpowers (F - Yr 5)",
             content:
               "In this incursion students will understand the importance sustainability has on the future of the earth. The will look at the effect of pollution and the impact they can have on the environment.",

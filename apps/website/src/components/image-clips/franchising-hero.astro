@@ -1,7 +1,8 @@
 ---
-import { Image } from "astro:assets";
+import Image from "@/components/image.astro";
+import type { ImageSource } from "@/types/images";
 interface Props {
-  img: ImageMetadata;
+  img: ImageSource;
   alt: string;
 }
 const { img, alt } = Astro.props as Props;
