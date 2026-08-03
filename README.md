@@ -58,7 +58,9 @@ The server-side application handles business logic, data processing, and API pro
 A monorepo using the conventional `apps/` (deployables) and `packages/` (shared libraries) layout:
 
 - **`apps/client/`**: React frontend.
+- **`apps/docs/`**: Astro + Starlight staff and franchisee knowledge base, deployed by Netlify.
 - **`apps/server/`**: Node.js backend (tRPC API definitions, Firebase Functions).
+- **`apps/website/`**: Public Astro + React marketing website, deployed by Netlify.
 - **`packages/core/`**: Shared logic, types, and utilities, published locally as `@fizz-kidz/core`. Consumed from source by both the client and the Functions bundle, so it needs no separate build to run or deploy the app.
 
 Deployable applications live under `apps/`; shared libraries live under `packages/`.
@@ -100,26 +102,40 @@ npm run client:prod
 
 ## Verification
 
-Vite+ is a single toolchain, but checking and testing remain separate operations. To verify everything before finishing a change, run one command from the repository root:
+The default local feedback loop stays on the fast Vite+ path:
+
+```bash
+npm run check
+npm run test
+```
+
+To apply formatting and safe lint fixes across every workspace, then run the test suite:
 
 ```bash
 npm run verify
 ```
 
-That runs `vp check --fix && vp test --run`: it formats and applies safe lint fixes, then validates formatting, lint, type-aware lint, and TypeScript, and finally runs the whole test suite once.
+For release-level verification that also runs both Astro language-server checks:
+
+```bash
+npm run verify:full
+```
 
 The individual commands are also available:
 
-| Command         | Wraps           | Purpose                                                                                                                 |
-| --------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `npm run check` | `vp check`      | Formatting, Oxlint, type-aware lint, and TypeScript checks. Read-only.                                                  |
-| `npm test`      | `vp test --run` | Runs the client and server Vitest projects once and exits.                                                              |
-| `npm run build` | `vp build`      | Builds `@fizz-kidz/core`, bundles Firebase Functions to `apps/server/lib`, and builds the client to `apps/client/dist`. |
+| Command               | Wraps                      | Purpose                                                                                                                 |
+| --------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `npm run check`       | `vp check`                 | Fast read-only oxfmt, Oxlint, type-aware lint, and TypeScript 7 checks across all workspaces.                           |
+| `npm run check:astro` | Two scoped `astro check`s  | Runs framework-specific diagnostics for `docs` and `website`.                                                           |
+| `npm run test`        | `vp test --run`            | Runs the client and server Vitest projects once and exits.                                                              |
+| `npm run verify`      | Vite+ fix/check plus tests | Formats and safely fixes supported files across all workspaces, then runs tests.                                        |
+| `npm run verify:full` | Astro checks plus `verify` | Runs both Astro checks, whole-repository fixes/checks, and tests.                                                       |
+| `npm run build`       | `vp build`                 | Builds `@fizz-kidz/core`, bundles Firebase Functions to `apps/server/lib`, and builds the client to `apps/client/dist`. |
 
 Notes:
 
 - Use `vp test` (without `--run`) for watch mode while developing.
-- CI deliberately runs `vp check` rather than `npm run verify`, because `--fix` modifies files.
+- Firebase CI runs `vp check` rather than `npm run verify`, because `verify` applies formatting fixes. Each Netlify build runs its own Astro check before building.
 - Run `npm run build` after changing build configuration.
 
 The project compiler is TypeScript 7 (`vp exec tsc --version`). The `typescript6` compatibility package is retained only for tsdown's declaration-generation JS API; Vite+ checks and dev watchers use the TypeScript 7 toolchain.
@@ -128,11 +144,12 @@ The project compiler is TypeScript 7 (`vp exec tsc --version`). The `typescript6
 
 - Client: use `vp dev --mode dev|prod` or `vp build --mode dev|prod` (`apps/client/.env` by default; merges `apps/client/.env.prod` for prod builds).
 - Server: uses `dotenv` with `apps/server/src/load-env.ts` to read the Firebase project id and load `apps/server/.env` (dev) or `apps/server/.env.prod` (prod).
+- Website: `npm run website` loads `apps/website/.env`; Netlify owns production and deploy-preview values.
 - GitHub: the workflow writes the correct env file(s) from Environment variable SERVER_ENV_FILE and CLIENT_ENV_FILE before build/deploy.
 
 ## Deployment
 
-Deployed using Firebase.
+The client and server deploy through Firebase. The docs and website apps deploy independently through Netlify.
 
 - **Client (Firebase Hosting):**
   - Client app built to static assets (`apps/client/dist/`).

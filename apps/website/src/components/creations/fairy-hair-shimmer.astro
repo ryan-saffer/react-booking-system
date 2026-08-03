@@ -1,0 +1,18 @@
+---
+import FlipCreation from "../flip-creation.astro";
+
+import { sbCreationsGlitterHairShimmerPng as creation } from "@/data/storyblok-images";
+type Props = {
+  flippable?: boolean;
+};
+
+const { flippable = true } = Astro.props;
+---
+
+<!-- Exact same as glitter hair gel, just different text -->
+<FlipCreation
+  flippable={flippable}
+  image={creation}
+  text={["Fairy Hair Shimmer"]}
+  color="blue"
+/>

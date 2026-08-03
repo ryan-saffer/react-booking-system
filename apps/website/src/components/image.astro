@@ -1,0 +1,78 @@
+---
+import {
+  Image as AstroImage,
+  type LocalImageProps,
+  type RemoteImageProps,
+} from "astro:assets";
+import type { StoryblokImage } from "@/types/images";
+
+type Props = Omit<LocalImageProps, "src"> & {
+  src: LocalImageProps["src"] | StoryblokImage | string;
+  inferSize?: boolean;
+};
+
+const { src, ...props } = Astro.props;
+const storyblokImage =
+  typeof src === "object" && src !== null && "assetId" in src ? src : null;
+
+const requestedWidth =
+  props.width === undefined ? undefined : Number(props.width);
+const requestedHeight =
+  props.height === undefined ? undefined : Number(props.height);
+
+const imageProps = storyblokImage
+  ? (() => {
+      const defaultWidth = Math.min(storyblokImage.width, 1920);
+      const width =
+        requestedWidth ??
+        (requestedHeight
+          ? Math.round(
+              (requestedHeight * storyblokImage.width) / storyblokImage.height,
+            )
+          : defaultWidth);
+      const height =
+        requestedHeight ??
+        (requestedWidth
+          ? Math.round(
+              (requestedWidth * storyblokImage.height) / storyblokImage.width,
+            )
+          : Math.round(
+              (defaultWidth * storyblokImage.height) / storyblokImage.width,
+            ));
+      const layout = props.layout ?? "constrained";
+      const responsiveWidths =
+        layout !== "none" &&
+        props.widths === undefined &&
+        props.densities === undefined
+          ? getResponsiveWidths(width, storyblokImage.width)
+          : props.widths;
+
+      return {
+        ...props,
+        src: storyblokImage.src,
+        width,
+        height,
+        layout,
+        widths: responsiveWidths,
+      };
+    })()
+  : { ...props, src };
+
+function getResponsiveWidths(displayWidth: number, sourceWidth: number) {
+  const maxWidth = Math.min(sourceWidth, displayWidth * 2);
+  const breakpoints = [
+    320, 480, 640, 750, 828, 960, 1080, 1280, 1440, 1668, 1920, 2048, 2560,
+    3200, 3840,
+  ];
+
+  return [
+    ...new Set([
+      ...breakpoints.filter((breakpoint) => breakpoint < maxWidth),
+      Math.min(displayWidth, maxWidth),
+      maxWidth,
+    ]),
+  ].sort((a, b) => a - b);
+}
+---
+
+<AstroImage {...imageProps as LocalImageProps | RemoteImageProps} />

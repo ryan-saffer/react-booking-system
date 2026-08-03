@@ -1,0 +1,88 @@
+---
+import PartyPackage from "./party-package.astro";
+
+import { sbPagesPartiesPackagesGlitzAndGlamPng as glitzAndGlam } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesSciencePng as science } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesSlimePng as slime } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesTieDyePng as tieDye } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesSafariPng as safari } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesSwiftiePng as swiftie } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesKPopDemonHuntersPng as kpop } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesFluidBearsBlackPng as fluidBears } from "@/data/storyblok-images";
+---
+
+<section class="mt-12 md:mt-24">
+  <div class="mb-8 flex flex-col items-center gap-4 md:mb-16">
+    <h3 class="text-center font-lilita text-5xl">Birthday Party Themes</h3>
+    <h4
+      class="max-w-3xl text-center font-lilita text-2xl text-[#9044E2] md:text-3xl"
+    >
+      Our packages create a personalised birthday party that your child will
+      love.
+    </h4>
+    <p class="text-center font-gotham text-xl">
+      Whether your child loves all things glitter and sparkles or is amazed by<br
+      />science we have the perfect party for your child!
+    </p>
+  </div>
+  <div
+    class="mb-24 grid grid-cols-2 justify-center gap-y-4 min-[900px]:grid-cols-4"
+  >
+    <PartyPackage
+      title="Glam Parties"
+      color="#F24C9F"
+      image={glitzAndGlam}
+      imageAlt="hands with lip balm"
+      path="/birthday-parties/glam-parties/"
+    />
+    <PartyPackage
+      title="Science Parties"
+      color="#43D4F3"
+      image={science}
+      imageAlt="bubbling volcano"
+      path="/birthday-parties/science-parties/"
+    />
+    <PartyPackage
+      title="Slime Parties"
+      color="#9044E2"
+      image={slime}
+      imageAlt="girl holding slime and smiling"
+      path="/birthday-parties/slime-parties/"
+    />
+    <PartyPackage
+      title="Tie Dye Parties"
+      color="#F6BA33"
+      image={tieDye}
+      imageAlt="tie dye shoelaces"
+      path="/birthday-parties/tie-dye-parties/"
+    />
+    <PartyPackage
+      title="Jungle Safari Parties"
+      color="#4EE16D"
+      image={safari}
+      imageAlt="a frog in a bath bomb"
+      path="/birthday-parties/jungle-safari-parties/"
+    />
+    <PartyPackage
+      title="Swiftie Parties"
+      color="#9044E2"
+      image={swiftie}
+      imageAlt="Taylor Swift"
+      path="/birthday-parties/taylor-swift-parties/"
+    />
+    <PartyPackage
+      title="K-Pop Power Parties"
+      color="#F24C9F"
+      image={kpop}
+      imageAlt="k-pop power wand"
+      path="/birthday-parties/k-pop-power-parties/"
+    />
+    <PartyPackage
+      title="Fluid Bears Party"
+      color="#000000"
+      image={fluidBears}
+      imageAlt="A Fizz kids staff holding a box"
+      path="/birthday-parties/fluid-bears-parties/"
+    />
+  </div>
+</section>

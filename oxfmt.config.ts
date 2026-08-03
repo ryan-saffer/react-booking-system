@@ -49,6 +49,10 @@ export default defineConfig({
             options: { sortTailwindcss: { config: './apps/client/tailwind.config.js' } },
         },
         {
+            files: ['apps/website/**/*.{astro,html,js,jsx,ts,tsx}'],
+            options: { sortTailwindcss: { config: './apps/website/tailwind.config.mjs' } },
+        },
+        {
             // Indentation is semantically significant in Markdown and MDX: it controls
             // list nesting and paragraph boundaries, including inside JSX children.
             // Re-indenting these files from 2 to 4 spaces silently restructures the

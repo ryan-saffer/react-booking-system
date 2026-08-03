@@ -1,0 +1,38 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import { sbPagesPartiesFluidBearsPartyPng as fluidBears } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesFluidBearsWhitePng as fluidBearsPackage } from "@/data/storyblok-images";
+import FluidBearsCreations from "@/components/creation-packages/fluid-bears-creations.astro";
+---
+
+<Layout
+  title="Book a Kids Fluid Bears Birthday Party in Melbourne | Fizz Kidz"
+  description="Mesmerizing Drip Art Fun!"
+>
+  <PartyLayout partyPackage="Fluid Bears">
+    <PageIntro
+      slot="intro"
+      subtitle="Mesmerizing Drip Art Fun!"
+      type="image"
+      image={fluidBears}
+      imageAlt="hands holding colourful body glitter containers"
+      actionButtonText="Book a party"
+      actionButtonPath="/birthday-parties/book-a-party/#book"
+      color="gold"
+    >
+      <span slot="title">Fluid Bears Kids Birthday Parties</span>
+      <span slot="content"
+        >Design your very own awesome bear kingring by dripping vibrant paint
+        for a one-of-a-kind masterpiece that's yours to take home!</span
+      >
+    </PageIntro>
+    <FluidBearsCreations
+      variant="party"
+      image={fluidBearsPackage}
+      imageAlt="Jungle Safari Party Package"
+    />
+  </PartyLayout>
+</Layout>

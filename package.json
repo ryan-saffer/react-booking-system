@@ -14,6 +14,7 @@
     "scripts": {
         "build": "vp build",
         "check": "vp check",
+        "check:astro": "npm --workspace docs run check && npm --workspace website run check",
         "client": "VP_CLIENT_ONLY=true vp dev",
         "client:prod": "VP_CLIENT_ONLY=true vp dev --mode prod",
         "dev": "vp dev",
@@ -22,7 +23,9 @@
         "server:prepare": "npm --workspace server run dev:build",
         "server:watch": "vp exec concurrently --kill-others --kill-timeout 3000 --names server:types,shared:types,server:build,firebase --prefix-colors blue,magenta,cyan,yellow --pad-prefix \"npm --workspace server run dev:typecheck\" \"npm --workspace @fizz-kidz/core run dev:typecheck\" \"npm --workspace server run dev:build:watch\" \"\\\"${VP_HOME:-$HOME/.vite-plus}/bin/vp\\\" env exec npm exec -- firebase emulators:start --only functions,pubsub --inspect-functions\"",
         "test": "vp test --run",
-        "verify": "vp check --fix && vp test --run"
+        "verify": "vp check --fix && vp test --run",
+        "verify:full": "npm run check:astro && npm run verify",
+        "website": "npm --workspace website run dev"
     },
     "devDependencies": {
         "@sentry/vite-plugin": "^4.6.1",
@@ -33,6 +36,7 @@
         "@vitest/ui": "4.1.10",
         "babel-plugin-react-compiler": "^1.0.0",
         "concurrently": "^9.2.4",
+        "cookie": "2.0.1",
         "firebase-tools": "15.24.0",
         "jsdom": "^29.1.1",
         "react-hook-form": "7.72.1",

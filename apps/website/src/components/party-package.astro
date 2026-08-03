@@ -1,0 +1,44 @@
+---
+import Image from "@/components/image.astro";
+import type { ImageSource } from "@/types/images";
+
+type Props = {
+  color: string;
+  image: ImageSource;
+  imageAlt: string;
+  title: string;
+  path: string;
+};
+
+const { color, image, imageAlt, path, title } = Astro.props;
+---
+
+<style define:vars={{ color: color }}>
+  .package:hover {
+    border: 1px solid var(--color);
+  }
+</style>
+
+<div
+  class="package max-w-96 cursor-pointer rounded-2xl border border-transparent py-0 hover:border-solid"
+>
+  <a href={path} class="flex flex-col items-center">
+    <Image
+      src={image}
+      alt={imageAlt}
+      class="w-full min-w-32 object-contain sm:min-w-52"
+    />
+    <p
+      class="my-4 max-w-32 text-wrap text-center font-lilita text-2xl sm:max-w-96 sm:text-3xl"
+      style={{ color }}
+    >
+      {title}
+    </p>
+    <p
+      class="pb-1 text-center font-gotham text-sm font-semibold uppercase sm:text-base"
+      style={{ color }}
+    >
+      Learn more
+    </p>
+  </a>
+</div>

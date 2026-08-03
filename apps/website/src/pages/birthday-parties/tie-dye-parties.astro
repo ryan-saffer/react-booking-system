@@ -1,0 +1,38 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import { sbPagesPartiesTieDyePartyJpg as tieDye } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesTieDyePng as tieDyePackage } from "@/data/storyblok-images";
+import TieDyeCreations from "@/components/creation-packages/tie-dye-creations.astro";
+---
+
+<Layout
+  title="Book Your Tie Dye Kids Birthday Party in Melbourne"
+  description="A party package brimming with colour. Tie dye parties are sure to be memorable!"
+>
+  <PartyLayout partyPackage="Tie Dye">
+    <PageIntro
+      slot="intro"
+      subtitle="Tie Dye birthday parties are the best kids parties!"
+      type="image"
+      image={tieDye}
+      imageAlt="tie dyed shoelaces"
+      actionButtonText="Book a party"
+      actionButtonPath="/birthday-parties/book-a-party/#book"
+      color="pink"
+    >
+      <span slot="title">Tie Dye Kids Birthday Party</span>
+      <span slot="content">
+        Enjoy the process of Tie Dying your favourite items and take the item
+        home to enjoy!
+      </span>
+    </PageIntro>
+    <TieDyeCreations
+      variant="party"
+      image={tieDyePackage}
+      imageAlt="Tie Dye Party Package"
+    />
+  </PartyLayout>
+</Layout>

@@ -1,0 +1,39 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import { sbPagesPartiesGlamPartiesJpg as glamParties } from "@/data/storyblok-images";
+
+import { sbPagesPartiesPackagesGlitzAndGlamPng as glitz } from "@/data/storyblok-images";
+import GlamCreations from "@/components/creation-packages/glam-creations.astro";
+---
+
+<Layout
+  title="Book a Kids Birthday Glam Birthday Party in Melbourne | Fizz Kidz"
+  description="This pamper party package is made for all things glamorous!"
+>
+  <PartyLayout partyPackage="Glam">
+    <PageIntro
+      slot="intro"
+      subtitle="Bring the glitter, sparkles and fun to your child's next party!"
+      type="image"
+      image={glamParties}
+      imageAlt="hands holding colourful body glitter containers"
+      actionButtonText="Book a party"
+      actionButtonPath="/birthday-parties/book-a-party/#book"
+      color="pink"
+    >
+      <span slot="title">Glam Kids Birthday Party</span>
+      <span slot="content">
+        Make your very own sparkling and dazzling pamper products to take home
+        with you after the party!
+      </span>
+    </PageIntro>
+    <GlamCreations
+      variant="party"
+      image={glitz}
+      imageAlt="Three girls smiling"
+    />
+  </PartyLayout>
+</Layout>

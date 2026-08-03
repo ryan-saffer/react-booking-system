@@ -43,6 +43,9 @@ jobs:
               uses: actions/checkout@v4
               with:
                   fetch-depth: 0
+                  # Keep full commit metadata for paths-filter without downloading
+                  # historical file contents that this deployment never reads.
+                  filter: blob:none
 
             # Pushes deploy only the affected Firebase target. Manual runs intentionally
             # deploy both targets so they remain useful as full recovery deployments.
@@ -91,7 +94,9 @@ jobs:
                   path: |
                       node_modules
                       apps/client/node_modules
+                      apps/docs/node_modules
                       apps/server/node_modules
+                      apps/website/node_modules
                       packages/core/node_modules
                   key: dependencies-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.node-version', 'package.json', 'package-lock.json') }}
 

@@ -1,0 +1,38 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import { sbPagesPartiesSciencePartyJpg as scienceParty } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesSciencePng as science } from "@/data/storyblok-images";
+import ScienceCreations from "@/components/creation-packages/science-creations.astro";
+---
+
+<Layout
+  title="Book a Kids Science Birthday Party in Melbourne | Fizz Kidz"
+  description="Does your kid love science, experimenting, and making a mess? Then this party package is for them!"
+>
+  <PartyLayout partyPackage="Science">
+    <PageIntro
+      slot="intro"
+      subtitle="Fizz, Bubble, Explode! For all the little scientists out there, this is for you!"
+      type="image"
+      image={scienceParty}
+      imageAlt="a kid in awe as her science experiment bubbles"
+      actionButtonText="Book a party"
+      actionButtonPath="/birthday-parties/book-a-party/#book"
+      color="blue"
+    >
+      <span slot="title">Kids Science Birthday Parties</span>
+      <span slot="content">
+        Fizz Kidz science birthday parties are scientifically proven to be
+        fizzing fantastic!
+      </span>
+    </PageIntro>
+    <ScienceCreations
+      variant="party"
+      image={science}
+      imageAlt="Science Party Package"
+    />
+  </PartyLayout>
+</Layout>

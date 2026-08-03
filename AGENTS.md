@@ -18,17 +18,18 @@ This guide orients you to the codebase and points to the authoritative README fi
 - `apps/client/` – React frontend. Key: `src/app.tsx` (routes), `src/components/root/root.tsx` (providers + tRPC client), `src/utilities/trpc.ts` (tRPC types/client).
 - `apps/server/` – Firebase Functions (tRPC routers, webhooks, Pub/Sub). Key: `src/index.ts`, `src/trpc/*` (app router + adapter), feature dirs under `src/*`.
 - `apps/docs/` – Astro + Starlight staff/franchisee knowledge base, published to the web. Deployed by Netlify, not Firebase. Independent of the Vite+ toolchain and of `@fizz-kidz/core`. Not to be confused with the root `docs/` directory, which holds internal feature plans and design documents that are never published.
+- `apps/website/` – Public Astro + React marketing website. Content and remote imagery come from Storyblok; Netlify hosts the site and scheduled build function.
 - `packages/core/` – Shared module (types, constants, utilities, shared logic). Consumed from source by both client and server.
 - `scripts/` – Operational scripts (e.g., exports, maintenance utilities).
 
-There are four workspaces, declared as `apps/*` and `packages/*`. The directories are `apps/client`, `apps/server`, `apps/docs`, and `packages/core`. The apps are named after their directories (`client`, `server`, `docs`); the shared module is the scoped package `@fizz-kidz/core`. Apps are deployable and unscoped; shared packages are scoped (`@fizz-kidz/core`). Because no workspace nests inside another, `npm --workspace <name> ...` and `vp add <pkg> --filter <name>` target exactly one package.
+There are five workspaces, declared as `apps/*` and `packages/*`. The directories are `apps/client`, `apps/server`, `apps/docs`, `apps/website`, and `packages/core`. The apps are named after their directories (`client`, `server`, `docs`, `website`); the shared module is the scoped package `@fizz-kidz/core`. Apps are deployable and unscoped; shared packages are scoped (`@fizz-kidz/core`). Because no workspace nests inside another, `npm --workspace <name> ...` and `vp add <pkg> --filter <name>` target exactly one package.
 
 ## Deployment Boundaries
 
 Two independent deployment systems operate on this repository, and they must not trigger each other.
 
-- **Firebase (GitHub Actions, `.github/workflows/pipeline.yml`)** deploys `client` (Hosting) and `server` (Functions). Its trigger paths deliberately exclude `apps/docs/**` and `package-lock.json`, so docs changes never deploy Firebase.
-- **Netlify** deploys `apps/docs` as a separate Netlify site linked to this same repository. Its `netlify.toml` sets an `ignore` command scoped to `apps/docs`, so client/server changes never trigger a docs build or a docs deploy preview.
+- **Firebase (GitHub Actions, `.github/workflows/pipeline.yml`)** deploys `client` (Hosting) and `server` (Functions). Its trigger paths deliberately exclude `apps/docs/**`, `apps/website/**`, and `package-lock.json`, so Netlify-app changes never deploy Firebase.
+- **Netlify** deploys `apps/docs` and `apps/website` as separate Netlify sites linked to this same repository. Each app's `netlify.toml` scopes its `ignore` command to its own directory, so unrelated changes do not produce builds or deploy previews.
 
 When adding another Netlify-hosted app, give it its own `netlify.toml` with a directory-scoped `ignore` command, and leave it out of the pipeline trigger paths.
 
@@ -42,6 +43,8 @@ Both `client` and `server` import the shared module as `@fizz-kidz/core`, resolv
   - Tech stack, routing model, UI libraries, state management (Zustand/Context), tRPC client setup, development workflow.
 - Server app: [server/README.md](apps/server/README.md)
   - Function types (tRPC routers, webhooks, Pub/Sub), structure, lazy SDK pattern, local development with emulators.
+- Website app: [website/README.md](apps/website/README.md)
+  - Astro/React development, environment variables, shared checks, and Netlify deployment.
 - Firebase persistence boundary: [server/src/firebase/README.md](apps/server/src/firebase/README.md)
   - `DatabaseClient` should stay as a thin Firestore access layer; business workflows belong in feature `core` modules.
 - Core module: [core/README.md](packages/core/README.md)
@@ -83,7 +86,9 @@ Both `client` and `server` import the shared module as `@fizz-kidz/core`, resolv
 ## Verification Workflow
 
 - Run `npm run verify` from the repository root to check and test in one step; it runs `vp check --fix && vp test --run`.
-- To check without modifying files, run `vp check` on its own; it runs Oxfmt, Oxlint, type-aware linting, and TypeScript checks in order. CI uses this form.
+- Run `npm run verify:full` when changes affect either Astro app or shared build/tooling configuration; it runs `check:astro` before the normal verification command.
+- To check without modifying files, run `npm run check`; it runs oxfmt, Oxlint, type-aware linting, and TypeScript 7 checks across supported files in every workspace. Firebase CI uses this fast form.
+- Run `npm run check:astro` for framework-specific diagnostics in `apps/docs` and `apps/website`. Their Netlify build scripts run the same checks before building.
 - `vp check` does not run tests. Run `vp test --run` after changes that affect behavior, and `vp build` after build configuration changes.
 - Scope tests while iterating with `vp test --run --project client` or `--project server`.
 - Do not leave formatting-only diffs for the user to discover on save; format changed files before finishing.

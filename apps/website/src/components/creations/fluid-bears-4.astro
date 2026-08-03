@@ -1,0 +1,12 @@
+---
+import FlipCreation from "../flip-creation.astro";
+
+import { sbCreationsFluidBears4Png as creation } from "@/data/storyblok-images";
+type Props = {
+  flippable?: boolean;
+};
+
+const { flippable = true } = Astro.props;
+---
+
+<FlipCreation flippable={flippable} image={creation} text={[""]} color="blue" />

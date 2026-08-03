@@ -1,0 +1,17 @@
+---
+import FlipCreation from "../flip-creation.astro";
+
+import { sbCreationsUnicornBathBombsPng as creation } from "@/data/storyblok-images";
+type Props = {
+  flippable?: boolean;
+};
+
+const { flippable = true } = Astro.props;
+---
+
+<FlipCreation
+  flippable={flippable}
+  image={creation}
+  text={["Unicorn Bath Bombs (With horns!)"]}
+  color="blue"
+/>

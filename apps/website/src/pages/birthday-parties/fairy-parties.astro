@@ -1,0 +1,37 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import { sbPagesPartiesFairyPartyWebp as fairyParty } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesFairiesPng as fairy } from "@/data/storyblok-images";
+import FairyCreations from "@/components/creation-packages/fairy-creations.astro";
+---
+
+<Layout
+  title="Book a Kids Fairy Birthday Party in Melbourne | Fizz Kidz"
+  description="A party package full of sparkles, magic and fairies!"
+>
+  <PartyLayout partyPackage="Fairy">
+    <PageIntro
+      slot="intro"
+      subtitle="Welcome to the magical world of fairies!"
+      type="image"
+      image={fairyParty}
+      imageAlt="a purple butcket of glycerine cubes, with pretty colourful unciron soaps on top"
+      actionButtonText="Book a party"
+      actionButtonPath="/birthday-parties/book-a-party/#book"
+      color="pink"
+    >
+      <span slot="title">Fairy Kids Birthday Parties</span>
+      <span slot="content">
+        Here we love everything sparkles, glitter and magic!
+      </span>
+    </PageIntro>
+    <FairyCreations
+      variant="party"
+      image={fairy}
+      imageAlt="Fairy Party Package"
+    />
+  </PartyLayout>
+</Layout>

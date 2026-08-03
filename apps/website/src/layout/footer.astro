@@ -1,0 +1,93 @@
+---
+import Image from "@/components/image.astro";
+import logo from "@/assets/images/logo-white.png";
+import { RECALL_URL, RECALL_LABEL } from "@/utils/constants";
+---
+
+<footer
+  id="footer"
+  class="flex min-h-60 w-full flex-col items-center bg-zinc-800 p-8"
+>
+  <div class="flex w-full max-w-7xl flex-1 items-center justify-between gap-8">
+    <div
+      class="grid grid-cols-1 justify-between gap-6 text-white sm:grid-cols-2 xl:grid-cols-4"
+    >
+      {
+        [
+          {
+            location: "Balwyn",
+            email: "bookings@fizzkidz.com.au",
+            address: "184 Whitehorse Rd, Balwyn, 3103",
+            phone: "(03) 9059 8144",
+          },
+          {
+            location: "Cheltenham",
+            email: "bookings@fizzkidz.com.au",
+            address: "273 Bay Rd, Cheltenham, 3192",
+            phone: "(03) 9059 8144",
+          },
+          {
+            location: "Essendon",
+            email: "bookings@fizzkidz.com.au",
+            address: "75 Raleigh Street, Essendon, 3040",
+            phone: "(03) 9059 8144",
+          },
+          {
+            location: "Geelong",
+            email: "bookings@fizzkidz.com.au",
+            address: "352 Pakington St, Newtown, VIC, 3220",
+            phone: "(03) 9059 8144",
+          },
+          {
+            location: "Kingsville",
+            email: "bookings@fizzkidz.com.au",
+            address: "238 Sommerville Rd, Kingsville, 3012",
+            phone: "(03) 9059 8144",
+          },
+          {
+            location: "Malvern",
+            email: "bookings@fizzkidz.com.au",
+            address: "20 Glenferrie Rd, Malvern",
+            phone: "(03) 9059 8144",
+          },
+        ].map((studio) => (
+          <div class="flex w-fit flex-col">
+            <p class="font-lilita">{studio.location}</p>
+            <p class="text-xs text-gray-300">
+              <span class="font-bold">Email: </span>
+              {studio.email}
+            </p>
+            <p class="text-xs text-gray-300">
+              <span class="font-bold">Address: </span>
+              {studio.address}
+            </p>
+            <p class="text-xs text-gray-300">
+              <span class="font-bold">Call: </span>
+              {studio.phone}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+    <div>
+      <Image
+        src={logo}
+        alt="fizz kids logo in white"
+        class="h-48 w-fit object-contain"
+      />
+    </div>
+  </div>
+  <div class="mt-8 w-full max-w-7xl border-t border-zinc-700 pt-4">
+    <p class="text-xs text-gray-400">
+      Product safety recall: {RECALL_LABEL}.{" "}
+      <a
+        href={RECALL_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline underline-offset-2 hover:text-white"
+      >
+        View the recall notice
+      </a>
+    </p>
+  </div>
+</footer>
