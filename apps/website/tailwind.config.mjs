@@ -34,7 +34,7 @@ export default withUt({
         "gold-lg": "-50px 50px 0px -1px rgb(197, 179, 88, 0.2)",
         "gold-md": "-25px 25px 0px -1px rgb(197, 179, 88, 0.2)",
         "gold-sm": "-10px 10px 0px -1px rgb(197, 179, 88, 0.2)",
-        around: "rgba(0, 0, 0, 0.35) 0px 5px 15px;",
+        around: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
       },
       colors: {
         border: "hsl(var(--border))",

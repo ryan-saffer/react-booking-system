@@ -2,6 +2,9 @@
   "name": "fizz-kidz-website",
   "type": "module",
   "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -11,11 +14,10 @@
     "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,astro,json}\""
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
-    "@astrojs/netlify": "^6.3.4",
-    "@astrojs/react": "^4.3.0",
-    "@astrojs/sitemap": "^3.4.1",
-    "@astrojs/tailwind": "^6.0.2",
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/netlify": "^8.1.3",
+    "@astrojs/react": "^6.0.2",
+    "@astrojs/sitemap": "^3.7.3",
     "@hookform/resolvers": "^3.6.0",
     "@netlify/blobs": "^8.0.1",
     "@netlify/functions": "^2.8.1",
@@ -33,8 +35,8 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@uploadthing/react": "^7.3.1",
-    "astro": "^5.9.2",
-    "astro-loading-indicator": "^0.7.0",
+    "astro": "^7.1.6",
+    "astro-loading-indicator": "^0.9.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.1.5",
@@ -55,6 +57,7 @@
   "devDependencies": {
     "@tailwindcss/container-queries": "^0.1.1",
     "@types/luxon": "^3.4.2",
+    "autoprefixer": "^10.4.27",
     "prettier": "^3.3.2",
     "prettier-plugin-astro": "^0.14.0",
     "prettier-plugin-tailwindcss": "^0.6.5"

@@ -2,19 +2,13 @@ import { defineConfig } from "astro/config";
 import netlify from "@astrojs/netlify";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://www.fizzkidz.com.au",
+  compressHTML: true,
   adapter: netlify({ imageCDN: false }),
-  integrations: [
-    tailwind({
-      applyBaseStyles: false,
-    }),
-    react(),
-    sitemap(),
-  ],
+  integrations: [react(), sitemap()],
   redirects: {
     "play-lab": "/preschool-program",
     // TEMPORARY WHILE WE NO LONGER OFFER IN STUDIO SCIENCE
