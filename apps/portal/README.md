@@ -1,94 +1,41 @@
-# Fizz Kidz Portal
+# Portal
 
-This directory contains the frontend React application for the Fizz Kidz Portal.
+The working heart of Fizz Kidz: staff operations, bookings, enrolments, forms, and a handful of public customer journeys.
 
-## Table of Contents
+React 19, React Router, tRPC, Firebase Auth, and an evolving mix of UI systems. New work should favour shadcn/ui, Tailwind, and Zustand; MUI and Ant Design are the old world.
 
-- [Key Technologies](#key-technologies)
-- [Project Structure](#project-structure)
-- [Routing](#routing)
-- [UI Components](#ui-components)
-- [State Management](#state-management)
-- [API Communication](#api-communication)
-- [Development](#development)
-- [Testing](#testing)
-- [Deployment](#deployment)
+## Find Your Way Around
 
-## Key Technologies
+- `src/index.tsx` mounts the app.
+- `src/app.tsx` is the route map.
+- `src/components/root/root.tsx` wires tRPC, auth, organization, query, theme, localization, and dialogs.
+- `src/components/root/dashboard-layout.tsx` is the staff dashboard shell.
+- `src/components/Session` owns auth and organization access.
+- `src/ui-components/ui` contains shadcn/ui components.
+- `src/components` contains the actual features.
 
-- **Framework:** React
-- **Toolchain:** [Vite+](https://viteplus.dev/) (Vite/Rolldown build, Vitest tests, Oxlint, Oxfmt), configured in the root `vite.config.ts`
-- **Routing:** React Router DOM
-- **UI:** shadcn/ui (with Tailwind CSS & Radix UI). Material UI (MUI) and Ant Design are present but are being phased out.
-- **State Management:** Zustand (preferred), React Context
-- **API:** tRPC client
+Most pages are lazy-loaded. `/dashboard/**` is staff-only; booking, enrolment, form, and invitation routes may be public.
 
-## Project Structure
+## Server Connection
 
-The Portal source is organized within `apps/portal/src/`:
+The Portal batches tRPC requests through `/api/trpc`. The client is created in `root.tsx`; `src/utilities/trpc.ts` connects it to the server's `AppRouter` type.
 
-- **`app.tsx`**: Entry point for routing configuration.
-- **`components/`**: Contains all React components, further organized by feature (e.g., `Bookings/`, `HolidayPrograms/`) or shared functionality (e.g., `Shared/`, `Session/`).
-  - **`components/root/root.tsx`**: The root component of the application. It wraps all page content and is responsible for setting up global context providers, including the tRPC client, authentication, theming, and more.
-- **`ui-components/`**: Likely contains `shadcn/ui` components.
-- **`utilities/`**: Helper functions and utilities.
-- **`hooks/`**: Custom React hooks.
-- **`assets/` or `drawables/`**: Static assets like images and fonts.
+`@fizz-kidz/core` resolves straight to `packages/core/src`, so shared changes appear without a package build.
 
-## Routing
-
-- **React Router DOM:** Routing is handled using `react-router-dom`, with routes defined in `apps/portal/src/app.tsx` using `createBrowserRouter`.
-- **Root Layout:** The `apps/portal/src/components/root/root.tsx` component serves as the primary layout shell, providing essential contexts (like tRPC, Auth, Theming) to all routes via the `<Outlet />` mechanism.
-- **Dashboard vs. Public Routes:** The application has a clear distinction between:
-  - **Dashboard Routes:** Primarily under the `/dashboard` path, often utilizing `DashboardLayout` and `ProtectedRoute` for authenticated staff access.
-  - **Public Routes:** Accessible to all users, such as sign-in/sign-up pages, program enrolment forms (e.g., `/after-school-program-enrolment-form`), customer booking screens, and invitation views.
-- **Lazy Loading:** All page components are lazy-loaded in `app.tsx` (using `React.lazy` and `Suspense`). This is a key optimization strategy for this Single Page Application (SPA), ensuring that users only download the code necessary for the parts of the portal they are interacting with, improving initial load times.
-
-## UI Components
-
-- **`shadcn/ui`:** This is the current preferred UI component library, built upon Tailwind CSS and Radix UI. Components are typically added to the `ui-components/ui/` directory.
-- **Legacy Libraries:** Material UI (MUI) and Ant Design components are also present in the codebase but are being progressively phased out in favor of `shadcn/ui`.
-
-## State Management
-
-- **Zustand:** Zustand is the preferred global state management solution for more complex state needs.
-- **React Context:** React's built-in Context API is also utilized, particularly for managing global concerns like authentication state (`components/Session/auth-provider.tsx`) and organization selection (`components/Session/org-provider.tsx`), often within the `Root` component's providers.
-
-## API Communication
-
-- The Portal communicates with the backend server via tRPC.
-- The tRPC client is configured in `apps/portal/src/components/root/root.tsx` and made available to the component tree through a React Context provider. This setup enables type-safe API calls from anywhere in the application.
-- The Portal's tRPC setup targets the single Express Firebase Function exposed at `/api/trpc` (implemented in `apps/server/src/api.ts`), batching requests through one endpoint.
-
-## Development
-
-To run the Portal in development mode:
+## Run It
 
 ```bash
-npm run portal
-```
-
-Run this from the repository root. The root `vite.config.ts` owns the Portal configuration and resolves the shared `@fizz-kidz/core` source directly.
-
-Use `npm run portal:prod` to run the local Portal against the production backend and Firebase project.
-
-## Testing
-
-Portal tests are Vitest files matching `apps/portal/src/**/*.test.{ts,tsx}`, using jsdom and Testing Library. They are registered as the `portal` Vitest project in the root `vite.config.ts`, so run them from the repository root rather than from this directory:
-
-```bash
-# whole suite once (Portal + server)
-npm test
-
-# watch mode while developing
-vp test
-
-# only the Portal project
+npm run portal          # Portal + type watcher, no emulators
+npm run portal:prod     # Portal pointed at production
+npm run dev             # Portal + local server stack
 vp test --run --project portal
 ```
 
-Use `npm run verify` to run the checks and the full suite together before finishing a change.
+> **Remember**
+>
+> - `portal:prod` talks to real production services.
+> - `/invite/**` uses the separate `invitation.html` build entry.
+> - Backend-owned paths such as `/forms/**` must match Express, Firebase Hosting, and the Vite proxy.
+> - Development uses `apps/portal/.env`; production mode also loads `.env.prod`.
 
-## Deployment
-
-Portal-only changes deploy Firebase Hosting without redeploying Functions. Changes to the shared `@fizz-kidz/core` package conservatively deploy both targets.
+`npm run build` writes the Portal to `apps/portal/dist`. Firebase Hosting serves it and falls back to `index.html` for normal SPA routes.

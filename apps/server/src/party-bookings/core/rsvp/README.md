@@ -1,55 +1,33 @@
-# RSVP / Invitation v2 (Server)
+# Invitations And RSVPs: Server
 
-This folder contains the server-side implementation of the v2 invitation + RSVP system for party bookings.
+Invitations can change; the guest list must not. That is the idea behind this feature.
 
-## Core Data Model
+- A booking stores the stable `invitationId` and `invitationOwnerUid`.
+- The invitation stores its design and creating user's `uid`.
+- RSVPs live under the booking, separate from the image.
+- Each response records whether it came from a `guest` or the `host`.
 
-- Each party booking stores:
-  - `invitationId`: ID of the current invitation linked to the booking.
-  - `ownerUid`: owner of the invitation/booking (required to manage RSVPs).
-- RSVPs live as a child collection under the party booking in Firestore. This decouples RSVP data from the invitation asset so invitations can be edited/re-generated without losing responses.
+## Lifecycle
 
-## Invitation Lifecycle
+The design flow creates a stable ID and a PNG in temporary storage. Linking moves the PNG to its permanent path and connects the invitation to the booking.
 
-1. **Generate (temp storage)**: When a user designs an invite, the generated image is written to Firebase Storage under a temp path. This prevents cluttering storage with abandoned designs.
-2. **Link invitation**: After the user confirms the design, the temp asset is moved into a permanent path keyed by `invitationId`, and the booking is updated with `invitationId`/`ownerUid`.
-3. **Update/Delete**: Subsequent edits regenerate and overwrite the linked asset; deleting resets/removes the linkage but keeps RSVPs intact.
+An edit replaces the invitation document and image while keeping the same ID. Old links and printed QR codes continue to work; RSVPs stay untouched.
 
-## RSVP Handling
+`resetInvitation` fully unlinks an invitation, but only exists as a testing utility.
 
-- RSVPs are stored per child under the booking, allowing multiple invitations/designs without affecting responses.
-- RSVP records have a required `source` field: `guest` for public invitation submissions and `host` for responses entered by the party host.
-- This keeps a single source of truth for who is attending, independent of any specific invitation image.
-- Hosts can add RSVPs from the manage page via the authenticated host RSVP endpoint. These records are stored in the same RSVP collection, but do not require child date of birth and skip Zoho enrichment and guest confirmation email side effects.
-- Future use: expose aggregated RSVP data to party hosts or other systems.
+## Access And Side Effects
 
-## Image Generation
+- Guest RSVPs require date of birth, update CRM data, and send confirmation email.
+- Owners can add host-entered RSVPs; these skip date of birth, guest CRM, and guest email.
+- Owners and organization staff can update or delete existing responses.
+- Editing the invitation, changing notifications, and adding host responses remain owner-only.
 
-- Uses `node-canvas` to load a template image from the server and render text/fields onto a new canvas, producing a high-quality PNG.
-- A QR code is generated and drawn onto the invite so guests can scan a printed invite and still RSVP online.
+## Links
 
-## Public Entry → Routing
+- Share: `/invite/:invitationId`
+- RSVP: `/invite/:invitationId/rsvp`, reached from the share page
+- Durable host entry: `/api/webhooks/invitation/:bookingId`
 
-- Canonical public/share URL: `https://bookings.fizzkidz.com.au/invite/:invitationId`
-  - This is the guest-facing URL used in the share dialog and QR code.
-  - This route is handled directly by the client and is the canonical URL that guests should share.
-- Canonical host entry URL: `https://bookings.fizzkidz.com.au/api/webhooks/invitation/:bookingId`
-  - This is the booking-owner entry point used from booking flows and staff tools.
-  - If the booking already has an invitation, it redirects to the canonical public/share URL.
-  - If no invitation exists yet, it redirects to the create/design flow.
-- App route family: `https://bookings.fizzkidz.com.au/invite`
-  - `/invite/:invitationId` shows the invitation.
-  - `/invite/:invitationId/rsvp` shows the RSVP form.
-  - The client decides whether to show the public invite or the manage-RSVPs screen based on auth.
+The QR code points to the share page. Legacy `/invitation/v2` routes remain only for old links; never generate new ones.
 
-## Legacy Compatibility
-
-- The host entry route stays long-term: `https://bookings.fizzkidz.com.au/api/webhooks/invitation/:bookingId`
-- Legacy public usage of booking-based invite links stays supported until `2026-06-06`.
-- That legacy public usage includes:
-  - Hosted domain links on `https://bookings.fizzkidz.com.au/api/webhooks/invitation/:bookingId`
-  - Prod raw function URL: `https://australia-southeast1-bookings-prod.cloudfunctions.net/api/api/webhooks/invitation/:bookingId`
-  - Dev raw function URL: `https://australia-southeast1-booking-system-6435d.cloudfunctions.net/api/api/webhooks/invitation/:bookingId`
-- After `2026-06-06`, the route itself stays, but the legacy public-link wording/support assumptions can be removed.
-- After `2026-06-06`, the following RSVP-only compatibility code can be deleted:
-  - The legacy `/invitation/v2` route block in `apps/portal/src/app.tsx`
+Portal details: [`apps/portal/src/components/rsvp/README.md`](../../../../../portal/src/components/rsvp/README.md).

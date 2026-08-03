@@ -1,42 +1,23 @@
-# Fizz Kidz Documentation
+# Knowledge Base
 
-This repository houses the official knowledge base for Fizz Kidz staff and franchisees. It consolidates service playbooks, operational policies, and the technology workflows that keep our parties, programs, and retail experiences running smoothly.
+The published how-to site for Fizz Kidz staff and franchisees. It currently covers selected party and gift-card processes plus tools such as Acuity, calendars, email signatures, and Sling.
 
-## About
+This is an Astro + Starlight app. The useful bit is simple:
 
-- Provide a single source of truth for how each Fizz Kidz service operates, from in-store experiences to online booking.
-- Explain the tools and integrations that underpin our offerings so teams can troubleshoot and train with confidence.
-- Keep guidance actionable and franchise-ready by pairing procedures with context, screenshots, and links to internal systems.
+- Pages live in `src/content/docs`.
+- Sidebar navigation lives in `astro.config.mjs`.
+- Imported images live in `src/assets`; direct downloads live in `public`.
 
-## Project Structure
+> **Not this folder:** root [`docs/`](../../docs/README.md) is an unpublished engineering notebook.
 
-```
-.
-├── public/                # Static assets served as-is
-├── src/
-│   ├── assets/            # Images and media imported into content
-│   ├── content/
-│   │   └── docs/          # Markdown/MDX pages surfaced in the site
-│   ├── content.config.ts  # Content collections and frontmatter schema
-│   └── shifts.json        # Shared operational data examples
-├── astro.config.mjs       # Astro + Starlight configuration
-├── package.json           # Scripts and dependencies
-└── tsconfig.json          # TypeScript configuration
+## Work On It
+
+```bash
+npm run docs
+npm --workspace docs run check
+npm run build --workspace docs
 ```
 
-## Getting Started
+Write for someone trying to complete a task between customers: short steps, useful screenshots, no throat-clearing.
 
-1. Install dependencies with `npm install`.
-2. Run `npm run dev` and visit `http://localhost:4321` for a live preview.
-3. Update or add docs under `src/content/docs/`, then reload the browser to confirm changes.
-
-## Key Commands
-
-- `npm run dev` — start the local development server with live reload.
-- `npm run build` — create the production-ready static site in `dist/`.
-- `npm run preview` — serve the built site locally to mimic deployment.
-- `npm run astro -- check` — run Astro diagnostics to catch content or routing errors.
-
-## Contributing
-
-Review `AGENTS.md` for detailed contributor guidelines covering style, review expectations, and quality checks. Open pull requests with screenshots or terminal output when changes alter the user experience or build behavior.
+Netlify builds from the repository root using `apps/docs/netlify.toml`. Its ignore rule only watches `apps/docs`, so a root dependency or tooling change may require a manual build.

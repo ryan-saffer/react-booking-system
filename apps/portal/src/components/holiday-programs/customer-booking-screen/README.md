@@ -1,57 +1,33 @@
-# Overview
+# Holiday Program Booking
 
-A form for customers to book their children into the Fizz Kidz holiday programs.
+The customer picks sessions, adds children, applies a discount or gift card, pays, and lands in Acuity.
 
-Provides ability to select multiple programs at once, individually add each child they are booking for, automatically apply same day discounts, and the ability to apply discount codes and pay.
+## Who Owns What
 
-# Architecture
+- **Acuity:** sessions, prices, availability, and attendance
+- **Firestore:** discount codes and redemptions
+- **Square:** orders, gift cards, payments, and refunds
+- **Zoho:** customer and deal follow-up
 
-All program information, including times, slots and available coupons are stored inside [Acuity Scheduling](https://acuityscheduling.com/) and accesed through the [developer API](https://developers.acuityscheduling.com/reference).
+The Portal owns the form and cart. `apps/server/src/holiday-programs/core` owns validation, payment, scheduling, and side effects.
 
-Payments are processed via [Square](https://developer.squareup.com/reference/square) for all consumer payments.
-Note: B2B invoices are sent directly through Xero (outside this flow).
+## Checkout In One Breath
 
-## Flow
+The server validates the amount, claims an idempotency key, rechecks Acuity capacity, creates and pays a Square order, books paid Acuity appointments, then updates Zoho, sends email, records discounts, and tracks analytics.
 
-When form loads, customers selects their store, and available programs are listed. If two programs on the same day are selected, the 'allday' coupon of $5 off is applied.
+Payment supports Apple Pay, Google Pay, card, Square gift card, split gift-card/card payments, and zero-dollar orders.
 
-> A customer cannot select classes across two stores. When changing stores, their class selection is cleared.
+> **All-day is not a discount.** Selecting two sessions on one day marks both appointments with Acuity's `allday` certificate, but does not reduce the price. Firestore discount codes are the only automatic cart discount.
 
-When adding children to the form, you can only add as many as the spots available. If multiple classes selected, the class with the least spots is used to determine this.
+> **Payment happens first.** If Acuity scheduling fails after Square succeeds, there is no automatic compensation. Use the logged order ID to reconcile it manually.
 
-### Payment Screen
+## Cancellations
 
-On checkout, the client collects a Square card token and buyer verification token (3DS) and sends them to the server.
-The server creates a Square Order (line items per child/session, including an optional order-level discount) and then charges the payment using the submitted token.
-Orders include metadata for `classId` and a `lineItemIdentifier` to support accurate refunds.
+The Acuity webhook finds the exact Square line item using the stored order ID and line-item identifier.
 
-### Processing Payment
+- At least 48 hours out: refund the charged amount across the available tenders.
+- Inside 48 hours: no automatic refund.
+- Free line item: no Square refund.
+- Either way: send the cancellation email.
 
-When the customer presses 'Confirm and pay', the server:
-
-- Creates/updates a Square Order with line items and any discount.
-- Charges the payment via Square using the provided token and buyer verification token.
-- Immediately books the programs into Acuity with `paid: true`, attaching the Square `orderId` and the `lineItemIdentifier` on the appointment for traceability.
-
-## Discount Codes
-
-Only one discount code can be applied to a booking in Acuity at a time. Therefore if the customer enters a discount code, the 'same day discount' is removed from their pricing.
-
-With Square, discounts are applied at the Order level as either a fixed percentage or fixed amount. Line items capture the final price (after discount), and metadata is used for reconciliation and refunds.
-
-### ⚠️ **Note about discount codes** ⚠️
-
-Discounts affect payment totals (in Square) but are not applied within Acuity.
-All-day identification still uses the Acuity certificate (`allday`).
-Order/line-item amounts in Square reflect discounts and are used for refunds and reconciliation.
-
-## Booking into Acuity & Refunds
-
-Bookings are scheduled into Acuity immediately after successful payment (no payment webhook required). Each appointment stores the Square `orderId` and `lineItemIdentifier`.
-
-If a customer cancels via Acuity, the Acuity webhook triggers server logic to identify the correct Square Order line item and calculate the refund amount based on the charged price (after discounts). Refunds are issued via Square, and a confirmation email is sent to the customer with the Square receipt URL when available.
-
-## Known Limitations
-
-- If someone books in for the day, then cancels on of the two appointments, they will still be seen as 'allday'.
-- Conversely, if someone books in a program, and later returns to book in the other program on that day, it will not mark both programs as 'allday'.
+All-day status is not recalculated when one appointment is cancelled or when the second session is booked later.

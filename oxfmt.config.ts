@@ -1,11 +1,7 @@
 import { defineConfig } from 'oxfmt'
 
 export default defineConfig({
-    ignorePatterns: [
-        'docs/feature-plans/PRESCHOOL_V2_IMPLEMENTATION_PLAN.md',
-        'docs/inventory-system-plan.md',
-        'scripts/readme.md',
-    ],
+    ignorePatterns: ['docs/feature-plans/PRESCHOOL_V2_IMPLEMENTATION_PLAN.md', 'docs/inventory-system-plan.md'],
     trailingComma: 'es5',
     tabWidth: 4,
     semi: false,
