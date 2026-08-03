@@ -18,7 +18,6 @@ import Values from "@/components/values.astro";
 import PlayLabProgramsSection from "@/react-components/play-lab/play-lab-programs-section";
 import PlayLabDaySchedule from "@/components/play-lab-day-schedule.astro";
 import Reviews from "@/components/reviews.astro";
-import headerVideo from "@/assets/images/pages/play-lab/play-lab-header.mp4";
 import PrimaryButton from "@/components/primary-button.astro";
 ---
 
@@ -41,8 +40,9 @@ import PrimaryButton from "@/components/primary-button.astro";
     />
     <PageIntro
       color="blue"
-      type="video"
-      videoUrl={headerVideo}
+      type="image"
+      image={swing}
+      imageAlt="A child enjoying a Fizz Kidz Play Lab activity"
       subtitle="Weekly immersive programs for kids aged 18 months to 5 years that your kids will love!"
       actionButtonText="Book today"
       actionButtonPath="https://bookings.fizzkidz.com.au/play-lab-booking"
