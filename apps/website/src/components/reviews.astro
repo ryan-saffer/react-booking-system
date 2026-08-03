@@ -3,16 +3,7 @@ import Image from "@/components/image.astro";
 import ReviewsCarousel from "./react/reviews-carousel";
 import reviewsIcon from "@/assets/images/reviews.png";
 
-export type Review = {
-  review: string;
-  writtenBy: string;
-  writtenYear: string;
-  writtenDate?: string;
-  rating?: number;
-  location?: string;
-  reviewUrl?: string;
-  source?: string;
-};
+import type { Review } from "@/types/reviews";
 
 type Props = {
   title: string;

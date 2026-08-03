@@ -1,14 +1,9 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "./ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
 
 function JobListings() {
-  return (
-    <Accordion type="multiple" className="rounded-2xl border">
-      {/*<AccordionItem value="1" className="px-4">
+    return (
+        <Accordion type="multiple" className="rounded-2xl border">
+            {/*<AccordionItem value="1" className="px-4">
         <AccordionTrigger className="font-bold">Area Manager</AccordionTrigger>
         <AccordionContent className="text-base">
           <strong>Position Overview:</strong>
@@ -211,7 +206,7 @@ function JobListings() {
           on children's lives while driving business success.
         </AccordionContent>
       </AccordionItem>*/}
-      {/* <AccordionItem value="2" className="px-4">
+            {/* <AccordionItem value="2" className="px-4">
         <AccordionTrigger className="font-bold">
           Social Media & Content Creator
         </AccordionTrigger>
@@ -319,95 +314,81 @@ function JobListings() {
           </ul>
         </AccordionContent>
       </AccordionItem> */}
-      {/* <AccordionItem value="4" className="px-4"> */}
-      {/*   <AccordionTrigger className="font-bold"> */}
-      {/*     Cheltenham Studio Supervisor */}
-      {/*   </AccordionTrigger> */}
-      {/*   <AccordionContent className="text-base"> */}
-      {/*     <strong>About the role:</strong> */}
-      {/*     <br /> */}
-      {/*     As our Fizz Kidz Studio Supervisor you will play a pivotal role in */}
-      {/*     ensuring seamless studio operations and delivering outstanding */}
-      {/*     customer experiences. Working closely with the Manager, you'll guide, */}
-      {/*     motivate, and assist a team of facilitators, fostering a positive work */}
-      {/*     environment and culture within your studio. */}
-      {/*     <br /> */}
-      {/*     <br /> */}
-      {/*     <strong>Key responsibilities:</strong> */}
-      {/*     <ul className="mb-4 list-disc pl-4"> */}
-      {/*       <li>Support the Studio Manager in day-to-day operations</li> */}
-      {/*       <li> */}
-      {/*         Supervise Party Facilitators, ensuring smooth party execution */}
-      {/*       </li> */}
-      {/*       <li>Assist with inventory management and rostering</li> */}
-      {/*       <li> */}
-      {/*         Guide and mentor new facilitators, aiding in their training and */}
-      {/*         onboarding */}
-      {/*       </li> */}
-      {/*       <li>Step in as a facilitator when required</li> */}
-      {/*       <li> */}
-      {/*         Ensure the studio is clean and organised before, during, and after */}
-      {/*         events */}
-      {/*       </li> */}
-      {/*       <li>Handle customer service issues and troubleshoot problems</li> */}
-      {/*     </ul> */}
-      {/*   </AccordionContent> */}
-      {/* </AccordionItem> */}
-      <AccordionItem value="2" className="px-4">
-        <AccordionTrigger className="font-bold">
-          Party Facilitator
-        </AccordionTrigger>
-        <AccordionContent className="text-base">
-          <strong>About the role:</strong>
-          <br />
-          Are you confident, enthusiastic and bubbly? Join us and facilitate
-          children's parties on the weekend!
-          <br />
-          <br />
-          <strong>Key responsibilities:</strong>
-          <ul className="mb-4 list-disc pl-4">
-            <li>Set up and decorate party rooms</li>
-            <li>Greet parents and children upon arrival</li>
-            <li>
-              Lead and engage children in fun activities (dancing, games,
-              singing)
-            </li>
-            <li>Prepare kids' party food and serve it</li>
-            <li>Take payments and clean up after the event</li>
-          </ul>
-          <strong>Key Skills:</strong>
-          <ul className="mb-4 list-disc pl-4">
-            <li>Strong teamwork, leadership, and communication skills</li>
-            <li>High energy and enthusiasm when working with children</li>
-            <li>
-              Ability to manage a room full of kids and adjust activities based
-              on age
-            </li>
-            <li>Solution-oriented and can resolve issues quickly</li>
-            <li>Organised and able to manage admin tasks</li>
-            <li>Experience in party facilitation and customer service</li>
-            <li>
-              Ability to work collaboratively and maintain a positive
-              environment
-            </li>
-          </ul>
-          <strong>Requirements:</strong>
-          <ul className="mb-4 list-disc pl-4">
-            <li>Weekend availability (mandatory)</li>
-            <li>
-              Availability during school holidays and/or after school
-              (preferred)
-            </li>
-            <li>Flexibility for additional shifts last minute</li>
-            <li>
-              Passion for working with children; experience in drama, education,
-              or entertainment is highly regarded
-            </li>
-          </ul>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
-  );
+            {/* <AccordionItem value="4" className="px-4"> */}
+            {/*   <AccordionTrigger className="font-bold"> */}
+            {/*     Cheltenham Studio Supervisor */}
+            {/*   </AccordionTrigger> */}
+            {/*   <AccordionContent className="text-base"> */}
+            {/*     <strong>About the role:</strong> */}
+            {/*     <br /> */}
+            {/*     As our Fizz Kidz Studio Supervisor you will play a pivotal role in */}
+            {/*     ensuring seamless studio operations and delivering outstanding */}
+            {/*     customer experiences. Working closely with the Manager, you'll guide, */}
+            {/*     motivate, and assist a team of facilitators, fostering a positive work */}
+            {/*     environment and culture within your studio. */}
+            {/*     <br /> */}
+            {/*     <br /> */}
+            {/*     <strong>Key responsibilities:</strong> */}
+            {/*     <ul className="mb-4 list-disc pl-4"> */}
+            {/*       <li>Support the Studio Manager in day-to-day operations</li> */}
+            {/*       <li> */}
+            {/*         Supervise Party Facilitators, ensuring smooth party execution */}
+            {/*       </li> */}
+            {/*       <li>Assist with inventory management and rostering</li> */}
+            {/*       <li> */}
+            {/*         Guide and mentor new facilitators, aiding in their training and */}
+            {/*         onboarding */}
+            {/*       </li> */}
+            {/*       <li>Step in as a facilitator when required</li> */}
+            {/*       <li> */}
+            {/*         Ensure the studio is clean and organised before, during, and after */}
+            {/*         events */}
+            {/*       </li> */}
+            {/*       <li>Handle customer service issues and troubleshoot problems</li> */}
+            {/*     </ul> */}
+            {/*   </AccordionContent> */}
+            {/* </AccordionItem> */}
+            <AccordionItem value="2" className="px-4">
+                <AccordionTrigger className="font-bold">Party Facilitator</AccordionTrigger>
+                <AccordionContent className="text-base">
+                    <strong>About the role:</strong>
+                    <br />
+                    Are you confident, enthusiastic and bubbly? Join us and facilitate children's parties on the
+                    weekend!
+                    <br />
+                    <br />
+                    <strong>Key responsibilities:</strong>
+                    <ul className="mb-4 list-disc pl-4">
+                        <li>Set up and decorate party rooms</li>
+                        <li>Greet parents and children upon arrival</li>
+                        <li>Lead and engage children in fun activities (dancing, games, singing)</li>
+                        <li>Prepare kids' party food and serve it</li>
+                        <li>Take payments and clean up after the event</li>
+                    </ul>
+                    <strong>Key Skills:</strong>
+                    <ul className="mb-4 list-disc pl-4">
+                        <li>Strong teamwork, leadership, and communication skills</li>
+                        <li>High energy and enthusiasm when working with children</li>
+                        <li>Ability to manage a room full of kids and adjust activities based on age</li>
+                        <li>Solution-oriented and can resolve issues quickly</li>
+                        <li>Organised and able to manage admin tasks</li>
+                        <li>Experience in party facilitation and customer service</li>
+                        <li>Ability to work collaboratively and maintain a positive environment</li>
+                    </ul>
+                    <strong>Requirements:</strong>
+                    <ul className="mb-4 list-disc pl-4">
+                        <li>Weekend availability (mandatory)</li>
+                        <li>Availability during school holidays and/or after school (preferred)</li>
+                        <li>Flexibility for additional shifts last minute</li>
+                        <li>
+                            Passion for working with children; experience in drama, education, or entertainment is
+                            highly regarded
+                        </li>
+                    </ul>
+                </AccordionContent>
+            </AccordionItem>
+        </Accordion>
+    )
 }
 
-export default JobListings;
+export default JobListings

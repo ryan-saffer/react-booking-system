@@ -1,64 +1,40 @@
-# Astro + React + Tailwind Scaffold
+# Fizz Kidz Website
 
-This project was scoffolded with the following commands:
+Public Fizz Kidz marketing website built with Astro, React, Tailwind CSS, and Storyblok. Netlify hosts the site and its scheduled build function.
 
-```sh
-npm create astro@latest
+## Development
 
-# tmpl -> Empty
-# ts -> Yes
-# use -> Strict
-# deps -> Yes
-# git -> Yes
+Run commands from the monorepo root:
 
-npx astro add react
+| Command                               | Purpose                                                                      |
+| ------------------------------------- | ---------------------------------------------------------------------------- |
+| `vp install`                          | Install all workspace dependencies.                                          |
+| `npm run website`                     | Start Astro at `http://localhost:4321`.                                      |
+| `npm --workspace website run check`   | Run Astro diagnostics.                                                       |
+| `npm run check`                       | Run the fast shared oxfmt, Oxlint, type-aware lint, and TypeScript 7 checks. |
+| `npm run check:astro`                 | Run Astro diagnostics for both Netlify workspaces.                           |
+| `npm run verify:full`                 | Run Astro diagnostics, shared fixes/checks, and tests.                       |
+| `npm run build --workspace website`   | Run Astro diagnostics and create the Netlify production build.               |
+| `npm --workspace website run preview` | Preview the production output locally.                                       |
 
-# yes to all questions
+The shared Vite+ configuration owns formatting and linting. Do not add a package-local Prettier or ESLint configuration. oxfmt and oxlint handle supported source/config files; `astro check` validates `.astro` files and generated Astro types.
 
-npx astro add tailwind
+## Environment
 
-# yes to all questions
+Local development expects `apps/website/.env`. The application currently reads:
 
-```
+- `STORYBLOK_TOKEN`
+- `PUBLIC_UPLOADTHING_TOKEN`
+- `NETLIFY_TOKEN`
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+Configure production and deploy-preview values in the existing Netlify site. Environment files remain untracked.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Deployment
 
-## 🚀 Project Structure
+Netlify should use:
 
-Inside of your Astro project, you'll see the following folders and files:
+- Base directory: unset (repository root)
+- Package directory: `apps/website`
+- Build and publish settings: `apps/website/netlify.toml`
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+The `ignore` command in `netlify.toml` skips builds and deploy previews unless `apps/website` changed. Scheduled builds triggered by the Netlify build hook intentionally bypass this check.

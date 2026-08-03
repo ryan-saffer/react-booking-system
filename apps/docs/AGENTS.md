@@ -20,8 +20,9 @@ This app is a workspace in the Fizz Kidz Portal monorepo. Run these from the rep
 - `npm run docs` starts the docs at `http://localhost:4321` with live reload.
 - `npm run build --workspace docs` outputs the production bundle in `dist/` for deployment checks.
 - `npm --workspace docs run preview` serves the built site locally to mirror hosting.
-- `npm --workspace docs run astro -- check` runs Astro diagnostics for content and routing issues.
-- `vp check --fix` formats and lints this app together with the rest of the monorepo.
+- `npm --workspace docs run check` runs Astro diagnostics for content and routing issues.
+- `npm run check` runs the fast shared checks across supported files in every workspace.
+- `npm run verify:full` runs both Astro checks, shared fixes/checks, and tests.
 
 ## Coding Style & Naming Conventions
 
@@ -33,8 +34,8 @@ This app is a workspace in the Fizz Kidz Portal monorepo. Run these from the rep
 
 ## Testing & Quality Checks
 
-- No automated tests yet; run `npm run astro -- check` and `npm run build` before every PR.
-- Manually click through affected routes via `npm run dev` to verify copy, navigation, and embeds.
+- No automated tests yet; run `npm --workspace docs run check` and `npm --workspace docs run build` before every PR.
+- Manually click through affected routes via `npm run docs` to verify copy, navigation, and embeds.
 - Note any console warnings during validation and resolve or document them in the PR.
 
 ## Commit & Pull Request Guidelines

@@ -1,10 +1,10 @@
-import type { ImageMetadata } from "astro";
+import type { ImageMetadata } from 'astro'
 
 export type StoryblokImage = {
-  src: string;
-  width: number;
-  height: number;
-  assetId: number;
-};
+    src: string
+    width: number
+    height: number
+    assetId: number
+}
 
-export type ImageSource = ImageMetadata | StoryblokImage;
+export type ImageSource = ImageMetadata | StoryblokImage

@@ -1,5 +1,13 @@
+[build]
+command = "npm run build --workspace website"
+publish = "apps/website/dist"
+ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF apps/website"
+
 [build.environment]
-  NODE_VERSION = "22"
+NODE_VERSION = "22.23.2"
+
+[functions]
+directory = "apps/website/netlify/functions"
 
 [images]
-  remote_images = ["https://a-ap.storyblok.com/.*", "https://.*.cdninstagram.com/.*"]
+remote_images = ["https://a-ap.storyblok.com/.*", "https://.*.cdninstagram.com/.*"]

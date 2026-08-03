@@ -1,17 +1,16 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "compilerOptions": {
+    "extends": "astro/tsconfigs/strict",
     "include": [".astro/types.d.ts", "**/*"],
     "exclude": ["dist"],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@/react-components/*": ["./src/components/react/*"],
-      "@/react-ui/*": ["./src/components/react/ui/*"],
-      "@/react-lib/*": ["./src/components/react/lib/*"]
-    },
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
-    "noErrorTruncation": true
-  }
+    "compilerOptions": {
+        "paths": {
+            "@/*": ["./src/*"],
+            "@/react-components/*": ["./src/components/react/*"],
+            "@/react-ui/*": ["./src/components/react/ui/*"],
+            "@/react-lib/*": ["./src/components/react/lib/*"]
+        },
+        "jsx": "react-jsx",
+        "jsxImportSource": "react",
+        "noErrorTruncation": true
+    }
 }

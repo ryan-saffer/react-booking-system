@@ -326,6 +326,8 @@ export default defineConfig(({ command, mode }) => {
                 'apps/client/coverage/**',
                 'apps/server/lib/**',
                 'apps/server/coverage/**',
+                'apps/website/dist/**',
+                'apps/website/.astro/**',
                 'packages/core/lib/**',
                 'packages/core/lib-tsc/**',
             ],
@@ -369,6 +371,21 @@ export default defineConfig(({ command, mode }) => {
                         ],
                         'react/rules-of-hooks': 'error',
                     },
+                },
+                {
+                    files: ['apps/website/src/**/*.{js,jsx,ts,tsx}'],
+                    plugins: ['typescript', 'react'],
+                    env: { browser: true, es2020: true },
+                    rules: {
+                        'react/exhaustive-deps': 'warn',
+                        'react/only-export-components': 'off',
+                        'react/rules-of-hooks': 'error',
+                    },
+                },
+                {
+                    files: ['apps/website/*.{js,mjs,cjs,ts}', 'apps/website/netlify/**/*.{js,mjs,cjs,ts}'],
+                    plugins: ['typescript'],
+                    env: { es2020: true, node: true },
                 },
                 {
                     files: ['apps/server/**/*.{js,mjs,ts}'],
