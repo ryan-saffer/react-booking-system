@@ -116,7 +116,7 @@ jobs:
 
             - name: Create portal .env from PORTAL_ENV_FILE
               env:
-                  PORTAL_ENV_FILE: ${{ vars.PORTAL_ENV_FILE || vars.CLIENT_ENV_FILE }}
+                  PORTAL_ENV_FILE: ${{ vars.PORTAL_ENV_FILE }}
               run: |
                   if [ "${{ github.ref_name }}" = 'main' ]; then
                     printf '%s' "$PORTAL_ENV_FILE" > apps/portal/.env.prod
