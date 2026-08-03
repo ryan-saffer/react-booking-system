@@ -1,0 +1,108 @@
+---
+import "@/styles/globals.css";
+import Header from "@/layout/header.astro";
+import Footer from "@/layout/footer.astro";
+import RecallBanner from "@/layout/recall-banner.astro";
+import { ClientRouter } from "astro:transitions";
+import LoadingIndicator from "astro-loading-indicator/component";
+
+type Props = {
+  title: string;
+  description: string;
+  noIndex?: boolean;
+};
+
+const { title, description, noIndex = false } = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+---
+
+<style is:global>
+  .no-scroll {
+    /* position: fixed;
+    overflow-y: hidden; */
+    display: none;
+    width: 100%;
+  }
+</style>
+
+<script is:inline>
+  /**
+   * This allows navigation directly to a hash route, where it will smoothly scroll after arriving on the page.
+   */
+  document.addEventListener("astro:page-load", () => {
+    if (window.location.hash) {
+      const target = document.querySelector(window.location.hash);
+      if (target) {
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: "smooth" });
+        }, 100); // A slight delay to ensure the page has fully loaded
+      }
+    }
+  });
+</script>
+
+<html lang="en" transition:animate="none" class="h-full">
+  <head>
+    <!-- Google Tag Manager -->
+    <script is:inline>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-NBCZ5XHQ");
+    </script>
+    <!-- End Google Tag Manager -->
+    <meta charset="utf-8" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/open-graph/home.jpg" />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content="/open-graph/home.jpg" />
+    <meta name="twitter:image:alt" content="A child smiling" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <ClientRouter />
+  </head>
+
+  <LoadingIndicator color="#9044E2" height="3px" threshold={400} />
+  <body class="flex flex-col">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NBCZ5XHQ"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"></iframe></noscript
+    >
+    <!-- End Google Tag Manager (noscript) -->
+    <RecallBanner />
+    <Header />
+    <!-- <div -->
+    <!--   class="flex flex-col items-center justify-center bg-[#FFDC5D] p-4 text-center font-lilita text-lg md:text-4xl lg:flex-row" -->
+    <!-- > -->
+    <!--   Preschool Program Term 3 bookings are now open!&nbsp; -->
+    <!--   <a -->
+    <!--     href="https://bookings.fizzkidz.com.au/preschool-program-v2-booking" -->
+    <!--     class="text-blue-500 hover:underline">Book now.</a -->
+    <!--   > -->
+    <!-- </div> -->
+    <div id="main">
+      <slot class="flex-1" />
+    </div>
+    <Footer />
+  </body>
+</html>

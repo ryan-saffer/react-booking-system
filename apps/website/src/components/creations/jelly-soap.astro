@@ -1,0 +1,18 @@
+---
+import FlipCreation from "../flip-creation.astro";
+
+import { sbCreationsJellySoapPng as glitterSlime } from "@/data/storyblok-images";
+
+type Props = {
+  flippable?: boolean;
+};
+
+const { flippable = true } = Astro.props;
+---
+
+<FlipCreation
+  flippable={flippable}
+  image={glitterSlime}
+  text={["Jelly Soap"]}
+  color="yellow"
+/>

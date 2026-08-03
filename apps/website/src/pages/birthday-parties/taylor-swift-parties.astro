@@ -1,0 +1,38 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import { sbPagesPartiesTaylorSwiftPartyJpg as taylorSwiftParty } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesSwiftiePng as taylorSwiftPackage } from "@/data/storyblok-images";
+import TaylorSwiftCreations from "@/components/creation-packages/taylor-swift-creations.astro";
+---
+
+<Layout
+  title="Taylor Swift Kids Birthday Party Packages in Melbourne"
+  description="As obsessed with Taylor Swift as we are? This party package is perfect for all Swiftie's out there!"
+>
+  <PartyLayout partyPackage="Taylor Swift">
+    <PageIntro
+      slot="intro"
+      subtitle="Join us for the best Swiftie Party!"
+      type="image"
+      image={taylorSwiftParty}
+      imageAlt="a purple butcket of glycerine cubes, with pretty colourful unciron soaps on top"
+      actionButtonText="Book a party"
+      actionButtonPath="/birthday-parties/book-a-party/#book"
+      color="purple"
+    >
+      <span slot="title">Taylor Swift Kids Birthday Party</span>
+      <span slot="content"
+        >Make your very own sparkling and dazzling Swiftie creations to take
+        home with you after the party!</span
+      >
+    </PageIntro>
+    <TaylorSwiftCreations
+      variant="party"
+      image={taylorSwiftPackage}
+      imageAlt="Taylor Swift Party Package"
+    />
+  </PartyLayout>
+</Layout>

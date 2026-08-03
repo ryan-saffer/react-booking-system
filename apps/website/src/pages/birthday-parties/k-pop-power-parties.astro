@@ -1,0 +1,38 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import { sbPagesPartiesKPopDemonHuntersPartyPng as kpopparty } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesKPopDemonHuntersPng as kpop } from "@/data/storyblok-images";
+import KPopPowerCreations from "@/components/creation-packages/k-pop-power-creations.astro";
+---
+
+<Layout
+  title="Book a K-Pop Birthday Party in Melbourne | Fizz Kidz"
+  description="A fun, easy and stress free K-Pop Birthday Party"
+>
+  <PartyLayout partyPackage="K-Pop Power">
+    <PageIntro
+      slot="intro"
+      subtitle="The ultimate K-Pop party experience!"
+      type="image"
+      image={kpopparty}
+      imageAlt="a purple butcket of glycerine cubes, with pretty colourful unciron soaps on top"
+      actionButtonText="Book a party"
+      actionButtonPath="/birthday-parties/book-a-party/#book"
+      color="purple"
+    >
+      <span slot="title">Kids K-Pop Power Parties</span>
+      <span slot="content">
+        Step into a world of magic and music where K-Pop energy meets fantasy
+        adventure!
+      </span>
+    </PageIntro>
+    <KPopPowerCreations
+      variant="party"
+      image={kpop}
+      imageAlt="Fairy Party Package"
+    />
+  </PartyLayout>
+</Layout>

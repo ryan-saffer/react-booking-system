@@ -1,0 +1,172 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
+import Layout from "@/layout/Layout.astro";
+import { sbPagesLocationsCheltenhamJpg as cheltenham } from "@/data/storyblok-images";
+import { sbPagesLocationsBalwynJpg as balwyn } from "@/data/storyblok-images";
+import { sbPagesLocationsEssendonJpg as essendon } from "@/data/storyblok-images";
+import { sbPagesLocationsMalvernJpg as malvern } from "@/data/storyblok-images";
+import { sbPagesLocationsKingsvilleJpg as kingsville } from "@/data/storyblok-images";
+import Values from "@/components/values.astro";
+import MailingList from "@/components/mailing-list.astro";
+import CardWithImage from "@/components/card-with-image.astro";
+import { ArrowRight } from "lucide-react";
+---
+
+<Layout
+  title="Find Your Nearest Kids Party Location in Melbourne | Fizz Kidz"
+  description="View the locations of all of our studios, and find the closest one to you!"
+>
+  <main class="m-auto block max-w-[1380px] px-5 pt-4">
+    <div class="h-[10px]"></div>
+    <BreadcrumbWrapper
+      items={[{ type: "link", title: "Locations", path: "/locations/" }]}
+    />
+    <PageIntro
+      subtitle="Find a studio near you!"
+      type="image"
+      image={essendon}
+      imageAlt="The interior of a Fizz Kids studio"
+      color="blue"
+      actionButtonPath="/contact-us/#contact"
+      actionButtonText="Contact us"
+    >
+      <span slot="title">Fizz Kidz Locations</span>
+    </PageIntro>
+    <section class="my-12 md:my-32">
+      <h4 class="mb-16 text-center font-lilita text-5xl text-[#8BC34B]">
+        The heart of Fizz Kidz are our Fizz Kidz Studios.
+      </h4>
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <a href="/locations/balwyn">
+          <CardWithImage
+            className="group h-full w-full cursor-pointer"
+            image={balwyn}
+            imageAlt="Fizz kids balwyn studio"
+          >
+            <div
+              slot="content"
+              class="p-8 group-hover:cursor-pointer group-hover:bg-gray-50"
+            >
+              <p class="mb-2 font-lilita text-4xl text-[#9044E2]">Balwyn</p>
+              <p class="mb-5 font-lilita text-xl">
+                184 Whitehorse Rd, Balwyn 3103
+              </p>
+              <div class="flex items-center gap-2">
+                <p>Learn more</p>
+                <ArrowRight className="h-4 w-4" />
+              </div>
+            </div>
+          </CardWithImage>
+        </a>
+        <a href="/locations/cheltenham">
+          <CardWithImage
+            className="group h-full w-full cursor-pointer"
+            image={cheltenham}
+            imageAlt="Fizz kids cheltenham studio"
+          >
+            <div
+              slot="content"
+              class="p-8 group-hover:cursor-pointer group-hover:bg-gray-50"
+            >
+              <p class="mb-2 font-lilita text-4xl text-[#9044E2]">Cheltenham</p>
+              <p class="mb-5 font-lilita text-xl">
+                273 Bay Road, Cheltenham VIC 3192
+              </p>
+              <div class="flex items-center gap-2">
+                <p>Learn more</p>
+                <ArrowRight className="h-4 w-4" />
+              </div>
+            </div>
+          </CardWithImage>
+        </a>
+        <a href="/locations/essendon">
+          <CardWithImage
+            className="group h-full w-full cursor-pointer"
+            image={essendon}
+            imageAlt="Fizz kids essendon studio"
+          >
+            <div
+              slot="content"
+              class="p-8 group-hover:cursor-pointer group-hover:bg-gray-50"
+            >
+              <p class="mb-2 font-lilita text-4xl text-[#9044E2]">Essendon</p>
+              <p class="mb-5 font-lilita text-xl">
+                75 Raleigh St, Essendon VIC 3040
+              </p>
+              <div class="flex items-center gap-2">
+                <p>Learn more</p>
+                <ArrowRight className="h-4 w-4" />
+              </div>
+            </div>
+          </CardWithImage>
+        </a>
+        <a href="/locations/geelong">
+          <CardWithImage
+            className="group h-full w-full cursor-pointer"
+            image={kingsville}
+            imageAlt="Fizz kids geelong studio"
+          >
+            <div
+              slot="content"
+              class="p-8 group-hover:cursor-pointer group-hover:bg-gray-50"
+            >
+              <p class="mb-2 font-lilita text-4xl text-[#9044E2]">Geelong</p>
+              <p class="mb-5 font-lilita text-xl">
+                352 Pakington St, Newtown VIC 3220
+              </p>
+              <div class="flex items-center gap-2">
+                <p>Learn more</p>
+                <ArrowRight className="h-4 w-4" />
+              </div>
+            </div>
+          </CardWithImage>
+        </a>
+        <a href="/locations/kingsville">
+          <CardWithImage
+            className="group h-full w-full cursor-pointer"
+            image={kingsville}
+            imageAlt="Fizz kids kingsville studio"
+          >
+            <div
+              slot="content"
+              class="p-8 group-hover:cursor-pointer group-hover:bg-gray-50"
+            >
+              <p class="mb-2 font-lilita text-4xl text-[#9044E2]">Kingsville</p>
+              <p class="mb-5 font-lilita text-xl">
+                238 Somerville Rd, Kingsville, VIC 3012
+              </p>
+              <div class="flex items-center gap-2">
+                <p>Learn more</p>
+                <ArrowRight className="h-4 w-4" />
+              </div>
+            </div>
+          </CardWithImage>
+        </a>
+        <a href="/locations/malvern">
+          <CardWithImage
+            className="group h-full w-full cursor-pointer"
+            image={malvern}
+            imageAlt="Fizz kids malvern studio"
+          >
+            <div
+              slot="content"
+              class="p-8 group-hover:cursor-pointer group-hover:bg-gray-50"
+            >
+              <p class="mb-2 font-lilita text-4xl text-[#9044E2]">Malvern</p>
+              <p class="mb-5 font-lilita text-xl">
+                20 Glenferrie Road, Malvern VIC 3144
+              </p>
+              <div class="flex items-center gap-2">
+                <p>Learn more</p>
+                <ArrowRight className="h-4 w-4" />
+              </div>
+            </div>
+          </CardWithImage>
+        </a>
+      </div>
+    </section>
+    <Values />
+  </main>
+  <MailingList />
+</Layout>

@@ -1,0 +1,37 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import { sbPagesPartiesUnicornPartyJpg as unicornParty } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesUnicornPng as unicorn } from "@/data/storyblok-images";
+import UnicornCreations from "@/components/creation-packages/unicorn-creations.astro";
+---
+
+<Layout
+  title="Book a Kids Unicorn Birthday Party in Melbourne | Fizz Kidz"
+  description="A party package full of sparkles, glitter and unicorns!"
+>
+  <PartyLayout partyPackage="Unicorn">
+    <PageIntro
+      slot="intro"
+      subtitle="Welcome to the magical world of Unicorns!"
+      type="image"
+      image={unicornParty}
+      imageAlt="a purple butcket of glycerine cubes, with pretty colourful unciron soaps on top"
+      actionButtonText="Book a party"
+      actionButtonPath="/birthday-parties/book-a-party/#book"
+      color="pink"
+    >
+      <span slot="title">Unicorn Kids Birthday Parties</span>
+      <span slot="content">
+        Here we love everything sparkles, glitter and magic!
+      </span>
+    </PageIntro>
+    <UnicornCreations
+      variant="party"
+      image={unicorn}
+      imageAlt="Unicorn Party Package"
+    />
+  </PartyLayout>
+</Layout>
