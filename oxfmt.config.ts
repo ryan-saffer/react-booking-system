@@ -45,8 +45,8 @@ export default defineConfig({
     sortPackageJson: false,
     overrides: [
         {
-            files: ['apps/client/**/*.{js,jsx,ts,tsx,html}'],
-            options: { sortTailwindcss: { config: './apps/client/tailwind.config.js' } },
+            files: ['apps/portal/**/*.{js,jsx,ts,tsx,html}'],
+            options: { sortTailwindcss: { config: './apps/portal/tailwind.config.js' } },
         },
         {
             files: ['apps/website/**/*.{astro,html,js,jsx,ts,tsx}'],

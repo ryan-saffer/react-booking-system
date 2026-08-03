@@ -15,7 +15,7 @@ The Fizz Kidz Portal is an internal management system streamlining Fizz Kidz ope
 
 ## Table of Contents
 
-- [Client](#client)
+- [Portal](#portal)
 - [Server](#server)
 - [tRPC Interaction](#trpc-interaction)
 - [Project Structure](#project-structure)
@@ -26,16 +26,16 @@ The Fizz Kidz Portal is an internal management system streamlining Fizz Kidz ope
 - [Deployment](#deployment)
 - [Routing Contract](#routing-contract)
 
-## Client
+## Portal
 
-The client-side application handles the user interface and interaction.
+The Portal application handles the internal user interface and interaction.
 
 - **Framework:** [React](https://react.dev/).
 - **Toolchain:** [Vite+](https://viteplus.dev/) unifies Vite, Vitest, Oxlint, Oxfmt, Rolldown, and tsdown (see `vite.config.ts`).
-- **Routing:** [React Router DOM](https://reactrouter.com/) for client-side routing (see `apps/client/src/app.tsx`).
+- **Routing:** [React Router DOM](https://reactrouter.com/) for client-side routing (see `apps/portal/src/app.tsx`).
 - **API Consumption:** Uses [tRPC](https://trpc.io/) to communicate with the server.
-  - tRPC client initialized in `apps/client/src/utilities/trpc.ts`.
-  - Enables type-safe API calls from React components (see `apps/client/src/app.tsx` and its children).
+  - tRPC client initialized in `apps/portal/src/utilities/trpc.ts`.
+  - Enables type-safe API calls from React components (see `apps/portal/src/app.tsx` and its children).
 
 ## Server
 
@@ -51,17 +51,17 @@ The server-side application handles business logic, data processing, and API pro
 
 ## tRPC Interaction
 
-[tRPC](https://trpc.io/) enables type-safe client-server communication. By sharing TypeScript types directly (via `AppRouter` from `apps/server/src/trpc/trpc.app-router.ts` imported into `apps/client/src/utilities/trpc.ts`), the client calls server procedures with full type-checking and autocompletion. This boosts developer experience and cuts integration errors, eliminating manual schema sync or code generation.
+[tRPC](https://trpc.io/) enables type-safe client-server communication. By sharing TypeScript types directly (via `AppRouter` from `apps/server/src/trpc/trpc.app-router.ts` imported into `apps/portal/src/utilities/trpc.ts`), the Portal calls server procedures with full type-checking and autocompletion. This boosts developer experience and cuts integration errors, eliminating manual schema sync or code generation.
 
 ## Project Structure
 
 A monorepo using the conventional `apps/` (deployables) and `packages/` (shared libraries) layout:
 
-- **`apps/client/`**: React frontend.
+- **`apps/portal/`**: Internal React operations portal.
 - **`apps/docs/`**: Astro + Starlight staff and franchisee knowledge base, deployed by Netlify.
 - **`apps/server/`**: Node.js backend (tRPC API definitions, Firebase Functions).
 - **`apps/website/`**: Public Astro + React marketing website, deployed by Netlify.
-- **`packages/core/`**: Shared logic, types, and utilities, published locally as `@fizz-kidz/core`. Consumed from source by both the client and the Functions bundle, so it needs no separate build to run or deploy the app.
+- **`packages/core/`**: Shared logic, types, and utilities, published locally as `@fizz-kidz/core`. Consumed from source by both the Portal and the Functions bundle, so it needs no separate build to run or deploy the app.
 
 Deployable applications live under `apps/`; shared libraries live under `packages/`.
 
@@ -80,24 +80,24 @@ Run the complete local stack from the repository root:
 npm run dev
 ```
 
-This wraps `vp dev`. It starts the client on `localhost:3000`, watches the Functions bundle, and starts the Firebase Functions and Pub/Sub emulators. Set `VP_CLIENT_ONLY=true` to start only the client.
+This wraps `vp dev`. It starts the Portal on `localhost:3000`, watches the Functions bundle, and starts the Firebase Functions and Pub/Sub emulators. Set `VP_PORTAL_ONLY=true` to start only the Portal.
 
-To keep client and server logs in separate terminals, run these commands from the repository root:
+To keep Portal and server logs in separate terminals, run these commands from the repository root:
 
 ```bash
 # Terminal 1
-npm run client
+npm run portal
 
 # Terminal 2
 npm run server
 ```
 
-The server-only command watches the Functions bundle and server TypeScript projects, then starts the Functions and Pub/Sub emulators without starting Vite's client dev server. The Functions bundle directly includes `packages/core/src`, so either server or shared-module changes trigger a backend rebuild. Client-only files are outside that dependency graph and do not rebuild the backend.
+The server-only command watches the Functions bundle and server TypeScript projects, then starts the Functions and Pub/Sub emulators without starting the Portal dev server. The Functions bundle directly includes `packages/core/src`, so either server or shared-module changes trigger a backend rebuild. Portal-only files are outside that dependency graph and do not rebuild the backend.
 
-To run the local client against the production backend and Firebase project without starting local emulators:
+To run the local Portal against the production backend and Firebase project without starting local emulators:
 
 ```bash
-npm run client:prod
+npm run portal:prod
 ```
 
 ## Verification
@@ -127,10 +127,10 @@ The individual commands are also available:
 | --------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `npm run check`       | `vp check`                 | Fast read-only oxfmt, Oxlint, type-aware lint, and TypeScript 7 checks across all workspaces.                           |
 | `npm run check:astro` | Two scoped `astro check`s  | Runs framework-specific diagnostics for `docs` and `website`.                                                           |
-| `npm run test`        | `vp test --run`            | Runs the client and server Vitest projects once and exits.                                                              |
+| `npm run test`        | `vp test --run`            | Runs the Portal and server Vitest projects once and exits.                                                              |
 | `npm run verify`      | Vite+ fix/check plus tests | Formats and safely fixes supported files across all workspaces, then runs tests.                                        |
 | `npm run verify:full` | Astro checks plus `verify` | Runs both Astro checks, whole-repository fixes/checks, and tests.                                                       |
-| `npm run build`       | `vp build`                 | Builds `@fizz-kidz/core`, bundles Firebase Functions to `apps/server/lib`, and builds the client to `apps/client/dist`. |
+| `npm run build`       | `vp build`                 | Builds `@fizz-kidz/core`, bundles Firebase Functions to `apps/server/lib`, and builds the Portal to `apps/portal/dist`. |
 
 Notes:
 
@@ -142,24 +142,24 @@ The project compiler is TypeScript 7 (`vp exec tsc --version`). The `typescript6
 
 ## Environment Configuration
 
-- Client: use `vp dev --mode dev|prod` or `vp build --mode dev|prod` (`apps/client/.env` by default; merges `apps/client/.env.prod` for prod builds).
+- Portal: use `vp dev --mode dev|prod` or `vp build --mode dev|prod` (`apps/portal/.env` by default; merges `apps/portal/.env.prod` for prod builds).
 - Server: uses `dotenv` with `apps/server/src/load-env.ts` to read the Firebase project id and load `apps/server/.env` (dev) or `apps/server/.env.prod` (prod).
 - Website: `npm run website` loads `apps/website/.env`; Netlify owns production and deploy-preview values.
-- GitHub: the workflow writes the correct env file(s) from Environment variable SERVER_ENV_FILE and CLIENT_ENV_FILE before build/deploy.
+- GitHub: the workflow writes the correct env file(s) from Environment variables `SERVER_ENV_FILE` and `PORTAL_ENV_FILE` before build/deploy. It temporarily accepts the legacy `CLIENT_ENV_FILE` as a fallback.
 
 ## Deployment
 
-The client and server deploy through Firebase. The docs and website apps deploy independently through Netlify.
+The Portal and server deploy through Firebase. The docs and website apps deploy independently through Netlify.
 
-- **Client (Firebase Hosting):**
-  - Client app built to static assets (`apps/client/dist/`).
+- **Portal (Firebase Hosting):**
+  - Portal app built to static assets (`apps/portal/dist/`).
   - Served by Firebase Hosting.
-  - `firebase.json` defines hosting config (URL rewrites, `predeploy` script: `sh ./client/predeploy.sh`).
+  - `firebase.json` defines hosting config (URL rewrites, `predeploy` script: `sh ./apps/portal/predeploy.sh`).
   - Backend-owned browser paths must be explicitly rewritten here. Today that includes `/api/**` and `/forms/**`.
 - **Server (Firebase Functions):**
   - The Express-based `api` Firebase Function exposes `/api/trpc` for tRPC along with `/api/webhooks/*` endpoints.
-  - It also handles durable browser entrypoints under `/forms/**`, which then redirect to the current client implementation.
-  - The client sends all tRPC requests to this single function URL (see `apps/client/src/components/root/root.tsx` for tRPC client `fetch` logic).
+  - It also handles durable browser entrypoints under `/forms/**`, which then redirect to the current Portal implementation.
+  - The Portal sends all tRPC requests to this single function URL (see `apps/portal/src/components/root/root.tsx` for tRPC client `fetch` logic).
   - Background jobs use the `background` Pub/Sub topic, handled centrally by `apps/server/src/pubsub.ts`.
   - `firebase.json` specifies `apps/server/` as functions source.
   - `functions` `predeploy` script in `firebase.json` (`npm --prefix "$RESOURCE_DIR" run build`) builds server code.
@@ -173,7 +173,7 @@ See `vite.config.ts`, `apps/server/vite.config.ts`, and `firebase.json` for deta
 ## Routing Contract
 
 - Use clean backend-owned URLs for long-lived external/customer-facing links when you want future frontend changes to stay backward compatible.
-- In this repo, `/forms/**` is the durable public form entrypoint and `/form` is the current client-side implementation behind it.
+- In this repo, `/forms/**` is the durable public form entrypoint and `/form` is the current Portal implementation behind it.
 - When adding another backend-owned browser route, update all three layers together:
   - Express routing in `apps/server/src/api.ts`
   - Firebase Hosting rewrites in `firebase.json`

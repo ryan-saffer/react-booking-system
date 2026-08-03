@@ -21,7 +21,7 @@ This directory contains the backend Node.js application for the Fizz Kidz Portal
 
 ## Overview
 
-The server provides the API for the client application and handles background tasks, integrations with third-party services, and business logic execution. It leverages a serverless architecture using Firebase Functions to ensure scalability and manage costs.
+The server provides the API for the Portal and handles background tasks, integrations with third-party services, and business logic execution. It leverages a serverless architecture using Firebase Functions to ensure scalability and manage costs.
 
 ## Core Technologies
 
@@ -55,7 +55,7 @@ Functions exported from `apps/server/src/index.ts` are deployed via Firebase. Th
 - Most of the API is built using tRPC.
 - Each feature-specific tRPC router (e.g., `partiesRouter` in `party-bookings/`, `authRouter` in `auth/`) is defined in its respective module and combined via `appRouter` (`apps/server/src/trpc/trpc.app-router.ts`).
 - The combined router is mounted once inside the Express app defined in `apps/server/src/api.ts`, which serves the `/api/trpc` endpoint through the single `api` Firebase Function.
-- The shared `AppRouter` type is still used by the client for end-to-end type safety.
+- The shared `AppRouter` type is still used by the Portal for end-to-end type safety.
 
 ### Webhook Handlers
 
@@ -120,9 +120,9 @@ To run the server functions locally for development, Firebase emulators are used
 npm run server
 ```
 
-Run this from the repository root. It watches the Functions bundle and server TypeScript projects, then starts the Functions and Pub/Sub emulators. Use `vp dev` instead to start the complete client and server stack in one terminal.
+Run this from the repository root. It watches the Functions bundle and server TypeScript projects, then starts the Functions and Pub/Sub emulators. Use `vp dev` instead to start the complete Portal and server stack in one terminal.
 
-The Functions bundle resolves `@fizz-kidz/core` directly to its source, so the single bundle watcher rebuilds after changes in either `apps/server/src` or `packages/core/src`. It does not watch client files. Separate TypeScript watchers report server and shared-module type errors without producing another build artifact.
+The Functions bundle resolves `@fizz-kidz/core` directly to its source, so the single bundle watcher rebuilds after changes in either `apps/server/src` or `packages/core/src`. It does not watch Portal files. Separate TypeScript watchers report server and shared-module type errors without producing another build artifact.
 
 Invitation generation in the emulator uses an installed Google Chrome rather than downloading a separate browser with Puppeteer. If Chrome is installed in a non-standard location, set `PUPPETEER_EXECUTABLE_PATH` to its executable before starting the emulators. Production continues to use `@sparticuz/chromium`.
 
@@ -145,7 +145,7 @@ These run through `tsx`, which executes the TypeScript directly and honours the 
 Server tests are Vitest files matching `apps/apps/server/src/**/*.test.ts`. They are registered as the `server` Vitest project in the root `vite.config.ts`, so run them from the repository root rather than from this directory:
 
 ```bash
-# whole suite once (client + server)
+# whole suite once (Portal + server)
 npm test
 
 # watch mode while developing

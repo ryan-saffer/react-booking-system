@@ -52,4 +52,4 @@ This folder contains the server-side implementation of the v2 invitation + RSVP 
   - Dev raw function URL: `https://australia-southeast1-booking-system-6435d.cloudfunctions.net/api/api/webhooks/invitation/:bookingId`
 - After `2026-06-06`, the route itself stays, but the legacy public-link wording/support assumptions can be removed.
 - After `2026-06-06`, the following RSVP-only compatibility code can be deleted:
-  - The legacy `/invitation/v2` route block in `apps/client/src/app.tsx`
+  - The legacy `/invitation/v2` route block in `apps/portal/src/app.tsx`

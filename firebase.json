@@ -1,6 +1,6 @@
 {
     "hosting": {
-        "public": "apps/client/dist",
+        "public": "apps/portal/dist",
         "rewrites": [
             {
                 "source": "/api{,/**}",
@@ -30,7 +30,7 @@
             }
         ],
         "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-        "predeploy": ["sh ./apps/client/predeploy.sh"]
+        "predeploy": ["sh ./apps/portal/predeploy.sh"]
     },
     "emulators": {
         "functions": {
