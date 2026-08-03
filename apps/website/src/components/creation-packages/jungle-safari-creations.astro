@@ -1,6 +1,7 @@
 ---
 import CreationsSummary from "@/components/creations-summary.astro";
 import Creations from "@/components/party-package-creations.astro";
+import type { ImageSource } from "@/types/images";
 import MonsterSlimePurple from "@/components/creations/monster-slime-purple.astro";
 import BugsInBathBombs from "@/components/creations/bugs-in-bath-bombs.astro";
 import MonsterSlimeGreen from "@/components/creations/monster-slime-green.astro";
@@ -12,7 +13,7 @@ import DinosaurBathBombs from "@/components/creations/dinosaur-bath-bombs.astro"
 
 type Props = {
   variant?: "summary" | "party";
-  image?: ImageMetadata;
+  image?: ImageSource;
   imageAlt?: string;
 };
 

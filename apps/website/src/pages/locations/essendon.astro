@@ -2,32 +2,26 @@
 import PageIntro from "@/components/page-intro.astro";
 import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
 import Layout from "@/layout/Layout.astro";
-import essendon from "@/assets/images/pages/locations/essendon.jpg";
-import birthday from "@/assets/images/pages/locations/kingsville/birthday.jpg";
-import holidayPrograms from "@/assets/images/pages/locations/kingsville/holiday-programs.jpg";
-import contact from "@/assets/images/pages/locations/kingsville/contact.jpg";
-import slime from "@/assets/images/pages/locations/kingsville/slime.jpg";
-import { getImage, Image } from "astro:assets";
+import { sbPagesLocationsEssendonJpg as essendon } from "@/data/storyblok-images";
+import { sbPagesLocationsKingsvilleBirthdayJpg as birthday } from "@/data/storyblok-images";
+import { sbPagesLocationsKingsvilleHolidayProgramsJpg as holidayPrograms } from "@/data/storyblok-images";
+import { sbPagesLocationsKingsvilleContactJpg as contact } from "@/data/storyblok-images";
+import { sbPagesLocationsKingsvilleSlimeJpg as slime } from "@/data/storyblok-images";
+import Image from "@/components/image.astro";
 import CardWithImage from "@/components/card-with-image.astro";
 import ImageCarousel from "@/components/react/image-carousel";
 import GoogleReviews from "@/components/google-reviews.astro";
 import blueWave from "@/assets/images/pages/locations/blue-wave.svg";
 import Values from "@/components/values.astro";
 import FaqAccordion from "@/components/react/faq-accordion";
-import faq from "@/assets/images/pages/parties/faq.png";
+import { sbPagesPartiesFaqPng as faq } from "@/data/storyblok-images";
 
-import carousel1Image from "@/assets/images/pages/locations/essendon/essendon1.jpg";
-import carousel2Image from "@/assets/images/pages/locations/essendon/essendon2.jpg";
-import carousel3Image from "@/assets/images/pages/locations/essendon/essendon3.jpg";
-import carousel4Image from "@/assets/images/pages/locations/essendon/essendon4.jpg";
-import carousel5Image from "@/assets/images/pages/locations/essendon/essendon5.jpg";
+import { sbPagesLocationsEssendonEssendon1Jpg as carousel1Image } from "@/data/storyblok-images";
+import { sbPagesLocationsEssendonEssendon2Jpg as carousel2Image } from "@/data/storyblok-images";
+import { sbPagesLocationsEssendonEssendon3Jpg as carousel3Image } from "@/data/storyblok-images";
+import { sbPagesLocationsEssendonEssendon4Jpg as carousel4Image } from "@/data/storyblok-images";
+import { sbPagesLocationsEssendonEssendon5Jpg as carousel5Image } from "@/data/storyblok-images";
 import { menu } from "@/components/react/navigation/navigation-menu";
-
-const carousel1 = await getImage({ src: carousel1Image, format: "webp" });
-const carousel2 = await getImage({ src: carousel2Image, format: "webp" });
-const carousel3 = await getImage({ src: carousel3Image, format: "webp" });
-const carousel4 = await getImage({ src: carousel4Image, format: "webp" });
-const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
 ---
 
 <Layout
@@ -181,14 +175,64 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
       <ImageCarousel
         client:idle
         loop
-        images={[
-          { image: carousel1, alt: "Alt" },
-          { image: carousel2, alt: "Alt" },
-          { image: carousel3, alt: "Alt" },
-          { image: carousel4, alt: "Alt" },
-          { image: carousel5, alt: "Alt" },
-        ]}
-      />
+        imageSlots={["image1", "image2", "image3", "image4", "image5"]}
+      >
+        <Image
+          slot="image1"
+          src={carousel1Image}
+          alt="Fizz Kidz Essendon gallery photo 1"
+          class="h-60 w-60 rounded-md object-cover"
+          width={240}
+          height={240}
+          widths={[240, 480]}
+          sizes="240px"
+          fit="cover"
+        />
+        <Image
+          slot="image2"
+          src={carousel2Image}
+          alt="Fizz Kidz Essendon gallery photo 2"
+          class="h-60 w-60 rounded-md object-cover"
+          width={240}
+          height={240}
+          widths={[240, 480]}
+          sizes="240px"
+          fit="cover"
+        />
+        <Image
+          slot="image3"
+          src={carousel3Image}
+          alt="Fizz Kidz Essendon gallery photo 3"
+          class="h-60 w-60 rounded-md object-cover"
+          width={240}
+          height={240}
+          widths={[240, 480]}
+          sizes="240px"
+          fit="cover"
+        />
+        <Image
+          slot="image4"
+          src={carousel4Image}
+          alt="Fizz Kidz Essendon gallery photo 4"
+          class="h-60 w-60 rounded-md object-cover"
+          width={240}
+          height={240}
+          widths={[240, 480]}
+          sizes="240px"
+          fit="cover"
+        />
+        <Image
+          slot="image5"
+          src={carousel5Image}
+          alt="Fizz Kidz Essendon gallery photo 5"
+          class="h-60 w-60 rounded-md object-cover"
+          width={240}
+          height={240}
+          widths={[240, 480]}
+          sizes="240px"
+          fit="cover"
+        />
+      </ImageCarousel>
     </section>
     <section>
       <GoogleReviews
@@ -217,8 +261,8 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
         Kidz is the go-to destination for
         <strong
           >fun, hands-on kids' parties and exciting school holiday programs.
-        </strong> Our vibrant studio is designed to spark creativity and deliver
-        unforgettable experiences, making every visit full of <strong>
+        </strong> Our vibrant studio is designed to spark creativity and deliver unforgettable
+        experiences, making every visit full of <strong>
           laughter, learning, and interactive fun.
         </strong>
       </p>

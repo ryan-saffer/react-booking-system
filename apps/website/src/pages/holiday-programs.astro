@@ -5,14 +5,14 @@ import HolidayProgramWeek from "@/components/holiday-program-week.astro";
 import Layout from "@/layout/Layout.astro";
 import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
 import PageIntro from "@/components/page-intro.astro";
-import holidayPrograms from "@/assets/images/pages/holiday-programs/holiday-programs.png";
+import { sbPagesHolidayProgramsHolidayProgramsPng as holidayPrograms } from "@/data/storyblok-images";
 import Step from "@/components/step.astro";
 import forwardArrow from "@/assets/images/pages/parties/forward-arrow.png";
 import StarBulletPoints from "@/components/star-bullet-points.astro";
-import { Image } from "astro:assets";
+import Image from "@/components/image.astro";
 import FaqAccordion from "@/components/react/faq-accordion";
-import faq from "@/assets/images/pages/parties/packages/slime.png";
-import why from "@/assets/images/pages/parties/packages/safari.png";
+import { sbPagesPartiesPackagesSlimePng as faq } from "@/data/storyblok-images";
+import { sbPagesPartiesPackagesSafariPng as why } from "@/data/storyblok-images";
 
 const { default: greenDrop } = await import(
   `@/assets/images/pages/parties/drop-green.svg?raw`

@@ -28,7 +28,7 @@ const GOOGLE_REVIEWS_FETCH_TIMEOUT_MS = 3_000;
 
 export async function getGoogleReviews(input: GetGoogleReviewsInput = 12) {
   try {
-    const limit = typeof input === "number" ? input : input.limit ?? 12;
+    const limit = typeof input === "number" ? input : (input.limit ?? 12);
     const location = typeof input === "number" ? undefined : input.location;
     const url = new URL(GOOGLE_REVIEWS_API_URL);
     url.searchParams.set("limit", limit.toString());

@@ -1,9 +1,10 @@
 ---
-import { Image } from "astro:assets";
+import Image from "@/components/image.astro";
+import type { ImageSource } from "@/types/images";
 import purpleCalendar from "@/assets/images/pages/holiday-programs/purple-calendar.png";
 import { Button } from "./react/ui/button";
 import { cn } from "./react/lib/utils";
-import blackGraphics from "@/assets/images/pages/play-lab/black-graphics.png";
+import { sbPagesPlayLabBlackGraphicsPng as blackGraphics } from "@/data/storyblok-images";
 
 type Props = {
   position: number;
@@ -13,7 +14,7 @@ type Props = {
     ages: string;
     time: string;
     color: string;
-    image: ImageMetadata;
+    image: ImageSource;
   }[];
 };
 

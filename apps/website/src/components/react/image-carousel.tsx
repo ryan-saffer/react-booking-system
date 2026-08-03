@@ -6,28 +6,24 @@ import {
   CarouselPrevious,
 } from "./ui/carousel";
 
-import type { CustomImage } from "@/types/types";
+import type { ReactNode } from "react";
 
-function ImageCarousel({
-  images,
-  loop = false,
-}: {
-  images: CustomImage[];
+type Props = {
+  imageSlots: string[];
   loop?: boolean;
-}) {
+  [slot: string]: ReactNode;
+};
+
+function ImageCarousel({ imageSlots, loop = false, ...imageSlotProps }: Props) {
   return (
     <Carousel className="m-12" opts={{ loop }}>
       <CarouselContent>
-        {images.map((image, idx) => (
+        {imageSlots.map((imageSlot) => (
           <CarouselItem
-            key={idx}
+            key={imageSlot}
             className="flex basis-full justify-center sm:basis-1/3 lg:basis-1/5"
           >
-            <img
-              src={image.image.src}
-              alt={image.alt}
-              className="h-60 w-60 rounded-md object-cover"
-            />
+            {imageSlotProps[imageSlot]}
           </CarouselItem>
         ))}
       </CarouselContent>

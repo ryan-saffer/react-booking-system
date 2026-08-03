@@ -1,6 +1,7 @@
 ---
 import CreationsSummary from "@/components/creations-summary.astro";
 import Creations from "@/components/party-package-creations.astro";
+import type { ImageSource } from "@/types/images";
 import TsBathBombs from "@/components/creations/ts-bath-bombs.astro";
 import TsBracelets from "@/components/creations/ts-bracelets.astro";
 import TsRainbowBathBombs from "@/components/creations/ts-rainbow-bath-bombs.astro";
@@ -14,7 +15,7 @@ import SparkleCrowns from "@/components/creations/sparkle-crowns.astro";
 
 type Props = {
   variant?: "summary" | "party";
-  image?: ImageMetadata;
+  image?: ImageSource;
   imageAlt?: string;
 };
 

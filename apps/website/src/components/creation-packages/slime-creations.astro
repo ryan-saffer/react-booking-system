@@ -1,6 +1,7 @@
 ---
 import CreationsSummary from "@/components/creations-summary.astro";
 import Creations from "@/components/party-package-creations.astro";
+import type { ImageSource } from "@/types/images";
 import FairySlime from "@/components/creations/fairy-slime.astro";
 import BirthdayCakeSlime from "@/components/creations/birthday-cake-slime.astro";
 import MonsterSlimeGreen from "@/components/creations/monster-slime-green.astro";
@@ -15,7 +16,7 @@ import FrozenSparkleSlimeGreen from "@/components/creations/frozen-sparkle-slime
 
 type Props = {
   variant?: "summary" | "party";
-  image?: ImageMetadata;
+  image?: ImageSource;
   imageAlt?: string;
 };
 

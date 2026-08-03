@@ -1,10 +1,11 @@
 ---
-import { Image } from "astro:assets";
+import Image from "@/components/image.astro";
+import type { ImageSource } from "@/types/images";
 import type { ClassValue } from "clsx";
 import { cn } from "./react/lib/utils";
 
 type Props = {
-  image: ImageMetadata;
+  image: ImageSource;
   imageAlt: string;
   eager?: boolean;
   className?: ClassValue;
@@ -37,6 +38,7 @@ const {
       src={image}
       alt={imageAlt}
       width={1000}
+      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
       class="h-full w-full rounded-t-xl object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
     />
   </div>

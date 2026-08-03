@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import { Button } from "../ui/button";
-import type { CustomImage } from "@/types/types";
 import PlayLabProgramCard from "./play-lab-program-card";
 import { cn } from "../lib/utils";
 
@@ -15,12 +14,12 @@ const PlayLabProgramsSection = ({
   allPlaysImage,
   allPlaysBanner,
 }: {
-  littleExplorersImage: CustomImage;
-  littleExplorersBanner: CustomImage;
-  creativeKindersImage: CustomImage;
-  creativeKindersBanner: CustomImage;
-  allPlaysImage: CustomImage;
-  allPlaysBanner: CustomImage;
+  littleExplorersImage?: ReactNode;
+  littleExplorersBanner?: ReactNode;
+  creativeKindersImage?: ReactNode;
+  creativeKindersBanner?: ReactNode;
+  allPlaysImage?: ReactNode;
+  allPlaysBanner?: ReactNode;
 }) => {
   const [isMobile, setIsMobile] = useState(true);
 
@@ -78,8 +77,8 @@ const PlayLabProgramsSection = ({
         selected={selectedModule === "little-explorers"}
         queued={queuedModule === "little-explorers"}
         backgroundColor="#EDF9FB"
+        image={littleExplorersImage}
         content={{
-          img: littleExplorersImage,
           color: "#4DC5D9",
           title: "Little Explorers",
           subtitle: "Ages 18 months - 3 years",
@@ -107,11 +106,7 @@ const PlayLabProgramsSection = ({
             activities and grow social confidence - all while sharing giggles
             and special moments with their grown-up.
           </p>
-          <img
-            className="my-12 h-60 w-full rounded-lg object-cover"
-            src={littleExplorersBanner.image.src}
-            alt="ALl ages banner"
-          />
+          {littleExplorersBanner}
           <div className="flex flex-col gap-12 md:flex-row">
             <div className="flex w-full flex-col gap-8 md:w-1/2">
               <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md @container">
@@ -208,8 +203,8 @@ const PlayLabProgramsSection = ({
         selected={selectedModule === "create-kinders"}
         queued={queuedModule === "create-kinders"}
         backgroundColor="#F5F9EC"
+        image={creativeKindersImage}
         content={{
-          img: creativeKindersImage,
           color: "#9ECC45",
           title: "Creative Kinders",
           subtitle: "Ages 3 - 5 years",
@@ -244,11 +239,7 @@ const PlayLabProgramsSection = ({
             real skills—fostering creativity, confidence, and teamwork while
             they build projects to proudly take home.
           </p>
-          <img
-            className="my-12 h-60 w-full rounded-lg object-cover"
-            src={creativeKindersBanner.image.src}
-            alt="ALl ages banner"
-          />
+          {creativeKindersBanner}
           <div className="flex flex-col gap-12 md:flex-row">
             <div className="flex w-full flex-col gap-8 md:w-1/2">
               <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md @container">
@@ -359,8 +350,8 @@ const PlayLabProgramsSection = ({
         selected={selectedModule === "all-playz"}
         queued={queuedModule === "all-playz"}
         backgroundColor="#F3ECFC"
+        image={allPlaysImage}
         content={{
-          img: allPlaysImage,
           color: "#9044E2",
           title: "All Playz",
           subtitle: "Ages 18 months - 5 years",
@@ -393,11 +384,7 @@ const PlayLabProgramsSection = ({
             A mixed-age facilitated adventure of sensory play, discovery, and
             joyful mess-making!
           </p>
-          <img
-            className="my-12 h-60 w-full rounded-lg object-cover"
-            src={allPlaysBanner.image.src}
-            alt="ALl ages banner"
-          />
+          {allPlaysBanner}
           <div className="flex flex-col gap-12 md:flex-row">
             <div className="flex w-full flex-col gap-8 md:w-1/2">
               <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md @container">

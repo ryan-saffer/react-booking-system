@@ -27,8 +27,7 @@ export type MenuItem =
       title: string;
       items: Readonly<MenuLink[]>;
     } & (
-      | { clickable: true; path: string; subTitle: string }
-      | { clickable: false }
+      { clickable: true; path: string; subTitle: string } | { clickable: false }
     ));
 
 export const menu = [

@@ -2,16 +2,16 @@
 import PageIntro from "@/components/page-intro.astro";
 import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
 import Layout from "@/layout/Layout.astro";
-import hero from "@/assets/images/pages/our-team/hero.jpg";
-import { Image } from "astro:assets";
-import allStaff from "@/assets/images/pages/our-team/all-staff.jpg";
+import { sbPagesOurTeamHeroJpg as hero } from "@/data/storyblok-images";
+import Image from "@/components/image.astro";
+import { sbPagesOurTeamAllStaffJpg as allStaff } from "@/data/storyblok-images";
 
-import talia from "@/assets/images/pages/our-team/talia.jpg";
-import lami from "@/assets/images/pages/our-team/lami.jpg";
-import ryan from "@/assets/images/pages/our-team/ryan.jpg";
-import kym from "@/assets/images/pages/our-team/kym.jpg";
-import michaela from "@/assets/images/pages/our-team/michaela.jpg";
-import tShirt from "@/assets/images/pages/our-team/t-shirt.png";
+import { sbPagesOurTeamTaliaJpg as talia } from "@/data/storyblok-images";
+import { sbPagesOurTeamLamiJpg as lami } from "@/data/storyblok-images";
+import { sbPagesOurTeamRyanJpg as ryan } from "@/data/storyblok-images";
+import { sbPagesOurTeamKymJpg as kym } from "@/data/storyblok-images";
+import { sbPagesOurTeamMichaelaJpg as michaela } from "@/data/storyblok-images";
+import { sbPagesOurTeamTShirtPng as tShirt } from "@/data/storyblok-images";
 import PrimaryButton from "@/components/primary-button.astro";
 import Values from "@/components/values.astro";
 
@@ -78,9 +78,9 @@ const team = [
           our parties and programs.
           <br /><br />
           We run engaging experiences that involve every child creating their own
-          masterpiece to take home and enjoy! Our staff are buzzing with fun and
-          will make sure that every child is laughing and smiling throughout every
-          event. We're truly experts in kids entertainment!
+          masterpiece to take home and enjoy! Our staff are buzzing with fun and will
+          make sure that every child is laughing and smiling throughout every event.
+          We're truly experts in kids entertainment!
         </p>
       </div>
     </section>

@@ -5,36 +5,53 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/react-ui/carousel";
+import type { ReactNode } from "react";
 
 import { Button } from "../ui/button";
-import type { GetImageResult } from "astro";
 
-function CardCarousel({
-  items,
-}: {
+type ImageSlot =
+  "image1" | "image2" | "image3" | "image4" | "image5" | "image6";
+
+type Props = {
   items: {
-    image: GetImageResult;
-    imageAlt: string;
+    imageSlot: ImageSlot;
     title: string;
     content: string;
     buttonText: string;
     buttonPath: string;
   }[];
-}) {
+} & Partial<Record<ImageSlot, ReactNode>>;
+
+function CardCarousel({
+  items,
+  image1,
+  image2,
+  image3,
+  image4,
+  image5,
+  image6,
+}: Props) {
+  const images: Record<ImageSlot, ReactNode> = {
+    image1,
+    image2,
+    image3,
+    image4,
+    image5,
+    image6,
+  };
+
   return (
     <Carousel className="mx-12 my-4">
       <CarouselContent className="my-4">
-        {items.map((item, idx) => (
+        {items.map((item) => (
           <CarouselItem
-            key={idx}
+            key={item.imageSlot}
             className="basis-full sm:basis-1/2 md:basis-1/3"
           >
             <div className="flex h-full min-h-[520px] flex-col rounded-2xl border bg-white shadow-sm">
-              <img
-                className="h-[250px] w-full rounded-t-2xl object-cover"
-                src={item.image.src}
-                alt={item.imageAlt}
-              />
+              <div className="h-[250px] shrink-0 overflow-hidden rounded-t-2xl [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
+                {images[item.imageSlot]}
+              </div>
               <div className="flex h-full flex-col justify-between p-6">
                 <div>
                   <p className="mb-2 font-lilita text-2xl">{item.title}</p>

@@ -1,6 +1,7 @@
 ---
 import CreationsSummary from "@/components/creations-summary.astro";
 import Creations from "@/components/party-package-creations.astro";
+import type { ImageSource } from "@/types/images";
 import FluidBears1 from "@/components/creations/fluid-bears-1.astro";
 import FluidBears2 from "@/components/creations/fluid-bears-2.astro";
 import FluidBears3 from "@/components/creations/fluid-bears-3.astro";
@@ -10,7 +11,7 @@ import FluidBears6 from "@/components/creations/fluid-bears-6.astro";
 
 type Props = {
   variant?: "summary" | "party";
-  image?: ImageMetadata;
+  image?: ImageSource;
   imageAlt?: string;
 };
 

@@ -1,6 +1,7 @@
 ---
 import CreationsSummary from "@/components/creations-summary.astro";
 import Creations from "@/components/party-package-creations.astro";
+import type { ImageSource } from "@/types/images";
 import TieDyeToteBags from "@/components/creations/tie-dye-tote-bags.astro";
 import TieDyePillow from "@/components/creations/tie-dye-pillow.astro";
 import RainbowCrystals from "@/components/creations/rainbow-crystals.astro";
@@ -8,7 +9,7 @@ import RainbowSlime from "@/components/creations/rainbow-slime.astro";
 
 type Props = {
   variant?: "summary" | "party";
-  image?: ImageMetadata;
+  image?: ImageSource;
   imageAlt?: string;
 };
 

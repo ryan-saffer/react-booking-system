@@ -1,9 +1,10 @@
 ---
-import { Image } from "astro:assets";
+import Image from "@/components/image.astro";
+import type { ImageSource } from "@/types/images";
 import { cn } from "./react/lib/utils";
 
 type Props = {
-  image: ImageMetadata;
+  image: ImageSource;
   imageAlt: string;
   imageSide: "left" | "right";
 };
@@ -25,6 +26,7 @@ const { image, imageAlt, imageSide } = Astro.props;
       })}
       src={image}
       alt={imageAlt}
+      sizes="(min-width: 1380px) 828px, (min-width: 768px) 60vw, 100vw"
     />
   </div>
   <div class="p-8 md:w-2/5">

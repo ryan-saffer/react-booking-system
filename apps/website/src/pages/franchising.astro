@@ -1,21 +1,21 @@
 ---
-import { Image } from "astro:assets";
+import Image from "@/components/image.astro";
 
-import purpleWave from "@/assets/images/pages/franchising/purple-wave.png";
-import blueWave from "@/assets/images/pages/franchising/blue-wave.png";
-import staff from "@/assets/images/pages/franchising/staff.png";
-import franchiseChild from "@/assets/images/pages/franchising/franchise-child.jpg";
-import talia from "@/assets/images/pages/franchising/talia.jpg";
-import pinkCircle from "@/assets/images/pages/franchising/pink-circle.png";
-import yellowCircle from "@/assets/images/pages/franchising/yellow-circle.png";
-import greenCircle from "@/assets/images/pages/franchising/green-circle.png";
-import purpleCurve from "@/assets/images/pages/franchising/purple-curve.png";
-import team from "@/assets/images/pages/franchising/all-staff.jpg";
-import clouds from "@/assets/images/pages/franchising/clouds.png";
+import { sbPagesFranchisingPurpleWavePng as purpleWave } from "@/data/storyblok-images";
+import { sbPagesFranchisingBlueWavePng as blueWave } from "@/data/storyblok-images";
+import { sbPagesFranchisingStaffPng as staff } from "@/data/storyblok-images";
+import { sbPagesFranchisingFranchiseChildJpg as franchiseChild } from "@/data/storyblok-images";
+import { sbPagesFranchisingTaliaJpg as talia } from "@/data/storyblok-images";
+import { sbPagesFranchisingPinkCirclePng as pinkCircle } from "@/data/storyblok-images";
+import { sbPagesFranchisingYellowCirclePng as yellowCircle } from "@/data/storyblok-images";
+import { sbPagesFranchisingGreenCirclePng as greenCircle } from "@/data/storyblok-images";
+import { sbPagesFranchisingPurpleCurvePng as purpleCurve } from "@/data/storyblok-images";
+import { sbPagesFranchisingAllStaffJpg as team } from "@/data/storyblok-images";
+import { sbPagesFranchisingCloudsPng as clouds } from "@/data/storyblok-images";
 import check from "@/assets/images/pages/franchising/check.png";
-import yellowWaveTop from "@/assets/images/pages/franchising/yellow-wave-top.png";
-import yellowWaveBottom from "@/assets/images/pages/franchising/yellow-wave-bottom.png";
-import faq from "@/assets/images/pages/parties/faq.png";
+import { sbPagesFranchisingYellowWaveTopPng as yellowWaveTop } from "@/data/storyblok-images";
+import { sbPagesFranchisingYellowWaveBottomPng as yellowWaveBottom } from "@/data/storyblok-images";
+import { sbPagesPartiesFaqPng as faq } from "@/data/storyblok-images";
 import graphic1 from "@/assets/images/pages/franchising/graphics/graphic1.png";
 import graphic2 from "@/assets/images/pages/franchising/graphics/graphic2.png";
 import graphic3 from "@/assets/images/pages/franchising/graphics/graphic3.png";
@@ -31,26 +31,26 @@ import graphic12 from "@/assets/images/pages/franchising/graphics/graphic12.png"
 import graphic13 from "@/assets/images/pages/franchising/graphics/graphic13.png";
 import graphic14 from "@/assets/images/pages/franchising/graphics/graphic14.png";
 import graphic15 from "@/assets/images/pages/franchising/graphics/graphic15.png";
-import birthdayParties from "@/assets/images/pages/franchising/birthday-parties.jpg";
-import holidayPrograms from "@/assets/images/pages/franchising/holiday-programs.jpg";
-import playLab from "@/assets/images/pages/franchising/play-lab.jpg";
-import afterSchool from "@/assets/images/pages/franchising/after-school.jpg";
-import activations from "@/assets/images/pages/franchising/activations.jpg";
-import schools from "@/assets/images/pages/franchising/schools.jpg";
-import topBubble from "@/assets/images/pages/franchising/top-bubble.jpg";
-import step1 from "@/assets/images/pages/franchising/step-1.jpg";
-import step2 from "@/assets/images/pages/franchising/step-2.jpg";
-import step3 from "@/assets/images/pages/franchising/step-3.jpg";
-import step4 from "@/assets/images/pages/franchising/step-4.jpg";
-import step5 from "@/assets/images/pages/franchising/step-5.jpg";
-import step6 from "@/assets/images/pages/franchising/step-6.jpg";
-import step7 from "@/assets/images/pages/franchising/step-7.jpg";
-import step8 from "@/assets/images/pages/franchising/step-8.jpg";
-import studio1 from "@/assets/images/pages/franchising/studio-1.jpg";
-import studio2 from "@/assets/images/pages/franchising/studio-2.jpg";
-import studio3 from "@/assets/images/pages/franchising/studio-3.jpg";
-import studio4 from "@/assets/images/pages/franchising/studio-4.jpg";
-import studio5 from "@/assets/images/pages/franchising/studio-5.png";
+import { sbPagesFranchisingBirthdayPartiesJpg as birthdayParties } from "@/data/storyblok-images";
+import { sbPagesFranchisingHolidayProgramsJpg as holidayPrograms } from "@/data/storyblok-images";
+import { sbPagesFranchisingPlayLabJpg as playLab } from "@/data/storyblok-images";
+import { sbPagesFranchisingAfterSchoolJpg as afterSchool } from "@/data/storyblok-images";
+import { sbPagesFranchisingActivationsJpg as activations } from "@/data/storyblok-images";
+import { sbPagesFranchisingSchoolsJpg as schools } from "@/data/storyblok-images";
+import { sbPagesFranchisingTopBubbleJpg as topBubble } from "@/data/storyblok-images";
+import { sbPagesFranchisingStep1Jpg as step1 } from "@/data/storyblok-images";
+import { sbPagesFranchisingStep2Jpg as step2 } from "@/data/storyblok-images";
+import { sbPagesFranchisingStep3Jpg as step3 } from "@/data/storyblok-images";
+import { sbPagesFranchisingStep4Jpg as step4 } from "@/data/storyblok-images";
+import { sbPagesFranchisingStep5Jpg as step5 } from "@/data/storyblok-images";
+import { sbPagesFranchisingStep6Jpg as step6 } from "@/data/storyblok-images";
+import { sbPagesFranchisingStep7Jpg as step7 } from "@/data/storyblok-images";
+import { sbPagesFranchisingStep8Jpg as step8 } from "@/data/storyblok-images";
+import { sbPagesFranchisingStudio1Jpg as studio1 } from "@/data/storyblok-images";
+import { sbPagesFranchisingStudio2Jpg as studio2 } from "@/data/storyblok-images";
+import { sbPagesFranchisingStudio3Jpg as studio3 } from "@/data/storyblok-images";
+import { sbPagesFranchisingStudio4Jpg as studio4 } from "@/data/storyblok-images";
+import { sbPagesFranchisingStudio5Png as studio5 } from "@/data/storyblok-images";
 import whiteSlime from "@/assets/images/pages/franchising/white-slime.svg";
 
 import Layout from "@/layout/Layout.astro";
@@ -149,14 +149,14 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
     <Image
       src={purpleWave}
       alt=""
-      class=""
+      class="block w-full"
       aria-hidden="true"
       loading="eager"
     />
     <Image
       src={blueWave}
       alt=""
-      class="absolute -top-0.5"
+      class="absolute inset-x-0 -top-0.5 w-full"
       aria-hidden="true"
       loading="eager"
     />
@@ -410,12 +410,22 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
               image: yellowCircle,
             },
           ].map((item) => (
-            <div
-              class="flex min-h-80 min-w-80 flex-col items-center justify-center gap-2 overflow-hidden bg-contain bg-no-repeat"
-              style={`background-image: url('${item.image.src}')`}
-            >
-              <p class="text-center font-lilita text-4xl">{item.heading}</p>
-              <p class="max-w-48 text-center">{item.content}</p>
+            <div class="relative flex min-h-80 min-w-80 flex-col items-center justify-center gap-2 overflow-hidden">
+              <Image
+                src={item.image}
+                alt=""
+                aria-hidden="true"
+                width={320}
+                height={320}
+                widths={[320, 640]}
+                sizes="320px"
+                fit="contain"
+                class="absolute inset-0 h-full w-full object-contain"
+              />
+              <p class="relative text-center font-lilita text-4xl">
+                {item.heading}
+              </p>
+              <p class="relative max-w-48 text-center">{item.content}</p>
             </div>
           ))
         }

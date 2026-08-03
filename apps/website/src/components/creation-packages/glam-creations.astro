@@ -1,6 +1,7 @@
 ---
 import CreationsSummary from "@/components/creations-summary.astro";
 import Creations from "@/components/party-package-creations.astro";
+import type { ImageSource } from "@/types/images";
 import SparklingLipBalm from "@/components/creations/sparkling-lip-balm.astro";
 import GlitterFaceShimmer from "@/components/creations/glitter-face-shimmer.astro";
 import RainbowCrystals from "@/components/creations/rainbow-crystals.astro";
@@ -14,7 +15,7 @@ import GlitterHairShimmer from "@/components/creations/glitter-hair-shimmer.astr
 
 type Props = {
   variant?: "summary" | "party";
-  image?: ImageMetadata;
+  image?: ImageSource;
   imageAlt?: string;
 };
 

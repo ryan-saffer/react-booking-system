@@ -1,8 +1,9 @@
 ---
-import { Image } from "astro:assets";
+import Image from "@/components/image.astro";
+import type { ImageSource } from "@/types/images";
 
 type Props = {
-  img: ImageMetadata;
+  img: ImageSource;
   alt: string;
   objectPosition?: string;
 };

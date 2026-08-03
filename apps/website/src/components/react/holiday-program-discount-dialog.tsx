@@ -1,9 +1,8 @@
 import { Dialog, DialogContent, DialogTitle } from "@/react-ui/dialog";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import { DateTime } from "luxon";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import type { GetImageResult } from "astro";
 import HolidayProgramDiscountDialogForm from "./forms/holiday-program-discount-dialog-form";
 import { VisuallyHidden } from "@/react-ui/visually-hidden";
 
@@ -15,11 +14,8 @@ export function HolidayProgramDiscountDialog({
   promotionalImage,
   frame,
 }: {
-  promotionalImage: {
-    img: GetImageResult;
-    alt: string;
-  };
-  frame: { img: GetImageResult };
+  promotionalImage: ReactNode;
+  frame: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState<DiscountCode | null>(null);
@@ -69,19 +65,9 @@ export function HolidayProgramDiscountDialog({
       </VisuallyHidden>
       <DialogContent className="max-w-lg p-1 lg:w-full lg:max-w-7xl">
         <div className="flex flex-col lg:flex-row">
-          <img
-            className="hidden aspect-square h-full w-full object-cover lg:block lg:max-h-full lg:w-1/2"
-            src={promotionalImage.img.src}
-            alt={promotionalImage.alt}
-          />
+          {promotionalImage}
           <div className="relative h-full min-h-[500px] w-full bg-[#6AC2E6] lg:max-h-full lg:w-1/2">
-            <div className="absolute inset-0 z-0">
-              <img
-                className="h-full w-full object-cover p-2"
-                src={frame.img.src}
-                alt="frame"
-              />
-            </div>
+            <div className="absolute inset-0 z-0">{frame}</div>
             <div className="relative z-10 mx-2 flex h-full flex-col items-center justify-center gap-1">
               {result === null ? (
                 <>

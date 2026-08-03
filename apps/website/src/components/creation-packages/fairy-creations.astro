@@ -1,6 +1,7 @@
 ---
 import CreationsSummary from "@/components/creations-summary.astro";
 import Creations from "@/components/party-package-creations.astro";
+import type { ImageSource } from "@/types/images";
 import FairyWands from "@/components/creations/fairy-wands.astro";
 import PixieGlitter from "@/components/creations/pixie-glitter.astro";
 import FairyBracelets from "@/components/creations/fairy-bracelets.astro";
@@ -14,7 +15,7 @@ import SparkleCrowns from "@/components/creations/sparkle-crowns.astro";
 
 type Props = {
   variant?: "summary" | "party";
-  image?: ImageMetadata;
+  image?: ImageSource;
   imageAlt?: string;
 };
 

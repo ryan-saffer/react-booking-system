@@ -1,6 +1,7 @@
 ---
 import CreationsSummary from "@/components/creations-summary.astro";
 import Creations from "@/components/party-package-creations.astro";
+import type { ImageSource } from "@/types/images";
 import StarhexWands from "@/components/creations/starhex-wands.astro";
 import SquishyPockets from "@/components/creations/squishy-pockets.astro";
 import HendrixGlitterShine from "@/components/creations/hendrix-glitter-shine.astro";
@@ -12,7 +13,7 @@ import SparkleCrowns from "@/components/creations/sparkle-crowns.astro";
 
 type Props = {
   variant?: "summary" | "party";
-  image?: ImageMetadata;
+  image?: ImageSource;
   imageAlt?: string;
 };
 
