@@ -1,22 +1,36 @@
 ---
-title: Shifts & Payroll Integration
-description: Pick the right Sling shift variant so cost of delivery and overheads stay accurate in Xero.
+title: Sling Shifts and Payroll
+description: Choose the right Sling shift so the payroll CSV maps work correctly in Xero.
 ---
 
-Our Sling roster drives every casual-timesheet we create in Xero. Treat it as the source of truth for who worked, what they did, and how they should be paid.
+The Portal converts published Sling shifts into a CSV for UpSheets and Xero. The employee, location, position, time, and notes on each shift determine the exported payroll rows.
 
 :::note[Casual staff only]
-Only roster employees engaged as casual staff. Anyone else added to Sling receives an auto-generated Xero timesheet that payroll cannot use.
+Only casual employees are rostered in Sling. Manage other employment types outside Sling.
 :::
 
-Our Sling roster needs to reflect the service a team member delivered and whether the work was hands-on with kids or preparation. Accurate labels keep Xero labour costs split between Cost of Goods Sold (COGS) for service delivery, COGS Supervisor duties, and Non COGS for other miscellaneous tasks.
+The roster must reflect the service delivered and whether the work was hands-on or preparation. Accurate labels keep Xero labour costs split between Cost of Goods Sold (COGS) for service delivery, COGS Supervisor duties, and Non COGS tasks.
 
 :::tip[Quick rules]
 
 - Choose a _Facilitator_ shift whenever the person is actively running the service.
 - Use the service-specific _[Supervisor]_ shift for all prep, packing, shopping, calls, or other support tasks.
-- Every Facilitator shift has `[On Call]`, `[Superhero]`, and `[Sunday]` variants - match the correct label to the circumstance.
+- Use the `[On Call]` and `[Sunday]` variants only when they match the shift.
   :::
+
+See [Payroll](/people/payroll) for CSV generation, exception checks, and the manual UpSheets-to-Xero steps.
+
+## How shifts map to payroll
+
+- Only published shifts in the selected date range and business are exported.
+- Sling employees are matched to Xero by email.
+- The shift position maps to a Xero pay item and tracking activity; the location maps to the relevant business location.
+- Sling notes are copied into the CSV for reimbursements and other review items.
+- Generating the CSV does not import it or create a Xero pay run.
+
+:::caution[Werribee is not supported]
+Do not use the Portal payroll export for Werribee. Its payroll mappings are not available.
+:::
 
 ## Core services and shifts
 
@@ -32,21 +46,23 @@ All seven core services have the same structure. Facilitator variants post to on
 
 ## Exceptions
 
-| Exception              | Shift names                                                                                   | When to use                                                                                                                  |
-| ---------------------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Training               | <ul style="white-space:nowrap"><li>`Training`</li><li>`[Sunday] Training`</li></ul>           | Any structured training or shadowing block. Posts to Non COGS even if it happens during a program.                           |
-| PIC (Person In Charge) | <ul style="white-space:nowrap"><li>` PIC`</li><li>`[Sunday] PIC`</li></ul>                    | On-call duty manager coverage. Pays the 10% standby rate - avoid rostering during active delivery.                           |
-| Miscellaneous          | <ul style="white-space:nowrap"><li>`Miscellaneous`</li><li>`[Sunday] Miscellaneous`</li></ul> | Work that does not fit a specific service (e.g. customer service at Head Office). Use sparingly and flag in Slack if unsure. |
+| Exception              | Shift names                               | When to use                                                                                                        |
+| ---------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Training               | `Training`, `[Sunday] Training`           | Structured training or shadowing. Posts to Non COGS even when it happens during a program.                         |
+| PIC (Person In Charge) | `PIC`, `[Sunday] PIC`                     | On-call duty manager coverage. Pays the 10% standby rate; avoid rostering it during active delivery.               |
+| Miscellaneous          | `Miscellaneous`, `[Sunday] Miscellaneous` | Work that does not fit a service, such as Head Office customer service. Use sparingly and flag in Slack if unsure. |
 
 ## Rate modifiers and budgeting
 
 Use this reference when you need a modifier on a Facilitator or Supervisor shift.
 
-| Modifier                                              | Rate impact                                             | When to use                                                                       |
-| ----------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| <span style="white-space:nowrap">`[On Call]`</span>   | Pays 10% of the base rate and does not accrue overtime. | Someone is on standby (including PIC) rather than delivering the session.         |
-| <span style="white-space:nowrap">`[Superhero]`</span> | Pays 150% of the base rate.                             | A team member jumps in at the last minute and genuinely saves the day.            |
-| <span style="white-space:nowrap">`[Sunday]`</span>    | No rate change - label supports Sling budgeting only.   | The shift falls on a Sunday; payroll still calculates penalties by calendar date. |
+| Modifier                                            | Rate impact                                             | When to use                                                                       |
+| --------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| <span style="white-space:nowrap">`[On Call]`</span> | Pays 10% of the base rate and does not accrue overtime. | Someone is on standby (including PIC) rather than delivering the session.         |
+| <span style="white-space:nowrap">`[Sunday]`</span>  | No rate change - label supports Sling budgeting only.   | The shift falls on a Sunday; payroll still calculates penalties by calendar date. |
+
+`Superhero` is not mapped as a Sling position by the payroll export. Any approved Superhero payment must be handled as
+a manual Xero pay item rather than relying on the generated CSV.
 
 ## Laundry allowance
 
@@ -64,20 +80,11 @@ The allowance applies to hands-on facilitator shifts where staff wear the Fizz K
 - Incursions
 - Play Lab Facilitator
 
-It does not apply to `[On Call]`, PIC, Supervisor, Training, Miscellaneous, or `[Superhero]` shifts.
-
-### How the export creates rows
-
-- The export adds one laundry allowance row for each eligible day worked, with quantity `1` at `$1.32`.
-- Rows are created per day, rather than one combined weekly row, so each allowance can be tracked against the correct Xero activity.
-- If someone works multiple eligible shifts on the same day, payroll uses the activity from their first eligible shift that day.
-- If someone works eligible shifts in more than one location on the same day, payroll also uses the location from their first eligible shift that day.
+It does not apply to `[On Call]`, PIC, Supervisor, Training, or Miscellaneous shifts. Superhero payments are handled manually in Xero.
 
 ### Weekly cap
 
-The allowance is capped at `$6.62` per employee per week.
-
-Five eligible days pays `$6.60` (`5 x $1.32`). If the employee works a 6th or 7th eligible day, payroll adds only the remaining `$0.02` needed to reach the cap. The export does this by adding one extra laundry allowance row with quantity `0.0152`, because `$1.32 x 0.0152 = $0.020064`, which Xero rounds to `$0.02`.
+The export adds `$1.32` for each eligible day, capped at `$6.62` per employee per week. Multiple eligible shifts on one day receive one allowance for that day.
 
 ## Overtime thresholds in Sling
 

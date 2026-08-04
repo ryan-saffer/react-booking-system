@@ -1,0 +1,85 @@
+---
+title: How bookings work
+description: The current Preschool Program journey from session selection to Square and Acuity confirmation.
+---
+
+import { Card, CardGrid, LinkCard, Steps } from '@astrojs/starlight/components'
+
+Preschool Program checkout lets families book and pay for individual dates or a whole term.{' '}
+<strong>Square records payment</strong>; <strong>Acuity records each child's session</strong>.
+
+## Customer journey
+
+<Steps>
+  <ol>
+    <li>
+      <h3>Choose a studio and sessions</h3>
+      <p>
+        Dates come from Acuity and are grouped by weekday, start time and term. Families can select individual dates or
+        use <strong>Book into entire term</strong> when it is available.
+      </p>
+    </li>
+    <li>
+      <h3>Add family details</h3>
+      <p>
+        The form collects parent, child, emergency contact, allergy, anaphylaxis-plan and additional information. Totals
+        update when the number of children changes.
+      </p>
+    </li>
+    <li>
+      <h3>Review pricing and pay</h3>
+      <p>
+        The 20% whole-term discount is applied first, then one discount code, then a Fizz Kidz gift card. Any balance is
+        paid by card, Apple Pay or Google Pay.
+      </p>
+    </li>
+    <li>
+      <h3>Receive confirmation</h3>
+      <p>
+        The success screen and Fizz Kidz email confirm every child/session, location, whole-term discount label, receipt
+        when available, and individual{' '}
+        <strong>Change / Cancel</strong> links.
+      </p>
+    </li>
+  </ol>
+</Steps>
+
+## Booking outcome
+
+<CardGrid>
+  <Card title="Current availability" icon="warning">
+    Availability and prices are confirmed at checkout. If a selected session no longer has enough places for every
+    child, the family can choose another session.
+  </Card>
+  <Card title="Payment summary" icon="seti:lock">
+    The order includes every child and session. Whole-term and code discounts reduce the total, and gift card and card
+    payments can share the balance.
+  </Card>
+  <Card title="Session bookings" icon="information">
+    Each child has a separate appointment for each session, carrying the contact and safety details used by attendance.
+  </Card>
+  <Card title="Confirmation" icon="email">
+    Each management link controls one child/session, even when the family books a whole term in one checkout.
+  </Card>
+</CardGrid>
+
+## Discounts and gift cards
+
+- A percentage code is calculated after the 20% whole-term reduction.
+- A fixed code cannot exceed the already-discounted subtotal.
+- One discount code can be applied. It may also be limited by expiry, available uses or one use per customer.
+- A gift card pays the discounted total first; another payment method covers any remainder.
+- See [Whole-term bookings](/services/preschool-programs/whole-term-bookings/) for eligibility and cancellation
+  repricing.
+
+<LinkCard
+  title="Attendance"
+  href="/services/preschool-programs/attendance/"
+  description="How Acuity appointments become the Preschool attendance list."
+/>
+
+<LinkCard
+  title="Changes and refunds"
+  href="/services/preschool-programs/changes-and-refunds/"
+  description="What each Change / Cancel link does."
+/>

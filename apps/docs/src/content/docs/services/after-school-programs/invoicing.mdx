@@ -1,0 +1,95 @@
+---
+title: Invoicing
+description: How after-school invoices are created in Square and represented in the Portal.
+---
+
+import { Aside, Badge, Card, CardGrid, Steps } from '@astrojs/starlight/components'
+
+After-school invoicing begins after the free trial. The Portal selects the enrolment and calculates the amount; Square
+creates, emails, and tracks the actual invoice.
+
+## Sending an invoice
+
+<Steps>
+  <ol>
+    <li>
+      <h3>Choose the program and enrolments</h3>
+      <p>
+        The invoicing view shows active Portal enrolments for the selected program, together with their continuation and
+        current Square invoice status.
+      </p>
+    </li>
+    <li>
+      <h3>Select the number of weeks</h3>
+      <p>
+        Staff choose the number of weeks to charge. The Portal multiplies that number by the per-week price saved when
+        the child enrolled. This allows a mid-term enrolment to be billed for fewer weeks.
+      </p>
+    </li>
+    <li>
+      <h3>Square publishes and emails the invoice</h3>
+      <p>
+        Square creates the customer and invoice, accepts card payment, and emails the payment link. The invoice is due
+        three days after it is sent and includes three scheduled reminders.
+      </p>
+    </li>
+    <li>
+      <h3>The Portal stores the Square invoice link</h3>
+      <p>
+        The new invoice ID is saved against the enrolment, the continuation choice is set to yes, and both staff and the
+        parent portal can read the latest status from Square.
+      </p>
+    </li>
+  </ol>
+</Steps>
+
+<Aside type="caution" title="Choose the weeks before sending">
+  The number of weeks is chosen by staff; it is not automatically taken from the full appointment count. Sending again
+  creates a new invoice and cancels the previous invoice when it is still cancellable. A paid invoice remains paid, and
+  a new invoice can still be created, so review the current invoice before sending another.
+</Aside>
+
+<Aside type="note" title="Reminders are automatic">
+  Square sends the three reminders using the schedule included with the invoice. Staff do not need to send them
+  separately.
+</Aside>
+
+## Portal statuses
+
+<CardGrid>
+  <Card title="NOT SENT" icon="information">
+    No Square invoice ID is stored on the enrolment. The parent portal shows the expected full-term price but no payment
+    button.
+  </Card>
+  <Card title="UNPAID" icon="warning">
+    A Square invoice exists but is not currently reported as paid or cancelled. Staff can open the invoice in Square;
+    the parent can use the payment link.
+  </Card>
+  <Card title="PAID" icon="approve-check-circle">
+    The invoice is paid. Partially refunded invoices also appear as <strong>PAID</strong> in the Portal.
+  </Card>
+  <Card title="VOID" icon="seti:lock">
+    Square reports the invoice as cancelled. The Portal keeps the link so staff can inspect the invoice history.
+  </Card>
+</CardGrid>
+
+## Unenrolments and refunds
+
+<Badge text="Acuity" variant="note" size="small" />{' '}
+<Badge text="Portal" variant="tip" size="small" />{' '}
+<Badge text="Square" variant="caution" size="small" />
+
+Using the Portal's full unenrolment action cancels the child's appointments, marks the enrolment inactive, and cancels a
+linked invoice when it is still cancellable.
+
+It does **not** refund a paid invoice. Full and partial refunds are separate manual actions in Square, and a partially
+refunded invoice continues to appear as <strong>PAID</strong> in the Portal.
+
+<Aside type="note" title="Do not use an absence to adjust an invoice">
+  A week marked as not attending remains part of the enrolment and does not create a credit or refund. Attendance and
+  billing are separate. See
+  <a href="/services/after-school-programs/parent-portal-and-attendance/">Parent portal and attendance</a>.
+</Aside>
+
+See [After the trial](/services/after-school-programs/after-the-trial/) for the continuation step that comes before
+invoicing.

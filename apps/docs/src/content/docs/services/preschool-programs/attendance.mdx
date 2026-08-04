@@ -1,0 +1,84 @@
+---
+title: Attendance
+description: How Preschool Program appointments and Acuity labels appear in the Portal attendance view.
+---
+
+import { Aside, Badge, Card, CardGrid, LinkCard, Steps } from '@astrojs/starlight/components'
+
+Preschool attendance is read from Acuity. One paid checkout can create many rows because every child/session is a
+separate appointment.
+
+## Attendance labels
+
+<CardGrid>
+  <Card title="Not signed in" icon="information">
+    <Badge text="No attendance label" variant="default" size="small" />
+    <br />
+    The child is booked but has not yet been signed in.
+  </Card>
+  <Card title="Signed in" icon="approve-check-circle">
+    <Badge text="Checked in" variant="tip" size="small" />
+    <br />
+    The row turns green and is included in the Signed in count.
+  </Card>
+  <Card title="Signed out" icon="rocket">
+    <Badge text="Checked out" variant="note" size="small" />
+    <br />
+    The row becomes muted and is included in the Signed out count.
+  </Card>
+  <Card title="Not attending" icon="warning">
+    <Badge text="Not attending" variant="caution" size="small" />
+    <br />
+    The Portal shows the saved Acuity label. Staff can sign the child in if they arrive or use{' '}
+    <strong>Mark attending</strong> to clear it.
+  </Card>
+</CardGrid>
+
+## Staff flow
+
+<Steps>
+  <ol>
+    <li>
+      <h3>Choose studio and session</h3>
+      <p>
+        The selector shows upcoming sessions and earlier dates from a term that is still in progress. Older completed
+        terms are left out of the quick list.
+      </p>
+    </li>
+    <li>
+      <h3>Review the row</h3>
+      <p>Expand it for parent and emergency contacts, allergies, additional information and any anaphylaxis plan.</p>
+    </li>
+    <li>
+      <h3>Sign in, then sign out</h3>
+      <p>Each action replaces the attendance label in Acuity and updates the row and summary count.</p>
+    </li>
+    <li>
+      <h3>Correct a mistake</h3>
+      <p>
+        <strong>Undo sign in</strong> returns to no attendance label. <strong>Undo sign out</strong> returns to Checked
+        in.
+      </p>
+    </li>
+  </ol>
+</Steps>
+
+<Aside type="caution" title="Safety details come from the appointment">
+  <Badge text="Anaphylaxis" variant="caution" size="small" />{' '}
+  <Badge text="Allergies" variant="caution" size="small" />
+  <br />
+  These details are drawn from the booking. Open the row and review the plan before sign-in. The tags highlight the
+  submitted details but do not replace reviewing the plan.
+</Aside>
+
+<LinkCard
+  title="How bookings work"
+  href="/services/preschool-programs/how-bookings-work/"
+  description="Why each paid child/session needs a matching Acuity appointment."
+/>
+
+<LinkCard
+  title="Changes and refunds"
+  href="/services/preschool-programs/changes-and-refunds/"
+  description="How cancelling one appointment affects the paid order."
+/>

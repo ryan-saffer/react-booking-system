@@ -1,0 +1,76 @@
+---
+title: Party changes and problems
+description: Help customers with common party booking, email, form and cancellation questions.
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+Use the booking menu for common customer requests and make booking changes in the Portal rather than editing the Google
+Calendar event directly.
+
+## Send another email or link
+
+### Booking confirmation
+
+1. Confirm that **Send confirmation email** was selected when booked.
+2. Check the parent email saved in the Portal.
+3. Correct the email address if needed.
+4. Use **Resend confirmation email** and confirm the address shown in the prompt.
+
+### Updated party details
+
+Only a date, start-time or party-length change automatically sends an updated confirmation. Address, contact, food,
+notes, creation and add-on edits do not. Contact the family directly for those changes.
+
+### Party Form or reminder
+
+Use **Get Party Form link** from the booking menu and send it directly. The reminder depends on the booking still being
+marked as missing its Party Form; it is not a general resend button.
+
+### RSVP details
+
+Guests cannot edit a submitted RSVP themselves. The host or a signed-in team member can update the response from the
+guest-list view. Contact the guest directly if they need another confirmation.
+
+## Details changed after a form submission
+
+- A repeat Party Form emails the studio a before-and-after comparison.
+- Repeated take-home bag and product quantities are added to existing quantities.
+- Removing a previously selected unpaid addition may require a manual Portal correction.
+- Changing an existing RSVP is silent and does not email the guest or reverse Zoho data.
+- Changing the party date or length through the booking editor updates Calendar and sends the parent an email.
+
+For paid-order corrections, use the approved Square refund or correction process and contact the supplier directly when
+their order needs to change. Editing the Portal does not refund a payment or change an order already sent to a supplier.
+
+## Cancel or delete a party
+
+Deleting a booking removes the Calendar event, invitation, RSVPs and booking, and marks a linked Zoho deal as lost. It
+does **not**:
+
+- notify the customer;
+- collect a cancellation fee;
+- refund Square payments or paid add-ons; or
+- cancel an order directly with the cake supplier.
+
+Complete those customer, payment and supplier steps separately as your approved process requires.
+
+## Related guides
+
+<CardGrid>
+  <LinkCard
+    title="Manage bookings"
+    description="See exactly what create, edit, resend and delete actions do."
+    href="/services/birthday-parties/manage-bookings/"
+  />
+  <LinkCard
+    title="Forms and add-ons"
+    description="Understand the Paperform, Square and supplier sequence."
+    href="/services/birthday-parties/forms-and-add-ons/"
+  />
+  <LinkCard
+    title="Invitations and RSVPs"
+    description="Manage invitations, guest responses and access to the guest list."
+    href="/services/birthday-parties/rsvp/"
+  />
+</CardGrid>

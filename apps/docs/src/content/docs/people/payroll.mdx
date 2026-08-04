@@ -1,0 +1,76 @@
+---
+title: Payroll
+description: Generate and review the Sling payroll CSV before importing it into Xero.
+---
+
+import { Aside } from '@astrojs/starlight/components'
+
+The Portal turns published Sling shifts into a CSV for UpSheets. The CSV is reviewed and imported into Xero manually; generating it does not create a pay run.
+
+<Aside type="caution" title="Sling must be correct first">
+  Payroll uses published Sling shifts, including their employee, location, position, dates, times, and notes. Finalise
+  the roster before generating the file.
+</Aside>
+
+<Aside type="danger" title="Werribee is not supported">
+  Do not use the Portal payroll export for Werribee. Its payroll mappings are not available.
+</Aside>
+
+## Generate the CSV
+
+1. Finalise and publish all casual employee shifts in Sling.
+2. In the Portal, open **Payroll**.
+3. Select the payroll period. The range must be 28 days or less.
+4. Select **Generate Timesheets**.
+5. Review the result sections and download the CSV.
+6. Upload the reviewed file to [UpSheets](https://app.upsheets.com/login).
+7. Import from UpSheets into Xero, create the pay run, and complete any adjustments identified during review.
+
+## What the Portal calculates
+
+For each published shift in the selected business and date range, the Portal:
+
+- matches the Sling employee to Xero by email;
+- maps the Sling position and location to a Xero pay item and tracking activity;
+- separates overtime after 10 hours in one shift or 38 hours in a week;
+- applies the special handling for on-call, Sunday, and higher-rate shift variants;
+- adds eligible laundry allowance rows and enforces the weekly cap;
+- flags birthday rate changes, under-18 super checks, and short shifts; and
+- carries Sling shift notes into the CSV for review.
+
+Uploading to UpSheets, creating the Xero pay run, and adding reimbursements from notes remain manual payroll tasks.
+
+## Review every exception
+
+### Skipped employees
+
+Skipped employees are listed in the result and are not included in the CSV.
+
+Add the employee to the correct Xero organisation with an ordinary-hours rate, and use the same email as Sling. Then generate the CSV again and include any required backpay.
+
+### Birthdays in the period
+
+The Portal lists casual employees whose birthday falls in the selected range, including whether they worked.
+
+- Decide whether their rate changes because of the birthday.
+- If it changes, update the Xero pay template.
+- Remove pre-birthday rows from the CSV before import, then add those hours to the pay run at the previous rate.
+- Pay particular attention when the employee turns 18 because the pay items may also change.
+
+### Under 18 and more than 30 hours
+
+Employees under 18 who worked more than 30 hours in a week require superannuation in the pay run.
+
+### Shifts below the minimum length
+
+The Portal lists published shifts shorter than three hours, or shorter than four hours on Sunday. Correct the roster or use the notes to explain the short shift.
+
+### Overtime
+
+The Portal separates overtime after 10 hours in one shift or 38 hours in a week. On-call hours do not accrue overtime. Sunday hours remain on the Sunday pay item when that rate is higher.
+
+### Allowances and reimbursements
+
+Laundry allowances are generated automatically for eligible uniformed shifts. Other items, such as travel or kilometre reimbursements, are not inferred from the roster. Review the CSV **notes** column and add required adjustments in Xero.
+
+See [Sling shifts and payroll](/tools/sling/sling-payroll) for shift labels and [Budgeting in Sling](/tools/sling/sling-budgeting) for estimated wage costs.

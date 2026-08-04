@@ -1,94 +1,164 @@
 ---
-title: Invitations & RSVP's
-description: Create and share party invitations, collect RSVPs online, and manage guest lists securely.
+title: Invitations and RSVPs
+description: Create and share invitations, understand guest responses, and safely maintain the guest list.
 ---
 
-import { Aside, Badge, Card, CardGrid, Steps } from '@astrojs/starlight/components'
+import { Aside, Card, CardGrid, LinkCard, Steps } from '@astrojs/starlight/components'
 
-<CardGrid>
-  <Card title="Create once, share anywhere" icon="instagram">
-    <p>
-      Hosts build an invitation, then share a link or download a printable version. Every printed invite includes a QR
-      code that lands on the live web page.
-    </p>
-  </Card>
-  <Card title="RSVPs stay in sync" icon="rocket">
-    <p>
-      Guests can RSVP directly on the invitation page - including multiple children at once - and their responses stay
-      tied to the party, even if the host updates the invitation or swaps designs later.
-    </p>
-  </Card>
-  <Card title="Automatic confirmations" icon="email">
-    <p>
-      Guests receive an email confirming their RSVP and are added to our mailing list. When enabled, hosts also get an
-      email alert for each new response.
-    </p>
-  </Card>
-  <Card title="Secure, role-aware access" icon="seti:lock">
-    <p>
-      Authentication decides what someone sees: guests get the RSVP form, hosts see the tracking dashboard, and staff
-      signing in from the portal see the same tracking view on iPads.
-    </p>
-  </Card>
-</CardGrid>
+The invitation link has two views: guests see the public invitation and RSVP form; the signed-in host and signed-in Fizz
+Kidz staff see the live guest list.
 
-## Guest experience
+<Aside type="caution" title="Fizz Kidz does not monitor allergy arrangements">
+  Allergy information is shown to the party host for planning. Guests are told that the host must arrange allergy needs
+  directly. Staff can view the information, but the RSVP system is not an automatic allergy alert or approval process.
+</Aside>
+
+## Create and share an invitation
 
 <Steps>
   <ol>
     <li>
-      <h3>
-        Open the invitation <Badge text="Link" variant="note" size="small" />{' '}
-        <Badge text="QR code" variant="tip" size="small" />
-      </h3>
+      <h3>Open the invitation link</h3>
       <p>
-        Guests tap the shared link or scan the QR on a printed invite to load the live page with all party details and
-        the invitation design the host selected.
+        The booking confirmation contains a durable host link. If an invitation already exists, it opens that invitation;
+        otherwise it starts the design flow.
       </p>
     </li>
     <li>
-      <h3>Submit an RSVP for any children attending</h3>
+      <h3>Choose the details and design</h3>
       <p>
-        The form accepts multiple children in one submission so families can reply once. Guests can include allergy
-        details alongside their response.
+        Party details are prefilled from the booking. The host can set the RSVP contact, deadline and whether to receive
+        an email for each guest response.
       </p>
     </li>
     <li>
-      <h3>Confirmation and notifications</h3>
+      <h3>Sign in and finish</h3>
       <p>
-        After submitting, guests receive an email confirming their RSVP and are added to our mailing list. If the host
-        chose notifications, they receive the same alert when a new RSVP arrives.
+        Saving requires a Fizz Kidz Portal account sign-in. The account becomes the invitation owner. On the first save,
+        the system links the invitation to the booking and emails the booking's parent address with the share link.
+      </p>
+    </li>
+    <li>
+      <h3>Share the stable link</h3>
+      <p>
+        The host can copy the link, share it by WhatsApp, SMS or email, or download a PNG to print. The downloaded invite
+        includes a QR code to the same public page.
       </p>
     </li>
   </ol>
 </Steps>
 
-## Host view and controls
-
-- Hosts must sign in or create an account before finalising an invitation so
-  guest details stay protected.
-- When a signed-in host opens their invitation link, they are taken to the RSVP
-  management view instead of the guest form.
-- Hosts can review every RSVP, edit entries, or delete responses as needed.
-- Invitations can be edited or redesigned at any time without losing RSVP data;
-  existing printed QR codes keep pointing to the right page.
-- Only the invitation owner can make edits once it is created.
-
-<Aside type="tip" title="Keep designs fresh without risk">
-  Swapping to a new invitation template never breaks the QR codes that were already handed out - guests still land on
-  the current invitation and their responses remain intact.
+<Aside type="tip" title="Design changes keep the guest list">
+  Editing the invitation or choosing another design keeps the same invitation ID. Existing links and printed QR codes
+  continue to work, and the RSVPs remain attached to the booking.
 </Aside>
 
-## Staff access
+## What guests submit
 
-Staff can open the invitation from the portal on iPads (while signed in) to see
-the same tracking view as hosts. This list helps the team gauge expected head
-count and check allergy requirements before the party.
+<CardGrid>
+  <Card title="One reply, multiple children" icon="information">
+    <p>A family can include more than one child and choose attending or not attending for each child.</p>
+  </Card>
+  <Card title="Required contact details" icon="information">
+    <p>Guest submissions require the parent's name, email and mobile, plus each child's name and date of birth.</p>
+  </Card>
+  <Card title="Allergies and message" icon="warning">
+    <p>Attending children require a yes/no allergy answer. Allergy details and a message can be included.</p>
+  </Card>
+  <Card title="Marketing preference" icon="email">
+    <p>
+      The form includes a marketing checkbox. The response is passed to Zoho as the contact's opt-in or opt-out
+      preference; do not promise subscription to a particular marketing campaign.
+    </p>
+  </Card>
+</CardGrid>
 
-## Security rules
+## What happens after a guest RSVP
 
-<Aside type="caution" title="Authentication first">
-  All RSVP data is protected. Every invitation requires the host to be signed in before it can be finalised or edited,
-  and only the owner can make changes. The live page adapts to the viewer - guests get the RSVP form, while hosts and
-  staff see the tracking view after authenticating.
+<Steps>
+  <ol>
+    <li>
+      <h3>The RSVP is saved</h3>
+      <p>
+        The response is stored under the party booking. Guest-list totals count children, not form submissions, so a
+        single family can add several attending or not-attending responses.
+      </p>
+    </li>
+    <li>
+      <h3>Zoho CRM is updated</h3>
+      <p>
+        The system creates or updates a Birthday Party Guest parent and child record for every child, including the branch
+        and marketing preference.
+      </p>
+    </li>
+    <li>
+      <h3>Confirmation emails are sent</h3>
+      <p>
+        The guest receives a summary with each child's response, allergy notes, date, time, venue and host contact. If
+        host notifications are enabled, the booking's parent email also receives the response details.
+      </p>
+    </li>
+  </ol>
+</Steps>
+
+## Host and staff controls
+
+| Action | Host account | Signed-in Fizz Kidz staff |
+| --- | --- | --- |
+| View totals, contact details, messages and allergies | Yes | Yes |
+| Change attending/not attending on an existing entry | Yes | Yes |
+| Delete a child or response | Yes | Yes |
+| Add an RSVP on behalf of a guest | Yes | No host-only button |
+| Turn response emails on or off | Yes | No host-only switch |
+| Preview and share the invitation | Yes | Available from the management view |
+
+Host-entered RSVPs deliberately skip date of birth, guest confirmation email and Zoho guest creation. Use this when the
+host receives a reply by phone or message.
+
+<Aside type="caution" title="Edits are silent">
+  Changing a response or deleting it from the guest list updates the saved list only. It does not email the guest and
+  does not reverse the guest records already written to Zoho. Tell the family directly when confirmation matters.
 </Aside>
+
+## Common problems
+
+### A guest needs to change a response
+
+Guests cannot reopen and edit a submitted RSVP. The host or a signed-in team member can change the status or delete the
+entry from the management view. If the family needs to supply new contact or allergy details, the host should confirm
+those directly.
+
+### The host sees the guest form
+
+They are not signed into the invitation owner's account. Ask them to sign in using the same account used to finalise the
+invitation, then reopen the invitation link.
+
+### A team member cannot see the guest list
+
+Confirm they are signed into the Portal and have a Fizz Kidz organisation role. Opening the link while signed out shows
+the public guest experience.
+
+### The invitation will not load
+
+Open the booking in the Portal and use <strong>Get invitation link</strong> rather than reusing a copied or shortened
+link. If the booking has been deleted, its invitation image, invitation record and RSVPs are also deleted.
+
+### A downloaded invite is old
+
+Preview the current invitation and download it again. The public link and QR code remain stable, but an old PNG does not
+change after a redesign.
+
+## Related guides
+
+<CardGrid>
+  <LinkCard
+    title="Manage bookings"
+    description="Find the invitation link and understand what deleting a booking removes."
+    href="/services/birthday-parties/manage-bookings/"
+  />
+  <LinkCard
+    title="Changes and problems"
+    description="Help customers with common booking, email and form questions."
+    href="/services/birthday-parties/changes-and-problems/"
+  />
+</CardGrid>

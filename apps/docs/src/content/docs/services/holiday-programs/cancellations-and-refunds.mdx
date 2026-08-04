@@ -1,0 +1,52 @@
+---
+title: Cancellations and refunds
+description: What happens when a Holiday Program appointment is changed or cancelled in Acuity.
+---
+
+import { Aside, Badge, Card, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+Each booking confirmation has a <strong>Change / Cancel</strong> link beside every child/session. It opens that
+individual Acuity appointment.
+
+## The 48-hour rule
+
+<CardGrid>
+  <Card title="At least 48 hours before" icon="approve-check-circle">
+    <Badge text="Automatic" variant="tip" size="small" />
+    <br />
+    Cancelling the appointment automatically refunds the eligible amount for that child and session.
+  </Card>
+  <Card title="Inside 48 hours" icon="warning">
+    <Badge text="No automatic refund" variant="caution" size="small" />
+    <br />
+    The appointment is cancelled and a cancellation email is sent, but no refund is created.
+  </Card>
+  <Card title="Free line" icon="information">
+    A fully discounted appointment can be cancelled, but there is no paid amount to return.
+  </Card>
+  <Card title="Gift card + card" icon="seti:lock">
+    A split payment is refunded to the original gift card and card, up to the amount paid with each.
+  </Card>
+</CardGrid>
+
+<Aside type="note" title="Cancellation and rescheduling are different">
+  Cancelling applies the 48-hour refund rule. Rescheduling moves the appointment and keeps the booking active; it does
+  not create a refund.
+</Aside>
+
+<Aside type="tip" title="What the customer receives">
+  Every cancellation sends a cancellation email. When a refund is due, the email includes the refunded amount and a
+  receipt link when available. Each <strong>Change / Cancel</strong> link applies to one child and session.
+</Aside>
+
+<LinkCard
+  title="How bookings work"
+  href="/services/holiday-programs/how-bookings-work/"
+  description="See the Holiday Program booking and confirmation journey."
+/>
+
+<LinkCard
+  title="Gift cards"
+  href="/services/gift-cards/"
+  description="How Fizz Kidz gift card funds are handled across studios."
+/>

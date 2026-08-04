@@ -1,0 +1,79 @@
+---
+title: Incursion preparation forms
+description: How final incursion details are collected during the 22-day preparation window.
+---
+
+import { Aside, Badge, Card, CardGrid, Steps } from '@astrojs/starlight/components'
+
+Incursion preparation forms are sent automatically. Each day at 8:30 am, upcoming incursions within the next 22 days
+become eligible for the form email.
+
+<Aside type="tip" title="Think of 22 days as a sending window">
+  The form is not sent at an exact minute 22 days before the incursion. It is sent during the first daily run after the
+  booking enters the 22-day window.
+</Aside>
+
+## The automated journey
+
+<Steps>
+  <ol>
+    <li>
+      <h3>
+        Eligible incursions are selected <Badge text="Daily 8:30 am" variant="note" size="small" />
+      </h3>
+      <p>
+        Only future incursions receive this form. Standard events do not.
+      </p>
+    </li>
+    <li>
+      <h3>Sibling slots are grouped together</h3>
+      <p>
+        Every slot in the booking is included in one email to the booking contact. The email lists all current session
+        dates and times and links to one shared form.
+      </p>
+    </li>
+    <li>
+      <h3>The event is marked as sent</h3>
+      <p>
+        The sent marker applies to every sibling slot, so the booking receives one preparation form email.
+      </p>
+    </li>
+    <li>
+      <h3>The customer submits final details</h3>
+      <p>
+        The form captures the organisation and address again, total children, room or location, parking, expected
+        learning, teacher presence, additional information, and how they heard about Fizz Kidz.
+      </p>
+    </li>
+    <li>
+      <h3>The update is shared</h3>
+      <p>
+        The submission marks the incursion form complete and updates those preparation details across all sibling Portal
+        slots. The number of children also becomes the updated students-per-session value.
+      </p>
+    </li>
+    <li>
+      <h3>Both sides receive a summary</h3>
+      <p>
+        The customer receives a confirmation of their answers and all slots. The responsible Fizz Kidz studio receives
+        the booking and preparation summary, with the customer's address available for a direct reply.
+      </p>
+    </li>
+  </ol>
+</Steps>
+
+<CardGrid>
+  <Card title="Portal" icon="open-book">
+    Stores whether the form was sent and completed, plus all submitted preparation answers. The completed answers appear
+    in the event's Form Results section.
+  </Card>
+  <Card title="Google Calendar" icon="calendar">
+    Keeps the scheduled slot entries. A preparation form submission does not rewrite those calendar entries.
+  </Card>
+  <Card title="Zoho" icon="rocket">
+    The submission updates the incursion student count on the linked deal.
+  </Card>
+</CardGrid>
+
+See [How incursions and events work](/services/incursions-and-events/how-it-works/) for event creation, edits and sibling
+time slots.

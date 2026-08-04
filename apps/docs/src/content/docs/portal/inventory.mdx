@@ -1,0 +1,81 @@
+---
+title: Inventory
+description: Track consumables and turn upcoming party bookings into a suggested shopping list.
+---
+
+import { Aside, Card, CardGrid, Steps } from '@astrojs/starlight/components'
+
+Inventory tracks consumable stock used by studios. It has three connected parts: the catalogue, a generated shopping
+list, and usage rules.
+
+<CardGrid>
+  <Card title="Inventory" icon="document">
+    The shared item catalogue plus the selected studio's current quantity or level.
+  </Card>
+  <Card title="Shopping list" icon="list-format">
+    A calculation based on upcoming in-studio party bookings, active usage rules, current counts, and minimum targets.
+  </Card>
+  <Card title="Usage rules" icon="puzzle">
+    Defines how much of an item a base party, food package, or addition needs per booking, per child, or both.
+  </Card>
+</CardGrid>
+
+What you can view or edit depends on your Portal responsibilities. The master organisation can choose a studio for stock
+and can generate a shopping list grouped across studios.
+
+## Keep stock current
+
+<Steps>
+1. Confirm the studio shown in the catalogue.
+2. Find the item using search, category, or stock-status filters.
+3. For quantity items, use **Receive** to add stock or **Set stock** after a count.
+4. For level-based items, use **Update level** to choose the current level.
+5. Mark an item **Unused here** only when that studio does not track it, not when it is temporarily out of stock.
+</Steps>
+
+Quantity items hold a numeric count. Level-based items use values such as high, medium, low, out, or unknown. Running-low
+status comes from the item's configured threshold.
+
+<Aside type="caution" title="Stock does not reduce itself">
+  Bookings and attendance do not automatically consume inventory. Staff must keep counts or levels current. The system
+  records stock changes, but the catalogue is only as current as the latest update.
+</Aside>
+
+## Generate a shopping list
+
+Choose a date range in **Shopping list** and select **Generate**. For each matching studio party booking, the Portal:
+
+1. Applies active base-party, food-package, and addition rules.
+2. Uses the party's child count for per-child quantities.
+3. Totals the required quantity by item.
+4. Adds the item's **Keep at least** target.
+5. Subtracts the current quantity on hand, never suggesting less than zero.
+
+The result explains the amount needed, stock on hand, minimum target, suggested amount to buy, and which rules produced
+the requirement.
+
+<Aside type="note" title="The list is advice, not an order">
+  Generating a shopping list does not purchase stock or change inventory. Review its warnings and the physical stock
+  before ordering.
+</Aside>
+
+## Understand warnings
+
+- **Count first:** the current quantity is unknown, so the system cannot calculate a purchase amount.
+- **Party form not completed / invalid child count:** per-child quantities may be missing.
+- **No matching or duplicate item:** a usage rule does not map cleanly to one active catalogue item.
+- **Qualitative item required:** check its physical level; no numeric purchase amount can be calculated.
+- **Unused here or no studio record:** the booking needs an item that is not currently tracked at that studio.
+- **No active rules:** the system has no instructions for turning bookings into stock requirements.
+
+## Catalogue and rules
+
+Create catalogue items for consumables only, not reusable equipment. A new item is created for every studio and can then
+be marked unused where appropriate. Archived and unused items appear under **Hidden items**; hidden does not mean out of
+stock.
+
+Each usage rule must point to the intended catalogue item. Leave rule maintenance to people with the relevant editing
+access because changes affect future shopping lists.
+
+If a booking is missing from the list, check its studio, date, party type, food and additions, and child count on
+[Bookings](/portal/bookings/) before changing inventory.

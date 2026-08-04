@@ -1,0 +1,50 @@
+---
+title: Employee Onboarding
+description: Understand what the Portal automates and which employee setup steps remain manual.
+---
+
+import { Aside } from '@astrojs/starlight/components'
+
+The Portal starts employee onboarding, tracks progress, and files submitted documents. It does **not** create the employee in Xero or Sling.
+
+## What happens automatically
+
+When **New Employee** is submitted in the Portal:
+
+1. A contract is created and sent for signature.
+2. The employee receives a welcome email with their onboarding form.
+3. The employee appears in the onboarding table as **Form Sent**.
+
+When the employee submits the form, their details and documents are filed in their staff folder in Google Drive. This includes the form summary, TFN and super declaration, WWCC evidence, and certificates. The signed contract also belongs in this folder.
+
+People is notified when filing is complete and the employee moves to **Requires Verification**.
+
+## Statuses
+
+| Portal status | What it means | What to do |
+| --- | --- | --- |
+| **Form Sent** | The onboarding form has been sent and is waiting for the employee. Contract progress is shown separately. | Follow up with the employee if needed. |
+| **Uploading Files** | The submitted form and documents are being filed in Google Drive. | Wait for filing to finish. |
+| **Requires Verification** | Filing is complete and the employee is ready for manual setup. | Open **Verify** and complete the listed steps. |
+| **Onboarding Complete** | The manual setup checklist has been confirmed. | No further onboarding action is required. |
+
+<Aside type="note" title="Contract and onboarding statuses are separate">
+  An employee can submit the onboarding form before signing the contract. Add the signed PDF to their staff folder when
+  it becomes available.
+</Aside>
+
+## Complete manual setup
+
+Before selecting **I verify all steps have been completed**:
+
+1. Review the employee's submitted documents in their Drive folder.
+2. Add the employee to the Team Pay Rates sheet and record them in **Recent Changes** so their payroll setup can be checked.
+3. Create the employee in Xero and complete their pay setup.
+4. Create and invite the employee in Sling with the correct location and roles.
+5. Use the same email in Sling and Xero so payroll can match the employee.
+
+See [Sling overview](/tools/sling/sling-overview) for account guardrails and [Payroll](/people/payroll) for the first-pay-run checks.
+
+## WWCC applications
+
+If the employee supplied an application number rather than a card, their WWCC status remains **Applied**. Once the photo has been received and uploaded to their Drive folder, use **WWCC Provided** in the Portal. This updates the status and stops the recurring reminder for that employee.

@@ -1,23 +1,26 @@
 ---
 title: Budgeting in Sling
-description: Understand how Sling estimates payroll costs and why the numbers may differ from the final pay run.
+description: Understand how Sling estimates roster costs.
 ---
 
-Sling’s budgeting feature estimates payroll for the current roster so you can see labour costs before the pay run lands in Xero. The estimate pulls the wage assigned to each employee-position combination, then applies the correct loading for the shift label they are rostered into (including `[On Call]`, `[Superhero]`, and `[Sunday]` combinations). Those base wages sync from Xero automatically.
+Sling budgeting estimates labour cost from the roster. It is a planning figure, not a payroll result. The estimate uses the wage assigned to each employee-position combination and the loading represented by labels such as `[On Call]`, `[Superhero]`, and `[Sunday]`.
 
 ## How wage data stays current
 
 - Wages sync from Xero every Friday at 6:00 a.m., immediately after the Thursday payroll run.
-- Each employee in Sling is assigned to every position, even the ones they rarely work, so a published shift never receives a $0 estimate.
+- Casual employees with synced Xero wage data are assigned an estimate for every Sling position.
+- Employees are matched between Sling and the correct Xero organisation by email and location.
 
-## When budgets diverge from payroll
+## Budget and payroll differences
 
-Even with fresh wage data, Sling’s estimate will not always match the final payroll figure.
+Sling is a roster estimate, while the Portal and Xero calculate payroll.
 
-- New starters do not receive a wage in Sling until after their first payroll is processed, so their shifts show $0 until the next Friday sync.
-- Birthdays inside the pay period raise the base rate inside Xero from that date onward; Sling may show the lower rate until the weekly sync runs.
+- New starters receive a Sling wage estimate in the Friday sync after their first payroll.
+- Birthday rate changes appear after the next Friday sync.
 - Travel allowances, laundry allowances, and other extras are added in Xero payroll only - they never appear in Sling’s budgeting view.
-- Sling does not calculate overtime penalties, so large week totals can underestimate the final pay.
+- Sling does not calculate overtime penalties.
+
+The final calculation happens when the Portal generates the [payroll CSV](/people/payroll), and then again when the file is reviewed and imported into Xero.
 
 ## Overtime thresholds in Sling
 

@@ -1,0 +1,67 @@
+---
+title: Enrolments and waitlists
+description: What families can expect when an after-school class has space or is full.
+---
+
+import { Aside, Card, CardGrid, Steps } from '@astrojs/starlight/components'
+
+## When a class has space
+
+<Steps>
+  <ol>
+    <li>
+      <h3>Acuity supplies the program</h3>
+      <p>
+        The form only offers after-school programs currently available to book. It reads the program name, price,
+        calendar, upcoming sessions, and remaining capacity from Acuity.
+      </p>
+    </li>
+    <li>
+      <h3>The family enters enrolment details</h3>
+      <p>
+        The form collects the parent, child, emergency contact, allergy and support information, photography permission,
+        and approved pickup people. No credit card details are requested.
+      </p>
+    </li>
+    <li>
+      <h3>The child's term place is booked</h3>
+      <p>
+        The child is booked into every remaining published class. Their Portal enrolment holds the session list and
+        per-week price.
+      </p>
+    </li>
+    <li>
+      <h3>The family receives two useful emails</h3>
+      <p>
+        The enrolment confirmation lists the sessions, location, term price, and number of weeks. A separate email gives
+        the family their parent portal link.
+      </p>
+    </li>
+  </ol>
+</Steps>
+
+<Aside type="tip" title="The first booking is a real term enrolment">
+  The system creates all remaining term appointments so the child's place is held. The free trial changes when payment
+  is requested, not which appointments are initially created.
+</Aside>
+
+## When a class is full
+
+When the selected class has no space, the full enrolment form is replaced by a waitlist form.
+
+<CardGrid>
+  <Card title="What is saved" icon="add-document">
+    The program, parent name, parent email, parent mobile, and child name are added to the after-school waitlist sheet.
+  </Card>
+  <Card title="What is not created" icon="warning">
+    There is no Portal enrolment, Acuity appointment, parent portal, or Square invoice. The success message only confirms
+    that the family joined the waitlist.
+  </Card>
+  <Card title="What happens next" icon="email">
+    The waitlist does not automatically promote or enrol a child. The team contacts the family if a place becomes
+    available and completes the enrolment separately.
+  </Card>
+</CardGrid>
+
+Continue with [After the trial](/services/after-school-programs/after-the-trial/), or return to the
+[full program journey](/services/after-school-programs/how-it-works/).

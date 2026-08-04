@@ -1,50 +1,164 @@
 ---
 title: Gift cards
-description: How Fizz Kidz Square e-gift cards are sold and redeemed across locations.
+description: Sell, redeem and troubleshoot Fizz Kidz Square gift cards across locations and online bookings.
 ---
 
-import { Aside } from '@astrojs/starlight/components'
+import { Aside, Badge, Card, CardGrid, LinkCard, Steps } from '@astrojs/starlight/components'
 
-#### Fizz Kidz uses Square e-gift cards so customers can buy once and redeem at any studio.
+Fizz Kidz gift cards are managed by Square. The current sales channel is the shared Square e-gift card website, while
+redemptions can happen in supported online checkouts or at a studio Square point of sale.
 
-<Aside type="danger" title="Sell only via the website">
-  Process every gift card sale through the online gift card site and never through the Square point of sale app.
+<Aside type="danger" title="Sell through the gift-card website only">
+  Do not create or sell a new gift card from a studio Square POS. Shared gift-card sales are routed through the Fizz Kidz
+  HQ Square setup so a card can later be redeemed at a different studio without the sale being credited to the wrong
+  franchisee.
 </Aside>
 
-- [Buy, reload, or check balances here](https://app.squareup.com/gift/3BYCWGK2H0SXV/order)
-- E-gift cards are the only option; physical cards are not supported yet.
-- Since gift cards can be redeemed at any studio, sales route to a dedicated 'Fizz Kidz HQ' Square location.
+<CardGrid>
+  <LinkCard
+    title="Buy, reload or check a balance"
+    description="Open the official Fizz Kidz Square gift-card site."
+    href="https://app.squareup.com/gift/3BYCWGK2H0SXV/order"
+  />
+  <LinkCard
+    title="Accept a gift card in studio"
+    description="Follow Square's current POS instructions."
+    href="https://squareup.com/help/au/en/article/8404-accept-gift-cards"
+  />
+</CardGrid>
 
-<Aside type="note" title="Why are sales routed through Fizz Kidz HQ?">
-  Selling directly through a studio, such as via the Square POS, would credit that studio even though the card can be
-  redeemed anywhere, forcing studios to settle up with each other. Keeping all sales on the gift card website prevents
-  cross-studio money movement and avoids disputes. Physical cards are paused until a clean, shared solution is in place.
+## What customers can do
+
+- Buy an e-gift card for themselves or another person.
+- Schedule delivery by email or text using Square's checkout options.
+- Create a group gift and invite other contributors.
+- Reload an existing Square gift card.
+- Check the balance from the same Square page.
+
+<Aside type="note" title="Physical cards: accept, but do not promise new sales">
+  Fizz Kidz currently sells e-gift cards through the website. The Portal's supported booking checkouts accept the number
+  from a Fizz Kidz physical or e-gift card, so an existing compatible physical card can still be redeemed. Do not tell a
+  customer that a studio can issue a new physical card unless HQ has introduced and communicated that process.
 </Aside>
 
-## How purchasing works
+## Where customers can redeem
 
-Customers can:
+<CardGrid>
+  <Card title="Online booking checkout" icon="rocket">
+    <p>
+      <Badge text="Supported" variant="tip" size="small" />
+      <br />
+      Holiday Programs, Play Lab and the current Preschool Program checkout include a Fizz Kidz gift-card field.
+    </p>
+  </Card>
+  <Card title="At a studio" icon="approve-check-circle">
+    <p>
+      Staff can accept the gift card in Square POS. This is the path for in-studio purchases and service balances where
+      the online checkout does not show a gift-card field.
+    </p>
+  </Card>
+</CardGrid>
 
-- Buy for themselves or as a gift and send via email or text.
-- Invite multiple contributors to pool funds onto one gift card.
-- Reload an existing card or check the balance from the same link.
+The customer should use the gift-card number, not a delivery email address or Square order number. Spaces and hyphens are
+ignored by the online balance lookup.
 
-## Redemption options
+## How online redemption works
 
-- **Online checkout**: accepted for Holiday Program or Play Lab bookings.
-- **In studio**: accepted at the point of sale. [Follow Square’s steps here to accept a gift card in studio](https://squareup.com/help/au/en/article/8404-accept-gift-cards)
+<Steps>
+  <ol>
+    <li>
+      <h3>Customer applies the gift card</h3>
+      <p>
+        The Portal checks the gift-card number and AUD balance with Square. A non-AUD card is not supported.
+      </p>
+    </li>
+    <li>
+      <h3>The Portal shows the amount to apply</h3>
+      <p>
+        The checkout applies up to the order total. If the gift-card balance is smaller than the total, the Portal shows
+        the remaining amount for card or wallet payment. If it is larger, the unused balance remains on the gift card.
+      </p>
+    </li>
+    <li>
+      <h3>Square processes the payment</h3>
+      <p>
+        The gift card must be <strong>ACTIVE</strong>. Square applies the gift-card amount and charges any remainder to the
+        customer's card or wallet as one order.
+      </p>
+    </li>
+  </ol>
+</Steps>
 
-## How franchisees receive funds
+<Aside type="note" title="Buying a gift card does not make a booking">
+  A gift-card purchase adds value to the card. The customer still needs to complete the normal service booking.
+</Aside>
 
-- Gift card sales settle to Fizz Kidz HQ, not the studio where the card is sold or redeemed.
-- At month end, HQ runs a redemption report by location and pays out each studio for the value redeemed, minus Square fees.
-- Studios do not receive funds at the time of redemption; the month-end payout handles reimbursement.
+## Refunds and cancellations
 
-## Video introducing Gift cards
+Eligible Holiday Program, Play Lab and current Preschool Program cancellations are refunded to the original payment
+methods. This means a split gift-card/card purchase can also have a split refund.
+
+<Aside type="caution" title="Refunds return to the original payment methods">
+  Refund eligibility depends on the service's cancellation rules. The automated program workflows generally do not
+  refund cancellations inside 48 hours, and Play Lab term enrolments have separate handling. A split gift-card/card
+  payment may also have a split refund, so do not promise that the full refund will appear on the bank card.
+</Aside>
+
+For an in-studio manual refund, refund the original Square transaction using the approved Square process. Do not replace
+it with an off-system cash adjustment.
+
+## Franchisee funds
+
+The current documented operating arrangement is:
+
+1. Shared gift-card sales settle to the dedicated Fizz Kidz HQ Square location.
+2. Redemptions are recorded at the studio location processing the service or POS sale.
+3. HQ reviews Square's redemption reporting by location at month end.
+4. HQ reimburses each studio for value redeemed, less the applicable Square fees under the current arrangement.
+
+<Aside type="note" title="Settlement is an HQ process">
+  The Portal records redemptions at the service location, but it does not calculate or pay the monthly franchisee
+  settlement. HQ uses Square redemption reporting to calculate each studio's remittance.
+</Aside>
+
+## Troubleshooting
+
+### Gift card not found
+
+1. Ask the customer to read the gift-card number again, including all digits.
+2. Remove spaces and hyphens; the Portal normally does this automatically.
+3. Make sure they have not supplied the Square purchase order number, receipt number or delivery email instead.
+4. Use the official Square balance-check page.
+5. If Square cannot find it, contact HQ with the purchase details and only the last four digits. Never send the full
+   number in an unsecured message.
+
+### Gift card is inactive
+
+Square can report a card as deactivated, blocked, pending or unknown. Only an active card can be redeemed. Check the card
+in Square or contact HQ when the customer needs help with its status.
+
+### Balance is zero or lower than expected
+
+- Check Square's balance and activity rather than relying on the original purchase amount.
+- Confirm whether part of the card was already used in another booking or studio.
+
+### Studio settlement looks wrong
+
+Compare the HQ remittance against Square's location redemption report, not gift-card sales at the studio. Include the
+reporting month, studio and disputed redeemed amount when contacting HQ.
+
+## Quick team checklist
+
+- Sell new cards only through the official Square e-gift card link.
+- Redeem online only where the checkout displays a gift-card field; otherwise use Square POS.
+- Share only the last four gift-card digits when asking for support.
+
+## Video introduction
 
 <div style="position: relative; padding-bottom: 64.55089820359281%; height: 0;">
   <iframe
     src="https://www.loom.com/embed/f0d3a70f20f64f05883ff84cc68d9ac1"
+    title="Fizz Kidz gift cards introduction"
     frameborder="0"
     webkitallowfullscreen
     mozallowfullscreen

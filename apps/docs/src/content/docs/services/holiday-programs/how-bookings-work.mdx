@@ -1,0 +1,92 @@
+---
+title: How bookings work
+description: The customer journey from session selection to Square payment and Acuity appointments.
+---
+
+import { Aside, Card, CardGrid, LinkCard, Steps } from '@astrojs/starlight/components'
+
+Holiday Program checkout brings together two systems: <strong>Square records the money</strong> and{' '}
+<strong>Acuity records the place in each session</strong>.
+
+## Customer journey
+
+<Steps>
+  <ol>
+    <li>
+      <h3>Select a studio and sessions</h3>
+      <p>
+        The booking form shows Acuity availability. Full sessions cannot be selected, and low availability is shown to
+        the customer.
+      </p>
+    </li>
+    <li>
+      <h3>Add children and contact details</h3>
+      <p>
+        The customer supplies parent, emergency contact, allergy, anaphylaxis and additional-needs information. The
+        total is recalculated for every child in every selected session.
+      </p>
+    </li>
+    <li>
+      <h3>Review and pay</h3>
+      <p>
+        A valid discount code is applied to the booking total. A Fizz Kidz gift card is then used first, with any
+        balance paid by card, Apple Pay or Google Pay.
+      </p>
+    </li>
+    <li>
+      <h3>Receive confirmation</h3>
+      <p>
+        The customer sees <strong>Booked!</strong> and receives a Fizz Kidz confirmation with each child/session, the
+        location, receipt when available, and an individual{' '}
+        <strong>Change / Cancel</strong> link.
+      </p>
+    </li>
+  </ol>
+</Steps>
+
+## Booking outcome
+
+<CardGrid>
+  <Card title="Current availability" icon="warning">
+    Availability is confirmed at checkout. If there are not enough places for every selected child, the customer sees a
+    session-full message and can choose another session.
+  </Card>
+  <Card title="Payment summary" icon="seti:lock">
+    The order includes every child and session. Discount codes reduce the total, and gift card and card payments can
+    share the balance.
+  </Card>
+  <Card title="Session bookings" icon="information">
+    Each child has a separate appointment for each session, carrying the contact and safety details needed for
+    attendance.
+  </Card>
+  <Card title="Confirmation" icon="email">
+    The confirmation lists all booked sessions and their management links. Additional-needs answers are also added to
+    the staff follow-up list.
+  </Card>
+</CardGrid>
+
+<Aside type="tip" title="Morning + afternoon">
+  Selecting both sessions on the same date marks those appointments as <strong>All Day</strong> for attendance. It is
+  still two paid session lines and two Acuity appointments per child.
+</Aside>
+
+## Discounts and gift cards
+
+- One discount code can be used at checkout. Codes may be invalid, expired, exhausted or limited to one use per
+  customer.
+- A fixed discount cannot be greater than the booking total.
+- A gift card can cover all or part of the total. Any remainder moves to the customer's other payment method.
+- Gift cards are a payment method, not a discount. See [Gift cards](/services/gift-cards/) for how they are sold and
+  settled.
+
+<LinkCard
+  title="Cancellations and refunds"
+  href="/services/holiday-programs/cancellations-and-refunds/"
+  description="What the Change / Cancel links do and when a refund applies."
+/>
+
+<LinkCard
+  title="Attendance"
+  href="/services/holiday-programs/attendance/"
+  description="How booked appointments become the attendance list and labels."
+/>

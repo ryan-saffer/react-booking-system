@@ -1,0 +1,147 @@
+---
+title: Manage party bookings
+description: Create, find, change and cancel birthday party bookings in the Portal.
+---
+
+import { Aside, Card, CardGrid, LinkCard, Steps } from '@astrojs/starlight/components'
+
+Party bookings in the Portal feed Google Calendar, customer emails, Zoho CRM, invitations and the Party Form. Make the
+change in the Portal rather than editing an automatic calendar event by hand.
+
+## Find a booking
+
+1. Open **Portal > Bookings**.
+2. Choose the party date and, if needed, the location filter.
+3. Expand the booking under the correct studio.
+4. A direct booking link containing `?id=` opens that specific record and moves the page to its date and location.
+
+## Create a booking
+
+<Steps>
+  <ol>
+    <li>
+      <h3>Enter the family and child details</h3>
+      <p>
+        Add every birthday child separately. Check each birthday and the age they will be turning; those records also
+        feed the Calendar title, confirmation wording and Zoho CRM.
+      </p>
+    </li>
+    <li>
+      <h3>Enter date, time and party setup</h3>
+      <p>
+        Select studio or mobile, the Fizz location, party length and mobile address where applicable. Studio bookings
+        also require the included-food or self-catered choice.
+      </p>
+    </li>
+    <li>
+      <h3>Choose whether to send the confirmation</h3>
+      <p>
+        <strong>Send confirmation email</strong> is selected by default. Clear it only when there is a deliberate reason
+        not to contact the customer yet.
+      </p>
+    </li>
+    <li>
+      <h3>Save the booking</h3>
+      <p>
+        The Portal saves the booking, creates its Google Calendar event, and creates or updates the confirmed Birthday
+        Party deal, parent and children in Zoho CRM.
+      </p>
+    </li>
+  </ol>
+</Steps>
+
+<CardGrid>
+  <Card title="Calendar" icon="open-book">
+    <p>
+      The event title contains the parent, birthday child display and mobile. It links back to the Portal booking and
+      uses the studio address or mobile-party address.
+    </p>
+  </Card>
+  <Card title="Zoho CRM" icon="rocket">
+    <p>
+      An existing enquiry deal can be confirmed using its Zoho deal ID. Without one, the system creates or upserts a
+      confirmed booking deal and writes the new deal ID back to the booking.
+    </p>
+  </Card>
+  <Card title="Confirmation email" icon="email">
+    <p>
+      The email includes booking details, lead-up contact, cancellation terms, invitations and eligible order links. It
+      comes from the booking flow only when the checkbox is selected.
+    </p>
+  </Card>
+</CardGrid>
+
+## Change a booking
+
+1. Expand the booking and select **Edit**.
+2. Change the available fields. The location is locked in the existing-booking form.
+3. Select **Save**.
+
+### What changes automatically
+
+| Change | Google Calendar | Customer email | Zoho CRM |
+| --- | --- | --- | --- |
+| Date or start time | Event start/end updates | Updated-time confirmation is sent | Party date updates when the booking has a Zoho deal ID |
+| Party length | Event end updates | Updated-time confirmation is sent | No length update in this workflow |
+| Mobile address | Event location updates | No automatic email | No address update in this workflow |
+| Parent contact, child, food, notes, creations or add-ons | Event title may use changed parent/child/mobile values when saved | No automatic email | No general contact/deal sync in this workflow |
+
+## Booking menu actions
+
+<CardGrid>
+  <Card title="Get Party Form link" icon="open-book">
+    <p>Copies a durable link that loads Paperform with the booking's current details.</p>
+  </Card>
+  <Card title="Get cake form link" icon="add-document">
+    <p>Copies the order-mode form link. Check cake eligibility before sending it.</p>
+  </Card>
+  <Card title="Resend confirmation email" icon="email">
+    <p>
+      Sends the current booking confirmation to the email address now saved on the booking. Confirm the displayed
+      address in the resend prompt.
+    </p>
+  </Card>
+  <Card title="Get invitation link" icon="rocket">
+    <p>
+      For RSVP-enabled bookings, copies the existing public invite or the host's create-invitation entry link when no
+      invite has been finalised yet.
+    </p>
+  </Card>
+</CardGrid>
+
+## Delete a booking
+
+<Aside type="danger" title="Delete is not a customer cancellation workflow">
+  Deleting removes system records. It does not send the family a cancellation email, charge a cancellation fee or issue
+  a refund. Handle those customer and payment steps separately.
+</Aside>
+
+Deleting the booking:
+
+- removes the Google Calendar event;
+- marks a linked Zoho party deal as **Lost Booking** with the selected reason;
+- removes the invitation record and stored image when one exists;
+- removes every RSVP under the booking; and
+- deletes the Portal booking.
+
+Choose the lost reason carefully because it is recorded in Zoho.
+
+## Related guides
+
+<CardGrid>
+  <LinkCard
+    title="Customer journey"
+    description="See where booking actions fit in the customer's email timeline."
+    href="/services/birthday-parties/customer-journey/"
+  />
+  <LinkCard
+    title="Forms and add-ons"
+    description="Send the correct form and understand paid versus unpaid selections."
+    href="/services/birthday-parties/forms-and-add-ons/"
+  />
+  <LinkCard
+    title="Changes and problems"
+    description="Help customers with common booking, email and form questions."
+    href="/services/birthday-parties/changes-and-problems/"
+  />
+</CardGrid>

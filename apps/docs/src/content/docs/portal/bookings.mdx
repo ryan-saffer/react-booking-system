@@ -1,0 +1,53 @@
+---
+title: Bookings
+description: Find, create, update, and manage party, event, and incursion bookings in the Portal.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components'
+
+Open **Parties, Events & Incursions** from the Portal dashboard. The page groups work by date, with separate views for
+**Parties & Events** and **Incursions**.
+
+## Find a booking
+
+<Steps>
+1. Choose the date using the booking page controls.
+2. If a studio filter is available, choose the relevant studio or all studios.
+3. Open the **Parties & Events** or **Incursions** tab.
+4. Expand the booking to see its details and available actions.
+</Steps>
+
+Party rows show the time, customer and birthday child, studio or mobile status, and useful flags such as self-catered.
+A linked invitation also provides access to RSVPs. Events include a staff feedback form link.
+
+## Create or update
+
+Use **New Booking**, then choose **Party Booking** or **Event Booking**. On an existing row, enter edit mode, make the
+change, and save it.
+
+Check names, email, mobile, studio, address, date, time, length, party type, food choice, and whether a confirmation should
+be sent. When an existing party's time or length changes, the Portal emails the parent the revised time.
+
+<Aside type="note" title="Confirmation email is controllable">
+  New party bookings only send the booking confirmation when **Send confirmation email** is selected. An existing party
+  also has a **Resend confirmation email** action.
+</Aside>
+
+## Delete carefully
+
+Deleting a party removes the booking and its linked invitation. The delete flow asks for a lost reason.
+
+<Aside type="caution" title="Deletion is not customer communication">
+  The party deletion workflow does not send a cancellation email. Confirm the customer communication separately before
+  deleting the record.
+</Aside>
+
+## Automatic party follow-up
+
+The Portal sends party forms, reminders, cake forms, guest-count messages, and feedback emails at the appropriate times.
+Keep booking dates and customer email addresses current.
+
+## Related guidance
+
+- [Invitations and RSVPs](/services/birthday-parties/rsvp/)
+- [Attendance](/portal/attendance/)

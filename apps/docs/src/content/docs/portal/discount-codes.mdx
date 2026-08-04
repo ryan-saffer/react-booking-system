@@ -1,0 +1,57 @@
+---
+title: Discount codes
+description: Create and manage Portal booking discounts without losing track of limits or redemptions.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components'
+
+The **Discount Codes** page is an administration tool. It lists each code's discount, expiry, allocation, use count, and
+one-use-per-customer setting.
+
+## Create a code
+
+<Steps>
+1. Select **Create Discount Code**.
+2. Enter a unique code.
+3. Choose a fixed dollar amount or percentage and enter the amount.
+4. Set the expiry date and total number of uses.
+5. Choose whether each customer email may redeem it only once.
+6. Create the code and wait for the success message.
+</Steps>
+
+New codes start with zero uses. Codes must be unique, percentages cannot exceed 100, and discount amounts must be greater
+than zero.
+
+<Aside type="note" title="What counts as a use">
+  A customer booking multiple Holiday Program sessions in one checkout uses one allocation. When enabled, the
+  one-use-per-customer rule compares redemptions by customer email.
+</Aside>
+
+## What checkout checks
+
+When a customer applies a code, checkout checks that it exists, has not expired, has an available use, and has not already
+been used by that email when the one-use limit applies. Discount codes are available for Holiday Program, Play Lab, and
+Preschool Program bookings.
+
+## Edit or remove a code
+
+- Filter the table by code name.
+- Edit the discount amount or allocation in the table; leave the field or press Enter to save.
+- Pick a new expiry date from the date control.
+- Toggle **Once per customer** directly in the table.
+- Use the row menu to delete a code.
+
+<Aside type="caution" title="Deletion is immediate">
+  The row's **Delete** action removes the code without a separate confirmation step. Prefer correcting the expiry or
+  allocation when the code should remain visible for reference.
+</Aside>
+
+## If a code is rejected
+
+Check these in order:
+
+1. The customer entered the same code shown in the table.
+2. The expiry date has not passed.
+3. **Number of uses** is lower than **Allocations**.
+4. The customer email has not already redeemed a one-use-per-customer code.
+5. The discount amount and type are what you intended.

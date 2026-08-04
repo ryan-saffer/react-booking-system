@@ -1,0 +1,98 @@
+---
+title: Whole-term bookings
+description: Eligibility, pricing and cancellation rules for the 20% Preschool Program whole-term discount.
+---
+
+import { Aside, Badge, Card, CardGrid, LinkCard, Steps } from '@astrojs/starlight/components'
+
+<Aside type="tip" title="The short version">
+  A family receives <strong>20% off</strong> when every session in an eligible Preschool Program term group is booked
+  for a child.
+</Aside>
+
+## When the option appears
+
+The booking system groups sessions with the same weekday and start time. A break of two weeks or more starts a new term
+group.
+
+<CardGrid>
+  <Card title="Before the term starts" icon="information">
+    <Badge text="Eligible" variant="tip" size="small" />
+    <br />
+    The first session must still be in the future.
+  </Card>
+  <Card title="Every session has space" icon="approve-check-circle">
+    <Badge text="Eligible" variant="tip" size="small" />
+    <br />
+    All sessions in the group must have availability.
+  </Card>
+  <Card title="Term already started" icon="warning">
+    <Badge text="Individual dates only" variant="caution" size="small" />
+    <br />
+    Upcoming sessions remain bookable, but the whole-term offer is not shown.
+  </Card>
+  <Card title="One session is full" icon="information">
+    <Badge text="Individual dates only" variant="caution" size="small" />
+    <br />
+    The family cannot book the complete group, so the term discount is unavailable.
+  </Card>
+</CardGrid>
+
+## Pricing order
+
+<Steps>
+  <ol>
+    <li>
+      <h3>Select every session</h3>
+      <p>
+        <strong>Book into entire term</strong> selects the available group. Selecting all dates individually also makes
+        the complete group eligible.
+      </p>
+    </li>
+    <li>
+      <h3>Apply 20% per child/session</h3>
+      <p>The discount applies to each eligible term line and scales with the number of children.</p>
+    </li>
+    <li>
+      <h3>Apply a discount code</h3>
+      <p>
+        A percentage code uses the subtotal after the whole-term discount. A fixed code also comes off that discounted
+        subtotal.
+      </p>
+    </li>
+    <li>
+      <h3>Use gift card and other payment</h3>
+      <p>The gift card pays after discounts. It does not change the order value or whole-term eligibility.</p>
+    </li>
+  </ol>
+</Steps>
+
+Eligibility and pricing are recalculated at checkout using the current session selection and availability.
+
+## If a discounted term session is cancelled
+
+<Aside type="caution" title="The remaining term is repriced">
+  Once any session that received the whole-term discount is cancelled, the remaining sessions from that discounted term
+  are recalculated at the standard session price. The refund is the amount paid so far minus the newly repriced value of
+  all appointments still active in that order.
+</Aside>
+
+- The automatic refund can therefore be smaller than one session's displayed price, or $0.
+- If more sessions are later cancelled outside the 48-hour cutoff, a later cancellation can create a refund once the
+  amount paid is greater than the value still booked.
+- Any percentage discount code is recalculated against the new subtotal. A fixed code is capped so it cannot reduce the
+  remaining value below $0.
+- Cancelling an extra, individually booked session does not remove the whole-term discount when every discounted term
+  session remains active.
+
+<LinkCard
+  title="Changes and refunds"
+  href="/services/preschool-programs/changes-and-refunds/"
+  description="See the 48-hour rule and how cancellation refunds are calculated."
+/>
+
+<LinkCard
+  title="How bookings work"
+  href="/services/preschool-programs/how-bookings-work/"
+  description="See how term pricing appears in the booking journey."
+/>

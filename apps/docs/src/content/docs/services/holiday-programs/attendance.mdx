@@ -1,0 +1,82 @@
+---
+title: Attendance
+description: How Holiday Program bookings appear in attendance and what each Portal label means.
+---
+
+import { Aside, Badge, Card, CardGrid, LinkCard, Steps } from '@astrojs/starlight/components'
+
+The Holiday Program attendance list is built from <strong>Acuity appointments</strong>. Each row represents one child in
+one session, not a whole Square order.
+
+## What staff see
+
+<CardGrid>
+  <Card title="Child details" icon="open-book">
+    Name and age, plus parent and emergency contact details from checkout.
+  </Card>
+  <Card title="Safety details" icon="warning">
+    <Badge text="Allergy" variant="caution" size="small" />{' '}
+    <Badge text="Anaphylactic" variant="caution" size="small" />
+    <br />
+    Allergy details and the submitted plan are available from the child's row.
+  </Card>
+  <Card title="Booking context" icon="information">
+    <Badge text="All Day" variant="note" size="small" />{' '}
+    <Badge text="Includes Notes" variant="default" size="small" />
+    <br />
+    <strong>All Day</strong> appears when the child has morning and afternoon sessions on the same date.{' '}
+    <strong>Includes Notes</strong> highlights additional information.
+  </Card>
+  <Card title="Attendance state" icon="approve-check-circle">
+    A row with no attendance label is waiting to be signed in. Signing in applies Acuity's{' '}
+    <strong>Checked in</strong> label; <strong>Undo Sign In</strong> removes it.
+  </Card>
+</CardGrid>
+
+<Aside type="caution" title="Review anaphylaxis plans first">
+  For an anaphylactic child, open and verify the plan before completing sign-in. The label highlights the requirement
+  but does not replace reviewing the plan.
+</Aside>
+
+## Sign-in flow
+
+<Steps>
+  <ol>
+    <li>
+      <h3>Open the correct class</h3>
+      <p>Confirm the studio, date and session time before using the list.</p>
+    </li>
+    <li>
+      <h3>Expand the child's row</h3>
+      <p>
+        Review allergies, notes, parent details and emergency contact information. For all-day children, remember that
+        the morning and afternoon remain separate appointments.
+      </p>
+    </li>
+    <li>
+      <h3>Sign in</h3>
+      <p>
+        The Portal saves the <strong>Checked in</strong> label back to Acuity. Holiday Program check-in also updates the
+        customer follow-up record when it matches their first booked program date.
+      </p>
+    </li>
+    <li>
+      <h3>Correct mistakes</h3>
+      <p>
+        Use <strong>Undo Sign In</strong> to remove the attendance label.
+      </p>
+    </li>
+  </ol>
+</Steps>
+
+<LinkCard
+  title="How bookings work"
+  href="/services/holiday-programs/how-bookings-work/"
+  description="Why one checkout creates several attendance rows."
+/>
+
+<LinkCard
+  title="Cancellations and refunds"
+  href="/services/holiday-programs/cancellations-and-refunds/"
+  description="How cancelled appointments leave the active booking flow."
+/>

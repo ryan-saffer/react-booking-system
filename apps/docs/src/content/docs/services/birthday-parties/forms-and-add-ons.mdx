@@ -1,0 +1,139 @@
+---
+title: Party forms and add-ons
+description: How Paperform, Square, the Portal and supplier notifications work together for final details and paid items.
+---
+
+import { Aside, Card, CardGrid, LinkCard, Steps } from '@astrojs/starlight/components'
+
+Fizz Kidz uses one hosted Paperform in two modes. The **Party Form** gathers final event details. The **cake form** is an
+earlier route for eligible cakes, take-home bags and products.
+
+## Which link to send
+
+<CardGrid>
+  <Card title="Party Form" icon="open-book">
+    <p>
+      Use for final guest numbers, creations, food package, additions, fun facts, questions and optional paid items.
+    </p>
+  </Card>
+  <Card title="Cake form" icon="add-document">
+    <p>
+      Use for an eligible customer's cake, take-home bag or product order before the main Party Form is due. Cakes are
+      available only for studio parties outside Geelong.
+    </p>
+  </Card>
+</CardGrid>
+
+Both links are tied to the booking. When opened, Fizz Kidz prefills Paperform with the current location, parent, child,
+food-package and previous paid-item details.
+
+<Aside type="caution" title="Never reuse a link for another family">
+  The booking ID controls which Portal record is updated. Always copy the form link from the correct booking menu.
+</Aside>
+
+## Automatic sends
+
+| Workflow | Who it selects | Who it skips |
+| --- | --- | --- |
+| Early cake/order email | Eligible parties roughly 3-4 weeks away | Mobile, Geelong, or a booking already recording a cake, take-home bag or product |
+| Party Form email | Parties in the following Tuesday-to-Tuesday window | No `Party Form filled in` filter on the initial send |
+| Party Form reminder | Parties in the upcoming Tuesday-to-Tuesday window | Any booking already marked `Party Form filled in` |
+
+The exact send time is scheduled automatically. If a customer needs the form now, use **Get Party Form link** instead of
+waiting for the scheduled email.
+
+## Paid now and paid later
+
+<CardGrid>
+  <Card title="Paid in Square checkout" icon="approve-check-circle">
+    <p>
+      Fizz cake, take-home bags and products selected in the form create a Square payment link. Square payment happens
+      before the form is completed.
+    </p>
+  </Card>
+  <Card title="Not paid by the form" icon="warning">
+    <p>
+      Food additions, party packs and the remaining party balance are stored on the booking but are not line items in
+      this Square checkout. The Portal displays booking additions as <strong>NOT PAID</strong>.
+    </p>
+  </Card>
+</CardGrid>
+
+If there are no paid items, the customer skips Square and goes directly to form completion. If paid items are selected,
+the order is paid in Square before the form is completed.
+
+## What happens after completion
+
+<Steps>
+  <ol>
+    <li>
+      <h3>Square records paid items</h3>
+      <p>
+        Cakes, take-home bags and products are paid through the Square checkout. Supplier-fulfilled take-home bags and
+        products are added back to the studio's Square inventory.
+      </p>
+    </li>
+    <li>
+      <h3>The Portal booking is updated</h3>
+      <p>
+        The Party Form marks <code>Party Form filled in</code>, then saves final numbers, creations, food selection,
+        additions, questions and ordered items. Cake-only mode does not mark the Party Form complete.
+      </p>
+    </li>
+    <li>
+      <h3>Customer and internal emails are sent</h3>
+      <p>
+        The customer receives a Party Form summary, or an order summary for cake mode when something was ordered. Studio
+        and supplier notices are sent according to the selections below.
+      </p>
+    </li>
+  </ol>
+</Steps>
+
+## Internal notifications
+
+| Trigger | Automatic effect |
+| --- | --- |
+| Party Form submitted again | Studio inbox receives the old and new details |
+| Studio food package changed | Studio inbox receives a separate notice, including on the first form |
+| Too many creations selected | Studio inbox is asked to contact the parent and agree on a workable set |
+| Customer leaves a question | Studio inbox receives the question with the parent as reply-to |
+| Party pack selected | Studio inbox is notified; the party pack remains unpaid by this checkout |
+| Take-home bag or product ordered | Studio inbox is notified |
+| Cake ordered | `orders@birthdaycakeshop.com.au` is emailed and the studio is blind-copied |
+| Take-home bags ordered | `orders@birthdaycakeshop.com.au` is emailed |
+
+Contact the supplier directly for late changes or corrections to an order already sent.
+
+## Repeated forms need care
+
+- A second Party Form sends a comparison email to the studio.
+- New take-home bag and product quantities are added to quantities already on the booking; they are not treated as a replacement.
+- Previously selected unpaid additions may still need manual correction in the Portal if the customer removes them on a later form.
+- A new paid order can create another Square payment and another supplier email.
+- Guest numbers, creations and food-package values are updated from the latest Party Form.
+
+<Aside type="caution" title="A repeat form can create a new order">
+  Repeating the form can add quantities, charge the family again and send another supplier email. Use the approved
+  correction or refund process for an existing paid order instead.
+</Aside>
+
+## Related guides
+
+<CardGrid>
+  <LinkCard
+    title="Manage bookings"
+    description="Copy form links, inspect saved selections and resend the booking confirmation."
+    href="/services/birthday-parties/manage-bookings/"
+  />
+  <LinkCard
+    title="Changes and problems"
+    description="Help customers with common form and booking questions."
+    href="/services/birthday-parties/changes-and-problems/"
+  />
+  <LinkCard
+    title="Customer journey"
+    description="See when each form and email normally appears."
+    href="/services/birthday-parties/customer-journey/"
+  />
+</CardGrid>
