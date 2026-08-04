@@ -13,6 +13,15 @@ export default defineConfig({
                 dark: './src/assets/logo-white.png',
             },
             favicon: '/favicon.png',
+            head: [
+                {
+                    tag: 'meta',
+                    attrs: {
+                        name: 'robots',
+                        content: 'noindex, nofollow, noarchive, nosnippet',
+                    },
+                },
+            ],
             plugins: [catppuccin()],
             sidebar: [
                 {

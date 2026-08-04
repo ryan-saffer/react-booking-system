@@ -12,3 +12,9 @@ publish = "apps/docs/dist"
 # Without this, every push to the repo (including apps/portal and apps/server)
 # would trigger a docs build and, for pull requests, a docs deploy preview.
 ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF apps/docs"
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+X-Robots-Tag = "noindex, nofollow, noarchive, nosnippet"
