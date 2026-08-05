@@ -10,7 +10,7 @@ export const api = onRequest(
     {
         region: 'australia-southeast1',
         cors: true,
-        memory: '2GiB',
+        memory: '1GiB',
         minInstances: env === 'prod' ? 1 : 0,
     },
     async (req, res) => {
