@@ -29,6 +29,7 @@ const portalAliases = {
 
 const serverAliases = {
     '@': path.join(serverDir, 'src'),
+    '@test-support': path.join(serverDir, 'test-support'),
     '@fizz-kidz/core': path.join(coreDir, 'src'),
 }
 
@@ -313,6 +314,13 @@ export default defineConfig(({ command, mode }) => {
                     test: {
                         name: 'server',
                         root: serverDir,
+                        include: ['src/**/*.test.ts'],
+                    },
+                },
+                {
+                    test: {
+                        name: 'core',
+                        root: coreDir,
                         include: ['src/**/*.test.ts'],
                     },
                 },

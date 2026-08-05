@@ -1,0 +1,142 @@
+import { logger } from 'firebase-functions/v2'
+import { DateTime } from 'luxon'
+
+import { ObjectKeys, isFranchise, type FranchiseOrMaster, type FranchiseStudio, type Studio } from '@fizz-kidz/core'
+
+import { OrdindayEarningsRateMap } from '@/features/staff/core/timesheets/generate-timesheets'
+import {
+    NON_CASUAL_EMPLOYEE_GROUP_ID,
+    SlingLocationToId,
+    SlingPositionToId,
+    getPositionRate,
+} from '@/features/staff/core/timesheets/timesheets.utils'
+import { logError } from '@/integrations/observability/log-error'
+import { SlingClient } from '@/integrations/sling/sling.client'
+import type { UpdateWagesBody } from '@/integrations/sling/sling.types'
+import { XeroClient } from '@/integrations/xero/xero.client'
+
+import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
+
+/**
+ * Iterates all active Sling users with an employee ID, and
+ * 1) Assignes them to every shift in Sling
+ * 2) Fetches their ordinary rate from Xero
+ * 3) Assigns a wage to every shift
+ *
+ * This allows Sling wages estimations to as closely resemble the actual cost as possible.
+ *
+ * Discrepency in Sling vs actual wages can be due to:
+ * - Employee not yet created in Xero
+ * - Travel allowance
+ * - Overtime
+ * - Employee had a birthday during the pay cycle (will look cheaper in advance, and more expense looking back)
+ */
+export async function updateSlingWages() {
+    logger.log('📊 Updating Wages in Sling...')
+
+    const slingClient = new SlingClient()
+    const users = await slingClient.getUsers()
+
+    // to ensure warnings are legitimite, exclude non casual staff (or anyone we know won't be in Sling) - see Sling group 'Non Casual Staff'.
+    const activeUsers = users.filter((it) => it.active === true && !it.groupIds.includes(NON_CASUAL_EMPLOYEE_GROUP_ID))
+
+    // a cache for the 'GET all employees' endpoint for each franchise
+    // needed in order to find the employee's xero employeeId
+    const xeroUsersByStudioCache: Partial<Record<FranchiseOrMaster, Employee[]>> = {}
+
+    // iterate each user in sling. For each position, edit/create a wage line for the position
+    for (const slingUser of activeUsers) {
+        // if an employee is assigned a franchise, use that franchise to lookup their rate, otherwise use master
+        // head office is safe, because we default to master
+        let studio: FranchiseOrMaster = 'master'
+        for (const location of ObjectKeys(SlingLocationToId)) {
+            if (slingUser.groupIds.includes(SlingLocationToId[location]) && isFranchise(location as Studio)) {
+                studio = location as FranchiseStudio
+            }
+        }
+        const xero = await XeroClient.getInstance(studio)
+        const xeroUsers = await getAndCacheAllXeroEmployees(studio, xeroUsersByStudioCache)
+        const xeroUser = xeroUsers?.find(
+            (user) =>
+                user.email?.toLowerCase() === slingUser.email.toLowerCase() ||
+                user.email?.toLowerCase() === slingUser.pending?.toLowerCase()
+        )
+
+        if (!xeroUser) {
+            logger.warn(
+                `unable to find sling user in xero for the ${studio} studio: ${slingUser.legalName} ${slingUser.lastname} - ${slingUser.email}`
+            )
+            continue
+        }
+
+        const body: UpdateWagesBody = []
+        logger.log(`Fetching Xero info for ${xeroUser.firstName} ${xeroUser.lastName}`)
+        // oxlint-disable-next-line typescript/no-non-null-asserted-optional-chain
+        const employee = (await xero.payrollAUApi.getEmployee('', xeroUser.employeeID!)).body.employees?.[0]!
+        const ordinaryRate = employee.payTemplate?.earningsLines?.find(
+            (line) => line.earningsRateID === OrdindayEarningsRateMap[studio]
+        )?.ratePerUnit
+        if (!ordinaryRate) {
+            logger.warn(
+                `unable to find ordinary earnings rate in Xero for user: ${slingUser.legalName} ${slingUser.lastname}`
+            )
+            continue
+        }
+
+        // In order to assign wages to a shift, the the shift must first be assigned to the user or it will 409.
+        // If we instead skipped this shift (since its not assigned), the user can still be assigned shifts at this position, and those shifts will appear as $0 shifts.
+        // Therefore, we assign all shifts to all users.
+        try {
+            await slingClient.addShiftsToUser(slingUser.id, [
+                ...slingUser.groupIds, // without this, existing groups get deleted such as locations
+                ...Object.values(SlingPositionToId),
+            ])
+        } catch (err) {
+            logError(`Error adding shifts to user: ${slingUser.id}`, err, {
+                shiftsToAdd: Object.values(SlingPositionToId),
+            })
+            continue
+        }
+
+        // iterate all positions
+        for (const positionId of Object.values(SlingPositionToId)) {
+            body.push({
+                // if editing, (wage item for this position already exists), update it by providing the id. Otherwise it will create. [It will 409 confict if this logic is wrong].
+                ...(slingUser.wages?.[positionId] && { id: slingUser.wages[positionId][0].id }),
+                dateEffective: DateTime.fromJSDate(new Date(employee.startDate!)).toFormat('yyyy-LL-dd'),
+                fromDate: new Date(employee.startDate!).toISOString(),
+                positionId: positionId,
+                isSalary: false,
+                locationId: null,
+                regularRate: getPositionRate({
+                    positionId,
+                    rate: ordinaryRate,
+                    dob: DateTime.fromJSDate(new Date(employee.dateOfBirth)),
+                }),
+                userId: slingUser.id,
+                _edited: false,
+            })
+        }
+
+        try {
+            await slingClient.updateWages(body)
+        } catch (err) {
+            logError('Error updating wages', err)
+            continue
+        }
+        logger.log(`✔︎ ${employee.firstName} ${employee.lastName}`)
+    }
+    logger.log('✅ Wages updated successfully')
+}
+
+async function getAndCacheAllXeroEmployees(
+    studio: FranchiseOrMaster,
+    cache: Partial<Record<FranchiseOrMaster, Employee[]>>
+) {
+    const xero = await XeroClient.getInstance(studio)
+    if (!cache[studio]) {
+        const employees = (await xero.payrollAUApi.getEmployees('')).body.employees
+        cache[studio] = employees
+    }
+    return cache[studio]
+}

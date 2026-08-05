@@ -22,4 +22,4 @@ Guests cannot edit a submitted response. Guest submissions require each child's 
 
 Creating or saving an invitation requires Firebase sign-in. The `returnTo` query parameter brings the host back after authentication.
 
-Server lifecycle: [`apps/server/src/party-bookings/core/rsvp/README.md`](../../../../server/src/party-bookings/core/rsvp/README.md).
+Server lifecycle: [`apps/server/src/features/party-bookings/core/rsvp/README.md`](../../../../server/src/features/party-bookings/core/rsvp/README.md).

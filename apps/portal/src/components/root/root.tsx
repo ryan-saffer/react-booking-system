@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { Outlet, ScrollRestoration } from 'react-router-dom'
 import { Toaster } from 'sonner'
 
+import type { AppRouter } from '@/app/trpc/trpc.app-router'
 import { FirebaseProvider } from '@components/Firebase/firebase-provider'
 import { ConfirmationDialogWithCheckboxProvider } from '@components/Hooks/confirmation-dialog-with-checkbox.tsx/confirmation-dialog-with-checkbox.provider'
 import { ConfirmationDialogProvider } from '@components/Hooks/confirmation-dialog.tsx/confirmation-dialog.provider'
@@ -18,8 +19,6 @@ import { AppUpdatePrompt } from '@components/root/app-update-prompt'
 import { AuthProvider } from '@components/Session/auth-provider'
 import { OrgProvider } from '@components/Session/org.provider'
 import { TRPCProvider } from '@utils/trpc'
-
-import type { AppRouter } from '../../../../server/src/trpc/trpc.app-router'
 
 mixpanel.init(import.meta.env.VITE_MIXPANEL_API_KEY, { debug: import.meta.env.VITE_ENV === 'dev' })
 

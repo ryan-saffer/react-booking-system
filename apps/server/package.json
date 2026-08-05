@@ -11,8 +11,8 @@
         "dev:typecheck": "vp exec tsc --noEmit --watch --preserveWatchOutput",
         "deploy": "vp exec firebase deploy --only functions",
         "logs": "vp exec firebase functions:log",
-        "script:dev": "FIREBASE_CONFIG='{ \"projectId\": \"booking-system-6435d\" }' vp exec tsx ./src/_scripts/main.ts",
-        "script:prod": "FIREBASE_CONFIG='{ \"projectId\": \"bookings-prod\" }' vp exec tsx ./src/_scripts/main.ts"
+        "script:dev": "FIREBASE_CONFIG='{ \"projectId\": \"booking-system-6435d\" }' vp exec tsx ./scripts/main.ts",
+        "script:prod": "FIREBASE_CONFIG='{ \"projectId\": \"bookings-prod\" }' vp exec tsx ./scripts/main.ts"
     },
     "dependencies": {
         "@google-cloud/pubsub": "^3.7.1",

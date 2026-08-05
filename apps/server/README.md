@@ -7,22 +7,27 @@ The deployment is deliberately small: one HTTP function and one Pub/Sub function
 ## The Shape
 
 - `src/index.ts` exports Firebase Functions.
-- `src/api.ts` mounts tRPC, webhooks, public API routes, and durable redirects.
-- `src/trpc/trpc.app-router.ts` combines the feature routers.
-- `src/pubsub.ts` dispatches messages from the shared `background` topic.
-- `src/<feature>/core` contains workflows.
-- `src/<feature>/functions` contains HTTP, tRPC, webhook, or job adapters.
-- `src/firebase/DatabaseClient.ts` is the Firestore boundary.
+- `src/app/http/api.ts` exports the HTTP function and lazily loads `src/app/http/app.ts`.
+- `src/app/http/app.ts` mounts tRPC, webhooks, public API routes, and durable redirects.
+- `src/app/trpc/trpc.app-router.ts` combines the feature routers.
+- `src/app/background/function.ts` dispatches messages from the shared `background` topic.
+- `src/features/<feature>/core` contains workflows.
+- `src/features/<feature>/functions` contains HTTP, tRPC, webhook, or job adapters.
+- `src/integrations/firebase/database.client.ts` is the Firestore boundary.
+- `src/shared` contains only narrow, server-wide runtime helpers and types.
+
+The dependency direction is `app` adapters into `features`, `integrations`, and `shared`; features may use integrations and shared modules; shared modules stay independent. Provider SDKs and runtime I/O belong in integrations. Some large provider directories still contain mixed orchestration from the old layout, notably Acuity, Paperforms, SendGrid, Zoho, and Firebase; those locations are transitional, not examples for new code.
 
 The `api` function owns `/api/trpc`, `/api/webhooks/**`, public endpoints such as Google reviews, and `/forms/**`. The `pubsub` function handles reminders, follow-ups, form processing, onboarding, timesheets, and other deferred work.
 
 ## Rules Of Thumb
 
-- Keep `DatabaseClient` about persistence, not business decisions. See [`src/firebase/README.md`](src/firebase/README.md).
+- Keep `DatabaseClient` about persistence, not business decisions. See [`src/integrations/firebase/README.md`](src/integrations/firebase/README.md).
 - Put browser/server-safe contracts and pure logic in `@fizz-kidz/core`.
 - Keep credentials, SDK clients, Firestore, and network calls here.
+- Name integration client modules `<provider-or-service>.client.ts`; use similarly descriptive dot-qualified names for reference registries and helpers where appropriate.
 - Load heavyweight SDKs lazily; Firebase cold starts notice everything.
-- Register new tRPC routers in `trpc.app-router.ts` and new background handlers in `pubsub.ts`.
+- Register new tRPC routers in `app/trpc/trpc.app-router.ts` and new background handlers in `app/background/function.ts`.
 
 ## Run It
 
@@ -45,7 +50,7 @@ npm install --package-lock-only --ignore-scripts --workspaces=false --prefix app
 
 ## Scripts With Consequences
 
-`src/_scripts` contains reporting jobs, migrations, real-email senders, and production mutations. Set up credentials and read the warnings in [`src/_scripts/README.md`](src/_scripts/README.md) before running one.
+`scripts` contains reporting jobs, migrations, real-email senders, and production mutations. Set up credentials and read the warnings in [`scripts/README.md`](scripts/README.md) before running one.
 
 ```bash
 npm --workspace server run script:dev

@@ -13,9 +13,10 @@
         "types": ["*"],
         "paths": {
             "@fizz-kidz/core": ["../../packages/core/src"],
-            "@/*": ["./src/*"]
+            "@/*": ["./src/*"],
+            "@test-support/*": ["./test-support/*"]
         },
         "noErrorTruncation": true
     },
-    "include": ["src", "src/environment.d.ts", "declarations/index.d.ts"]
+    "include": ["src", "scripts", "test-support", "src/environment.d.ts", "declarations/index.d.ts"]
 }

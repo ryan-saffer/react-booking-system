@@ -18,4 +18,4 @@
 *service-key.*
 .vscode/*
 
-/apps/server/src/_scripts/.credentials/
+/apps/server/scripts/.credentials/

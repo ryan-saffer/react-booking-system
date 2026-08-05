@@ -28,15 +28,15 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
 
 - Holiday programs:
   - `apps/portal/src/components/holiday-programs/customer-booking-screen`
-  - `apps/server/src/holiday-programs/core/book-holiday-program.ts`
-  - `apps/server/src/holiday-programs/core/process-holiday-program-payment.ts`
+  - `apps/server/src/features/holiday-programs/core/book-holiday-program.ts`
+  - `apps/server/src/features/holiday-programs/core/process-holiday-program-payment.ts`
   - Acuity-as-source booking model.
   - Square order line item metadata for refunds.
   - Gift-card-first split tender payment flow.
 - Play Lab:
   - `apps/portal/src/components/play-lab/booking-form`
-  - `apps/server/src/play-lab/core/book-play-lab.ts`
-  - `apps/server/src/play-lab/core/process-play-lab-payment.ts`
+  - `apps/server/src/features/play-lab/core/book-play-lab.ts`
+  - `apps/server/src/features/play-lab/core/process-play-lab-payment.ts`
   - Modern shadcn staged booking form.
   - Square wallet/card checkout UI.
   - Gift card input and cart store patterns.
@@ -126,7 +126,7 @@ Replace the current preschool enrolment/invoicing model with a simpler booking-a
 2. Done: Add public route:
    - `/preschool-program-v2-booking`.
 3. Done: Add server folder:
-   - `apps/server/src/preschool-program-v2`.
+   - `apps/server/src/features/preschool-program-v2`.
 4. Done: Add tRPC router:
    - `preschoolProgramV2`.
 5. Keep this entirely separate from `preschoolProgram` legacy router.

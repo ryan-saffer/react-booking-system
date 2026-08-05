@@ -33,6 +33,7 @@ Portal and server both resolve `@fizz-kidz/core` directly to `src`, so normal de
 
 ```bash
 npm --workspace @fizz-kidz/core run build
+vp test --run --project core
 ```
 
-That command emits a normal ESM package and declarations to `lib`. The output is useful for validation and future consumers, but current apps do not depend on it at runtime.
+The build command emits a normal ESM package and declarations to `lib`. The output is useful for validation and future consumers, but current apps do not depend on it at runtime. Core tests live beside their implementations in `src` and run as part of the root test suite.
