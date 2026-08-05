@@ -2,7 +2,7 @@ import type { AfterSchoolEnrolment, SendTermContinuationEmailsParams } from '@fi
 import { getApplicationDomain } from '@fizz-kidz/core'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { MailClient } from '@/sendgrid/MailClient'
 import { isUsingEmulator, throwTrpcError } from '@/utilities'
 

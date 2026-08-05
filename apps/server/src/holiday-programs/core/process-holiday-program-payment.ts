@@ -1,4 +1,4 @@
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
 import { getSquareError, SquareClient } from '@/square/core/square-client'
 import { GiftCardInactiveError, PaymentMethodInvalidError } from '@/trpc/trpc.errors'

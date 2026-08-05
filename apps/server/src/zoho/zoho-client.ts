@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 import type { Booking, Event, PartyLostReason, ScienceModule, Studio, StudioOrTest } from '@fizz-kidz/core'
 import { capitalise, getApplicationDomain, ModuleIncursionMap, ModuleNameMap } from '@fizz-kidz/core'
 
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { isUsingEmulator } from '@/utilities'
 import {
     PartyThemeDisplayValueMap,

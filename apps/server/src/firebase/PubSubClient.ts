@@ -1,4 +1,4 @@
-import { projectId } from '../init'
+import { projectId } from '@/init/firebase'
 
 import type { ClientStatus } from '../utilities/types'
 import type { PubSub as TPubSub } from '@google-cloud/pubsub'

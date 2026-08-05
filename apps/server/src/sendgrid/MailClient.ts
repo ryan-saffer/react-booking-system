@@ -6,7 +6,7 @@ import Mustache from 'mustache'
 
 import { assertNever } from '@fizz-kidz/core'
 
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import type { ClientStatus } from '@/utilities/types'
 
 import type { Emails } from './types'

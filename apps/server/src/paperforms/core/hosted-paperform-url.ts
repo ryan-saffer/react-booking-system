@@ -1,6 +1,6 @@
 import { getApplicationDomain } from '@fizz-kidz/core'
 
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { isUsingEmulator } from '@/utilities'
 
 export type HostedPaperform = 'party' | 'cake' | 'onboarding' | 'incursion' | 'incident-reporting' | 'staff-feedback'

@@ -60,7 +60,7 @@ class MockAcuityClient {
 
 const mockAcuityClient = new MockAcuityClient()
 let mergeAcuityWithStoryblok = async (classes: MockClass[]) => classes
-vi.mock('@/init', () => ({ env: 'dev' }))
+vi.mock('@/init/firebase', () => ({ env: 'dev' }))
 vi.mock('@/acuity/core/acuity-client', () => ({
     AcuityClient: {
         getInstance: async () => mockAcuityClient,

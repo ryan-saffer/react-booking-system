@@ -3,7 +3,7 @@ import express from 'express'
 import { getInvitationShareUrl } from '@fizz-kidz/core'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { generateInvitationUrl } from '@/party-bookings/core/rsvp/generate-invitation-url'
 import { isUsingEmulator } from '@/utilities'
 

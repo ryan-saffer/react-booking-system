@@ -1,7 +1,7 @@
 import { getInvitationShareUrl, type InvitationsV2 } from '@fizz-kidz/core'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
 import { isUsingEmulator } from '@/utilities'

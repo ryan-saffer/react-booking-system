@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/node'
 
-import { env } from './init'
+import { env } from './firebase'
 
 // Ensure to call this before requiring any other modules!
 Sentry.init({

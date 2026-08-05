@@ -1,6 +1,6 @@
 import { FirestoreRefs } from '@/firebase/FirestoreRefs'
 import { StorageClient } from '@/firebase/StorageClient'
-import { projectId } from '@/init'
+import { projectId } from '@/init/firebase'
 
 import { deleteInvitationV2 } from './delete-invitation-v2'
 

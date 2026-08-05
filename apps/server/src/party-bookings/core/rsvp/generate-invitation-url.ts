@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 import { ObjectKeys, getApplicationDomain, getPartyEndDate } from '@fizz-kidz/core'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { isUsingEmulator } from '@/utilities'
 
 /**

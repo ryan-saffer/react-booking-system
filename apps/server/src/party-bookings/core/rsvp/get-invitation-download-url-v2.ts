@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { StorageClient } from '@/firebase/StorageClient'
-import { projectId } from '@/init'
+import { projectId } from '@/init/firebase'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { isUsingEmulator } from '@/utilities'
 

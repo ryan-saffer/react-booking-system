@@ -1,7 +1,8 @@
 import { getStorage } from 'firebase-admin/storage'
 
+import { projectId } from '@/init/firebase'
+
 import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { projectId } from '../../init'
 
 export async function getAfterSchoolProgramAnaphylaxisPlanSignedUrl(enrolmentId: string) {
     const bucket = getStorage().bucket(`${projectId}.appspot.com`)

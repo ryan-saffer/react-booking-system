@@ -1,6 +1,6 @@
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { StorageClient } from '@/firebase/StorageClient'
-import { projectId } from '@/init'
+import { projectId } from '@/init/firebase'
 
 /**
  * Deletes the invitation, and completely unlinks it from the booking.

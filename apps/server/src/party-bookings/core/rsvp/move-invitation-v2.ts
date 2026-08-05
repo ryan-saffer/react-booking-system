@@ -2,7 +2,7 @@ import type { InvitationsV2 } from '@fizz-kidz/core'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { StorageClient } from '@/firebase/StorageClient'
-import { projectId } from '@/init'
+import { projectId } from '@/init/firebase'
 
 /**
  * Gives an invitation a new id, and moves it both in storage and firestore

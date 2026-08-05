@@ -1,7 +1,7 @@
+import { env } from '@/init/firebase'
 import { GiftCardInactiveError } from '@/trpc/trpc.errors'
 import { throwCustomTrpcError } from '@/utilities'
 
-import { env } from '../../init'
 import { SquareClient } from '../../square/core/square-client'
 
 import type { BookPlayLabProps } from './book-play-lab'

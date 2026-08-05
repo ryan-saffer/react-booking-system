@@ -22,7 +22,11 @@ function isProdProject(): boolean {
 }
 
 ;(() => {
-    const serverDir = path.resolve(__dirname, '..')
+    const serverDir = [path.resolve(__dirname, '..'), path.resolve(__dirname, '../..')].find((directory) =>
+        fs.existsSync(path.join(directory, 'package.json'))
+    )
+    if (!serverDir) return
+
     const envFile = isProdProject() ? '.env.prod' : '.env'
     const envPath = path.join(serverDir, envFile)
 

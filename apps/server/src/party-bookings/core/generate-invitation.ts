@@ -13,7 +13,7 @@ import type { GenerateInvitation, InvitationOption } from '@fizz-kidz/core'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { FirestoreRefs } from '@/firebase/FirestoreRefs'
 import { StorageClient } from '@/firebase/StorageClient'
-import { projectId } from '@/init'
+import { projectId } from '@/init/firebase'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { isUsingEmulator } from '@/utilities'
 

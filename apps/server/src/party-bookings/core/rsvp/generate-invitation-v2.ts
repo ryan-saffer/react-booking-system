@@ -7,7 +7,7 @@ import { generateRandomString } from '@fizz-kidz/core'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { StorageClient } from '@/firebase/StorageClient'
-import { projectId } from '@/init'
+import { projectId } from '@/init/firebase'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 
 import { InvitationImageGenerator } from './invitation-image-generator'

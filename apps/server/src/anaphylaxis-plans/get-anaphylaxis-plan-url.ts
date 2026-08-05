@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto'
 
 import { StorageClient } from '@/firebase/StorageClient'
-import { projectId } from '@/init'
+import { projectId } from '@/init/firebase'
 import { isUsingEmulator, throwTrpcError } from '@/utilities'
 
 import { isValidAnaphylaxisPlanPath } from './anaphylaxis-plan-path'

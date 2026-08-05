@@ -15,7 +15,7 @@ import {
 } from '@fizz-kidz/core'
 
 import { StorageClient } from '@/firebase/StorageClient'
-import { projectId } from '@/init'
+import { projectId } from '@/init/firebase'
 import { SlingClient } from '@/sling/sling-client'
 import { isUsingEmulator, throwTrpcError } from '@/utilities'
 import { XeroClient } from '@/xero/XeroClient'

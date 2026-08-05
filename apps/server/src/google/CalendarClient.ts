@@ -1,6 +1,7 @@
 import type { Studio } from '@fizz-kidz/core'
 
-import { env } from '../init'
+import { env } from '@/init/firebase'
+
 import { withExponentialBackoff } from '../utilities'
 import { getOAuth2Client } from './google-oauth'
 

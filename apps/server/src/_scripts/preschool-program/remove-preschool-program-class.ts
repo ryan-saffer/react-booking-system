@@ -2,7 +2,7 @@ import { DateTime } from 'luxon'
 import prompts from 'prompts'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { removePreschoolProgramClass } from '@/preschool-program/core/remove-preschool-program-class'
 
 export async function runRemovePreschoolProgramClassScript() {

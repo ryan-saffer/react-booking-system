@@ -1,23 +1,23 @@
 import { assertNever, type PubSubFunctions } from '@fizz-kidz/core'
 
-import { sendIncursionForms } from './events/core/send-incursion-forms'
+import { sendIncursionForms } from '@/events/core/send-incursion-forms'
 import {
     handleGoogleBusinessProfileReviewNotification,
     isGoogleBusinessProfileReviewNotification,
     type GoogleBusinessProfileReviewNotification,
-} from './google-business-profile/core/google-business-profile-review-notification'
-import { handlePaperformSubmission } from './paperforms/functions/pubsub/paperform.pubsub'
-import { cleanUpStaleInvitations } from './party-bookings/core/rsvp/clean-up-stale-invitations'
-import { sendCakeForms } from './party-bookings/core/send-cake-form'
-import { sendGuestsEmail } from './party-bookings/core/send-guests-email'
-import { sendPartyFeedbackEmails } from './party-bookings/core/send-party-feedback-emails'
-import { sendPartyFormReminderEmails } from './party-bookings/core/send-party-form-reminder-emails'
-import { sendPartyForms } from './party-bookings/core/send-party-forms'
-import { updateSlingWages } from './sling/update-sling-wages'
-import { remindAboutTurning18NextMonth } from './staff/core/remind-about-turning-18-next-month'
-import { remindAboutWwcc } from './staff/core/remind-about-wwcc'
-import { sendMinimumShiftLengthReport } from './staff/core/send-minimum-shift-length-report'
-import { onMessagePublished, logError } from './utilities'
+} from '@/google-business-profile/core/google-business-profile-review-notification'
+import { handlePaperformSubmission } from '@/paperforms/functions/pubsub/paperform.pubsub'
+import { cleanUpStaleInvitations } from '@/party-bookings/core/rsvp/clean-up-stale-invitations'
+import { sendCakeForms } from '@/party-bookings/core/send-cake-form'
+import { sendGuestsEmail } from '@/party-bookings/core/send-guests-email'
+import { sendPartyFeedbackEmails } from '@/party-bookings/core/send-party-feedback-emails'
+import { sendPartyFormReminderEmails } from '@/party-bookings/core/send-party-form-reminder-emails'
+import { sendPartyForms } from '@/party-bookings/core/send-party-forms'
+import { updateSlingWages } from '@/sling/update-sling-wages'
+import { remindAboutTurning18NextMonth } from '@/staff/core/remind-about-turning-18-next-month'
+import { remindAboutWwcc } from '@/staff/core/remind-about-wwcc'
+import { sendMinimumShiftLengthReport } from '@/staff/core/send-minimum-shift-length-report'
+import { onMessagePublished, logError } from '@/utilities'
 
 export const pubsub = onMessagePublished(
     'background',

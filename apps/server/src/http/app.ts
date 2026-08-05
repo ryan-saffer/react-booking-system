@@ -1,23 +1,23 @@
 import * as trpcExpress from '@trpc/server/adapters/express'
 import express from 'express'
 import { logger } from 'firebase-functions/v2'
-import { onRequest } from 'firebase-functions/v2/https'
 
-import { acuityWebhook } from './acuity/functions/acuity.webhook'
-import { esignaturesWebhook } from './esignatures.io/functions/esignatures.webhook'
-import { googleReviewsRoute } from './google-business-profile/functions/routes/google-reviews'
-import { env } from './init'
-import { hostedPaperformRedirect } from './paperforms/functions/routes/hosted-paperform-redirect'
-import { partyFormRedirect } from './paperforms/functions/webhooks/paperform-redirect'
-import { paperformWebhook } from './paperforms/functions/webhooks/paperform.webhook'
-import { invitationEntryRedirect } from './party-bookings/functions/webhooks/invitation-redirect'
-import { createContext } from './trpc/trpc'
-import { appRouter } from './trpc/trpc.app-router'
-import { getErrorCode, type AppErrorCode } from './trpc/trpc.errors'
-import { isUsingEmulator } from './utilities'
-import { websiteFormsWebhook } from './website/functions/webhooks/website-forms-webhook'
+import { acuityWebhook } from '@/acuity/functions/acuity.webhook'
+import { esignaturesWebhook } from '@/esignatures.io/functions/esignatures.webhook'
+import { googleReviewsRoute } from '@/google-business-profile/functions/routes/google-reviews'
+import { hostedPaperformRedirect } from '@/paperforms/functions/routes/hosted-paperform-redirect'
+import { partyFormRedirect } from '@/paperforms/functions/webhooks/paperform-redirect'
+import { paperformWebhook } from '@/paperforms/functions/webhooks/paperform.webhook'
+import { invitationEntryRedirect } from '@/party-bookings/functions/webhooks/invitation-redirect'
+import { createContext } from '@/trpc/trpc'
+import { appRouter } from '@/trpc/trpc.app-router'
+import { getErrorCode, type AppErrorCode } from '@/trpc/trpc.errors'
+import { isUsingEmulator } from '@/utilities'
+import { websiteFormsWebhook } from '@/website/functions/webhooks/website-forms-webhook'
 
-const app = express()
+export const app = express()
+export type App = typeof app
+
 const apiRouter = express.Router()
 
 const ERRORS_TO_IGNORE: AppErrorCode[] = [
@@ -31,7 +31,6 @@ const ERRORS_TO_IGNORE: AppErrorCode[] = [
 ]
 
 // TRPC
-
 apiRouter.use(
     '/trpc',
     trpcExpress.createExpressMiddleware({
@@ -91,13 +90,3 @@ app.use('/api', apiRouter)
 
 // Public durable entrypoints for hosted Paperforms.
 app.use('/forms', hostedPaperformRedirect)
-
-export const api = onRequest(
-    {
-        region: 'australia-southeast1',
-        cors: true,
-        memory: '2GiB',
-        minInstances: env === 'prod' ? 1 : 0,
-    },
-    app
-)

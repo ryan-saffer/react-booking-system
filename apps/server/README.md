@@ -7,9 +7,10 @@ The deployment is deliberately small: one HTTP function and one Pub/Sub function
 ## The Shape
 
 - `src/index.ts` exports Firebase Functions.
-- `src/api.ts` mounts tRPC, webhooks, public API routes, and durable redirects.
+- `src/http/api.ts` exports the HTTP function and lazily loads `src/http/app.ts`.
+- `src/http/app.ts` mounts tRPC, webhooks, public API routes, and durable redirects.
 - `src/trpc/trpc.app-router.ts` combines the feature routers.
-- `src/pubsub.ts` dispatches messages from the shared `background` topic.
+- `src/background/function.ts` dispatches messages from the shared `background` topic.
 - `src/<feature>/core` contains workflows.
 - `src/<feature>/functions` contains HTTP, tRPC, webhook, or job adapters.
 - `src/firebase/DatabaseClient.ts` is the Firestore boundary.
@@ -22,7 +23,7 @@ The `api` function owns `/api/trpc`, `/api/webhooks/**`, public endpoints such a
 - Put browser/server-safe contracts and pure logic in `@fizz-kidz/core`.
 - Keep credentials, SDK clients, Firestore, and network calls here.
 - Load heavyweight SDKs lazily; Firebase cold starts notice everything.
-- Register new tRPC routers in `trpc.app-router.ts` and new background handlers in `pubsub.ts`.
+- Register new tRPC routers in `trpc.app-router.ts` and new background handlers in `background/function.ts`.
 
 ## Run It
 

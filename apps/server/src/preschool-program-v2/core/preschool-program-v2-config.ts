@@ -1,4 +1,4 @@
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 
 const PRESCHOOL_PROGRAM_V2_SESSION_CATALOG_OBJECT_IDS = {
     prod: 'QG6IJP4BMHR7UM6CWLO6AJHK',

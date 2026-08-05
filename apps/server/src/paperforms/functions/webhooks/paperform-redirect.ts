@@ -16,7 +16,7 @@ import {
 } from '@fizz-kidz/core'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { buildHostedPaperformUrl } from '@/paperforms/core/hosted-paperform-url'
 import { PaperformClient, type PaperformSubmission } from '@/paperforms/core/paperform-client'
 import { getPartyFormEmbedConfig } from '@/paperforms/core/party-form-prefill'

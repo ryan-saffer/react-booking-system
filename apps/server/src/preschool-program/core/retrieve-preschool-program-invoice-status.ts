@@ -1,6 +1,6 @@
 import type { InvoiceStatus, PreschoolProgramEnrolment } from '@fizz-kidz/core'
 
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { SquareClient } from '@/square/core/square-client'
 import { throwTrpcError } from '@/utilities'
 

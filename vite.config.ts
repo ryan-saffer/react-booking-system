@@ -316,6 +316,13 @@ export default defineConfig(({ command, mode }) => {
                         include: ['src/**/*.test.ts'],
                     },
                 },
+                {
+                    test: {
+                        name: 'core',
+                        root: coreDir,
+                        include: ['src/**/*.test.ts'],
+                    },
+                },
             ],
         },
         lint: {

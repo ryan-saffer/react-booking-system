@@ -1,14 +1,8 @@
-/**
- * Currently writing unit test inside the core package is a pain.
- *
- * So they exist here for now.
- */
-
 import { strictEqual } from 'assert'
 
 import { describe, it } from 'vite-plus/test'
 
-import { addOrdinalSuffix } from '@fizz-kidz/core'
+import { addOrdinalSuffix } from './stringUtilities'
 
 describe('Fizz Kidz Utilities', () => {
     describe('addOrdinalSuffix', () => {

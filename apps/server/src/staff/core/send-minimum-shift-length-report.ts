@@ -8,7 +8,7 @@ import {
     type ShiftUnderMinimumShiftLength,
 } from '@fizz-kidz/core'
 
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { MailClient } from '@/sendgrid/MailClient'
 import { SlingClient } from '@/sling/sling-client'
 

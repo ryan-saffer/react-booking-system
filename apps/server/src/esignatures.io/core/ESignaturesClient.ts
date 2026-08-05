@@ -1,4 +1,4 @@
-import { env } from '../../init'
+import { env } from '@/init/firebase'
 
 const PARTY_FACILITATOR_CONTRACT_TEMPLATE_ID = 'ae77f4ae-8a4d-438a-82b1-b27d49b45ea9'
 const AREA_MANAGER_CONTRACT_TEMPLATE_ID = 'd6aecbf5-6842-4144-9968-f8f6714dc50b'

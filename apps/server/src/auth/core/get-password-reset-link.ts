@@ -2,7 +2,7 @@ import { getAuth } from 'firebase-admin/auth'
 
 import { getApplicationDomain } from '@fizz-kidz/core'
 
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { isUsingEmulator } from '@/utilities'
 
 export async function getPasswordResetLink(email: string) {

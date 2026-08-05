@@ -5,7 +5,7 @@ import type { AcuityTypes, Studio, StudioOrMaster } from '@fizz-kidz/core'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { mergeAcuityWithStoryblok } from '@/acuity/core/merge-storyblok-with-acuity'
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 
 const studioOrMasterSchema = z.custom<StudioOrMaster>(
     (value) => typeof value === 'string' && (value === 'master' || STUDIOS.includes(value as Studio))

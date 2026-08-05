@@ -5,7 +5,7 @@ import { getApplicationDomain, getStudioAddress, getPartyEndDate, getPartyBirthd
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { CalendarClient } from '@/google/CalendarClient'
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { throwTrpcError, logError, isUsingEmulator } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'

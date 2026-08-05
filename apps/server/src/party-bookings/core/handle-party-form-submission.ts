@@ -13,7 +13,7 @@ import {
 } from '@fizz-kidz/core'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import type { PaperformSubmission } from '@/paperforms/core/paperform-client'
 import { MailClient } from '@/sendgrid/MailClient'

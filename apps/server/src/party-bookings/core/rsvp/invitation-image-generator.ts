@@ -8,7 +8,7 @@ import QRCode from 'qrcode'
 import type { InvitationsV2, WithoutUid } from '@fizz-kidz/core'
 import { ObjectKeys, getInvitationShareUrl, getStudioAddress } from '@fizz-kidz/core'
 
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { isUsingEmulator } from '@/utilities'
 
 import type { PNGStream } from 'canvas'

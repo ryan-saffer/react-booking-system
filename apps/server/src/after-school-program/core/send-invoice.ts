@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
 import { SquareClient } from '@/square/core/square-client'
 import { throwTrpcError } from '@/utilities'

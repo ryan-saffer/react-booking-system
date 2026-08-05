@@ -47,7 +47,7 @@ npm run website         # Public site on :4321
 npm run docs            # Knowledge base on :4321
 
 npm run check           # Read-only format, lint, and type checks
-npm run test            # Portal and server tests
+npm run test            # Core, Portal, and server tests
 npm run verify          # Fix checks, then test
 npm run verify:full     # Include both Astro checks
 npm run build           # Core + server + Portal
@@ -88,9 +88,9 @@ vp add <package> --filter @fizz-kidz/core
 
 - Portal routes: `apps/portal/src/app.tsx`
 - Portal providers and tRPC client: `apps/portal/src/components/root/root.tsx`
-- Server HTTP composition: `apps/server/src/api.ts`
+- Server HTTP composition: `apps/server/src/http/app.ts`
 - Server tRPC composition: `apps/server/src/trpc/trpc.app-router.ts`
-- Background jobs: `apps/server/src/pubsub.ts`
+- Background jobs: `apps/server/src/background/function.ts`
 - Shared exports: `packages/core/src/index.ts`
 - Firestore boundary: [`apps/server/src/firebase/README.md`](apps/server/src/firebase/README.md)
 - Operational scripts: [`apps/server/src/_scripts/README.md`](apps/server/src/_scripts/README.md)

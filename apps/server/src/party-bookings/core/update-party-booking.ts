@@ -17,7 +17,7 @@ import {
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { CalendarClient } from '@/google/CalendarClient'
-import { env } from '@/init'
+import { env } from '@/init/firebase'
 import { MailClient } from '@/sendgrid/MailClient'
 import { isUsingEmulator, logError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'

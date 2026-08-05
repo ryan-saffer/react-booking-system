@@ -1,4 +1,4 @@
-import '../load-env'
+import '@/init/load-env'
 import { DateTime } from 'luxon'
 import prompts from 'prompts'
 
