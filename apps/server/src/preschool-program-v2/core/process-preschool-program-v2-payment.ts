@@ -1,6 +1,4 @@
-import { SquareError } from 'square'
-
-import { SquareClient } from '@/square/core/square-client'
+import { getSquareError, SquareClient } from '@/square/core/square-client'
 import { GiftCardInactiveError, PaymentMethodInvalidError } from '@/trpc/trpc.errors'
 import { throwCustomTrpcError, throwTrpcError } from '@/utilities'
 
@@ -156,8 +154,9 @@ export async function processPreschoolProgramV2Payment(
                     await square.payments.cancel({ paymentId: giftCardPayment.id! })
                 }
 
-                if (err instanceof SquareError) {
-                    const error = err.errors[0]
+                const squareError = await getSquareError(err)
+                if (squareError) {
+                    const error = squareError.errors[0]
                     if (error.category === 'PAYMENT_METHOD_ERROR') {
                         throwCustomTrpcError(new PaymentMethodInvalidError())
                     }

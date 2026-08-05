@@ -2,7 +2,6 @@ import { FieldValue } from 'firebase-admin/firestore'
 import { logger } from 'firebase-functions/v2'
 import { Status } from 'google-gax'
 import { DateTime } from 'luxon'
-import { SquareError } from 'square'
 
 import { AcuityConstants, AcuityUtilities, normalize, studioNameAndAddress, type AcuityTypes } from '@fizz-kidz/core'
 
@@ -12,6 +11,7 @@ import { getDiscountCodeRedemptionKey } from '@/holiday-programs/core/discount-c
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
 import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
+import { getSquareError } from '@/square/core/square-client'
 import { ClassFullError, CustomTrpcError, PaymentMethodInvalidError } from '@/trpc/trpc.errors'
 import { throwTrpcError, throwCustomTrpcError, logError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
@@ -122,12 +122,13 @@ export async function bookPlayLab(input: BookPlayLabProps) {
         input.payment,
         input.parentEmail,
         customerId
-    ).catch((err: any) => {
+    ).catch(async (err: any) => {
         if (err.cause instanceof CustomTrpcError) {
             throw err
         }
-        if (err instanceof SquareError) {
-            const error = err.errors[0]
+        const squareError = await getSquareError(err)
+        if (squareError) {
+            const error = squareError.errors[0]
             if (error.category === 'PAYMENT_METHOD_ERROR') {
                 throwCustomTrpcError(new PaymentMethodInvalidError())
             }

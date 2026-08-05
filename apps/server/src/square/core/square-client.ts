@@ -1,8 +1,7 @@
-import { SquareEnvironment, type SquareClient as TSquare } from 'square'
-
 import { env } from '../../init'
 
 import type { ClientStatus } from '../../utilities/types'
+import type { SquareClient as TSquare } from 'square'
 
 export class SquareClient {
     private static instance: SquareClient
@@ -28,10 +27,15 @@ export class SquareClient {
 
     async #initialise() {
         this.#status = 'initialising'
-        const { SquareClient: Square } = await import('square')
+        const { SquareClient: Square, SquareEnvironment } = await import('square')
         const token = env === 'dev' ? process.env.SQUARE_DEV_TOKEN : process.env.SQUARE_PROD_TOKEN
         const environment = env === 'dev' ? SquareEnvironment.Sandbox : SquareEnvironment.Production
         this.#client = new Square({ token, version: '2025-04-16', environment })
         this.#status = 'initialised'
     }
+}
+
+export async function getSquareError(error: unknown) {
+    const { SquareError } = await import('square')
+    return error instanceof SquareError ? error : undefined
 }

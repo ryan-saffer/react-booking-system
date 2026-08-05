@@ -1,6 +1,4 @@
-import { SquareError } from 'square'
-
-import { SquareClient } from '@/square/core/square-client'
+import { getSquareError, SquareClient } from '@/square/core/square-client'
 import { GiftCardNotFoundError } from '@/trpc/trpc.errors'
 import { throwCustomTrpcError, throwTrpcError } from '@/utilities'
 
@@ -40,9 +38,10 @@ export async function checkGiftCardBalance(giftCardNumber: string): Promise<Chec
             last4: (giftCard.gan || '').slice(-4),
         }
     } catch (err) {
-        if (err instanceof SquareError) {
-            const squareError = err.errors[0]
-            if (squareError?.code === 'NOT_FOUND') {
+        const squareError = await getSquareError(err)
+        if (squareError) {
+            const error = squareError.errors[0]
+            if (error?.code === 'NOT_FOUND') {
                 throwCustomTrpcError(new GiftCardNotFoundError())
             }
         }
