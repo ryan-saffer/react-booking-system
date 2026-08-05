@@ -1,9 +1,9 @@
 // Load environment variables from server/.env or server/.env.prod based on project
-import './init/load-env'
-import './init/instrumentation'
+import './app/init/load-env'
+import './app/init/instrumentation'
 
 // API (trpc & webhooks)
-export * from './http/api'
+export * from './app/http/api'
 
 // PubSub dispatcher
-export * from './background/function'
+export * from './app/background/function'

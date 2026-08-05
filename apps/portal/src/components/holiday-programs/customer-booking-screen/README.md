@@ -9,7 +9,7 @@ The customer picks sessions, adds children, applies a discount or gift card, pay
 - **Square:** orders, gift cards, payments, and refunds
 - **Zoho:** customer and deal follow-up
 
-The Portal owns the form and cart. `apps/server/src/holiday-programs/core` owns validation, payment, scheduling, and side effects.
+The Portal owns the form and cart. `apps/server/src/features/holiday-programs/core` owns validation, payment, scheduling, and side effects.
 
 ## Checkout In One Breath
 

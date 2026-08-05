@@ -1,0 +1,53 @@
+import { throwCustomTrpcError, throwTrpcError } from '@/app/trpc/transport-errors'
+import { GiftCardNotFoundError } from '@/app/trpc/trpc.errors'
+import { getSquareError, SquareClient } from '@/integrations/square/square.client'
+
+export type CheckGiftCardBalanceResponse = {
+    giftCardId: string
+    balanceCents: number
+    state: 'ACTIVE' | 'DEACTIVATED' | 'BLOCKED' | 'PENDING' | 'UNKNOWN'
+    last4: string
+}
+
+export async function checkGiftCardBalance(giftCardNumber: string): Promise<CheckGiftCardBalanceResponse> {
+    const square = await SquareClient.getInstance()
+    const cleanedNumber = giftCardNumber.replace(/[\s-]/g, '')
+    const last4 = cleanedNumber.slice(-4)
+
+    try {
+        const { giftCard } = await square.giftCards.getFromGan({ gan: cleanedNumber })
+
+        if (!giftCard) {
+            throwCustomTrpcError(new GiftCardNotFoundError())
+        }
+
+        const currency = giftCard.balanceMoney?.currency
+        if (currency && currency !== 'AUD') {
+            throwTrpcError('BAD_REQUEST', 'Gift card currency not supported', null, {
+                currency,
+                last4,
+            })
+        }
+
+        const balance = giftCard.balanceMoney?.amount ?? BigInt(0)
+
+        return {
+            giftCardId: giftCard.id || '',
+            balanceCents: Number(balance),
+            state: giftCard.state || 'UNKNOWN',
+            last4: (giftCard.gan || '').slice(-4),
+        }
+    } catch (err) {
+        const squareError = await getSquareError(err)
+        if (squareError) {
+            const error = squareError.errors[0]
+            if (error?.code === 'NOT_FOUND') {
+                throwCustomTrpcError(new GiftCardNotFoundError())
+            }
+        }
+
+        throwTrpcError('INTERNAL_SERVER_ERROR', 'Unable to retrieve gift card balance', err, {
+            last4,
+        })
+    }
+}

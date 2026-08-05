@@ -14,18 +14,18 @@ The first implementation stage should only create the backend capability to defi
 - [x] Add shared inventory types and constants in `packages/core/src/inventory/index.ts`.
 - [x] Export inventory types from `packages/core/src/index.ts`.
 - [x] Add inventory permissions to `packages/core/src/core/permission.ts`.
-- [x] Add typed Firestore refs for inventory collections in `apps/server/src/firebase/FirestoreRefs.ts`.
+- [x] Add typed Firestore refs for inventory collections in `apps/server/src/integrations/firebase/firestore.refs.ts`.
 - [x] Add `DatabaseClient` inventory item, stock-level, and stock-movement methods.
 - [x] Make inventory item creation also create initial location stock records.
 - [x] Implement transaction-backed stock movement writes.
 - [x] Add global hard delete for inventory items, including all studio stock levels and movement history.
 - [x] Add studio-scoped used/unused tracking via `InventoryStockLevel.stocked`.
-- [x] Add `apps/server/src/inventory/core` utilities for inventory operations.
+- [x] Add `apps/server/src/features/inventory/core` utilities for inventory operations.
 - [x] Add an `inventory` tRPC router with zod input validation.
 - [x] Move inventory auth and permission checks into inventory-scoped tRPC procedures.
 - [x] Move inventory operation schemas into core modules so tRPC and server functions share the same input type.
 - [x] Standardise inventory discriminated union keys with the `$` prefix.
-- [x] Register the inventory router in `apps/server/src/trpc/trpc.app-router.ts`.
+- [x] Register the inventory router in `apps/server/src/app/trpc/trpc.app-router.ts`.
 - [x] Run `vp check` across the workspace (formatting, lint, type-aware lint, and TypeScript for Portal, server, and shared core).
 - [ ] Add tests for stock movement transactions and permission checks.
 - [ ] Create an initial seed/admin script for party-food inventory items if needed.
@@ -41,10 +41,10 @@ The first implementation stage should only create the backend capability to defi
 Inventory should follow the current repository architecture instead of becoming a separate subsystem with different conventions.
 
 - Shared domain types belong in `packages/core/src` and are exported from `packages/core/src/index.ts`.
-- Typed Firestore collection/document references belong in `apps/server/src/firebase/FirestoreRefs.ts`.
-- Low-level database reads/writes belong in `apps/server/src/firebase/DatabaseClient.ts`.
+- Typed Firestore collection/document references belong in `apps/server/src/integrations/firebase/firestore.refs.ts`.
+- Low-level database reads/writes belong in `apps/server/src/integrations/firebase/database.client.ts`.
 - Feature/business operations belong in `apps/server/src/<feature>/core`.
-- tRPC routers belong in `apps/server/src/<feature>/functions/trpc` and are registered in `apps/server/src/trpc/trpc.app-router.ts`.
+- tRPC routers belong in `apps/server/src/<feature>/functions/trpc` and are registered in `apps/server/src/app/trpc/trpc.app-router.ts`.
 - The Portal consumes the server router through the existing typed tRPC client in `apps/portal/src/utilities/trpc.ts`.
 
 ## Design Principles
@@ -469,8 +469,8 @@ type InventoryShoppingListLine = {
 
 - Add `packages/core/src/inventory/index.ts`.
 - Update `packages/core/src/index.ts` to export inventory types.
-- Update `apps/server/src/firebase/FirestoreRefs.ts` with inventory refs.
-- Update `apps/server/src/firebase/DatabaseClient.ts` with inventory database methods.
+- Update `apps/server/src/integrations/firebase/firestore.refs.ts` with inventory refs.
+- Update `apps/server/src/integrations/firebase/database.client.ts` with inventory database methods.
 
 ### `FirestoreRefs` Additions
 
@@ -555,13 +555,13 @@ Start with simple query shapes. Add pagination only when the UI needs it.
 
 Create:
 
-- `apps/server/src/inventory/core/create-inventory-item.ts`
-- `apps/server/src/inventory/core/update-inventory-item.ts`
-- `apps/server/src/inventory/core/list-inventory-items.ts`
-- `apps/server/src/inventory/core/list-inventory-stock.ts`
-- `apps/server/src/inventory/core/adjust-inventory-stock.ts`
-- `apps/server/src/inventory/core/list-inventory-stock-movements.ts`
-- `apps/server/src/inventory/core/inventory-permissions.ts`
+- `apps/server/src/features/inventory/core/create-inventory-item.ts`
+- `apps/server/src/features/inventory/core/update-inventory-item.ts`
+- `apps/server/src/features/inventory/core/list-inventory-items.ts`
+- `apps/server/src/features/inventory/core/list-inventory-stock.ts`
+- `apps/server/src/features/inventory/core/adjust-inventory-stock.ts`
+- `apps/server/src/features/inventory/core/list-inventory-stock-movements.ts`
+- `apps/server/src/features/inventory/core/inventory-permissions.ts`
 
 Core functions should contain business rules that should not live in tRPC handlers, such as:
 
@@ -588,11 +588,11 @@ export async function listInventoryStockMovements(
 
 Create:
 
-- `apps/server/src/inventory/functions/trpc/trpc.inventory.ts`
+- `apps/server/src/features/inventory/functions/trpc/trpc.inventory.ts`
 
 Register in:
 
-- `apps/server/src/trpc/trpc.app-router.ts`
+- `apps/server/src/app/trpc/trpc.app-router.ts`
 
 Recommended router surface:
 
@@ -611,7 +611,7 @@ Use `zod` for runtime input validation in this new router. Older routers sometim
 
 Example validation module:
 
-- `apps/server/src/inventory/functions/trpc/inventory.schema.ts`
+- `apps/server/src/features/inventory/functions/trpc/inventory.schema.ts`
 
 Validation should use shared constants from `core`, for example `INVENTORY_CATEGORIES`, `INVENTORY_UNITS`, and `STUDIOS`, so runtime validators and TypeScript types cannot drift.
 
@@ -842,7 +842,7 @@ Recommended tests once stock movement logic exists:
 2. Add Firestore refs for inventory collections.
 3. Add `DatabaseClient` item and stock methods, including transactional stock movement writes.
 4. Add inventory permissions to shared role/permission types.
-5. Add `apps/server/src/inventory/core` functions.
+5. Add `apps/server/src/features/inventory/core` functions.
 6. Add `inventory` tRPC router and register it in `appRouter`.
 7. Add a small seed/admin script only if needed to create initial party-food inventory items.
 8. Build the inventory page.

@@ -29,6 +29,7 @@ const portalAliases = {
 
 const serverAliases = {
     '@': path.join(serverDir, 'src'),
+    '@test-support': path.join(serverDir, 'test-support'),
     '@fizz-kidz/core': path.join(coreDir, 'src'),
 }
 

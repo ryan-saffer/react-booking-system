@@ -61,6 +61,8 @@ Put runtime-neutral types and pure logic in `@fizz-kidz/core`, then export them 
 
 Keep SDK clients, credentials, Firestore, and other runtime-specific I/O in the app that owns them. Shared React UI should eventually become its own package rather than turning core into a grab bag.
 
+Inside the server, `app` composes deployable HTTP, tRPC, and background adapters; `features` owns business workflows; `integrations` owns provider and runtime I/O; and `shared` holds narrow server-wide helpers. Dependencies flow from app adapters through features and integrations toward shared leaf modules.
+
 Add dependencies from the root:
 
 ```bash
@@ -88,9 +90,9 @@ vp add <package> --filter @fizz-kidz/core
 
 - Portal routes: `apps/portal/src/app.tsx`
 - Portal providers and tRPC client: `apps/portal/src/components/root/root.tsx`
-- Server HTTP composition: `apps/server/src/http/app.ts`
-- Server tRPC composition: `apps/server/src/trpc/trpc.app-router.ts`
-- Background jobs: `apps/server/src/background/function.ts`
+- Server HTTP composition: `apps/server/src/app/http/app.ts`
+- Server tRPC composition: `apps/server/src/app/trpc/trpc.app-router.ts`
+- Background jobs: `apps/server/src/app/background/function.ts`
 - Shared exports: `packages/core/src/index.ts`
-- Firestore boundary: [`apps/server/src/firebase/README.md`](apps/server/src/firebase/README.md)
-- Operational scripts: [`apps/server/src/_scripts/README.md`](apps/server/src/_scripts/README.md)
+- Firestore boundary: [`apps/server/src/integrations/firebase/README.md`](apps/server/src/integrations/firebase/README.md)
+- Operational scripts: [`apps/server/scripts/README.md`](apps/server/scripts/README.md)
