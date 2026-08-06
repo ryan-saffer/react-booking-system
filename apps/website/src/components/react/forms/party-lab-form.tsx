@@ -6,15 +6,15 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 
 import '@/styles/sonner.css'
-import { FORM_WEBHOOK } from '@/utils/constants'
-import { assertNoCorsRequestSucceeded } from '@/utils/no-cors-response'
-
 import { Button } from '../ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { SelectContent, SelectForm, SelectItem, SelectValue } from '../ui/select'
 import { Toaster } from '../ui/sonner'
 import { Textarea } from '../ui/textarea'
+
+import { FORM_WEBHOOK } from '@/utils/constants'
+import { assertNoCorsRequestSucceeded } from '@/utils/no-cors-response'
 
 const SESSIONS = [
     'Creative Kinders Tuesday 10am',

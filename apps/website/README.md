@@ -28,6 +28,10 @@ Local environment values live in `apps/website/.env`:
 
 Production and preview values live in Netlify.
 
+## SEO Data
+
+`src/utils/seo.ts` builds the shared Schema.org graph and route-specific service, breadcrumb, location and studio-list entities. Keep public studio names and addresses in `src/utils/studios.ts`; location pages, the footer, structured data and `public/llms.txt` should agree with that source.
+
 > **Deployment gotcha:** `netlify.toml` only watches `apps/website`. If a root dependency or toolchain change affects the site, trigger a manual build or include a website-directory change.
 
 Netlify hosts the Astro output and `apps/website/netlify/functions`. Remote image optimization allows Storyblok and Instagram CDN hosts.

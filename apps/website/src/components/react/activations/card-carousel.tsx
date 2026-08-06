@@ -1,8 +1,8 @@
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/react-ui/carousel'
-
 import { Button } from '../ui/button'
 
 import type { ReactNode } from 'react'
+
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/react-ui/carousel'
 
 type ImageSlot = 'image1' | 'image2' | 'image3' | 'image4' | 'image5' | 'image6'
 

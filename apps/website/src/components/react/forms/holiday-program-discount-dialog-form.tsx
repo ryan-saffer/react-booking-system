@@ -6,14 +6,15 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 
 import '@/styles/sonner.css'
+
+import type { DiscountCode } from '../holiday-program-discount-dialog'
+
 import { Button } from '@/react-ui/button'
 import { Checkbox } from '@/react-ui/checkbox'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/react-ui/form'
 import { Input } from '@/react-ui/input'
 import { Toaster } from '@/react-ui/sonner'
 import { FORM_WEBHOOK } from '@/utils/constants'
-
-import type { DiscountCode } from '../holiday-program-discount-dialog'
 
 const formSchema = z.object({
     name: z.string().min(1, 'Name is required'),

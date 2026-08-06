@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 
-import blueParachute from '@/assets/images/pages/in-schools/incursions/blue-parachute.svg'
-import greenEarth from '@/assets/images/pages/in-schools/incursions/green-earth.svg'
-import purpleLightbulb from '@/assets/images/pages/in-schools/incursions/purple-lightbulb.svg'
-import yellowTube from '@/assets/images/pages/in-schools/incursions/yellow-tube.svg'
-
 import { cn } from '../lib/utils'
 import { IncursionModule } from './incursion-module'
 
 import type { ReactNode } from 'react'
+
+import blueParachute from '@/assets/images/pages/in-schools/incursions/blue-parachute.svg'
+import greenEarth from '@/assets/images/pages/in-schools/incursions/green-earth.svg'
+import purpleLightbulb from '@/assets/images/pages/in-schools/incursions/purple-lightbulb.svg'
+import yellowTube from '@/assets/images/pages/in-schools/incursions/yellow-tube.svg'
 
 type Props = {
     chemical1Image?: ReactNode

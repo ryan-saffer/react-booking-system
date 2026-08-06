@@ -6,11 +6,20 @@ import PartyLayout from "@/layout/party-layout.astro";
 import { sbPagesPartiesTaylorSwiftPartyJpg as taylorSwiftParty } from "@/data/storyblok-images";
 import { sbPagesPartiesPackagesSwiftiePng as taylorSwiftPackage } from "@/data/storyblok-images";
 import TaylorSwiftCreations from "@/components/creation-packages/taylor-swift-creations.astro";
+import { createPartySchemas } from "@/utils/seo";
+
+const description =
+  "A Swiftie-inspired kids birthday party with sparkling, music-themed craft and take-home creations at Fizz Kidz studios in Melbourne and Geelong.";
 ---
 
 <Layout
-  title="Taylor Swift Kids Birthday Party Packages in Melbourne"
-  description="As obsessed with Taylor Swift as we are? This party package is perfect for all Swiftie's out there!"
+  title="Swiftie-Inspired Birthday Parties in Melbourne & Geelong | Fizz Kidz"
+  description={description}
+  schema={createPartySchemas({
+    name: "Swiftie-Inspired Kids Birthday Party",
+    description,
+    slug: "taylor-swift-parties",
+  })}
 >
   <PartyLayout partyPackage="Taylor Swift">
     <PageIntro
@@ -18,7 +27,7 @@ import TaylorSwiftCreations from "@/components/creation-packages/taylor-swift-cr
       subtitle="Join us for the best Swiftie Party!"
       type="image"
       image={taylorSwiftParty}
-      imageAlt="a purple butcket of glycerine cubes, with pretty colourful unciron soaps on top"
+      imageAlt="Sparkling Swiftie-inspired party creations"
       actionButtonText="Book a party"
       actionButtonPath="/birthday-parties/book-a-party/#book"
       color="purple"

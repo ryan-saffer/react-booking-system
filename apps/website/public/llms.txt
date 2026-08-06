@@ -1,0 +1,42 @@
+# Fizz Kidz
+
+> Fizz Kidz is an Australian children's entertainment provider offering hosted birthday parties, school holiday programs, preschool sessions, school programs and event activations. Its six public studios are in Balwyn, Cheltenham, Essendon, Geelong, Kingsville and Malvern, Victoria.
+
+Fizz Kidz runs hands-on activities for children, including slime, science, art, craft, tie dye and take-home creations. Birthday parties and holiday programs are generally designed for children aged 4 to 12. Current availability, pricing and booking details should be confirmed on the official pages linked below.
+
+## Main Services
+
+- [Kids birthday parties](https://www.fizzkidz.com.au/birthday-parties/): Hosted themed parties at Fizz Kidz studios.
+- [At-home birthday parties](https://www.fizzkidz.com.au/birthday-parties/at-home-parties/): Mobile parties at a customer's home or venue.
+- [School holiday programs](https://www.fizzkidz.com.au/holiday-programs/): Creative programs during Victorian school holidays.
+- [Preschool program](https://www.fizzkidz.com.au/preschool-program/): Art, science and sensory sessions for children aged 2.5 to 5.
+- [School science incursions](https://www.fizzkidz.com.au/in-schools/incursions/): Hands-on science sessions delivered at schools.
+- [Event activations](https://www.fizzkidz.com.au/activations-and-events/): Children's activities for community, shopping centre and corporate events.
+
+## Birthday Party Themes
+
+- [Slime](https://www.fizzkidz.com.au/birthday-parties/slime-parties/)
+- [Science](https://www.fizzkidz.com.au/birthday-parties/science-parties/)
+- [Fairy](https://www.fizzkidz.com.au/birthday-parties/fairy-parties/)
+- [Unicorn](https://www.fizzkidz.com.au/birthday-parties/unicorn-parties/)
+- [Glam](https://www.fizzkidz.com.au/birthday-parties/glam-parties/)
+- [Tie Dye](https://www.fizzkidz.com.au/birthday-parties/tie-dye-parties/)
+- [Fluid Bears](https://www.fizzkidz.com.au/birthday-parties/fluid-bears-parties/)
+- [Jungle Safari](https://www.fizzkidz.com.au/birthday-parties/jungle-safari-parties/)
+- [K-Pop Power](https://www.fizzkidz.com.au/birthday-parties/k-pop-power-parties/)
+- [Swiftie-inspired](https://www.fizzkidz.com.au/birthday-parties/taylor-swift-parties/)
+
+## Studio Locations
+
+- [Balwyn](https://www.fizzkidz.com.au/locations/balwyn/): 184 Whitehorse Rd, Balwyn VIC 3103.
+- [Cheltenham](https://www.fizzkidz.com.au/locations/cheltenham/): 273 Bay Rd, Cheltenham VIC 3192.
+- [Essendon](https://www.fizzkidz.com.au/locations/essendon/): 75 Raleigh St, Essendon VIC 3040.
+- [Geelong](https://www.fizzkidz.com.au/locations/geelong/): 352 Pakington St, Newtown VIC 3220.
+- [Kingsville](https://www.fizzkidz.com.au/locations/kingsville/): 238 Somerville Rd, Kingsville VIC 3012.
+- [Malvern](https://www.fizzkidz.com.au/locations/malvern/): 20 Glenferrie Rd, Malvern VIC 3144.
+
+## Contact
+
+- [Contact Fizz Kidz](https://www.fizzkidz.com.au/contact-us/)
+- Phone: [(03) 9059 8144](tel:+61390598144)
+- Email: [bookings@fizzkidz.com.au](mailto:bookings@fizzkidz.com.au)

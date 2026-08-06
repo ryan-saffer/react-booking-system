@@ -21,6 +21,23 @@ import PartyThemes from "@/components/party-themes.astro";
 import PartyFaq from "@/components/party-faq.astro";
 import Values from "@/components/values.astro";
 import PartyPerks from "@/components/party-perks.astro";
+import { createBreadcrumbSchema, createServiceSchema } from "@/utils/seo";
+
+const description =
+  "Hosted kids birthday parties for ages 4 to 12 with themed activities, party games and take-home creations at six Fizz Kidz studios in Melbourne and Geelong.";
+
+const schema = [
+  createServiceSchema({
+    name: "Fizz Kidz Birthday Parties",
+    description,
+    path: "/birthday-parties/",
+    serviceType: "Kids birthday party venue",
+  }),
+  createBreadcrumbSchema("/birthday-parties/", [
+    { name: "Home", path: "/" },
+    { name: "Birthday Parties", path: "/birthday-parties/" },
+  ]),
+];
 
 const { default: greenClock } = await import(
   `@/assets/images/pages/parties/green-clock.svg?raw`
@@ -44,8 +61,9 @@ const { default: purpleDrop } = await import(
 ---
 
 <Layout
-  title="Book Kids Birthday Party Venue (Aged 4-12 Years) in Melbourne"
-  description="Fizz Kidz's Birthday Parties are the perfect and stress-free party for all boys and girls, aged 4 - 12, that your child and all their friends will love!"
+  title="Kids Birthday Party Venues in Melbourne & Geelong | Fizz Kidz"
+  description={description}
+  schema={schema}
 >
   <main>
     <div class="m-auto block max-w-[1380px] px-5 pt-4">
@@ -194,7 +212,7 @@ const { default: purpleDrop } = await import(
                   "Flexible & allergy aware party food",
                   "Personalised online invitations [NEW!]",
                   "You can bring your own birthday cake <strong>or order one through us!</strong>",
-                  "Let us know the approx. number of children & which creations your child would like to make a week before the party",
+                  "Let us know the approximate number of children and which creations your child would like to make 10 days before the party",
                 ]}
               />
             </div>

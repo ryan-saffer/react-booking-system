@@ -46,6 +46,27 @@ import PrimaryButton from "@/components/primary-button.astro";
 import ActivationsForm from "@/components/react/forms/activations-form";
 import Reviews from "@/components/reviews.astro";
 import Values from "@/components/values.astro";
+import { createBreadcrumbSchema, createServiceSchema } from "@/utils/seo";
+
+const description =
+  "Fizz Kidz delivers hands-on children's activations across Australia for shopping centres, community programs and corporate events, with trained staff and custom activities.";
+
+const schema = [
+  createServiceSchema({
+    name: "Kids Event Activations",
+    description,
+    path: "/activations-and-events/",
+    serviceType: "Children's event activation",
+    areaServed: ["Australia"],
+  }),
+  createBreadcrumbSchema("/activations-and-events/", [
+    { name: "Home", path: "/" },
+    {
+      name: "Activations and Events",
+      path: "/activations-and-events/",
+    },
+  ]),
+];
 
 const logos = [
   { src: aflLogo, alt: "afl logo" },
@@ -67,8 +88,9 @@ const logos = [
 ---
 
 <Layout
-  title="Kids Activation & Events Specialist in Melbourne | Fizz Kidz"
-  description="Fizz Kidz runs activations and events across Australia, creating a space for children to create something special. Book us for your shopping center, corporate event or anywhere you need a little bit of Fizz!"
+  title="Kids' Event Activations Across Australia | Fizz Kidz"
+  description={description}
+  schema={schema}
 >
   <main>
     <div class="m-auto block max-w-[1380px] px-5 pt-4">

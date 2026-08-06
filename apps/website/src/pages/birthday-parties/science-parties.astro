@@ -6,11 +6,20 @@ import PartyLayout from "@/layout/party-layout.astro";
 import { sbPagesPartiesSciencePartyJpg as scienceParty } from "@/data/storyblok-images";
 import { sbPagesPartiesPackagesSciencePng as science } from "@/data/storyblok-images";
 import ScienceCreations from "@/components/creation-packages/science-creations.astro";
+import { createPartySchemas } from "@/utils/seo";
+
+const description =
+  "A hands-on kids science birthday party with experiments and take-home creations, hosted by Fizz Kidz at studios across Melbourne and Geelong.";
 ---
 
 <Layout
-  title="Book a Kids Science Birthday Party in Melbourne | Fizz Kidz"
-  description="Does your kid love science, experimenting, and making a mess? Then this party package is for them!"
+  title="Kids Science Birthday Parties in Melbourne & Geelong | Fizz Kidz"
+  description={description}
+  schema={createPartySchemas({
+    name: "Kids Science Birthday Party",
+    description,
+    slug: "science-parties",
+  })}
 >
   <PartyLayout partyPackage="Science">
     <PageIntro

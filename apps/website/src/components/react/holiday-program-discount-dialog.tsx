@@ -2,10 +2,10 @@ import { DialogDescription } from '@radix-ui/react-dialog'
 import { DateTime } from 'luxon'
 import { useEffect, useState, type ReactNode } from 'react'
 
+import HolidayProgramDiscountDialogForm from './forms/holiday-program-discount-dialog-form'
+
 import { Dialog, DialogContent, DialogTitle } from '@/react-ui/dialog'
 import { VisuallyHidden } from '@/react-ui/visually-hidden'
-
-import HolidayProgramDiscountDialogForm from './forms/holiday-program-discount-dialog-form'
 
 export type DiscountCode = { code: string; expiryDate: string }
 

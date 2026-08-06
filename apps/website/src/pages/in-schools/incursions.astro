@@ -33,6 +33,24 @@ import Reviews from "@/components/reviews.astro";
 import { sbPagesInSchoolsIncursionsBlueBubblesPng as blueBubbles } from "@/data/storyblok-images";
 import IncursionForm from "@/components/react/forms/incursion-form";
 import SchoolLogos from "@/components/school-logos.astro";
+import { createBreadcrumbSchema, createServiceSchema } from "@/utils/seo";
+
+const description =
+  "Hands-on primary school science incursions delivered by Fizz Kidz, with engaging experiments and curriculum-aligned modules for schools across Australia.";
+
+const schema = [
+  createServiceSchema({
+    name: "Primary School Science Incursions",
+    description,
+    path: "/in-schools/incursions/",
+    serviceType: "Primary school science incursion",
+    areaServed: ["Australia"],
+  }),
+  createBreadcrumbSchema("/in-schools/incursions/", [
+    { name: "Home", path: "/" },
+    { name: "Science Incursions", path: "/in-schools/incursions/" },
+  ]),
+];
 
 const { default: purpleSplot } = await import(
   `@/assets/images/pages/in-schools/incursions/purple-splot.svg?raw`
@@ -40,8 +58,9 @@ const { default: purpleSplot } = await import(
 ---
 
 <Layout
-  title="School Science Incursions Provider in Melbourne | Fizz Kidz"
-  description="Fizz Kidz runs science incursions at schools across Australia. The perfect way to bring an extra fizz into the classroom!"
+  title="Primary School Science Incursions | Fizz Kidz"
+  description={description}
+  schema={schema}
 >
   <main>
     <div class="m-auto block max-w-[1380px] px-5 pt-4">

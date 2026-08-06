@@ -6,11 +6,20 @@ import PartyLayout from "@/layout/party-layout.astro";
 import { sbPagesPartiesKPopDemonHuntersPartyPng as kpopparty } from "@/data/storyblok-images";
 import { sbPagesPartiesPackagesKPopDemonHuntersPng as kpop } from "@/data/storyblok-images";
 import KPopPowerCreations from "@/components/creation-packages/k-pop-power-creations.astro";
+import { createPartySchemas } from "@/utils/seo";
+
+const description =
+  "A high-energy K-Pop Power birthday party with music-inspired craft and take-home creations at Fizz Kidz studios in Melbourne and Geelong.";
 ---
 
 <Layout
-  title="Book a K-Pop Birthday Party in Melbourne | Fizz Kidz"
-  description="A fun, easy and stress free K-Pop Birthday Party"
+  title="K-Pop Power Birthday Parties in Melbourne & Geelong | Fizz Kidz"
+  description={description}
+  schema={createPartySchemas({
+    name: "K-Pop Power Birthday Party",
+    description,
+    slug: "k-pop-power-parties",
+  })}
 >
   <PartyLayout partyPackage="K-Pop Power">
     <PageIntro
@@ -18,7 +27,7 @@ import KPopPowerCreations from "@/components/creation-packages/k-pop-power-creat
       subtitle="The ultimate K-Pop party experience!"
       type="image"
       image={kpopparty}
-      imageAlt="a purple butcket of glycerine cubes, with pretty colourful unciron soaps on top"
+      imageAlt="Colourful K-Pop Power party creations"
       actionButtonText="Book a party"
       actionButtonPath="/birthday-parties/book-a-party/#book"
       color="purple"
@@ -32,7 +41,7 @@ import KPopPowerCreations from "@/components/creation-packages/k-pop-power-creat
     <KPopPowerCreations
       variant="party"
       image={kpop}
-      imageAlt="Fairy Party Package"
+      imageAlt="K-Pop Power Party Package"
     />
   </PartyLayout>
 </Layout>

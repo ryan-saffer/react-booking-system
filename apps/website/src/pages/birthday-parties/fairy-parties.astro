@@ -6,11 +6,20 @@ import PartyLayout from "@/layout/party-layout.astro";
 import { sbPagesPartiesFairyPartyWebp as fairyParty } from "@/data/storyblok-images";
 import { sbPagesPartiesPackagesFairiesPng as fairy } from "@/data/storyblok-images";
 import FairyCreations from "@/components/creation-packages/fairy-creations.astro";
+import { createPartySchemas } from "@/utils/seo";
+
+const description =
+  "A hands-on fairy birthday party with magical craft, slime and take-home creations for kids aged 4 to 12 at Fizz Kidz studios in Melbourne and Geelong.";
 ---
 
 <Layout
-  title="Book a Kids Fairy Birthday Party in Melbourne | Fizz Kidz"
-  description="A party package full of sparkles, magic and fairies!"
+  title="Fairy Birthday Parties in Melbourne & Geelong | Fizz Kidz"
+  description={description}
+  schema={createPartySchemas({
+    name: "Fairy Birthday Party",
+    description,
+    slug: "fairy-parties",
+  })}
 >
   <PartyLayout partyPackage="Fairy">
     <PageIntro
@@ -18,7 +27,7 @@ import FairyCreations from "@/components/creation-packages/fairy-creations.astro
       subtitle="Welcome to the magical world of fairies!"
       type="image"
       image={fairyParty}
-      imageAlt="a purple butcket of glycerine cubes, with pretty colourful unciron soaps on top"
+      imageAlt="Colourful fairy-themed soaps and craft creations"
       actionButtonText="Book a party"
       actionButtonPath="/birthday-parties/book-a-party/#book"
       color="pink"
