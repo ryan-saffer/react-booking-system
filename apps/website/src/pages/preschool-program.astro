@@ -42,6 +42,24 @@ import Values from "@/components/values.astro";
 import FaqAccordion from "@/components/react/faq-accordion";
 import ImageCarousel from "@/components/react/image-carousel";
 import { sbPagesPartiesFaqPng as faq } from "@/data/storyblok-images";
+import { createBreadcrumbSchema, createServiceSchema } from "@/utils/seo";
+
+const description =
+  "A weekly two-hour preschool program for children aged 2.5 to 5, building confidence and school readiness through guided art, science, sensory play and movement.";
+
+const schema = [
+  createServiceSchema({
+    name: "Fizz Kidz Preschool Program",
+    description,
+    path: "/preschool-program/",
+    serviceType: "Preschool program",
+    areaServed: ["Victoria"],
+  }),
+  createBreadcrumbSchema("/preschool-program/", [
+    { name: "Home", path: "/" },
+    { name: "Preschool Program", path: "/preschool-program/" },
+  ]),
+];
 
 const sessionSlots = [
   {
@@ -96,8 +114,9 @@ const sessionSlots = [
 ---
 
 <Layout
-  title="Browse and book the Preschool Program for children aged 2.5 to 5 years. | Fizz Kidz"
-  description="Build confidence and school readiness with the Fizz Kidz Preschool Program for children aged 2.5 to 5 years."
+  title="Preschool Program & School Readiness | Fizz Kidz"
+  description={description}
+  schema={schema}
 >
   <Container class="mb:20 pt-4 md:mb-40">
     <BreadcrumbWrapper

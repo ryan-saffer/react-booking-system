@@ -16,6 +16,28 @@ import MixAndMatchParties from "@/components/mix-and-match-parties.astro";
 import { menu } from "../../components/react/navigation/navigation-menu";
 import AtHomePartyFaq from "@/components/at-home-party-faq.astro";
 import Values from "@/components/values.astro";
+import { createBreadcrumbSchema, createServiceSchema } from "@/utils/seo";
+
+const description =
+  "Fizz Kidz brings a hosted kids birthday party to your Melbourne home or venue, with guided slime, science and craft activities and take-home creations.";
+
+const schema = [
+  createServiceSchema({
+    name: "At-Home Kids Birthday Parties in Melbourne",
+    description,
+    path: "/birthday-parties/at-home-parties/",
+    serviceType: "Mobile kids birthday party",
+    areaServed: ["Melbourne", "Victoria"],
+  }),
+  createBreadcrumbSchema("/birthday-parties/at-home-parties/", [
+    { name: "Home", path: "/" },
+    { name: "Birthday Parties", path: "/birthday-parties/" },
+    {
+      name: "At-Home Parties",
+      path: "/birthday-parties/at-home-parties/",
+    },
+  ]),
+];
 
 const { default: greenClock } = await import(
   `@/assets/images/pages/parties/green-clock.svg?raw`
@@ -39,8 +61,9 @@ const { default: purpleDrop } = await import(
 ---
 
 <Layout
-  title="Book a Kids Birthday Party at Your Home or Venue in Melbourne | Fizz Kidz"
-  description="We can come to you, and run a fabulous birthday party at your home or venue!"
+  title="At-Home Kids Birthday Parties in Melbourne | Fizz Kidz"
+  description={description}
+  schema={schema}
 >
   <main class="m-auto block max-w-[1380px] px-5 pt-4">
     <BreadcrumbWrapper
@@ -144,7 +167,7 @@ const { default: purpleDrop } = await import(
             <h3 class="mb-2 mt-4 font-lilita text-2xl">Creations & numbers</h3>
             <StarBulletPoints
               content={[
-                "Let us know the approx. number of children & which creations your child would like to make a week before the party",
+                "Let us know the approximate number of children and which creations your child would like to make 10 days before the party",
               ]}
               className="pl-4"
             />

@@ -7,11 +7,20 @@ import { sbPagesPartiesSlimePartyJpg as slime } from "@/data/storyblok-images";
 import { sbPagesPartiesSlimeCreationsHeroPng as slimePackage } from "@/data/storyblok-images";
 import SlimeLab from "@/components/slime-lab.astro";
 import SlimeCreations from "@/components/creation-packages/slime-creations.astro";
+import { createPartySchemas } from "@/utils/seo";
+
+const description =
+  "A hosted slime birthday party where kids mix, customise and take home their own slime creations at Fizz Kidz studios across Melbourne and Geelong.";
 ---
 
 <Layout
-  title="Book a Kids Slime Birthday Party in Melbourne | Fizz Kidz"
-  description="Our most popular party package - get ready to get messy!"
+  title="Kids Slime Birthday Parties in Melbourne & Geelong | Fizz Kidz"
+  description={description}
+  schema={createPartySchemas({
+    name: "Kids Slime Birthday Party",
+    description,
+    slug: "slime-parties",
+  })}
 >
   <PartyLayout partyPackage="Slime">
     <PageIntro
@@ -33,7 +42,7 @@ import SlimeCreations from "@/components/creation-packages/slime-creations.astro
     <SlimeCreations
       variant="party"
       image={slimePackage}
-      imageAlt="Slime Party Pacakge"
+      imageAlt="Slime Party Package"
     />
     <SlimeLab />
   </PartyLayout>

@@ -9,10 +9,10 @@ import {
     useFormContext,
 } from 'react-hook-form'
 
+import type * as LabelPrimitive from '@radix-ui/react-label'
+
 import { cn } from '@/react-lib/utils'
 import { Label } from '@/react-ui/label'
-
-import type * as LabelPrimitive from '@radix-ui/react-label'
 
 const Form = FormProvider
 

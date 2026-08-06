@@ -6,11 +6,20 @@ import PartyLayout from "@/layout/party-layout.astro";
 import { sbPagesPartiesTieDyePartyJpg as tieDye } from "@/data/storyblok-images";
 import { sbPagesPartiesPackagesTieDyePng as tieDyePackage } from "@/data/storyblok-images";
 import TieDyeCreations from "@/components/creation-packages/tie-dye-creations.astro";
+import { createPartySchemas } from "@/utils/seo";
+
+const description =
+  "A colourful tie dye birthday party with guided, hands-on projects children can take home, hosted at Fizz Kidz studios in Melbourne and Geelong.";
 ---
 
 <Layout
-  title="Book Your Tie Dye Kids Birthday Party in Melbourne"
-  description="A party package brimming with colour. Tie dye parties are sure to be memorable!"
+  title="Kids Tie Dye Birthday Parties in Melbourne & Geelong | Fizz Kidz"
+  description={description}
+  schema={createPartySchemas({
+    name: "Kids Tie Dye Birthday Party",
+    description,
+    slug: "tie-dye-parties",
+  })}
 >
   <PartyLayout partyPackage="Tie Dye">
     <PageIntro

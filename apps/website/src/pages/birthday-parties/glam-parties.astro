@@ -7,11 +7,20 @@ import { sbPagesPartiesGlamPartiesJpg as glamParties } from "@/data/storyblok-im
 
 import { sbPagesPartiesPackagesGlitzAndGlamPng as glitz } from "@/data/storyblok-images";
 import GlamCreations from "@/components/creation-packages/glam-creations.astro";
+import { createPartySchemas } from "@/utils/seo";
+
+const description =
+  "A glittery kids glam birthday party with guided craft and take-home creations at Fizz Kidz studios in Melbourne and Geelong for children aged 4 to 12.";
 ---
 
 <Layout
-  title="Book a Kids Birthday Glam Birthday Party in Melbourne | Fizz Kidz"
-  description="This pamper party package is made for all things glamorous!"
+  title="Kids Glam Birthday Parties in Melbourne & Geelong | Fizz Kidz"
+  description={description}
+  schema={createPartySchemas({
+    name: "Kids Glam Birthday Party",
+    description,
+    slug: "glam-parties",
+  })}
 >
   <PartyLayout partyPackage="Glam">
     <PageIntro

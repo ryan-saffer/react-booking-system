@@ -6,11 +6,20 @@ import PartyLayout from "@/layout/party-layout.astro";
 import { sbPagesPartiesSafariPartyJpg as jungleSafariParty } from "@/data/storyblok-images";
 import { sbCreationsBubblingVolcanoesPng as bubblingVocanoes } from "@/data/storyblok-images";
 import JungleSafariCreations from "@/components/creation-packages/jungle-safari-creations.astro";
+import { createPartySchemas } from "@/utils/seo";
+
+const description =
+  "A jungle-themed kids birthday party with guided science, slime, bath bomb and potion creations at Fizz Kidz studios in Melbourne and Geelong.";
 ---
 
 <Layout
-  title="Book a Kids Jungle Safari Animal Birthday Party in Melbourne | Fizz Kidz"
-  description="This party package will take the kids on a safari adventure!"
+  title="Jungle Safari Birthday Parties in Melbourne & Geelong | Fizz Kidz"
+  description={description}
+  schema={createPartySchemas({
+    name: "Jungle Safari Birthday Party",
+    description,
+    slug: "jungle-safari-parties",
+  })}
 >
   <PartyLayout partyPackage="Jungle Safari">
     <PageIntro
@@ -18,7 +27,7 @@ import JungleSafariCreations from "@/components/creation-packages/jungle-safari-
       subtitle="Roar! Welcome to the jungle!"
       type="image"
       image={jungleSafariParty}
-      imageAlt="hands holding colourful body glitter containers"
+      imageAlt="Children enjoying a jungle-themed Fizz Kidz party"
       actionButtonText="Book a party"
       actionButtonPath="/birthday-parties/book-a-party/#book"
       color="green"

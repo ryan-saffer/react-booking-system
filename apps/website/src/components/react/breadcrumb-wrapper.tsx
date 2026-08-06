@@ -1,11 +1,11 @@
 import { Fragment } from 'react/jsx-runtime'
 
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/react-ui/breadcrumb'
-
 import { cn } from './lib/utils'
 import NavigationMenuDropdown from './navigation/navigation-menu-dropdown'
 
 import type { MenuLink } from './navigation/navigation-menu'
+
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/react-ui/breadcrumb'
 
 export function BreadcrumbWrapper({
     items,

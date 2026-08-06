@@ -2,6 +2,7 @@
 import Image from "@/components/image.astro";
 import logo from "@/assets/images/logo-white.png";
 import { RECALL_URL, RECALL_LABEL } from "@/utils/constants";
+import { PUBLIC_STUDIOS } from "@/utils/studios";
 ---
 
 <footer
@@ -13,57 +14,20 @@ import { RECALL_URL, RECALL_LABEL } from "@/utils/constants";
       class="grid grid-cols-1 justify-between gap-6 text-white sm:grid-cols-2 xl:grid-cols-4"
     >
       {
-        [
-          {
-            location: "Balwyn",
-            email: "bookings@fizzkidz.com.au",
-            address: "184 Whitehorse Rd, Balwyn, 3103",
-            phone: "(03) 9059 8144",
-          },
-          {
-            location: "Cheltenham",
-            email: "bookings@fizzkidz.com.au",
-            address: "273 Bay Rd, Cheltenham, 3192",
-            phone: "(03) 9059 8144",
-          },
-          {
-            location: "Essendon",
-            email: "bookings@fizzkidz.com.au",
-            address: "75 Raleigh Street, Essendon, 3040",
-            phone: "(03) 9059 8144",
-          },
-          {
-            location: "Geelong",
-            email: "bookings@fizzkidz.com.au",
-            address: "352 Pakington St, Newtown, VIC, 3220",
-            phone: "(03) 9059 8144",
-          },
-          {
-            location: "Kingsville",
-            email: "bookings@fizzkidz.com.au",
-            address: "238 Sommerville Rd, Kingsville, 3012",
-            phone: "(03) 9059 8144",
-          },
-          {
-            location: "Malvern",
-            email: "bookings@fizzkidz.com.au",
-            address: "20 Glenferrie Rd, Malvern",
-            phone: "(03) 9059 8144",
-          },
-        ].map((studio) => (
+        PUBLIC_STUDIOS.map((studio) => (
           <div class="flex w-fit flex-col">
-            <p class="font-lilita">{studio.location}</p>
+            <p class="font-lilita">{studio.name}</p>
             <p class="text-xs text-gray-300">
               <span class="font-bold">Email: </span>
-              {studio.email}
+              bookings@fizzkidz.com.au
             </p>
             <p class="text-xs text-gray-300">
               <span class="font-bold">Address: </span>
-              {studio.address}
+              {studio.streetAddress}, {studio.addressLocality} VIC {studio.postalCode}
             </p>
             <p class="text-xs text-gray-300">
               <span class="font-bold">Call: </span>
-              {studio.phone}
+              (03) 9059 8144
             </p>
           </div>
         ))

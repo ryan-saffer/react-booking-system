@@ -1,13 +1,13 @@
 import { ArrowRight, Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/react-ui/accordion'
-import { Button } from '@/react-ui/button'
-
 import { cn } from '../lib/utils'
 import NavigationMenuDropdown from './navigation-menu-dropdown'
 import NavigationMenuItemDesktop from './navigation-menu-item-desktop'
 import NavigationMenuItemMobile from './navigation-menu-item-mobile'
+
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/react-ui/accordion'
+import { Button } from '@/react-ui/button'
 
 export type MenuLink = {
     type: 'link'

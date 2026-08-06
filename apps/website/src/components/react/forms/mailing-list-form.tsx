@@ -6,13 +6,13 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 
 import '@/styles/sonner.css'
-import { FORM_WEBHOOK } from '@/utils/constants'
-import { assertNoCorsRequestSucceeded } from '@/utils/no-cors-response'
-
 import { Button } from '../ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { Toaster } from '../ui/sonner'
+
+import { FORM_WEBHOOK } from '@/utils/constants'
+import { assertNoCorsRequestSucceeded } from '@/utils/no-cors-response'
 
 const formSchema = z.object({
     name: z.string().min(1, 'Name is required'),

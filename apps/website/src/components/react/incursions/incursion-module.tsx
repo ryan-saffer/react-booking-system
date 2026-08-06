@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 
-import IncursionExpandable from '@/react-components/incursions/incursion-expandable'
-
 import { cn } from '../lib/utils'
 
 import type { SingleIncursionProps } from './incursion-expandable-item'
+
+import IncursionExpandable from '@/react-components/incursions/incursion-expandable'
 
 type Props = {
     position: number

@@ -1,4 +1,4 @@
 User-Agent: *
 Allow: /
 
-Sitemap: https://fizzkidz.com.au/sitemap-index.xml
+Sitemap: https://www.fizzkidz.com.au/sitemap-index.xml

@@ -8,7 +8,12 @@ export default defineConfig({
     site: 'https://www.fizzkidz.com.au',
     compressHTML: true,
     adapter: netlify({ imageCDN: false }),
-    integrations: [react(), sitemap()],
+    integrations: [
+        react(),
+        sitemap({
+            filter: (page) => !page.endsWith('/form-result/'),
+        }),
+    ],
     redirects: {
         'play-lab': '/preschool-program',
         // TEMPORARY WHILE WE NO LONGER OFFER IN STUDIO SCIENCE

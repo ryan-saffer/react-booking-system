@@ -11,10 +11,7 @@ import Image from "@/components/image.astro";
 import CardWithImage from "@/components/card-with-image.astro";
 import ImageCarousel from "@/components/react/image-carousel";
 import GoogleReviews from "@/components/google-reviews.astro";
-import blueWave from "@/assets/images/pages/locations/blue-wave.svg";
-import Values from "@/components/values.astro";
-import FaqAccordion from "@/components/react/faq-accordion";
-import { sbPagesPartiesFaqPng as faq } from "@/data/storyblok-images";
+import LocationDetails from "@/components/location-details.astro";
 
 import { sbPagesLocationsCheltenhamCheltenham1Jpg as carousel1Image } from "@/data/storyblok-images";
 import { sbPagesLocationsCheltenhamCheltenham2Jpg as carousel2Image } from "@/data/storyblok-images";
@@ -22,12 +19,18 @@ import { sbPagesLocationsCheltenhamCheltenham3Jpg as carousel3Image } from "@/da
 import { sbPagesLocationsCheltenhamCheltenham4Jpg as carousel4Image } from "@/data/storyblok-images";
 import { sbPagesLocationsCheltenhamCheltenham5Jpg as carousel5Image } from "@/data/storyblok-images";
 import { menu } from "@/components/react/navigation/navigation-menu";
+import { createLocationSchemas } from "@/utils/seo";
+
+const description =
+  "Visit Fizz Kidz Cheltenham for hosted kids birthday parties, school holiday programs and hands-on slime, science, art and craft activities in Melbourne's south-east.";
 ---
 
 <Layout
-  title="Cheltenham | Fizz Kidz"
-  description="Cheltenham birthday parties, holiday programs, toddler programs and more!"
+  title="Kids Parties & Holiday Programs in Cheltenham | Fizz Kidz"
+  description={description}
+  schema={createLocationSchemas("cheltenham")}
 >
+  <main>
   <div class="m-auto block max-w-[1380px] px-5 pt-4">
     <BreadcrumbWrapper
       client:idle
@@ -75,7 +78,7 @@ import { menu } from "@/components/react/navigation/navigation-menu";
       </div>
       <div class="flex flex-col justify-center lg:w-1/2">
         <p class="font-bold">Fizz Kidz Cheltenham Studio</p>
-        <p>273 Bay Rd, Cheltenham 3192</p>
+        <p>273 Bay Rd, Cheltenham VIC 3192</p>
         <p class="mt-4 font-bold">Phone</p>
         <p><a href="tel:0390598144">(03) 9059 8144</a></p>
         <p class="mt-4 font-bold">Email</p>
@@ -229,139 +232,6 @@ import { menu } from "@/components/react/navigation/navigation-menu";
       />
     </section>
   </div>
-  <Image
-    src={blueWave}
-    alt="blue background wave"
-    class="left-0 right-0 w-screen"
-  />
-  <div class="bg-[#43D4F3]">
-    <div class="m-auto block max-w-[1380px] px-5 py-4">
-      <p class="h2 text-lg font-bold">
-        THE ULTIMATE KIDS PARTY AND HOLIDAY PROGRAM VENUE IN CHELTENHAM,
-        MELBOURNE VIC
-      </p>
-      <p class="h2 mt-2">
-        Welcome to Fizz Kidz - Cheltenham's Most Creative Kids Party & Activity
-        Venue
-      </p>
-      <p class="mt-2">
-        Located in the heart of <strong>Cheltenham, Melbourne VIC</strong>, Fizz
-        Kidz is the go-to destination for
-        <strong
-          >fun, hands-on kids' parties and exciting school holiday programs.
-        </strong> Our bright and energetic studio is designed to <strong
-          >spark creativity and deliver unforgettable experiences,</strong
-        > making every visit full of <strong>
-          laughter, learning, and interactive fun.
-        </strong>
-      </p>
-      <p class="h2 mt-4 text-lg font-bold">
-        Unforgettable Kids' Birthday Parties at Fizz Kidz Cheltenham
-      </p>
-      <p>
-        Looking for the <strong>best kids' party venue in Cheltenham?</strong> Fizz
-        Kidz specializes in <strong>creative birthday parties</strong>, where
-        kids can <strong
-          >make slime, mix bath bombs, design tie-dye creations, and more!</strong
-        > Our <strong>high-energy party hosts</strong> ensure a seamless and engaging
-        experience, with plenty of fun activities, party games, and take-home creations
-        for every child.
-      </p>
-      <p class="h2 mt-4 text-lg font-bold">
-        Your Go-To School Holiday Program in Cheltenham
-      </p>
-      <p>
-        Fizz Kidz <strong>holiday programs</strong> keep kids entertained with hands-on,
-        themed activities like <strong
-          >science experiments, arts and crafts, and sensory</strong
-        > play. Perfect for keeping kids engaged, inspired, and having fun during
-        the school break!
-      </p>
-      <p class="h2 mt-4 text-lg font-bold">
-        A Fun-Filled Venue for Kids' Activities in Cheltenham
-      </p>
-      <p>
-        Beyond birthday parties and holiday programs, our Cheltenham studio is
-        the perfect place for <strong
-          >kids' workshops, incursions, and special events.</strong
-        >
-        Whether you're looking for a <strong
-          >stress-free party experience</strong
-        > or a creative activity to keep little hands busy, Fizz Kidz has something
-        for everyone.
-      </p><p class="h2 mt-4 text-lg font-bold">
-        Join the Fun at Fizz Kidz Cheltenham!
-      </p>
-      <p>
-        We invite you to <strong>discover the magic of Fizz Kidz</strong> — where
-        kids can explore, create, and celebrate in a vibrant, hands-on environment.
-        Whether you're planning a <strong
-          >birthday party, school holiday activity, or special event,</strong
-        >
-        we're here to make it <strong
-          >exciting, fun, and completely hassle-free.</strong
-        >
-      </p>
-      <p class="h2 mt-4 text-lg font-bold">Contact Us</p>
-      <p>
-        Visit <strong>Fizz Kidz Cheltenham, Melbourne VIC,</strong> or get in touch
-        to book your next <strong>party, workshop, or holiday program.</strong> Let's
-        create something amazing together!
-      </p>
-    </div>
-  </div>
-  <Image
-    src={blueWave}
-    alt="blue background wave"
-    class="left-0 right-0 -mt-1 w-screen rotate-180"
-  />
-  <div class="m-auto block max-w-[1380px] px-5 pt-4">
-    <section class="md:my-18 my-12">
-      <h6 class="mb-4 text-center font-lilita text-4xl md:text-5xl">
-        Frequently Asked Questions
-      </h6>
-      <div class="flex w-full flex-col items-center gap-8 md:flex-row">
-        <Image
-          class="hidden w-2/5 md:block"
-          src={faq}
-          alt="Three girls smiling"
-        />
-        <div class="w-full md:w-3/5">
-          <FaqAccordion
-            client:idle
-            items={[
-              {
-                question:
-                  "How many children can Fizz Kidz accommodate for parties?",
-                answer:
-                  "We accommodate up to 28 children, with a total venue capacity of 35 people.",
-              },
-              {
-                question: "Do parents stay for holiday programs?",
-                answer:
-                  "Our holiday programs are designed as a drop-off experience. However, if a child feels more comfortable with a parent staying, they are welcome to do so.",
-              },
-              {
-                question: "Does Fizz Kidz accept the Child Care Subsidy (CCS)?",
-                answer:
-                  "Unfortunately, no. Fizz Kidz operates as an entertainment center, which does not fall under the Child Care Subsidy.",
-              },
-              {
-                question: "Where are your Fizz Kidz locations?",
-                answer:
-                  "Fizz Kidz has multiple studio locations! Check out our website or contact us to find your nearest venue. ",
-              },
-              {
-                question:
-                  "How do I find more information about your Fizz Kidz birthday parties?",
-                answer:
-                  "We have lots of party themes for you to choose from! Click here to explore! ",
-              },
-            ]}
-          />
-        </div>
-      </div>
-    </section>
-    <Values />
-  </div>
+  <LocationDetails studio="cheltenham" />
+  </main>
 </Layout>

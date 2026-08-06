@@ -5,16 +5,26 @@ import Footer from "@/layout/footer.astro";
 import RecallBanner from "@/layout/recall-banner.astro";
 import { ClientRouter } from "astro:transitions";
 import LoadingIndicator from "astro-loading-indicator/component";
+import { absoluteUrl, createSchemaGraph, type JsonLd } from "@/utils/seo";
 
 type Props = {
   title: string;
   description: string;
   noIndex?: boolean;
+  schema?: JsonLd | JsonLd[];
 };
 
-const { title, description, noIndex = false } = Astro.props;
+const { title, description, noIndex = false, schema = [] } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const socialImage = absoluteUrl("/open-graph/home.jpg");
+const schemaItems = Array.isArray(schema) ? schema : [schema];
+const schemaGraph = createSchemaGraph({
+  path: Astro.url.pathname,
+  title,
+  description,
+  items: schemaItems,
+});
 ---
 
 <style is:global>
@@ -42,7 +52,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
   });
 </script>
 
-<html lang="en" transition:animate="none" class="h-full">
+<html lang="en-AU" transition:animate="none" class="h-full">
   <head>
     <!-- Google Tag Manager -->
     <script is:inline>
@@ -67,13 +77,28 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
     <meta name="description" content={description} />
     {noIndex && <meta name="robots" content="noindex, nofollow" />}
     <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/open-graph/home.jpg" />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content="/open-graph/home.jpg" />
-    <meta name="twitter:image:alt" content="A child smiling" />
+    <meta property="og:locale" content="en_AU" />
+    <meta property="og:site_name" content="Fizz Kidz" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:alt" content="A child smiling at Fizz Kidz" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content="A child smiling at Fizz Kidz" />
     <link rel="canonical" href={canonicalUrl} />
+    {
+      !noIndex && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(schemaGraph).replace(/</g, "\\u003c")}
+        />
+      )
+    }
 
     <ClientRouter />
   </head>
