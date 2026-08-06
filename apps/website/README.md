@@ -21,6 +21,7 @@ npm run website:local
 npm run website:prod
 npm --workspace website run check
 npm run build --workspace website
+npm --workspace website run build:dev
 npm --workspace website run preview
 ```
 
@@ -38,6 +39,6 @@ Production and preview values live in Netlify.
 
 `src/utils/seo.ts` builds the shared Schema.org graph and route-specific service, breadcrumb, location and studio-list entities. Keep public studio names and addresses in `src/utils/studios.ts`; location pages, the footer, structured data and `public/llms.txt` should agree with that source.
 
-> **Deployment gotcha:** Deploy server-side form changes before the website because submissions use tRPC and the legacy webhook route no longer exists. `netlify.toml` watches `apps/website` and the shared website form contracts; if another root dependency or toolchain change affects the site, trigger a manual build or include a website-directory change.
+> **Deployment:** Deploys from `main` and `develop` run through GitHub Actions. The pipeline publishes changed Firebase targets first and only then publishes the Website when Website code changed, so a Firebase failure skips Netlify. `main` publishes production; `develop` creates a unique deploy preview built in development mode. Netlify still owns pull-request previews, other branch deploys, and build-hook rebuilds; automatic Git-backed builds from `main` and `develop` are ignored. GitHub's `dev` and `prod` environments require the `NETLIFY_AUTH_TOKEN` secret and `NETLIFY_SITE_ID` variable.
 
 Netlify hosts the Astro output and `apps/website/netlify/functions`. Remote image optimization allows Storyblok and Instagram CDN hosts.
