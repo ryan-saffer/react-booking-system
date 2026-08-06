@@ -13,6 +13,7 @@
         "dev:prod": "astro dev --mode prod",
         "start": "npm run dev",
         "build": "astro check && astro build --mode prod",
+        "build:dev": "astro check && astro build --mode dev",
         "preview": "astro preview",
         "astro": "astro"
     },
