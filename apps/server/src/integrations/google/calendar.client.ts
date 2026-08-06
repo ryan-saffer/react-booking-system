@@ -1,12 +1,12 @@
 import type { Studio } from '@fizz-kidz/core'
 
-import { env } from '@/app/init/firebase'
-import type { ClientStatus } from '@/shared/lazy-client/client-status'
-import { withExponentialBackoff } from '@/shared/retry/with-exponential-backoff'
-
 import { getOAuth2Client } from './google-oauth'
 
+import type { ClientStatus } from '@/shared/lazy-client/client-status'
 import type { calendar_v3 } from 'googleapis'
+
+import { env } from '@/app/init/firebase'
+import { withExponentialBackoff } from '@/shared/retry/with-exponential-backoff'
 
 type Event = {
     title: string

@@ -8,6 +8,10 @@ import { DateTime } from 'luxon'
 import type { DiscountCode, StudioOrTest } from '@fizz-kidz/core'
 import { AcuityConstants, AcuityUtilities, normalize } from '@fizz-kidz/core'
 
+import { getDiscountCodeRedemptionKey } from './discount-codes/check-discount-code'
+import { processHolidayProgramPayment } from './process-holiday-program-payment'
+import { sendConfirmationEmail } from './send-confirmation-email'
+
 import { projectId } from '@/app/init/firebase'
 import { throwCustomTrpcError, throwTrpcError } from '@/app/trpc/transport-errors'
 import { ClassFullError } from '@/app/trpc/trpc.errors'
@@ -19,10 +23,6 @@ import { MixpanelClient } from '@/integrations/mixpanel/mixpanel.client'
 import { logError } from '@/integrations/observability/log-error'
 import { ZohoClient } from '@/integrations/zoho/zoho.client'
 import { isUsingEmulator } from '@/shared/runtime/is-using-emulator'
-
-import { getDiscountCodeRedemptionKey } from './discount-codes/check-discount-code'
-import { processHolidayProgramPayment } from './process-holiday-program-payment'
-import { sendConfirmationEmail } from './send-confirmation-email'
 
 export type HolidayProgramBookingProps = {
     idempotencyKey: string

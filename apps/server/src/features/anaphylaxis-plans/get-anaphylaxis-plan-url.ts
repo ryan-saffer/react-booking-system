@@ -1,11 +1,11 @@
 import { randomUUID } from 'crypto'
 
+import { isValidAnaphylaxisPlanPath } from './anaphylaxis-plan-path'
+
 import { projectId } from '@/app/init/firebase'
 import { throwTrpcError } from '@/app/trpc/transport-errors'
 import { StorageClient } from '@/integrations/firebase/storage.client'
 import { isUsingEmulator } from '@/shared/runtime/is-using-emulator'
-
-import { isValidAnaphylaxisPlanPath } from './anaphylaxis-plan-path'
 
 /** Normalises and validates an anaphylaxis plan reference before returning a short-lived read URL. */
 export async function getAnaphylaxisPlanUrl(value: string, allowedPrefix: string) {

@@ -1,9 +1,9 @@
 import type { CreationInstructionGroup, CreationInstructions } from '@fizz-kidz/core'
 
-import { env } from '@/app/init/firebase'
 import type { ClientStatus } from '@/shared/lazy-client/client-status'
-
 import type Client from 'storyblok-js-client'
+
+import { env } from '@/app/init/firebase'
 
 export type HolidayProgramWeek = {
     title: string

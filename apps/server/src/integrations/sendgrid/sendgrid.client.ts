@@ -6,10 +6,10 @@ import Mustache from 'mustache'
 
 import { assertNever } from '@fizz-kidz/core'
 
-import { env } from '@/app/init/firebase'
+import type { Emails } from './types'
 import type { ClientStatus } from '@/shared/lazy-client/client-status'
 
-import type { Emails } from './types'
+import { env } from '@/app/init/firebase'
 
 // This type query is erased; SendGrid is loaded only by #initialise's dynamic import.
 // oxlint-disable-next-line typescript/consistent-type-imports

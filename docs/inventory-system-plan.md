@@ -45,7 +45,7 @@ Inventory should follow the current repository architecture instead of becoming 
 - Low-level database reads/writes belong in `apps/server/src/integrations/firebase/database.client.ts`.
 - Feature/business operations belong in `apps/server/src/<feature>/core`.
 - tRPC routers belong in `apps/server/src/<feature>/functions/trpc` and are registered in `apps/server/src/app/trpc/trpc.app-router.ts`.
-- The Portal consumes the server router through the existing typed tRPC client in `apps/portal/src/utilities/trpc.ts`.
+- The Portal consumes the server router through the existing typed tRPC client in `apps/portal/src/integrations/trpc.ts`.
 
 ## Design Principles
 
@@ -677,9 +677,9 @@ Do not build this in the initial backend stage. Plan for it after the tRPC surfa
 
 Likely files:
 
-- `apps/portal/src/components/inventory/inventory-page.tsx`
-- `apps/portal/src/components/inventory/components/inventory-stock-table.tsx`
-- `apps/portal/src/components/inventory/components/inventory-location-filter.tsx`
+- `apps/portal/src/features/inventory/pages/inventory-page.tsx`
+- `apps/portal/src/features/inventory/components/inventory/inventory-items-table.tsx`
+- `apps/portal/src/features/inventory/hooks/use-inventory-location.ts`
 
 Route:
 

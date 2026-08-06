@@ -4,8 +4,8 @@ Read the root [`README.md`](README.md), then the README nearest the code being c
 
 ## Find The Code
 
-- Portal routes: `apps/portal/src/app.tsx`
-- Portal providers/tRPC: `apps/portal/src/components/root/root.tsx`
+- Portal routes: `apps/portal/src/app/router.tsx`
+- Portal providers/tRPC: `apps/portal/src/app/root/root.tsx`
 - Server HTTP: `apps/server/src/app/http/app.ts`
 - Server tRPC: `apps/server/src/app/trpc/trpc.app-router.ts`
 - Background jobs: `apps/server/src/app/background/function.ts`
@@ -33,6 +33,7 @@ Scope tests with `vp test --run --project portal` or `vp test --run --project se
 ## Boundaries
 
 - Shared and runtime-neutral: `packages/core`; export from `src/index.ts`.
+- Portal composition lives in `app`, user journeys in `features`, browser SDK boundaries in `integrations`, auth/organization state in `session`, and reusable UI/helpers in `shared`.
 - Server composition lives in `apps/server/src/app`, business workflows in `features`, provider/runtime I/O in `integrations`, and narrow server-only helpers in `shared`.
 - Dependencies flow from app adapters into features/integrations/shared and from features into integrations/shared; shared stays a leaf.
 - App-specific runtime I/O may stay in its owning deployable app.

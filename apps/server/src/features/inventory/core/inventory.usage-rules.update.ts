@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
-import { DatabaseClient } from '@/integrations/firebase/database.client'
-
 import { inventoryUsageRuleInputSchema } from './inventory.schemas'
 import { buildInventoryUsageRule } from './inventory.usage-rules.utils'
+
+import { DatabaseClient } from '@/integrations/firebase/database.client'
 
 export const updateInventoryUsageRuleInputSchema = z.object({
     ruleId: z.string().min(1),

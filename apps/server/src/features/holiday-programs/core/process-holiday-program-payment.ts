@@ -1,10 +1,10 @@
+import type { HolidayProgramBookingProps } from './book-holiday-program'
+
 import { env } from '@/app/init/firebase'
 import { throwCustomTrpcError, throwTrpcError } from '@/app/trpc/transport-errors'
 import { GiftCardInactiveError, PaymentMethodInvalidError } from '@/app/trpc/trpc.errors'
 import { getOrCreateCustomer } from '@/integrations/square/core/get-or-create-customer'
 import { getSquareError, SquareClient } from '@/integrations/square/square.client'
-
-import type { HolidayProgramBookingProps } from './book-holiday-program'
 
 /**
  * Process a holiday program payment according to the following steps:

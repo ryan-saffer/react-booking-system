@@ -1,13 +1,13 @@
 import type { AfterSchoolEnrolment, UnenrollAfterSchoolParams } from '@fizz-kidz/core'
 
+import type { Square } from 'square'
+
 import { throwTrpcError } from '@/app/trpc/transport-errors'
 import { AcuityClient } from '@/integrations/acuity/acuity.client'
 import { DatabaseClient } from '@/integrations/firebase/database.client'
 import { MixpanelClient } from '@/integrations/mixpanel/mixpanel.client'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
 import { SquareClient } from '@/integrations/square/square.client'
-
-import type { Square } from 'square'
 
 export async function unenrollAfterSchoolAppointments(input: UnenrollAfterSchoolParams) {
     await Promise.all(

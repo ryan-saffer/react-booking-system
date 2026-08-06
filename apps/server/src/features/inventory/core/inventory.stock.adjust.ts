@@ -2,13 +2,13 @@ import { z } from 'zod'
 
 import type { InventoryStockLevel, InventoryStockMovement } from '@fizz-kidz/core'
 
-import { DatabaseClient } from '@/integrations/firebase/database.client'
-
 import {
     inventoryStockAdjustmentInputSchema,
     inventoryStockMovementSourceSchema,
     studioSchema,
 } from './inventory.schemas'
+
+import { DatabaseClient } from '@/integrations/firebase/database.client'
 
 export const adjustInventoryStockInputSchema = z.object({
     itemId: z.string().min(1),

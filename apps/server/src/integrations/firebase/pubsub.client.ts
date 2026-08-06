@@ -1,7 +1,7 @@
-import { projectId } from '@/app/init/firebase'
 import type { ClientStatus } from '@/shared/lazy-client/client-status'
-
 import type { PubSub as TPubSub } from '@google-cloud/pubsub'
+
+import { projectId } from '@/app/init/firebase'
 
 export class PubSubClient {
     private static instance: PubSubClient

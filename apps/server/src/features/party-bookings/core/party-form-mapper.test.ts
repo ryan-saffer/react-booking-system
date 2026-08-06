@@ -4,9 +4,9 @@ import { describe, it } from 'vite-plus/test'
 
 import type { PartyForm } from '@fizz-kidz/core'
 
-import { PaperformSubmission } from '@/integrations/paperforms/paperform.client'
-
 import { PartyFormMapper } from './party-form-mapper'
+
+import { PaperformSubmission } from '@/integrations/paperforms/paperform.client'
 
 describe('PartyFormMapper', () => {
     it('treats omitted optional product fields as empty selections', () => {

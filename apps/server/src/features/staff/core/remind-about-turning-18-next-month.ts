@@ -2,10 +2,10 @@ import { DateTime } from 'luxon'
 
 import { capitalise, FRANCHISE_STUDIOS, type FranchiseOrMaster } from '@fizz-kidz/core'
 
+import { getEmployeesTurning18InMonth } from './staff-birthdays'
+
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
 import { XeroClient } from '@/integrations/xero/xero.client'
-
-import { getEmployeesTurning18InMonth } from './staff-birthdays'
 
 const XERO_STUDIOS: FranchiseOrMaster[] = ['master', ...FRANCHISE_STUDIOS]
 const TIMEZONE = 'Australia/Melbourne'

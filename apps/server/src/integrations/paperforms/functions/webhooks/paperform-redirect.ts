@@ -15,6 +15,8 @@ import {
     type TakeHomeBagType,
 } from '@fizz-kidz/core'
 
+import type { Square } from 'square'
+
 import { env } from '@/app/init/firebase'
 import { handlePartyFormSubmission } from '@/features/party-bookings/core/handle-party-form-submission'
 import { DatabaseClient } from '@/integrations/firebase/database.client'
@@ -25,8 +27,6 @@ import { PaperformClient, type PaperformSubmission } from '@/integrations/paperf
 import { getOrCreateCustomer } from '@/integrations/square/core/get-or-create-customer'
 import { SquareClient } from '@/integrations/square/square.client'
 import { isUsingEmulator } from '@/shared/runtime/is-using-emulator'
-
-import type { Square } from 'square'
 
 const SUCCESS_REDIRECT = 'https://fizzkidz.com.au/form-result?result=success'
 const ERROR_REDIRECT = 'https://fizzkidz.com.au/form-result?result=error'

@@ -3,6 +3,9 @@ import { DateTime } from 'luxon'
 
 import { ObjectKeys, isFranchise, type FranchiseOrMaster, type FranchiseStudio, type Studio } from '@fizz-kidz/core'
 
+import type { UpdateWagesBody } from '@/integrations/sling/sling.types'
+import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
+
 import { OrdindayEarningsRateMap } from '@/features/staff/core/timesheets/generate-timesheets'
 import {
     NON_CASUAL_EMPLOYEE_GROUP_ID,
@@ -12,10 +15,7 @@ import {
 } from '@/features/staff/core/timesheets/timesheets.utils'
 import { logError } from '@/integrations/observability/log-error'
 import { SlingClient } from '@/integrations/sling/sling.client'
-import type { UpdateWagesBody } from '@/integrations/sling/sling.types'
 import { XeroClient } from '@/integrations/xero/xero.client'
-
-import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
 /**
  * Iterates all active Sling users with an employee ID, and

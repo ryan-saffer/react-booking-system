@@ -1,7 +1,7 @@
-import { env } from '@/app/init/firebase'
 import type { ClientStatus } from '@/shared/lazy-client/client-status'
-
 import type { SquareClient as TSquare } from 'square'
+
+import { env } from '@/app/init/firebase'
 
 export class SquareClient {
     private static instance: SquareClient

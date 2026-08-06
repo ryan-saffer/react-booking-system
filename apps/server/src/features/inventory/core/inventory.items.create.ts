@@ -1,11 +1,11 @@
 import { STUDIOS, getInventoryStockLevelId } from '@fizz-kidz/core'
 import type { InventoryItem, InventoryStockLevel } from '@fizz-kidz/core'
 
-import { DatabaseClient } from '@/integrations/firebase/database.client'
-
 import { inventoryItemInputSchema } from './inventory.schemas'
 
 import type { z } from 'zod'
+
+import { DatabaseClient } from '@/integrations/firebase/database.client'
 
 export const createInventoryItemInputSchema = inventoryItemInputSchema
 

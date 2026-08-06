@@ -6,6 +6,8 @@ import { DateTime } from 'luxon'
 import { AcuityConstants, AcuityUtilities, normalize, studioNameAndAddress } from '@fizz-kidz/core'
 import type { AcuityTypes, DiscountCode } from '@fizz-kidz/core'
 
+import { processPreschoolProgramV2Payment } from './process-preschool-program-v2-payment'
+
 import { throwCustomTrpcError, throwTrpcError } from '@/app/trpc/transport-errors'
 import { ClassFullError, CustomTrpcError, PaymentMethodInvalidError } from '@/app/trpc/trpc.errors'
 import { getDiscountCodeRedemptionKey } from '@/features/holiday-programs/core/discount-codes/check-discount-code'
@@ -16,8 +18,6 @@ import { logError } from '@/integrations/observability/log-error'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
 import { getOrCreateCustomer } from '@/integrations/square/core/get-or-create-customer'
 import { getSquareError } from '@/integrations/square/square.client'
-
-import { processPreschoolProgramV2Payment } from './process-preschool-program-v2-payment'
 
 const TERM_LOOKBACK_MONTHS = 6
 const TERM_BOUNDARY_GAP_DAYS = 14

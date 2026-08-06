@@ -8,12 +8,12 @@ import {
     type ShiftUnderMinimumShiftLength,
 } from '@fizz-kidz/core'
 
+import { getShiftsUnderMinimumShiftLengthForTimesheets } from './timesheets/minimum-shift-length-report'
+import { getWeeks } from './timesheets/timesheets.utils'
+
 import { env } from '@/app/init/firebase'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
 import { SlingClient } from '@/integrations/sling/sling.client'
-
-import { getShiftsUnderMinimumShiftLengthForTimesheets } from './timesheets/minimum-shift-length-report'
-import { getWeeks } from './timesheets/timesheets.utils'
 
 const XERO_STUDIOS: FranchiseOrMaster[] = ['master', ...FRANCHISE_STUDIOS]
 const TIMEZONE = 'Australia/Melbourne'

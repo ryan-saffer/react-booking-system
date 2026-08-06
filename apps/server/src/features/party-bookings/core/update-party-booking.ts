@@ -15,6 +15,8 @@ import {
     getPartyBirthdayChildDisplay,
 } from '@fizz-kidz/core'
 
+import { canOrderCake, getCakeFormUrl } from './utils.party'
+
 import { env } from '@/app/init/firebase'
 import { throwTrpcError } from '@/app/trpc/transport-errors'
 import { DatabaseClient } from '@/integrations/firebase/database.client'
@@ -23,8 +25,6 @@ import { logError } from '@/integrations/observability/log-error'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
 import { ZohoClient } from '@/integrations/zoho/zoho.client'
 import { isUsingEmulator } from '@/shared/runtime/is-using-emulator'
-
-import { canOrderCake, getCakeFormUrl } from './utils.party'
 
 export async function updatePartyBooking(input: { bookingId: string; booking: Booking }) {
     const { bookingId, booking } = input

@@ -1,6 +1,6 @@
-import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
-
 import { getPasswordResetLink } from './get-password-reset-link'
+
+import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
 
 export async function requestPasswordReset(email: string) {
     const normalisedEmail = email.trim().toLowerCase()

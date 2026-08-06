@@ -5,15 +5,15 @@ import {
     type SendPreschoolProgramInvoiceParams,
 } from '@fizz-kidz/core'
 
-import { env } from '@/app/init/firebase'
-import { throwTrpcError } from '@/app/trpc/transport-errors'
-import { DatabaseClient } from '@/integrations/firebase/database.client'
-import { SquareClient } from '@/integrations/square/square.client'
-
 import { getPreschoolProgramInvoiceCatalogObjectId } from './preschool-program-invoice-config'
 import { sendPreschoolProgramInvoice } from './send-preschool-program-invoice'
 
 import type { Square } from 'square'
+
+import { env } from '@/app/init/firebase'
+import { throwTrpcError } from '@/app/trpc/transport-errors'
+import { DatabaseClient } from '@/integrations/firebase/database.client'
+import { SquareClient } from '@/integrations/square/square.client'
 
 export async function sendPreschoolProgramInvoices(input: SendPreschoolProgramInvoiceParams[]) {
     const invoiceStatusMap: InvoiceStatusMap = {}

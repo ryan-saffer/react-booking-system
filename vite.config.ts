@@ -18,12 +18,11 @@ const processCleanups = new Set<() => void>()
 let processCleanupRegistered = false
 
 const portalAliases = {
-    '@components': path.join(portalDir, 'src/components'),
-    '@ui-components': path.join(portalDir, 'src/ui-components/ui'),
-    '@constants': path.join(portalDir, 'src/constants'),
-    '@drawables': path.join(portalDir, 'src/drawables'),
-    '@utils': path.join(portalDir, 'src/utilities'),
-    '@hooks': path.join(portalDir, 'src/components/Hooks'),
+    '@app': path.join(portalDir, 'src/app'),
+    '@features': path.join(portalDir, 'src/features'),
+    '@integrations': path.join(portalDir, 'src/integrations'),
+    '@session': path.join(portalDir, 'src/session'),
+    '@shared': path.join(portalDir, 'src/shared'),
     '@fizz-kidz/core': path.join(coreDir, 'src'),
 }
 

@@ -4,10 +4,9 @@ import path from 'path'
 import { Readable } from 'stream'
 import { finished } from 'stream/promises'
 
-import type { ClientStatus } from '@/shared/lazy-client/client-status'
-
 import { getOAuth2Client } from './google-oauth'
 
+import type { ClientStatus } from '@/shared/lazy-client/client-status'
 import type { drive_v3 } from 'googleapis'
 import type { ReadableStream } from 'stream/web'
 

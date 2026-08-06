@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon'
 
-import { generateRandomString } from '@/shared/strings/random-string'
-
 import { createDiscountCode } from './create-discount-code'
+
+import { generateRandomString } from '@/shared/strings/random-string'
 
 /**
  * Generates a random discount code for a single use, and expire by the end of the upcoming holidays.

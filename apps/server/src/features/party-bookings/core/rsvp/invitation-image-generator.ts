@@ -8,10 +8,10 @@ import QRCode from 'qrcode'
 import type { InvitationsV2, WithoutUid } from '@fizz-kidz/core'
 import { ObjectKeys, getInvitationShareUrl, getStudioAddress } from '@fizz-kidz/core'
 
+import type { PNGStream } from 'canvas'
+
 import { env } from '@/app/init/firebase'
 import { isUsingEmulator } from '@/shared/runtime/is-using-emulator'
-
-import type { PNGStream } from 'canvas'
 
 export class InvitationImageGenerator {
     #invitation: WithoutUid<InvitationsV2.Invitation>

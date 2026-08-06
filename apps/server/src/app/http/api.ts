@@ -1,8 +1,8 @@
 import { onRequest } from 'firebase-functions/v2/https'
 
-import { env } from '@/app/init/firebase'
-
 import type { App } from './app'
+
+import { env } from '@/app/init/firebase'
 
 let appPromise: Promise<App> | undefined
 

@@ -2,9 +2,9 @@ import { DateTime } from 'luxon'
 
 import { isFranchise, type FranchiseOrMaster, type ShiftUnderMinimumShiftLength } from '@fizz-kidz/core'
 
-import type { Timesheet, User } from '@/integrations/sling/sling.types'
-
 import { getShiftsUnderMinimumShiftLength, SlingLocationsMap } from './timesheets.utils'
+
+import type { Timesheet, User } from '@/integrations/sling/sling.types'
 
 export function getShiftsUnderMinimumShiftLengthForTimesheets({
     studio,

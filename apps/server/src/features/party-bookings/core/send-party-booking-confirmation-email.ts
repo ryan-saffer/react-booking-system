@@ -15,11 +15,11 @@ import {
     getPartyBirthdayChildDisplay,
 } from '@fizz-kidz/core'
 
+import { canOrderCake, getCakeFormUrl } from './utils.party'
+
 import { env } from '@/app/init/firebase'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
 import { isUsingEmulator } from '@/shared/runtime/is-using-emulator'
-
-import { canOrderCake, getCakeFormUrl } from './utils.party'
 
 type SendPartyBookingConfirmationEmailInput = {
     bookingId: string

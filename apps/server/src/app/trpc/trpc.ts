@@ -2,13 +2,13 @@ import { initTRPC } from '@trpc/server'
 import { getAuth } from 'firebase-admin/auth'
 import { logger } from 'firebase-functions/v2'
 
-import { throwTrpcError } from '@/app/trpc/transport-errors'
-import { AcuityClient } from '@/integrations/acuity/acuity.client'
-import { isUsingEmulator } from '@/shared/runtime/is-using-emulator'
-
 import { getErrorCode } from './trpc.errors'
 
 import type * as trpcExpress from '@trpc/server/adapters/express'
+
+import { throwTrpcError } from '@/app/trpc/transport-errors'
+import { AcuityClient } from '@/integrations/acuity/acuity.client'
+import { isUsingEmulator } from '@/shared/runtime/is-using-emulator'
 
 // INITIALISATION
 const t = initTRPC.context<typeof createContext>().create({

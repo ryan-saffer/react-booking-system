@@ -4,11 +4,6 @@ import prompts from 'prompts'
 
 import { AcuityConstants, AcuityUtilities, STUDIOS } from '@fizz-kidz/core'
 
-import { cleanUpStaleInvitations } from '@/features/party-bookings/core/rsvp/clean-up-stale-invitations'
-import { updateSlingWages } from '@/features/staff/core/payroll/update-sling-wages'
-import { sendMinimumShiftLengthReport } from '@/features/staff/core/send-minimum-shift-length-report'
-import { SquareClient } from '@/integrations/square/square.client'
-
 import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
 import { getAllUsers } from './auth/get-all-users'
 import { deleteEvents } from './events/delete-events'
@@ -28,6 +23,11 @@ import { getParties } from './reports/get-parties'
 import { getPlayLabPrograms } from './reports/get-play-lab'
 
 import type { Square } from 'square'
+
+import { cleanUpStaleInvitations } from '@/features/party-bookings/core/rsvp/clean-up-stale-invitations'
+import { updateSlingWages } from '@/features/staff/core/payroll/update-sling-wages'
+import { sendMinimumShiftLengthReport } from '@/features/staff/core/send-minimum-shift-length-report'
+import { SquareClient } from '@/integrations/square/square.client'
 ;(async () => {
     const { script } = await prompts({
         type: 'select',

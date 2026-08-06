@@ -1,3 +1,11 @@
+import {
+    inventoryLocationReadProcedure,
+    inventoryLocationWriteProcedure,
+    inventoryReadProcedure,
+    inventoryShoppingListProcedure,
+    inventoryWriteProcedure,
+} from './trpc.inventory-procedures'
+
 import { router } from '@/app/trpc/trpc'
 import { createInventoryItem, createInventoryItemInputSchema } from '@/features/inventory/core/inventory.items.create'
 import { deleteInventoryItem, deleteInventoryItemInputSchema } from '@/features/inventory/core/inventory.items.delete'
@@ -33,14 +41,6 @@ import {
     updateInventoryUsageRule,
     updateInventoryUsageRuleInputSchema,
 } from '@/features/inventory/core/inventory.usage-rules.update'
-
-import {
-    inventoryLocationReadProcedure,
-    inventoryLocationWriteProcedure,
-    inventoryReadProcedure,
-    inventoryShoppingListProcedure,
-    inventoryWriteProcedure,
-} from './trpc.inventory-procedures'
 
 export const inventoryRouter = router({
     listItems: inventoryReadProcedure

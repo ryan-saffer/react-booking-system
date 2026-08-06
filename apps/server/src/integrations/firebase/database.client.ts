@@ -26,14 +26,14 @@ import type {
     DiscountCodeRedemption,
 } from '@fizz-kidz/core'
 
-import type { CreateEvent } from '@/features/events/core/create-event'
-import { midnight } from '@/shared/time/midnight'
-
 import { FirestoreClient } from './firestore.client'
 import { FirestoreRefs, type Document } from './firestore.refs'
 
+import type { CreateEvent } from '@/features/events/core/create-event'
 import type { DocumentReference, Query } from 'firebase-admin/firestore'
 import type { DateTime } from 'luxon'
+
+import { midnight } from '@/shared/time/midnight'
 
 type CreateDocOptions<T> = {
     ref?: Document<T>

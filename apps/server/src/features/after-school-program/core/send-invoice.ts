@@ -1,11 +1,11 @@
 import { DateTime } from 'luxon'
 
+import type { Square } from 'square'
+
 import { env } from '@/app/init/firebase'
 import { throwTrpcError } from '@/app/trpc/transport-errors'
 import { getOrCreateCustomer } from '@/integrations/square/core/get-or-create-customer'
 import { SquareClient } from '@/integrations/square/square.client'
-
-import type { Square } from 'square'
 
 export async function sendInvoice(input: {
     firstName: string

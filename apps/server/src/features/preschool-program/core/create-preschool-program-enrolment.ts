@@ -3,6 +3,8 @@ import { DateTime } from 'luxon'
 import type { CreatePreschoolProgramEnrolmentParams, PreschoolProgramEnrolment } from '@fizz-kidz/core'
 import { AcuityConstants, studioNameAndAddress } from '@fizz-kidz/core'
 
+import { resolveCalendarStudio } from './resolve-calendar-studio'
+
 import { throwTrpcError } from '@/app/trpc/transport-errors'
 import { AcuityClient } from '@/integrations/acuity/acuity.client'
 import { FirestoreRefs } from '@/integrations/firebase/firestore.refs'
@@ -10,8 +12,6 @@ import { MixpanelClient } from '@/integrations/mixpanel/mixpanel.client'
 import { logError } from '@/integrations/observability/log-error'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
 import { ZohoClient } from '@/integrations/zoho/zoho.client'
-
-import { resolveCalendarStudio } from './resolve-calendar-studio'
 
 export async function createPreschoolProgramEnrolment(input: CreatePreschoolProgramEnrolmentParams) {
     const newDoc = (await FirestoreRefs.preschoolProgramEnrolments()).doc()

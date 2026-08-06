@@ -30,4 +30,4 @@ An edit replaces the invitation document and image while keeping the same ID. Ol
 
 The QR code points to the share page. Legacy `/invitation/v2` routes remain only for old links; never generate new ones.
 
-Portal details: [`apps/portal/src/components/rsvp/README.md`](../../../../../portal/src/components/rsvp/README.md).
+Portal details: [`apps/portal/src/features/rsvp/README.md`](../../../../../../portal/src/features/rsvp/README.md).

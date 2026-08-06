@@ -2,9 +2,8 @@ import { DateTime, Duration, Interval } from 'luxon'
 
 import { ObjectKeys, assertNever, type ShiftUnderMinimumShiftLength, type Studio } from '@fizz-kidz/core'
 
-import type { Timesheet } from '@/integrations/sling/sling.types'
-
 import type { Rate } from './timesheets.types'
+import type { Timesheet } from '@/integrations/sling/sling.types'
 
 /**
  * Breaks the range down into weeks, and returns them as an array of intervals.

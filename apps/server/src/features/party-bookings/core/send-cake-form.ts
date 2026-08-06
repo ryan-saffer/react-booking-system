@@ -1,10 +1,10 @@
 import { getStudioContactEmail, type Booking } from '@fizz-kidz/core'
 
+import { canOrderCake, getCakeFormUrl, getUpcoming } from './utils.party'
+
 import { timestampConverter } from '@/integrations/firebase/firestore-converters'
 import { FirestoreRefs } from '@/integrations/firebase/firestore.refs'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
-
-import { canOrderCake, getCakeFormUrl, getUpcoming } from './utils.party'
 
 /**
  *  Runs every Tuesday.

@@ -3,6 +3,10 @@ import { Timestamp } from 'firebase-admin/firestore'
 import type { FirestoreBooking } from '@fizz-kidz/core'
 import { getApplicationDomain, getStudioAddress, getPartyEndDate, getPartyBirthdayChildDisplay } from '@fizz-kidz/core'
 
+import { sendPartyBookingConfirmationEmail } from './send-party-booking-confirmation-email'
+
+import type { CreatePartyBooking } from '../functions/trpc/trpc.parties'
+
 import { env } from '@/app/init/firebase'
 import { throwTrpcError } from '@/app/trpc/transport-errors'
 import { DatabaseClient } from '@/integrations/firebase/database.client'
@@ -11,10 +15,6 @@ import { MixpanelClient } from '@/integrations/mixpanel/mixpanel.client'
 import { logError } from '@/integrations/observability/log-error'
 import { ZohoClient } from '@/integrations/zoho/zoho.client'
 import { isUsingEmulator } from '@/shared/runtime/is-using-emulator'
-
-import { sendPartyBookingConfirmationEmail } from './send-party-booking-confirmation-email'
-
-import type { CreatePartyBooking } from '../functions/trpc/trpc.parties'
 
 export async function createPartyBooking(_booking: CreatePartyBooking) {
     const booking = {

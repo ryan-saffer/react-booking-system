@@ -3,11 +3,11 @@ import { logger } from 'firebase-functions/v2'
 import type { Booking } from '@fizz-kidz/core'
 import { getPartyCustomerContactInfo, getStudioContactEmail } from '@fizz-kidz/core'
 
+import { getPartyFormUrl, getUpcoming } from './utils.party'
+
 import { FirestoreRefs } from '@/integrations/firebase/firestore.refs'
 import { logError } from '@/integrations/observability/log-error'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
-
-import { getPartyFormUrl, getUpcoming } from './utils.party'
 
 export async function sendPartyFormReminderEmails() {
     // since this runs on a Monday, it will get tomorrow

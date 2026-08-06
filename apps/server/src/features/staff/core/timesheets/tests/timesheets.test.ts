@@ -3,8 +3,6 @@ import { strictEqual, throws } from 'assert'
 import { DateTime } from 'luxon'
 import { describe, it } from 'vite-plus/test'
 
-import type { Timesheet } from '@/integrations/sling/sling.types'
-
 import {
     SlingPosition,
     SlingPositionToId,
@@ -29,6 +27,7 @@ import {
     type SlingLocation,
 } from '../timesheets.utils'
 
+import type { Timesheet } from '@/integrations/sling/sling.types'
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
 const olderThan18 = DateTime.fromObject({ year: 2000, day: 30, month: 5 })
