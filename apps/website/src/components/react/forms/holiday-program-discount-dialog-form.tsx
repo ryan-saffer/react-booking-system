@@ -3,9 +3,8 @@ import { LoaderCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
-import '@/styles/sonner.css'
+import { HolidayProgramDiscountWebsiteFormSchema, type WebsiteForm } from '@fizz-kidz/core'
 
 import type { DiscountCode } from '../holiday-program-discount-dialog'
 
@@ -14,17 +13,11 @@ import { Checkbox } from '@/react-ui/checkbox'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/react-ui/form'
 import { Input } from '@/react-ui/input'
 import { Toaster } from '@/react-ui/sonner'
-import { FORM_WEBHOOK } from '@/utils/constants'
-
-const formSchema = z.object({
-    name: z.string().min(1, 'Name is required'),
-    email: z.string().min(1, 'Email address is required').email(),
-    joinMailingList: z.boolean().default(true),
-})
+import { submitWebsiteForm } from '@/utils/website-forms'
 
 function HolidayProgramDiscountDialogForm({ onSuccess }: { onSuccess: (data: DiscountCode) => void }) {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<WebsiteForm['holidayProgramDiscount']>({
+        resolver: zodResolver(HolidayProgramDiscountWebsiteFormSchema),
         defaultValues: {
             name: '',
             email: '',
@@ -34,25 +27,13 @@ function HolidayProgramDiscountDialogForm({ onSuccess }: { onSuccess: (data: Dis
 
     const [loading, setLoading] = useState(false)
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: WebsiteForm['holidayProgramDiscount']) {
         if (loading) return
         setLoading(true)
 
         try {
-            const response = await fetch(`${FORM_WEBHOOK}?formId=holidayProgramDiscount`, {
-                body: JSON.stringify(values),
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-            if (response.ok) {
-                const data = await response.json()
-                onSuccess(data)
-            } else {
-                toast.error('There was an error getting your discount code.')
-                return
-            }
+            const data = await submitWebsiteForm('holidayProgramDiscount', values)
+            onSuccess(data)
         } catch (err) {
             console.error(err)
             toast.error('There was an error getting your discount code.')

@@ -12,6 +12,7 @@ import { preschoolProgramV2Router } from '@/features/preschool-program-v2/functi
 import { preschoolProgramRouter } from '@/features/preschool-program/functions/trpc/trpc.preschool-program'
 import { reportsRouter } from '@/features/reports/functions/trpc/trpc.reports'
 import { staffRouter } from '@/features/staff/functions/trpc/trpc.staffRouter'
+import { websiteFormsRouter } from '@/features/website/functions/trpc/trpc.website-forms'
 import { acuityRouter } from '@/integrations/acuity/functions/trpc/trpc.acuity'
 
 export const appRouter = router({
@@ -28,6 +29,7 @@ export const appRouter = router({
     creations: creationsRouter,
     reports: reportsRouter,
     inventory: inventoryRouter,
+    websiteForms: websiteFormsRouter,
 })
 
 export type AppRouter = typeof appRouter

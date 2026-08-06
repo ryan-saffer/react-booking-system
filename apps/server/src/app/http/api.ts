@@ -1,5 +1,7 @@
 import { onRequest } from 'firebase-functions/v2/https'
 
+import { API_CORS_ORIGINS } from './cors-origins'
+
 import type { App } from './app'
 
 import { env } from '@/app/init/firebase'
@@ -9,7 +11,7 @@ let appPromise: Promise<App> | undefined
 export const api = onRequest(
     {
         region: 'australia-southeast1',
-        cors: true,
+        cors: API_CORS_ORIGINS,
         memory: '1GiB',
         minInstances: env === 'prod' ? 1 : 0,
     },

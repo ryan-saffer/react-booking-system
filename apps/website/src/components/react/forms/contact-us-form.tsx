@@ -3,9 +3,17 @@ import { CircleCheckBig, LoaderCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
-import '@/styles/sonner.css'
+import {
+    ContactFormLocationOptions,
+    ContactFormServiceOptions,
+    ContactWebsiteFormSchema,
+    IncursionFormModuleOptions,
+    PartyThemeOptions,
+    ReferenceOptions,
+    type WebsiteForm,
+} from '@fizz-kidz/core'
+
 import { Button } from '../ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
@@ -13,166 +21,11 @@ import { SelectContent, SelectForm, SelectItem, SelectValue } from '../ui/select
 import { Toaster } from '../ui/sonner'
 import { Textarea } from '../ui/textarea'
 
-import { FORM_WEBHOOK } from '@/utils/constants'
-import { assertNoCorsRequestSucceeded } from '@/utils/no-cors-response'
-
-const optionalPositiveInteger = z
-    .string()
-    .trim()
-    .refine((value) => value === '' || /^[1-9]\d*$/.test(value), 'Please enter a whole number greater than zero')
-    .optional()
-
-const formSchema = z
-    .object({
-        name: z.string().min(1, 'Contact name is required'),
-        email: z.string().min(1, 'Email address is required').email(),
-        contactNumber: z.string().min(10, 'Contact number must be at least 10 digits long'),
-        service: z
-            .enum(['party', 'holiday-program', 'after-school-program', 'incursion', 'activation', 'other'])
-            .optional()
-            .refine((it) => !!it, {
-                message: 'Please select which experience you are interested in',
-            }),
-        location: z
-            .enum(['balwyn', 'cheltenham', 'essendon', 'geelong', 'kingsville', 'malvern', 'at-home', 'other'])
-            .optional(),
-        suburb: z.string().optional(),
-        preferredDateAndTime: z.string().optional(),
-        school: z.string().optional(),
-        organisation: z.string().optional(),
-        module: z
-            .enum(['chemicalScience', 'pushAndPull', 'lightAndSound', 'earthWeatherSustainability', 'notSure'])
-            .optional(),
-        numberOfSessions: optionalPositiveInteger,
-        numberOfStudentsPerSession: z.string().trim().optional(),
-        numberOfAttendees: z.string().trim().optional(),
-        budget: z.string().optional(),
-        partyTheme: z
-            .enum([
-                'glam',
-                'fluid-bears',
-                'kpop',
-                'fairy',
-                'safari',
-                'science',
-                'slime',
-                'swiftie',
-                'tie-dye',
-                'own',
-                'mix',
-            ])
-            .optional(),
-        enquiry: z.string().min(1, 'Please enter an enquiry'),
-        reference: z.enum(['google', 'instagram', 'word-of-mouth', 'attended-fizz', 'other']).optional(),
-        referenceOther: z.string().optional(),
-    })
-    .superRefine((val, ctx) => {
-        if (val.service === 'party' || val.service === 'holiday-program') {
-            if (!val.location) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Please choose a location',
-                    path: ['location'],
-                })
-            }
-        }
-        if (val.service === 'party') {
-            if (!val.preferredDateAndTime) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Please enter your preferred date and time',
-                    path: ['preferredDateAndTime'],
-                })
-            }
-            if (!val.partyTheme) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Please select your preferred party theme',
-                    path: ['partyTheme'],
-                })
-            }
-        }
-        if (val.service === 'party' && val.location === 'at-home') {
-            if (!val.suburb) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Please enter your suburb',
-                    path: ['suburb'],
-                })
-            }
-        }
-        if (val.service === 'incursion') {
-            if (!val.school) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'School name is required',
-                    path: ['school'],
-                })
-            }
-            if (!val.preferredDateAndTime) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Please enter your preferred date and time',
-                    path: ['preferredDateAndTime'],
-                })
-            }
-            if (!val.module) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Please select a module',
-                    path: ['module'],
-                })
-            }
-            if (!val.numberOfSessions) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Please enter the number of sessions',
-                    path: ['numberOfSessions'],
-                })
-            }
-            if (!val.numberOfStudentsPerSession) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Please enter the number of students per session',
-                    path: ['numberOfStudentsPerSession'],
-                })
-            }
-        }
-        if (val.service === 'activation') {
-            if (!val.organisation) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Organisation name is required',
-                    path: ['organisation'],
-                })
-            }
-            if (!val.preferredDateAndTime) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Please enter your preferred date and time',
-                    path: ['preferredDateAndTime'],
-                })
-            }
-            if (!val.numberOfAttendees) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Please enter the estimated number of attendees',
-                    path: ['numberOfAttendees'],
-                })
-            }
-        }
-        if (val.service !== 'incursion' && val.service !== 'activation' && !val.reference) {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: 'Please select how you heard about us',
-                path: ['reference'],
-            })
-        }
-    })
+import { submitWebsiteForm } from '@/utils/website-forms'
 
 function ContactUsForm() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<WebsiteForm['contact']>({
+        resolver: zodResolver(ContactWebsiteFormSchema),
         shouldUnregister: true,
         defaultValues: {
             name: '',
@@ -197,17 +50,12 @@ function ContactUsForm() {
 
     const [loading, setLoading] = useState(false)
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: WebsiteForm['contact']) {
         if (loading) return
         setLoading(true)
 
         try {
-            const response = await fetch(`${FORM_WEBHOOK}?formId=contact`, {
-                body: JSON.stringify(values),
-                method: 'POST',
-                mode: 'no-cors',
-            })
-            assertNoCorsRequestSucceeded(response)
+            await submitWebsiteForm('contact', values)
             window.dataLayer.push({
                 event: 'lead_submit',
                 studio: values.location,
@@ -303,12 +151,11 @@ function ContactUsForm() {
                                 >
                                     <SelectValue placeholder="Select experience" />
                                     <SelectContent>
-                                        <SelectItem value="party">Birthday Party</SelectItem>
-                                        <SelectItem value="holiday-program">Holiday Program</SelectItem>
-                                        <SelectItem value="after-school-program">After School Program</SelectItem>
-                                        <SelectItem value="incursion">School Incursion</SelectItem>
-                                        <SelectItem value="activation">Activation and Events</SelectItem>
-                                        <SelectItem value="other">Other</SelectItem>
+                                        {ContactFormServiceOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </SelectForm>
                                 <FormMessage />
@@ -328,14 +175,11 @@ function ContactUsForm() {
                                     >
                                         <SelectValue />
                                         <SelectContent>
-                                            <SelectItem value="balwyn">Balwyn</SelectItem>
-                                            <SelectItem value="cheltenham">Cheltenham</SelectItem>
-                                            <SelectItem value="essendon">Essendon</SelectItem>
-                                            <SelectItem value="geelong">Geelong</SelectItem>
-                                            <SelectItem value="kingsville">Kingsville</SelectItem>
-                                            <SelectItem value="malvern">Malvern</SelectItem>
-                                            <SelectItem value="at-home">At Home</SelectItem>
-                                            <SelectItem value="other">Other</SelectItem>
+                                            {ContactFormLocationOptions.map(({ value, label }) => (
+                                                <SelectItem key={value} value={value}>
+                                                    {label}
+                                                </SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </SelectForm>
                                     <FormMessage />
@@ -425,15 +269,11 @@ function ContactUsForm() {
                                         >
                                             <SelectValue />
                                             <SelectContent>
-                                                <SelectItem value="chemicalScience">Chemical Science</SelectItem>
-                                                <SelectItem value="pushAndPull">Push and Pull</SelectItem>
-                                                <SelectItem value="lightAndSound">Light and Sound</SelectItem>
-                                                <SelectItem value="earthWeatherSustainability">
-                                                    Earth, Weather and Sustainability
-                                                </SelectItem>
-                                                <SelectItem value="notSure">
-                                                    A combination of the above / not sure
-                                                </SelectItem>
+                                                {IncursionFormModuleOptions.map(({ value, label }) => (
+                                                    <SelectItem key={value} value={value}>
+                                                        {label}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </SelectForm>
                                         <FormMessage />
@@ -563,17 +403,11 @@ function ContactUsForm() {
                                     >
                                         <SelectValue />
                                         <SelectContent>
-                                            <SelectItem value="glam">Glam Party</SelectItem>
-                                            <SelectItem value="fluid-bears">Fluid Bears Party</SelectItem>
-                                            <SelectItem value="kpop">Kpop Power Party</SelectItem>
-                                            <SelectItem value="fairy">Fairy Party</SelectItem>
-                                            <SelectItem value="safari">Jungle Safari Party</SelectItem>
-                                            <SelectItem value="science">Science Party</SelectItem>
-                                            <SelectItem value="slime">Slime Party</SelectItem>
-                                            <SelectItem value="swiftie">Swiftie Party</SelectItem>
-                                            <SelectItem value="tie-dye">Tie-Dye Party</SelectItem>
-                                            <SelectItem value="own">My own theme</SelectItem>
-                                            <SelectItem value="mix">A mix of the above</SelectItem>
+                                            {PartyThemeOptions.map(({ value, label }) => (
+                                                <SelectItem key={value} value={value}>
+                                                    {label}
+                                                </SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </SelectForm>
                                     <FormMessage />
@@ -614,11 +448,11 @@ function ContactUsForm() {
                                 >
                                     <SelectValue />
                                     <SelectContent>
-                                        <SelectItem value="google">Google search</SelectItem>
-                                        <SelectItem value="instagram">Instagram</SelectItem>
-                                        <SelectItem value="word-of-mouth">Word of mouth</SelectItem>
-                                        <SelectItem value="attended-fizz">Attended a Fizz Kidz experience</SelectItem>
-                                        <SelectItem value="other">Other</SelectItem>
+                                        {ReferenceOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </SelectForm>
                                 <FormMessage />

@@ -7,7 +7,6 @@ import { appRouter } from '@/app/trpc/trpc.app-router'
 import { getErrorCode, type AppErrorCode } from '@/app/trpc/trpc.errors'
 import { googleReviewsRoute } from '@/features/google-business-profile/functions/routes/google-reviews'
 import { invitationEntryRedirect } from '@/features/party-bookings/functions/webhooks/invitation-redirect'
-import { websiteFormsWebhook } from '@/features/website/functions/webhooks/website-forms-webhook'
 import { acuityWebhook } from '@/integrations/acuity/functions/acuity.webhook'
 import { esignaturesWebhook } from '@/integrations/esignatures.io/functions/esignatures.webhook'
 import { hostedPaperformRedirect } from '@/integrations/paperforms/functions/routes/hosted-paperform-redirect'
@@ -80,7 +79,6 @@ webhooks.use('/webhooks', [
     esignaturesWebhook,
     paperformWebhook,
     partyFormRedirect,
-    websiteFormsWebhook,
     invitationEntryRedirect,
 ])
 apiRouter.use(webhooks)

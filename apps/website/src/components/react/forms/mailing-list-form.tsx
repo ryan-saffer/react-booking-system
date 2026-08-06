@@ -3,25 +3,19 @@ import { LoaderCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
-import '@/styles/sonner.css'
+import { MailingListWebsiteFormSchema, type WebsiteForm } from '@fizz-kidz/core'
+
 import { Button } from '../ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { Toaster } from '../ui/sonner'
 
-import { FORM_WEBHOOK } from '@/utils/constants'
-import { assertNoCorsRequestSucceeded } from '@/utils/no-cors-response'
-
-const formSchema = z.object({
-    name: z.string().min(1, 'Name is required'),
-    email: z.string().min(1, 'Email address is required').email(),
-})
+import { submitWebsiteForm } from '@/utils/website-forms'
 
 function IncursionForm() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<WebsiteForm['mailingList']>({
+        resolver: zodResolver(MailingListWebsiteFormSchema),
         defaultValues: {
             name: '',
             email: '',
@@ -30,17 +24,12 @@ function IncursionForm() {
 
     const [loading, setLoading] = useState(false)
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: WebsiteForm['mailingList']) {
         if (loading) return
         setLoading(true)
 
         try {
-            const response = await fetch(`${FORM_WEBHOOK}?formId=mailingList`, {
-                body: JSON.stringify(values),
-                method: 'POST',
-                mode: 'no-cors',
-            })
-            assertNoCorsRequestSucceeded(response)
+            await submitWebsiteForm('mailingList', values)
         } catch (err) {
             console.error(err)
             toast.error('There was an error joining the mailing list.')

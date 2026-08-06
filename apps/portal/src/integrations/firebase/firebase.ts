@@ -18,8 +18,6 @@ import { type Firestore, getFirestore } from 'firebase/firestore'
 import { connectFunctionsEmulator, type Functions, getFunctions } from 'firebase/functions'
 import { type FirebaseStorage, getStorage } from 'firebase/storage'
 
-export const useEmulators = false
-
 class Firebase {
     auth: Auth
     db: Firestore
@@ -45,7 +43,7 @@ class Firebase {
         this.auth = getAuth(app)
         this.db = getFirestore(app)
         this.functions = getFunctions(app, 'australia-southeast1')
-        if (useEmulators) {
+        if (import.meta.env.MODE === 'emulator') {
             connectFunctionsEmulator(this.functions, 'localhost', 5001)
         }
         this.googleProvider = new GoogleAuthProvider()

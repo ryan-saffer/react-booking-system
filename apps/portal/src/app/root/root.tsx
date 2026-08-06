@@ -11,7 +11,6 @@ import { Toaster } from 'sonner'
 
 import { getApplicationDomain } from '@fizz-kidz/core'
 
-import { useEmulators } from '@integrations/firebase/firebase'
 import { FirebaseProvider } from '@integrations/firebase/firebase-provider'
 import useFirebase from '@integrations/firebase/use-firebase'
 import { MixpanelContext } from '@integrations/mixpanel/MixpanelContext'
@@ -56,7 +55,7 @@ const antdTheme: ThemeConfig = {
 function InnerRoot() {
     const firebase = useFirebase()
 
-    const domain = getApplicationDomain(import.meta.env.VITE_ENV, useEmulators)
+    const domain = getApplicationDomain(import.meta.env.VITE_ENV, import.meta.env.MODE === 'emulator')
 
     const [queryClient] = useState(() => new QueryClient())
     const [trpcClient] = useState(() =>

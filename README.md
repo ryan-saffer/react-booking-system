@@ -12,15 +12,15 @@ It is one npm workspace powered by [Vite+](https://viteplus.dev/), with deployab
 | [`apps/server`](apps/server/README.md)     | APIs, webhooks, jobs, and integrations  | Firebase Functions         |
 | [`apps/website`](apps/website/README.md)   | Public marketing website                | Netlify                    |
 | [`apps/docs`](apps/docs/README.md)         | Staff and franchisee knowledge base     | Netlify                    |
-| [`packages/core`](packages/core/README.md) | Code shared by the Portal and server    | Bundled into its consumers |
+| [`packages/core`](packages/core/README.md) | Runtime-neutral shared code             | Bundled into its consumers |
 
 > **Two kinds of docs:** `apps/docs` is the published knowledge base. Root [`docs/`](docs/README.md) is a notebook for engineering plans and design work.
 
 ## The Mental Model
 
-- The Portal calls the server through tRPC at `/api/trpc`.
+- The Portal and public website call the server through tRPC at `/api/trpc`.
 - The server exports one Express function (`api`) and one background dispatcher (`pubsub`).
-- Portal and server import `@fizz-kidz/core` directly from source. No publish step is involved.
+- Portal, server, and website import `@fizz-kidz/core` directly from source. No publish step is involved.
 - Website and docs are independent Astro apps. They do not start with the Firebase stack.
 - Firebase deploys from GitHub Actions; the Astro apps deploy through separate Netlify sites.
 
@@ -35,15 +35,18 @@ vp config
 npm run dev
 ```
 
-`npm run dev` starts the Portal at `localhost:3000`, server watchers, and the Functions/Pub/Sub emulators.
+`npm run dev` starts the Portal at `localhost:3000`, points it at the local server, and starts the server watchers and Functions/Pub/Sub emulators.
 
 ### Commands Worth Remembering
 
 ```bash
 npm run portal          # Portal without emulators
+npm run portal:local    # Portal only, pointed at local server
 npm run portal:prod     # Local Portal against production
 npm run server          # Server watchers and emulators
-npm run website         # Public site on :4321
+npm run website         # Public site on :4321 against development
+npm run website:local   # Public site on :4321 against local server
+npm run website:prod    # Public site on :4321 against production
 npm run docs            # Knowledge base on :4321
 
 npm run check           # Read-only format, lint, and type checks
@@ -57,7 +60,7 @@ Build either Astro app with `npm run build --workspace website` or `npm run buil
 
 ## Where Shared Code Goes
 
-Put runtime-neutral types and pure logic in `@fizz-kidz/core`, then export them from `packages/core/src/index.ts`.
+Put runtime-neutral types and pure logic in `@fizz-kidz/core`, then export them from `packages/core/src/index.ts`. Website form schemas and select options live in `packages/core/src/website/website-forms.ts`, where both the website and server consume the same runtime contracts.
 
 Keep SDK clients, credentials, Firestore, and other runtime-specific I/O in the app that owns them. Shared React UI should eventually become its own package rather than turning core into a grab bag.
 
@@ -76,8 +79,9 @@ vp add <package> --filter @fizz-kidz/core
 
 - `develop` deploys changed Firebase targets to development.
 - `main` deploys changed Firebase targets to production.
-- A core change deploys both Portal and server.
+- A core change deploys Portal and server; website form-contract changes also trigger the website's Netlify build.
 - Website and docs deploy independently through Netlify.
+- Deploy server-side website form changes before the website; form submissions use tRPC and the legacy webhook route no longer exists.
 - GitHub receives Firebase environment files through `PORTAL_ENV_FILE` and `SERVER_ENV_FILE` environment variables.
 
 > **Easy to forget**
@@ -86,7 +90,7 @@ vp add <package> --filter @fizz-kidz/core
 > - Website and docs both default to port `4321`.
 > - Server manifest changes also require refreshing `apps/server/package-lock.json`.
 > - Backend-owned browser routes must agree in Express, `firebase.json`, and the root Vite proxy.
-> - Netlify's ignore rules only watch each app directory; root tooling changes may need a manual build.
+> - Netlify's website ignore rule also watches the shared website form contracts; other root or core changes may still need a manual build.
 
 ## Useful Starting Points
 

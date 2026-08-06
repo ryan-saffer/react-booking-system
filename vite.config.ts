@@ -243,7 +243,7 @@ function firebaseEmulatorPlugin(): Plugin {
 }
 
 export default defineConfig(({ command, mode }) => {
-    const envMode = mode === 'production' ? 'prod' : mode === 'development' ? 'dev' : mode
+    const envMode = mode === 'production' ? 'prod' : ['development', 'emulator'].includes(mode) ? 'dev' : mode
     const env = loadEnv(envMode, portalDir, '')
     const { version, builtAt } = resolveAppVersion(env)
     const functionsApiTarget = `http://127.0.0.1:5001/${env.VITE_FIREBASE_PROJECT_ID}/australia-southeast1/api`
@@ -286,6 +286,7 @@ export default defineConfig(({ command, mode }) => {
             mode === 'test' ? undefined : typeCheckWatchPlugin(),
             mode === 'test' ? undefined : firebaseEmulatorPlugin(),
             command === 'build' &&
+            mode !== 'emulator' &&
             env.FUNCTIONS_EMULATOR !== 'true' &&
             process.env.FUNCTIONS_EMULATOR !== 'true' &&
             env.SENTRY_AUTH_TOKEN

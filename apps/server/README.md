@@ -24,6 +24,9 @@ The `api` function owns `/api/trpc`, `/api/webhooks/**`, public endpoints such a
 
 - Keep `DatabaseClient` about persistence, not business decisions. See [`src/integrations/firebase/README.md`](src/integrations/firebase/README.md).
 - Put browser/server-safe contracts and pure logic in `@fizz-kidz/core`.
+- Validate public website submissions with the shared schemas in `packages/core/src/website/website-forms.ts`; do not recreate payload types or cast request bodies.
+- Website form mutations live in `src/features/website/functions/trpc/trpc.website-forms.ts`, delegate to the workflow in `src/features/website/core`, and are registered under `websiteForms`.
+- Keep browser origins in `src/app/http/cors-origins.ts`; Firebase handles preflight before lazily loading Express.
 - Keep credentials, SDK clients, Firestore, and network calls here.
 - Name integration client modules `<provider-or-service>.client.ts`; use similarly descriptive dot-qualified names for reference registries and helpers where appropriate.
 - Load heavyweight SDKs lazily; Firebase cold starts notice everything.
@@ -37,7 +40,7 @@ vp test --run --project server
 npm --workspace server run build
 ```
 
-The dev command watches server and core code, type-checks both, and starts the Functions/Pub/Sub emulators. Environment loading selects `.env` for development and `.env.prod` for production.
+The dev command watches server and core code, type-checks both, and starts the Functions/Pub/Sub emulators against the `dev` Firebase project alias. Environment loading selects `.env` for development and `.env.prod` for production.
 
 ## Dependencies
 

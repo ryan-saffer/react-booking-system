@@ -1,38 +1,29 @@
-import express from 'express'
+import {
+    ContactFormLocationMap,
+    FranchisingInterestDisplayValueMap,
+    LocationDisplayValueMap,
+    ModuleDisplayValueMap,
+    PartyFormLocationMap,
+    PartyThemeDisplayValueMap,
+    ReferenceDisplayValueMap,
+    RoleDisplayValueMap,
+    ServiceDisplayValueMap,
+    type WebsiteForm,
+    type WebsiteFormId,
+} from '@fizz-kidz/core'
 
 import { generateDiscountCode } from '@/features/holiday-programs/core/discount-codes/generate-discount-code'
-import {
-    type Form,
-    LocationDisplayValueMap,
-    ReferenceDisplayValueMap,
-    PartyFormLocationMap,
-    ServiceDisplayValueMap,
-    ContactFormLocationMap,
-    ModuleDisplayValueMap,
-    RoleDisplayValueMap,
-    FranchisingInterestDisplayValueMap,
-    PartyThemeDisplayValueMap,
-} from '@/features/website/core/website-form-types'
 import { MixpanelClient } from '@/integrations/mixpanel/mixpanel.client'
 import { logError } from '@/integrations/observability/log-error'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
 import { ZohoClient } from '@/integrations/zoho/zoho.client'
 
-export const websiteFormsWebhook = express.Router()
-
-function getRequestBodyForLogging(body: unknown) {
-    if (typeof body !== 'string') {
-        return body
-    }
-
-    try {
-        return JSON.parse(body)
-    } catch {
-        return {
-            rawBody: body,
-        }
-    }
-}
+type WebsiteFormSubmission = {
+    [FormId in WebsiteFormId]: { formId: FormId; data: WebsiteForm[FormId] }
+}[WebsiteFormId]
+type HolidayProgramDiscountSubmission = Extract<WebsiteFormSubmission, { formId: 'holidayProgramDiscount' }>
+type StandardWebsiteFormSubmission = Exclude<WebsiteFormSubmission, HolidayProgramDiscountSubmission>
+type HolidayProgramDiscountCode = Awaited<ReturnType<typeof generateDiscountCode>>
 
 async function runZohoTask({
     description,
@@ -41,7 +32,7 @@ async function runZohoTask({
     task,
 }: {
     description: string
-    formId: keyof Form
+    formId: WebsiteFormId
     requestBody: unknown
     task: () => Promise<unknown>
 }) {
@@ -55,18 +46,23 @@ async function runZohoTask({
     }
 }
 
-websiteFormsWebhook.post('/website-forms', async (req, res) => {
-    const formId = req.query.formId as keyof Form
-    const requestBody = getRequestBodyForLogging(req.body)
-
+export function processWebsiteFormSubmission(
+    submission: HolidayProgramDiscountSubmission
+): Promise<HolidayProgramDiscountCode>
+export function processWebsiteFormSubmission(submission: StandardWebsiteFormSubmission): Promise<void>
+export async function processWebsiteFormSubmission(
+    submission: WebsiteFormSubmission
+): Promise<HolidayProgramDiscountCode | void> {
+    const formId = submission.formId
+    const requestBody = submission.data
     const zohoClient = new ZohoClient()
     const mailClient = await MailClient.getInstance()
     const mixpanelClient = await MixpanelClient.getInstance()
 
     try {
-        switch (formId) {
+        switch (submission.formId) {
             case 'party': {
-                const formData = JSON.parse(req.body) as Form['party']
+                const formData = submission.data
 
                 const [firstName, lastName] = formData.name.split(' ')
                 await runZohoTask({
@@ -168,7 +164,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
             }
 
             case 'contact': {
-                const formData = JSON.parse(req.body) as Form['contact']
+                const formData = submission.data
                 const [firstName, lastName] = formData['name'].split(' ')
 
                 const service = formData.service
@@ -360,7 +356,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
             }
 
             case 'event': {
-                const formData = JSON.parse(req.body) as Form['event']
+                const formData = submission.data
 
                 const [firstName, lastName] = formData.name.split(' ')
                 await runZohoTask({
@@ -441,7 +437,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
             }
 
             case 'incursion': {
-                const formData = JSON.parse(req.body) as Form['incursion']
+                const formData = submission.data
 
                 const [firstName, lastName] = formData.name.split(' ')
                 await runZohoTask({
@@ -524,7 +520,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
             }
 
             case 'careers': {
-                const formData = JSON.parse(req.body) as Form['careers']
+                const formData = submission.data
 
                 await mailClient.sendEmail(
                     'websiteCareersFormToCustomer',
@@ -573,7 +569,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
             }
 
             case 'mailingList': {
-                const formData = JSON.parse(req.body) as Form['mailingList']
+                const formData = submission.data
 
                 const [firstName, lastName] = formData.name.split(' ')
 
@@ -599,7 +595,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
             }
 
             case 'holidayProgramDiscount': {
-                const formData = req.body as Form['holidayProgramDiscount']
+                const formData = submission.data
                 const [firstName, lastName] = formData.name.split(' ')
                 const data = await generateDiscountCode(firstName)
                 await runZohoTask({
@@ -619,12 +615,11 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                     distinct_id: formData.email,
                 })
 
-                res.status(200).json(data)
-                return
+                return data
             }
 
             case 'franchising': {
-                const formData = JSON.parse(req.body) as Form['franchising']
+                const formData = submission.data
 
                 await mailClient.sendEmail(
                     'websiteFranchisingFormToCustomer',
@@ -670,22 +665,17 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
             }
 
             default: {
-                const exhaustiveCheck: never = formId
-                // we always want to send a 200 to the wordpress plugin, so only log the error
-                logError(`Website form submitted with invalid formId: '${exhaustiveCheck}'`)
-                res.status(500).send()
-                return
+                const exhaustiveCheck: never = submission
+                throw new Error(`Unhandled website form submission: ${exhaustiveCheck}`)
             }
         }
     } catch (err) {
-        logError(`Error running website form webhook with id: ${formId}`, err, {
+        logError(`Error processing website form with id: ${submission.formId}`, err, {
             formId,
             requestBody,
         })
-        res.status(500).send()
-        return
+        throw err
     }
 
-    res.status(200).send()
-    return
-})
+    return undefined
+}

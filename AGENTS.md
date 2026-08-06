@@ -19,8 +19,11 @@ Run from the repository root:
 ```bash
 npm run dev             # Portal + server + emulators
 npm run portal          # Portal only
+npm run portal:local    # Portal only, against local server
 npm run server          # Server only
 npm run website         # Public Astro site
+npm run website:local   # Public Astro site against local server
+npm run website:prod    # Public Astro site against production
 npm run docs            # Starlight knowledge base
 npm run check           # Read-only checks
 npm run test            # Core + Portal + server tests
