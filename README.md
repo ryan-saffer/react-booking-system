@@ -77,12 +77,12 @@ vp add <package> --filter @fizz-kidz/core
 
 ## Shipping
 
-- `develop` deploys changed Firebase targets first, then creates a Netlify Website deploy preview when Website code changed. The preview uses development mode and calls the development server.
-- `main` deploys only changed production targets. Firebase deploys first, then GitHub Actions publishes the Website to Netlify when Website code changed.
+- `develop` deploys changed Firebase targets first, then triggers a cached Netlify branch deploy when Website code changed. The branch deploy uses development mode and calls the development server.
+- `main` deploys only changed production targets. Firebase deploys first, then GitHub Actions triggers a cached Netlify production build when Website code changed.
 - A failed Firebase deployment prevents the Website deployment from running.
 - Portal watches `apps/portal` and all of `packages/core`; server watches `apps/server` and all of `packages/core`; Website watches `apps/website` and its Website-specific shared contracts.
 - Manual production runs deploy Portal, server, and Website as a full recovery deployment. Manual development runs deploy only Firebase targets.
-- The `dev` and `prod` GitHub environments require the `NETLIFY_AUTH_TOKEN` secret and `NETLIFY_SITE_ID` variable.
+- The `dev` and `prod` GitHub environments require the `NETLIFY_AUTH_TOKEN` and `NETLIFY_BUILD_HOOK_URL` secrets plus the `NETLIFY_SITE_ID` variable. Use the `develop` hook in `dev` and the `main` hook in `prod`.
 - GitHub failure email is configured per account under **Settings > Notifications > System > Actions**; enable email delivery and failed-workflow notifications.
 - Netlify still owns pull-request previews, other branch deploys, scheduled builds, and docs deployments.
 - GitHub receives Firebase environment files through `PORTAL_ENV_FILE` and `SERVER_ENV_FILE` environment variables.

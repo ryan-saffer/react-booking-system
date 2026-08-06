@@ -200,31 +200,10 @@ jobs:
 
             # This remains after Firebase so a failed Firebase deploy prevents the Website
             # from publishing a client that expects the new server contract.
-            - name: Deploy Website preview to Netlify
-              if: success() && github.ref_name == 'develop' && github.event_name == 'push' && steps.changes.outputs.website == 'true'
+            - name: Trigger and wait for Netlify Website deploy
+              if: success() && ((github.event_name == 'push' && steps.changes.outputs.website == 'true') || (github.event_name == 'workflow_dispatch' && github.ref_name == 'main'))
               env:
                   NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+                  NETLIFY_BUILD_HOOK_URL: ${{ secrets.NETLIFY_BUILD_HOOK_URL }}
                   NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
-              run: |
-                  deploy_json="$(npm exec --yes --package=netlify-cli@27.1.0 -- netlify deploy \
-                    --filter website \
-                    --context deploy-preview \
-                    --site "$NETLIFY_SITE_ID" \
-                    --message "GitHub Actions develop $GITHUB_SHA" \
-                    --json)"
-                  deploy_url="$(printf '%s' "$deploy_json" | jq -r '.deploy_url // .url')"
-                  printf 'Website deploy preview: %s\n' "$deploy_url"
-                  printf '### Website deploy preview\n\n[%s](%s)\n' "$deploy_url" "$deploy_url" >> "$GITHUB_STEP_SUMMARY"
-
-            - name: Deploy Website to Netlify
-              if: success() && github.ref_name == 'main' && (github.event_name == 'workflow_dispatch' || steps.changes.outputs.website == 'true')
-              env:
-                  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-                  NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
-              run: |
-                  npm exec --yes --package=netlify-cli@27.1.0 -- netlify deploy \
-                    --filter website \
-                    --context production \
-                    --prod \
-                    --site "$NETLIFY_SITE_ID" \
-                    --message "GitHub Actions $GITHUB_SHA"
+              run: bash .github/deploy-netlify.sh
