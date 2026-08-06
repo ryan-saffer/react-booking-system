@@ -1,7 +1,3 @@
-import { throwCustomTrpcError, throwTrpcError } from '@/app/trpc/transport-errors'
-import { GiftCardInactiveError, PaymentMethodInvalidError } from '@/app/trpc/trpc.errors'
-import { getSquareError, SquareClient } from '@/integrations/square/square.client'
-
 import {
     FULL_TERM_DISCOUNT_PERCENTAGE,
     FULL_TERM_DISCOUNT_UID,
@@ -11,6 +7,10 @@ import { getDiscountCodeAmountCents } from './preschool-program-v2-pricing'
 
 import type { BookPreschoolProgramV2Props } from './book-preschool-program-v2'
 import type { Square } from 'square'
+
+import { throwCustomTrpcError, throwTrpcError } from '@/app/trpc/transport-errors'
+import { GiftCardInactiveError, PaymentMethodInvalidError } from '@/app/trpc/trpc.errors'
+import { getSquareError, SquareClient } from '@/integrations/square/square.client'
 
 /** Creates and pays the Square order, applying discounts before gift-card and card tenders. */
 export async function processPreschoolProgramV2Payment(

@@ -1,0 +1,35 @@
+import { doc, getDoc } from 'firebase/firestore'
+import { useContext, useEffect, useState } from 'react'
+
+import type { AfterSchoolEnrolment, Service } from '@fizz-kidz/core'
+
+import { FirebaseContext } from '@integrations/firebase'
+import type Firebase from '@integrations/firebase'
+
+const useFetchAfterSchoolProgramEnrolment = (id: string) => {
+    const firebase = useContext(FirebaseContext) as Firebase
+
+    const [service, setService] = useState<Service<AfterSchoolEnrolment>>({ status: 'loading' })
+
+    useEffect(() => {
+        async function fetchEnrolment() {
+            try {
+                const result = await getDoc(doc(firebase.db, 'afterSchoolEnrolments', id))
+                if (result.exists()) {
+                    setService({ status: 'loaded', result: result.data() as AfterSchoolEnrolment })
+                } else {
+                    setService({ status: 'error', error: 'appointment not found' })
+                }
+            } catch (error) {
+                setService({ status: 'error', error })
+            }
+        }
+
+        fetchEnrolment()
+        // oxlint-disable-next-line react/exhaustive-deps
+    }, [])
+
+    return service
+}
+
+export default useFetchAfterSchoolProgramEnrolment

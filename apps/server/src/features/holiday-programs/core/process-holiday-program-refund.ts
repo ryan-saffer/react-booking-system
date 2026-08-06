@@ -2,13 +2,13 @@ import { logger } from 'firebase-functions/v2'
 
 import { AcuityConstants, AcuityUtilities } from '@fizz-kidz/core'
 
-import { AcuityClient } from '@/integrations/acuity/acuity.client'
 import type { AcuityWebhookData } from '@/integrations/acuity/functions/acuity.webhook'
+import type { Square } from 'square'
+
+import { AcuityClient } from '@/integrations/acuity/acuity.client'
 import { logError } from '@/integrations/observability/log-error'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
 import { SquareClient } from '@/integrations/square/square.client'
-
-import type { Square } from 'square'
 
 export async function processHolidayProgramRefund(data: AcuityWebhookData) {
     const acuity = await AcuityClient.getInstance()

@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
-import { DatabaseClient } from '@/integrations/firebase/database.client'
-
 import { inventoryCategorySchema } from './inventory.schemas'
+
+import { DatabaseClient } from '@/integrations/firebase/database.client'
 
 export const listInventoryItemsInputSchema = z
     .object({

@@ -1,9 +1,9 @@
-import { DatabaseClient } from '@/integrations/firebase/database.client'
-
 import { inventoryUsageRuleInputSchema } from './inventory.schemas'
 import { buildInventoryUsageRule } from './inventory.usage-rules.utils'
 
 import type { z } from 'zod'
+
+import { DatabaseClient } from '@/integrations/firebase/database.client'
 
 export const createInventoryUsageRuleInputSchema = inventoryUsageRuleInputSchema
 

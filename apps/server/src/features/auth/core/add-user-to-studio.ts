@@ -4,10 +4,10 @@ import { getAuth } from 'firebase-admin/auth'
 import type { Role, StaffUser, StudioOrMaster } from '@fizz-kidz/core'
 import { ObjectKeys } from '@fizz-kidz/core'
 
+import { getPasswordResetLink } from './get-password-reset-link'
+
 import { DatabaseClient } from '@/integrations/firebase/database.client'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
-
-import { getPasswordResetLink } from './get-password-reset-link'
 
 export async function addUserToStudio({
     firstname,

@@ -3,14 +3,14 @@ import { logger } from 'firebase-functions/v2'
 
 import { AcuityConstants, AcuityUtilities } from '@fizz-kidz/core'
 
+import { AcuityClient } from '../acuity.client'
+
 import { checkInToCrm } from '@/features/holiday-programs/core/check-in-to-crm'
 import { processHolidayProgramRefund } from '@/features/holiday-programs/core/process-holiday-program-refund'
 import { processPlayLabRefund } from '@/features/play-lab/core/process-play-lab-refund'
 import { processPreschoolProgramV2Refund } from '@/features/preschool-program-v2/core/process-preschool-program-v2-refund'
 import { logError } from '@/integrations/observability/log-error'
 import { ZohoClient } from '@/integrations/zoho/zoho.client'
-
-import { AcuityClient } from '../acuity.client'
 
 export type AcuityWebhookData = {
     action: 'scheduled' | 'rescheduled' | 'canceled' | 'changed' | 'order.completed'

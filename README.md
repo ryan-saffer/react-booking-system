@@ -63,6 +63,8 @@ Keep SDK clients, credentials, Firestore, and other runtime-specific I/O in the 
 
 Inside the server, `app` composes deployable HTTP, tRPC, and background adapters; `features` owns business workflows; `integrations` owns provider and runtime I/O; and `shared` holds narrow server-wide helpers. Dependencies flow from app adapters through features and integrations toward shared leaf modules.
 
+Inside the Portal, `app` composes routes and the dashboard shell; `features` owns user journeys; `integrations` owns browser SDK and transport boundaries; `session` owns auth and organization access; and `shared` contains reusable UI and pure helpers.
+
 Add dependencies from the root:
 
 ```bash
@@ -88,8 +90,8 @@ vp add <package> --filter @fizz-kidz/core
 
 ## Useful Starting Points
 
-- Portal routes: `apps/portal/src/app.tsx`
-- Portal providers and tRPC client: `apps/portal/src/components/root/root.tsx`
+- Portal routes: `apps/portal/src/app/router.tsx`
+- Portal providers and tRPC client: `apps/portal/src/app/root/root.tsx`
 - Server HTTP composition: `apps/server/src/app/http/app.ts`
 - Server tRPC composition: `apps/server/src/app/trpc/trpc.app-router.ts`
 - Background jobs: `apps/server/src/app/background/function.ts`

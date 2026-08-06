@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon'
 
+import type { Square } from 'square'
+
 import { throwTrpcError } from '@/app/trpc/transport-errors'
 import { getOrCreateCustomer } from '@/integrations/square/core/get-or-create-customer'
 import { SquareClient } from '@/integrations/square/square.client'
-
-import type { Square } from 'square'
 
 type Input = {
     firstName: string

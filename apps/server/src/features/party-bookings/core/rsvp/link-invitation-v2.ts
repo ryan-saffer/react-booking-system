@@ -1,13 +1,13 @@
 import { getInvitationShareUrl, type InvitationsV2 } from '@fizz-kidz/core'
 
+import { deleteInvitationV2 } from './delete-invitation-v2'
+import { moveInvitation } from './move-invitation-v2'
+
 import { env } from '@/app/init/firebase'
 import { DatabaseClient } from '@/integrations/firebase/database.client'
 import { MixpanelClient } from '@/integrations/mixpanel/mixpanel.client'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
 import { isUsingEmulator } from '@/shared/runtime/is-using-emulator'
-
-import { deleteInvitationV2 } from './delete-invitation-v2'
-import { moveInvitation } from './move-invitation-v2'
 
 export async function linkInvitation(invitation: InvitationsV2.Invitation, distinctId: string) {
     invitation.date = new Date(invitation.date)

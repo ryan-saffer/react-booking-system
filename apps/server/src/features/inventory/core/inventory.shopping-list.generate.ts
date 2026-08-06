@@ -13,11 +13,11 @@ import type {
     Studio,
 } from '@fizz-kidz/core'
 
-import { DatabaseClient } from '@/integrations/firebase/database.client'
-
 import { inventoryShoppingListInputSchema } from './inventory.schemas'
 
 import type { z } from 'zod'
+
+import { DatabaseClient } from '@/integrations/firebase/database.client'
 
 export const generateInventoryShoppingListInputSchema = inventoryShoppingListInputSchema
 

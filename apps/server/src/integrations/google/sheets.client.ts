@@ -1,7 +1,6 @@
-import type { ClientStatus } from '@/shared/lazy-client/client-status'
-
 import { getOAuth2Client } from './google-oauth'
 
+import type { ClientStatus } from '@/shared/lazy-client/client-status'
 import type { sheets_v4 } from 'googleapis'
 
 const SHEETS = {

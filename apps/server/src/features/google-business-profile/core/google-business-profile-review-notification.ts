@@ -1,13 +1,13 @@
 import { type Studio } from '@fizz-kidz/core'
 
-import { DatabaseClient } from '@/integrations/firebase/database.client'
-import { getOAuth2Client } from '@/integrations/google/google-oauth'
-import { MixpanelClient } from '@/integrations/mixpanel/mixpanel.client'
-
 import {
     getGoogleBusinessProfileLocationId,
     getGoogleBusinessProfileStudioFromLocationId,
 } from './google-business-profile-studios'
+
+import { DatabaseClient } from '@/integrations/firebase/database.client'
+import { getOAuth2Client } from '@/integrations/google/google-oauth'
+import { MixpanelClient } from '@/integrations/mixpanel/mixpanel.client'
 
 export type GoogleBusinessProfileReviewNotification = {
     type: 'NEW_REVIEW' | 'UPDATED_REVIEW'

@@ -7,15 +7,15 @@ import type {
     UpdateAfterSchoolEnrolmentParams,
 } from '@fizz-kidz/core'
 
-import { authenticatedProcedure, publicProcedure, router } from '@/app/trpc/trpc'
-import { retrieveInvoiceStatuses } from '@/features/after-school-program/core/retrieve-invoice-statuses'
-import { sendInvoices } from '@/features/after-school-program/core/send-invoices'
-import { SheetsClient } from '@/integrations/google/sheets.client'
-
 import scheduleAfterSchoolProgram from '../../core/schedule-after-school-program'
 import { sendTermContinutationEmails } from '../../core/send-term-continutation-email'
 import { unenrollAfterSchoolAppointments } from '../../core/unenroll-after-school-appointments'
 import { updateAfterSchoolEnrolment } from '../../core/update-after-school-enrolment'
+
+import { authenticatedProcedure, publicProcedure, router } from '@/app/trpc/trpc'
+import { retrieveInvoiceStatuses } from '@/features/after-school-program/core/retrieve-invoice-statuses'
+import { sendInvoices } from '@/features/after-school-program/core/send-invoices'
+import { SheetsClient } from '@/integrations/google/sheets.client'
 
 export const afterSchoolProgramRouter = router({
     sendTermContinuationEmails: authenticatedProcedure

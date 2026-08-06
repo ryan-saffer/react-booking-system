@@ -1,14 +1,14 @@
 import { FieldValue } from 'firebase-admin/firestore'
 import { z } from 'zod'
 
-import { DatabaseClient } from '@/integrations/firebase/database.client'
-
 import {
     inventoryCategorySchema,
     inventoryKeySchema,
     inventoryPurchaseOptionSchema,
     inventoryUnitSchema,
 } from './inventory.schemas'
+
+import { DatabaseClient } from '@/integrations/firebase/database.client'
 
 export const updateInventoryItemInputSchema = z.object({
     itemId: z.string().min(1),

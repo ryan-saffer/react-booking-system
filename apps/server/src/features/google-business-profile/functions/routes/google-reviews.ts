@@ -2,12 +2,12 @@ import express from 'express'
 
 import { isStudio, type GoogleBusinessProfileReview, type Studio } from '@fizz-kidz/core'
 
-import { DatabaseClient } from '@/integrations/firebase/database.client'
-
 import {
     getGoogleBusinessProfileLocationIdForStudio,
     getGoogleBusinessProfileMapsUrlForStudio,
 } from '../../core/google-business-profile-studios'
+
+import { DatabaseClient } from '@/integrations/firebase/database.client'
 
 type PublicGoogleReview = {
     id: string

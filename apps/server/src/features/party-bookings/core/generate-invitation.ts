@@ -10,14 +10,14 @@ import puppeteer from 'puppeteer-core'
 import { addOrdinalSuffix, getStudioAddress } from '@fizz-kidz/core'
 import type { GenerateInvitation, InvitationOption } from '@fizz-kidz/core'
 
+import type { Browser } from 'puppeteer-core'
+
 import { projectId } from '@/app/init/firebase'
 import { DatabaseClient } from '@/integrations/firebase/database.client'
 import { FirestoreRefs } from '@/integrations/firebase/firestore.refs'
 import { StorageClient } from '@/integrations/firebase/storage.client'
 import { MixpanelClient } from '@/integrations/mixpanel/mixpanel.client'
 import { isUsingEmulator } from '@/shared/runtime/is-using-emulator'
-
-import type { Browser } from 'puppeteer-core'
 
 export async function generateInvitation(input: GenerateInvitation) {
     // serialise back into a date

@@ -1,5 +1,4 @@
 import type { ClientStatus } from '@/shared/lazy-client/client-status'
-
 import type { Firestore } from 'firebase-admin/firestore'
 
 export class FirestoreClient {

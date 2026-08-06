@@ -5,6 +5,8 @@ import { DateTime } from 'luxon'
 
 import { AcuityConstants, AcuityUtilities, normalize, studioNameAndAddress, type AcuityTypes } from '@fizz-kidz/core'
 
+import { processPaylabPayment } from './process-play-lab-payment'
+
 import { throwCustomTrpcError, throwTrpcError } from '@/app/trpc/transport-errors'
 import { ClassFullError, CustomTrpcError, PaymentMethodInvalidError } from '@/app/trpc/trpc.errors'
 import { getDiscountCodeRedemptionKey } from '@/features/holiday-programs/core/discount-codes/check-discount-code'
@@ -16,8 +18,6 @@ import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
 import { getOrCreateCustomer } from '@/integrations/square/core/get-or-create-customer'
 import { getSquareError } from '@/integrations/square/square.client'
 import { ZohoClient } from '@/integrations/zoho/zoho.client'
-
-import { processPaylabPayment } from './process-play-lab-payment'
 
 export type BookPlayLabProps = {
     idempotencyKey: string

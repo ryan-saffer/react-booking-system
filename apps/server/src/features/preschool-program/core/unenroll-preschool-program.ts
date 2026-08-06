@@ -2,6 +2,8 @@ import { DateTime } from 'luxon'
 
 import type { UnenrollPreschoolProgramParams } from '@fizz-kidz/core'
 
+import type { Square } from 'square'
+
 import { throwTrpcError } from '@/app/trpc/transport-errors'
 import { AcuityClient } from '@/integrations/acuity/acuity.client'
 import { DatabaseClient } from '@/integrations/firebase/database.client'
@@ -9,8 +11,6 @@ import { MixpanelClient } from '@/integrations/mixpanel/mixpanel.client'
 import { logError } from '@/integrations/observability/log-error'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
 import { SquareClient } from '@/integrations/square/square.client'
-
-import type { Square } from 'square'
 
 export async function unenrollPreschoolProgram(input: UnenrollPreschoolProgramParams) {
     await Promise.all(

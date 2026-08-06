@@ -8,8 +8,6 @@ import type {
     UpdatePreschoolProgramEnrolmentParams,
 } from '@fizz-kidz/core'
 
-import { authenticatedProcedure, publicProcedure, router } from '@/app/trpc/trpc'
-
 import { createPreschoolProgramEnrolment } from '../../core/create-preschool-program-enrolment'
 import { getPreschoolProgramEnrolment } from '../../core/get-preschool-program-enrolment'
 import { listPreschoolProgramEnrolments } from '../../core/list-preschool-program-enrolments'
@@ -17,6 +15,8 @@ import { retrievePreschoolProgramInvoiceStatuses } from '../../core/retrieve-pre
 import { sendPreschoolProgramInvoices } from '../../core/send-preschool-program-invoices'
 import { unenrollPreschoolProgram } from '../../core/unenroll-preschool-program'
 import { updatePreschoolProgramEnrolment } from '../../core/update-preschool-program-enrolment'
+
+import { authenticatedProcedure, publicProcedure, router } from '@/app/trpc/trpc'
 
 export const preschoolProgramRouter = router({
     createEnrolment: publicProcedure

@@ -7,12 +7,12 @@
         "skipLibCheck": true,
 
         "paths": {
-            "@components/*": ["./src/components/*"],
-            "@ui-components/*": ["./src/ui-components/ui/*"],
-            "@constants/*": ["./src/constants/*"],
-            "@drawables/*": ["./src/drawables/*"],
-            "@utils/*": ["./src/utilities/*"],
-            "@hooks/*": ["./src/components/Hooks/*"],
+            "@app/*": ["./src/app/*"],
+            "@features/*": ["./src/features/*"],
+            "@integrations/*": ["./src/integrations/*"],
+            "@session/*": ["./src/session/*"],
+            "@shared/*": ["./src/shared/*"],
+            "@server/*": ["../server/src/*"],
             "@/*": ["../server/src/*"],
             "@fizz-kidz/core": ["../../packages/core/src"]
         },

@@ -17,12 +17,12 @@ export default defineConfig({
             {
                 groupName: 'internal-aliases',
                 elementNamePattern: [
-                    '@/**',
-                    '@components/**',
-                    '@ui-components/**',
-                    '@constants/**',
-                    '@drawables/**',
-                    '@utils/**',
+                    '@app/**',
+                    '@features/**',
+                    '@integrations/**',
+                    '@server/**',
+                    '@session/**',
+                    '@shared/**',
                 ],
             },
         ],

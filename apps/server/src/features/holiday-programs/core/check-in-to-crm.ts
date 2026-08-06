@@ -1,7 +1,8 @@
 import { AcuityConstants } from '@fizz-kidz/core'
 
-import { AcuityClient } from '@/integrations/acuity/acuity.client'
 import type { AcuityWebhookData } from '@/integrations/acuity/functions/acuity.webhook'
+
+import { AcuityClient } from '@/integrations/acuity/acuity.client'
 import { ZohoClient } from '@/integrations/zoho/zoho.client'
 
 /**

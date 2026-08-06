@@ -1,9 +1,9 @@
 import type { AcuityTypes } from '@fizz-kidz/core'
 import { AcuityConstants } from '@fizz-kidz/core'
 
-import { acuityAuthenticatedProcedure, acuityPublicProcedure, router } from '@/app/trpc/trpc'
-
 import { mergeAcuityWithStoryblok } from '../../core/merge-storyblok-with-acuity'
+
+import { acuityAuthenticatedProcedure, acuityPublicProcedure, router } from '@/app/trpc/trpc'
 
 export const acuityRouter = router({
     updateLabel: acuityAuthenticatedProcedure

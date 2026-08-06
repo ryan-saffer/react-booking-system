@@ -5,14 +5,14 @@ import {
     type SendInvoiceParams,
 } from '@fizz-kidz/core'
 
+import { sendInvoice } from './send-invoice'
+
+import type { Square } from 'square'
+
 import { env } from '@/app/init/firebase'
 import { throwTrpcError } from '@/app/trpc/transport-errors'
 import { DatabaseClient } from '@/integrations/firebase/database.client'
 import { SquareClient } from '@/integrations/square/square.client'
-
-import { sendInvoice } from './send-invoice'
-
-import type { Square } from 'square'
 
 export async function sendInvoices(input: SendInvoiceParams[]) {
     const invoiceStatusMap: InvoiceStatusMap = {}

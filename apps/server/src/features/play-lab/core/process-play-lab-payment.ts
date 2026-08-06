@@ -1,10 +1,10 @@
+import type { BookPlayLabProps } from './book-play-lab'
+import type { Square } from 'square'
+
 import { env } from '@/app/init/firebase'
 import { throwCustomTrpcError } from '@/app/trpc/transport-errors'
 import { GiftCardInactiveError } from '@/app/trpc/trpc.errors'
 import { SquareClient } from '@/integrations/square/square.client'
-
-import type { BookPlayLabProps } from './book-play-lab'
-import type { Square } from 'square'
 
 /**
  * Process a play lab payment according to the following steps:

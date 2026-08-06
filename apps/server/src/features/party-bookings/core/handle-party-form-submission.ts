@@ -12,16 +12,17 @@ import {
     getStudioContactEmail,
 } from '@fizz-kidz/core'
 
+import { PartyFormMapper } from './party-form-mapper'
+import { getBookingCreations, getBookingAdditions } from './utils.party'
+
+import type { PaperformSubmission } from '@/integrations/paperforms/paperform.client'
+
 import { env } from '@/app/init/firebase'
 import { throwFunctionsError } from '@/app/trpc/transport-errors'
 import { DatabaseClient } from '@/integrations/firebase/database.client'
 import { MixpanelClient } from '@/integrations/mixpanel/mixpanel.client'
 import { logError } from '@/integrations/observability/log-error'
-import type { PaperformSubmission } from '@/integrations/paperforms/paperform.client'
 import { MailClient } from '@/integrations/sendgrid/sendgrid.client'
-
-import { PartyFormMapper } from './party-form-mapper'
-import { getBookingCreations, getBookingAdditions } from './utils.party'
 
 export async function handlePartyFormSubmission(responses: PaperformSubmission<PartyForm>) {
     const formMapper = new PartyFormMapper(responses)

@@ -1,5 +1,4 @@
 import type { ClientStatus } from '@/shared/lazy-client/client-status'
-
 import type { Storage } from 'firebase-admin/storage'
 
 export class StorageClient {

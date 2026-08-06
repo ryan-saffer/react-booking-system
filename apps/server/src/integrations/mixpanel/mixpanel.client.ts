@@ -10,7 +10,6 @@ import type {
     ReferenceOption,
 } from '@/features/website/core/website-form-types'
 import type { ClientStatus } from '@/shared/lazy-client/client-status'
-
 import type { Mixpanel } from 'mixpanel'
 
 export class MixpanelClient {

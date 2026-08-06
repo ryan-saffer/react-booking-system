@@ -1,7 +1,6 @@
 import type { FranchiseOrMaster, StudioOrMaster } from '@fizz-kidz/core'
 
 import type { ClientStatus } from '@/shared/lazy-client/client-status'
-
 import type { XeroClient as TXeroClient } from 'xero-node'
 
 const ENV_MAP: Record<FranchiseOrMaster, { clientId: string; clientSecret: string }> = {

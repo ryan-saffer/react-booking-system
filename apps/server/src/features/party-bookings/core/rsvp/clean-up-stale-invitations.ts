@@ -1,8 +1,8 @@
+import { deleteInvitationV2 } from './delete-invitation-v2'
+
 import { projectId } from '@/app/init/firebase'
 import { FirestoreRefs } from '@/integrations/firebase/firestore.refs'
 import { StorageClient } from '@/integrations/firebase/storage.client'
-
-import { deleteInvitationV2 } from './delete-invitation-v2'
 
 /**
  * Deletes invitations that are no longer linked to any party booking.

@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
-import { DatabaseClient } from '@/integrations/firebase/database.client'
-
 import { studioSchema } from './inventory.schemas'
+
+import { DatabaseClient } from '@/integrations/firebase/database.client'
 
 export const listInventoryStockMovementsInputSchema = z
     .object({

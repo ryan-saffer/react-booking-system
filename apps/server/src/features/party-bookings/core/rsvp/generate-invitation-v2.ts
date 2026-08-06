@@ -5,12 +5,12 @@ import path from 'path'
 import type { InvitationsV2, WithoutId, WithoutUid } from '@fizz-kidz/core'
 import { generateRandomString } from '@fizz-kidz/core'
 
+import { InvitationImageGenerator } from './invitation-image-generator'
+
 import { projectId } from '@/app/init/firebase'
 import { DatabaseClient } from '@/integrations/firebase/database.client'
 import { StorageClient } from '@/integrations/firebase/storage.client'
 import { MixpanelClient } from '@/integrations/mixpanel/mixpanel.client'
-
-import { InvitationImageGenerator } from './invitation-image-generator'
 
 /**
  * Creates and uploads an invitation to storage, but does not create a document in firestore.

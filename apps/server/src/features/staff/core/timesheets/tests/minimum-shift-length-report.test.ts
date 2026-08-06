@@ -2,10 +2,10 @@ import { deepStrictEqual, strictEqual } from 'assert'
 
 import { describe, it } from 'vite-plus/test'
 
-import type { Timesheet, User } from '@/integrations/sling/sling.types'
-
 import { getShiftsUnderMinimumShiftLengthForTimesheets } from '../minimum-shift-length-report'
 import { SlingLocationToId, SlingPosition, SlingPositionToId } from '../timesheets.utils'
+
+import type { Timesheet, User } from '@/integrations/sling/sling.types'
 
 function createSlingUser(overrides: Partial<User> = {}): User {
     return {

@@ -1,3 +1,5 @@
+import { router } from './trpc'
+
 import { afterSchoolProgramRouter } from '@/features/after-school-program/functions/trpc/trpc.after-school-program'
 import { authRouter } from '@/features/auth/functions/trpc/trpc.auth'
 import { creationsRouter } from '@/features/creations/functions/trpc/trpc.creations'
@@ -11,8 +13,6 @@ import { preschoolProgramRouter } from '@/features/preschool-program/functions/t
 import { reportsRouter } from '@/features/reports/functions/trpc/trpc.reports'
 import { staffRouter } from '@/features/staff/functions/trpc/trpc.staffRouter'
 import { acuityRouter } from '@/integrations/acuity/functions/trpc/trpc.acuity'
-
-import { router } from './trpc'
 
 export const appRouter = router({
     parties: partiesRouter,
