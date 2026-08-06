@@ -2,7 +2,7 @@ import fs from 'fs/promises'
 
 import type { IncursionEvent, Studio } from '@fizz-kidz/core'
 
-import { eventsRouter } from '@/features/events/functions/trpc/trpc.events'
+import { eventsRouter } from '@/features/events/functions/trpc/events.trpc'
 import { CalendarClient } from '@/integrations/google/calendar.client'
 
 export async function groupEventsByContactEmail() {

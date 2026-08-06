@@ -3,9 +3,9 @@ import { CircleCheckBig, LoaderCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
-import '@/styles/sonner.css'
+import { EventWebsiteFormSchema, ReferenceOptions, type WebsiteForm } from '@fizz-kidz/core'
+
 import { Button } from '../ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
@@ -13,24 +13,11 @@ import { SelectContent, SelectForm, SelectItem, SelectValue } from '../ui/select
 import { Toaster } from '../ui/sonner'
 import { Textarea } from '../ui/textarea'
 
-import { FORM_WEBHOOK } from '@/utils/constants'
-import { assertNoCorsRequestSucceeded } from '@/utils/no-cors-response'
-
-const formSchema = z.object({
-    name: z.string().min(1, 'Contact name is required'),
-    email: z.string().min(1, 'Email address is required').email(),
-    contactNumber: z.string().min(10, 'Contact number must be at least 10 digits long'),
-    organisation: z.string().min(1, 'Organisation name is required'),
-    preferredDateAndTime: z.string().min(1, 'Please enter your preffered dates'),
-    numberOfAttendees: z.string().trim().min(1, 'Please enter the estimated number of attendees'),
-    budget: z.string().optional(),
-    enquiry: z.string().min(1, 'Please enter an enquiry'),
-    reference: z.enum(['google', 'instagram', 'word-of-mouth', 'attended-fizz', 'other']).optional(),
-})
+import { submitWebsiteForm } from '@/utils/website-forms'
 
 function ActivationsForm() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<WebsiteForm['event']>({
+        resolver: zodResolver(EventWebsiteFormSchema),
         defaultValues: {
             name: '',
             email: '',
@@ -46,17 +33,12 @@ function ActivationsForm() {
 
     const [loading, setLoading] = useState(false)
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: WebsiteForm['event']) {
         if (loading) return
         setLoading(true)
 
         try {
-            const response = await fetch(`${FORM_WEBHOOK}?formId=event`, {
-                body: JSON.stringify(values),
-                method: 'POST',
-                mode: 'no-cors',
-            })
-            assertNoCorsRequestSucceeded(response)
+            await submitWebsiteForm('event', values)
             window.dataLayer = window.dataLayer || []
             window.dataLayer.push({
                 event: 'lead_submit',
@@ -233,11 +215,11 @@ function ActivationsForm() {
                                 >
                                     <SelectValue />
                                     <SelectContent>
-                                        <SelectItem value="google">Google Search</SelectItem>
-                                        <SelectItem value="instagram">Instagram</SelectItem>
-                                        <SelectItem value="word-of-mouth">Word of mouth</SelectItem>
-                                        <SelectItem value="attended-fizz">Attended a Fizz Kidz experience</SelectItem>
-                                        <SelectItem value="other">Other</SelectItem>
+                                        {ReferenceOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </SelectForm>
                                 <FormMessage />

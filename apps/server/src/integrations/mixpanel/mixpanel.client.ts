@@ -1,14 +1,15 @@
 import { logger } from 'firebase-functions/v2'
 
-import type { InvitationOption, InvitationsV2 } from '@fizz-kidz/core'
-import { type ScienceModule, type Studio, type StudioOrTest } from '@fizz-kidz/core'
-
 import type {
     ContactFormLocationOption,
     ContactFormServiceOption,
-    Form,
+    InvitationOption,
+    InvitationsV2,
     ReferenceOption,
-} from '@/features/website/core/website-form-types'
+    WebsiteFormId,
+} from '@fizz-kidz/core'
+import { type ScienceModule, type Studio, type StudioOrTest } from '@fizz-kidz/core'
+
 import type { ClientStatus } from '@/shared/lazy-client/client-status'
 import type { Mixpanel } from 'mixpanel'
 
@@ -132,7 +133,7 @@ export type MixpanelEvent = {
     }
     'website-enquiry': {
         distinct_id: string
-        form: keyof Form
+        form: WebsiteFormId
         service?: ContactFormServiceOption
         location?: ContactFormLocationOption
         reference?: ReferenceOption

@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url'
+
 import netlify from '@astrojs/netlify'
 import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
@@ -8,6 +10,13 @@ export default defineConfig({
     site: 'https://www.fizzkidz.com.au',
     compressHTML: true,
     adapter: netlify({ imageCDN: false }),
+    vite: {
+        resolve: {
+            alias: {
+                '@fizz-kidz/core': fileURLToPath(new URL('../../packages/core/src', import.meta.url)),
+            },
+        },
+    },
     integrations: [
         react(),
         sitemap({

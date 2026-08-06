@@ -20,14 +20,17 @@ Most pages are lazy-loaded. `/dashboard/**` is staff-only; booking, enrolment, f
 
 The Portal batches tRPC requests through `/api/trpc`. The client is created in `root.tsx`; `src/utilities/trpc.ts` connects it to the server's `AppRouter` type.
 
+`npm run portal:local` only starts the Portal and routes its tRPC and callable Functions through an already-running local Functions emulator. Auth, Firestore, and Storage remain connected to the development Firebase project.
+
 `@fizz-kidz/core` resolves straight to `packages/core/src`, so shared changes appear without a package build.
 
 ## Run It
 
 ```bash
 npm run portal          # Portal + type watcher, no emulators
+npm run portal:local    # Portal only, pointed at local server
 npm run portal:prod     # Portal pointed at production
-npm run dev             # Portal + local server stack
+npm run dev             # Portal in local mode + local server stack
 vp test --run --project portal
 ```
 

@@ -3,9 +3,14 @@ import { CircleCheckBig, LoaderCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
-import '@/styles/sonner.css'
+import {
+    IncursionFormModuleOptions,
+    IncursionWebsiteFormSchema,
+    ReferenceOptions,
+    type WebsiteForm,
+} from '@fizz-kidz/core'
+
 import { Button } from '../ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
@@ -13,31 +18,11 @@ import { SelectContent, SelectForm, SelectItem, SelectValue } from '../ui/select
 import { Toaster } from '../ui/sonner'
 import { Textarea } from '../ui/textarea'
 
-import { FORM_WEBHOOK } from '@/utils/constants'
-import { assertNoCorsRequestSucceeded } from '@/utils/no-cors-response'
-
-const formSchema = z.object({
-    name: z.string().min(1, 'Contact name is required'),
-    school: z.string().min(1, 'School name is required'),
-    email: z.string().min(1, 'Email address is required').email(),
-    contactNumber: z.string().min(10, 'Contact number must be at least 10 digits long'),
-    preferredDateAndTime: z.string().min(1, 'Please enter a preferred date and time'),
-    module: z
-        .enum(['chemicalScience', 'pushAndPull', 'lightAndSound', 'earthWeatherSustainability', 'notSure'])
-        .optional()
-        .refine((it) => !!it, 'Please select a module'),
-    numberOfSessions: z
-        .string()
-        .trim()
-        .regex(/^[1-9]\d*$/, 'Please enter a whole number greater than zero'),
-    numberOfStudentsPerSession: z.string().trim().min(1, 'Please enter the number of students per session'),
-    enquiry: z.string().min(1, 'Please enter an enquiry'),
-    reference: z.enum(['google', 'instagram', 'word-of-mouth', 'attended-fizz', 'other']).optional(),
-})
+import { submitWebsiteForm } from '@/utils/website-forms'
 
 function IncursionForm() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<WebsiteForm['incursion']>({
+        resolver: zodResolver(IncursionWebsiteFormSchema),
         defaultValues: {
             name: '',
             school: '',
@@ -54,17 +39,12 @@ function IncursionForm() {
 
     const [loading, setLoading] = useState(false)
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: WebsiteForm['incursion']) {
         if (loading) return
         setLoading(true)
 
         try {
-            const response = await fetch(`${FORM_WEBHOOK}?formId=incursion`, {
-                body: JSON.stringify(values),
-                method: 'POST',
-                mode: 'no-cors',
-            })
-            assertNoCorsRequestSucceeded(response)
+            await submitWebsiteForm('incursion', values)
             window.dataLayer = window.dataLayer || []
             window.dataLayer.push({
                 event: 'lead_submit',
@@ -194,13 +174,11 @@ function IncursionForm() {
                                 >
                                     <SelectValue />
                                     <SelectContent>
-                                        <SelectItem value="chemicalScience">Chemical Science</SelectItem>
-                                        <SelectItem value="pushAndPull">Push and Pull</SelectItem>
-                                        <SelectItem value="lightAndSound">Light and Sound</SelectItem>
-                                        <SelectItem value="earthWeatherSustainability">
-                                            Earth, Weather and Sustainability
-                                        </SelectItem>
-                                        <SelectItem value="notSure">A combination of the above / not sure</SelectItem>
+                                        {IncursionFormModuleOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </SelectForm>
                                 <FormMessage />
@@ -275,11 +253,11 @@ function IncursionForm() {
                                 >
                                     <SelectValue />
                                     <SelectContent>
-                                        <SelectItem value="google">Google Search</SelectItem>
-                                        <SelectItem value="instagram">Instagram</SelectItem>
-                                        <SelectItem value="word-of-mouth">Word of mouth</SelectItem>
-                                        <SelectItem value="attended-fizz">Attended a Fizz Kidz experience</SelectItem>
-                                        <SelectItem value="other">Other</SelectItem>
+                                        {ReferenceOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </SelectForm>
                                 <FormMessage />

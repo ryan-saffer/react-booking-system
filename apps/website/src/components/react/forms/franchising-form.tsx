@@ -3,9 +3,14 @@ import { CircleCheckBig, LoaderCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
-import '@/styles/sonner.css'
+import {
+    AustralianStateOptions,
+    FranchisingInterestOptions,
+    FranchisingWebsiteFormSchema,
+    type WebsiteForm,
+} from '@fizz-kidz/core'
+
 import { Button } from '../ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
@@ -13,30 +18,11 @@ import { SelectContent, SelectForm, SelectItem, SelectValue } from '../ui/select
 import { Toaster } from '../ui/sonner'
 import { Textarea } from '../ui/textarea'
 
-import { FORM_WEBHOOK } from '@/utils/constants'
-import { assertNoCorsRequestSucceeded } from '@/utils/no-cors-response'
-
-const formSchema = z.object({
-    firstName: z.string().min(1, 'First name is required'),
-    lastName: z.string().min(1, 'Last name is required'),
-    email: z.string().min(1, 'Email address is required').email(),
-    contactNumber: z.string().min(10, 'Contact number must be at least 10 digits long'),
-    suburb: z.string().min(1, 'Suburb is required'),
-    state: z
-        .enum(['ACT', 'NSW', 'NT', 'QLD', 'TAS', 'VIC', 'WA'])
-        .optional()
-        .refine((it) => !!it, 'Please select a state'),
-    interest: z
-        .enum(['browsing', '3', '6', '12', '12+'])
-        .optional()
-        .refine((it) => !!it, 'Please select your interest level'),
-    enquiry: z.string().min(1, 'Please tell us a bit about yourself!'),
-    reference: z.string().min(1, 'Please enter how you heard about us'),
-})
+import { submitWebsiteForm } from '@/utils/website-forms'
 
 function FranchisingForm() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<WebsiteForm['franchising']>({
+        resolver: zodResolver(FranchisingWebsiteFormSchema),
         defaultValues: {
             firstName: '',
             lastName: '',
@@ -52,17 +38,12 @@ function FranchisingForm() {
 
     const [loading, setLoading] = useState(false)
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: WebsiteForm['franchising']) {
         if (loading) return
         setLoading(true)
 
         try {
-            const response = await fetch(`${FORM_WEBHOOK}?formId=franchising`, {
-                body: JSON.stringify(values),
-                method: 'POST',
-                mode: 'no-cors',
-            })
-            assertNoCorsRequestSucceeded(response)
+            await submitWebsiteForm('franchising', values)
         } catch (err) {
             console.error({ err })
             toast.error(
@@ -189,13 +170,11 @@ function FranchisingForm() {
                                 >
                                     <SelectValue />
                                     <SelectContent>
-                                        <SelectItem value="ACT">ACT</SelectItem>
-                                        <SelectItem value="NSW">NSW</SelectItem>
-                                        <SelectItem value="NT">NT</SelectItem>
-                                        <SelectItem value="QLD">QLD</SelectItem>
-                                        <SelectItem value="TAS">TAS</SelectItem>
-                                        <SelectItem value="VIC">VIC</SelectItem>
-                                        <SelectItem value="WA">WA</SelectItem>
+                                        {AustralianStateOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </SelectForm>
                                 <FormMessage />
@@ -215,11 +194,11 @@ function FranchisingForm() {
                                 >
                                     <SelectValue />
                                     <SelectContent>
-                                        <SelectItem value="3">Get started in 3 months</SelectItem>
-                                        <SelectItem value="6">Get started in 3-6 months</SelectItem>
-                                        <SelectItem value="12">Get started in 6-12 months</SelectItem>
-                                        <SelectItem value="12+">Get started in 12+ months</SelectItem>
-                                        <SelectItem value="browsing">Just browsing</SelectItem>
+                                        {FranchisingInterestOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </SelectForm>
                                 <FormMessage />

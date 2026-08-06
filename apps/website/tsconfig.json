@@ -4,7 +4,9 @@
     "exclude": ["dist"],
     "compilerOptions": {
         "paths": {
-            "@/*": ["./src/*"],
+            "@/*": ["./src/*", "../server/src/*"],
+            "@fizz-kidz/core": ["../../packages/core/src"],
+            "@server/*": ["../server/src/*"],
             "@/react-components/*": ["./src/components/react/*"],
             "@/react-ui/*": ["./src/components/react/ui/*"],
             "@/react-lib/*": ["./src/components/react/lib/*"]

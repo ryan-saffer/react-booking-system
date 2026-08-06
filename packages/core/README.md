@@ -1,6 +1,6 @@
 # `@fizz-kidz/core`
 
-The common language spoken by the Portal and server: domain types, constants, mappings, and pure business logic.
+The common language spoken by the Portal, website, and server: domain types, constants, mappings, validation schemas, and pure business logic.
 
 ## The Test
 
@@ -30,6 +30,8 @@ Shared UI should become a separate package rather than stretching core's contrac
 `src/index.ts` is the public surface. If another workspace should import something, export it there.
 
 Portal and server both resolve `@fizz-kidz/core` directly to `src`, so normal development needs no package build. The server bundles core into its Functions artifact.
+
+The website also resolves core directly to source. Its form contracts live in `src/website/website-forms.ts`: option arrays are the source for dropdowns and display mappings, Zod schemas validate in both browser and server, and `WebsiteForm` infers each submitted payload type.
 
 ```bash
 npm --workspace @fizz-kidz/core run build

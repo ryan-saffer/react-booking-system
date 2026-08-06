@@ -3,9 +3,15 @@ import { LoaderCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
-import '@/styles/sonner.css'
+import {
+    CareersFormRoleOptions,
+    CareersWebsiteFormSchema,
+    WebsiteStudioOptions,
+    YesNoOptions,
+    type WebsiteForm,
+} from '@fizz-kidz/core'
+
 import { Button } from '../ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
@@ -14,42 +20,12 @@ import { SelectContent, SelectForm, SelectItem, SelectValue } from '../ui/select
 import { Toaster } from '../ui/sonner'
 import { Textarea } from '../ui/textarea'
 
-import { FORM_WEBHOOK } from '@/utils/constants'
-import { assertNoCorsRequestSucceeded } from '@/utils/no-cors-response'
 import { UploadButton } from '@/utils/uploadthing'
-
-const formSchema = z
-    .object({
-        name: z.string().min(1, 'Contact name is required'),
-        email: z.string().min(1, 'Email address is required').email(),
-        contactNumber: z.string().min(10, 'Contact number must be at least 10 digits long'),
-        role: z
-            .enum(['area-manager', 'social-media', 'supervisor', 'facilitator', 'other'])
-            .optional()
-            .refine((it) => !!it, {
-                message: 'Please select which role you are applying for',
-            }),
-        location: z.enum(['balwyn', 'cheltenham', 'essendon', 'geelong', 'kingsville', 'malvern']).optional(),
-        wwcc: z.enum(['yes', 'no']),
-        driversLicense: z.enum(['yes', 'no']),
-        application: z.string().min(1, 'Please answer'),
-        reference: z.string().min(1, 'Please answer'),
-    })
-    .superRefine((val, ctx) => {
-        if (val.role !== 'area-manager' && val.role !== 'social-media') {
-            if (!val.location) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Please select location',
-                    path: ['location'],
-                })
-            }
-        }
-    })
+import { submitWebsiteForm } from '@/utils/website-forms'
 
 function CareersForm() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<WebsiteForm['careers']>({
+        resolver: zodResolver(CareersWebsiteFormSchema),
         defaultValues: {
             name: '',
             email: '',
@@ -59,10 +35,10 @@ function CareersForm() {
             driversLicense: undefined,
             application: '',
             reference: '',
+            resume: undefined,
         },
     })
 
-    const [file, setFile] = useState<{ name: string; url: string } | null>(null)
     const [uploadError, setUploadError] = useState({
         isError: false,
         message: '',
@@ -73,7 +49,7 @@ function CareersForm() {
     const handleCustomSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (loading) return
-        if (!file) {
+        if (!form.getValues('resume')) {
             setUploadError({
                 isError: true,
                 message: 'Please upload your resume / CV',
@@ -82,21 +58,13 @@ function CareersForm() {
         form.handleSubmit(onSubmit)(e)
     }
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: WebsiteForm['careers']) {
         if (loading) return
-        if (!file) {
-            return
-        }
 
         setLoading(true)
 
         try {
-            const response = await fetch(`${FORM_WEBHOOK}?formId=careers`, {
-                body: JSON.stringify({ resume: file, ...values }),
-                method: 'POST',
-                mode: 'no-cors',
-            })
-            assertNoCorsRequestSucceeded(response)
+            await submitWebsiteForm('careers', values)
         } catch (err) {
             console.error(err)
             toast.error(
@@ -112,7 +80,7 @@ function CareersForm() {
             wwcc: undefined,
             driversLicense: undefined,
         })
-        setFile(null)
+        form.resetField('resume')
         toast.success(
             'Application recieved! You should have an email with a copy of your submission. We will be in touch soon!',
             {
@@ -187,47 +155,41 @@ function CareersForm() {
                                 >
                                     <SelectValue placeholder="Select role" />
                                     <SelectContent>
-                                        {/*<SelectItem value="area-manager">Area Manager</SelectItem>*/}
-                                        {/* <SelectItem value="social-media">
-                    Social Media & Content Creator
-                  </SelectItem>
-                  <SelectItem value="manager">Studio Manager</SelectItem> */}
-                                        {/* <SelectItem value="supervisor">Studio Supervisor</SelectItem> */}
-                                        <SelectItem value="facilitator">Studio Facilitator</SelectItem>
-                                        <SelectItem value="other">Other</SelectItem>
+                                        {CareersFormRoleOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </SelectForm>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    {form.watch('role') !== 'area-manager' && form.watch('role') !== 'social-media' && (
-                        <FormField
-                            control={form.control}
-                            name="location"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <SelectForm
-                                        label="Which location do you want to work at? *"
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                        value={field.value}
-                                    >
-                                        <SelectValue placeholder="Select location" />
-                                        <SelectContent>
-                                            <SelectItem value="balwyn">Balwyn</SelectItem>
-                                            <SelectItem value="cheltenham">Cheltenham</SelectItem>
-                                            <SelectItem value="essendon">Essendon</SelectItem>
-                                            <SelectItem value="geelong">Geelong</SelectItem>
-                                            <SelectItem value="kingsville">Kingsville</SelectItem>
-                                            <SelectItem value="malvern">Malvern</SelectItem>
-                                        </SelectContent>
-                                    </SelectForm>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    )}
+                    <FormField
+                        control={form.control}
+                        name="location"
+                        render={({ field }) => (
+                            <FormItem>
+                                <SelectForm
+                                    label="Which location do you want to work at? *"
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    value={field.value}
+                                >
+                                    <SelectValue placeholder="Select location" />
+                                    <SelectContent>
+                                        {WebsiteStudioOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </SelectForm>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                     <FormField
                         control={form.control}
                         name="wwcc"
@@ -241,8 +203,11 @@ function CareersForm() {
                                 >
                                     <SelectValue placeholder="Please answer" />
                                     <SelectContent>
-                                        <SelectItem value="yes">Yes</SelectItem>
-                                        <SelectItem value="no">No</SelectItem>
+                                        {YesNoOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </SelectForm>
                                 <FormMessage />
@@ -262,8 +227,11 @@ function CareersForm() {
                                 >
                                     <SelectValue placeholder="Please answer" />
                                     <SelectContent>
-                                        <SelectItem value="yes">Yes</SelectItem>
-                                        <SelectItem value="no">No</SelectItem>
+                                        {YesNoOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </SelectForm>
                                 <FormMessage />
@@ -296,7 +264,11 @@ function CareersForm() {
                             onClientUploadComplete={(res) => {
                                 // Do something with the response
                                 setUploadError({ isError: false, message: '' })
-                                setFile({ name: res[0].name, url: res[0].ufsUrl })
+                                form.setValue(
+                                    'resume',
+                                    { name: res[0].name, url: res[0].ufsUrl },
+                                    { shouldValidate: true }
+                                )
                             }}
                             onUploadError={(error: Error) => {
                                 // Do something with the error.
@@ -306,9 +278,9 @@ function CareersForm() {
                         {uploadError.isError && (
                             <p className="text-sm font-medium text-destructive">{uploadError.message}</p>
                         )}
-                        {file && (
+                        {form.watch('resume') && (
                             <ul className="list-disc pl-4">
-                                <li>{file.name}</li>
+                                <li>{form.watch('resume')?.name}</li>
                             </ul>
                         )}
                     </div>

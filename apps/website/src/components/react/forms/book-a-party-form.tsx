@@ -3,9 +3,15 @@ import { CircleCheckBig, LoaderCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
-import '@/styles/sonner.css'
+import {
+    ContactFormLocationOptions,
+    PartyThemeOptions,
+    PartyWebsiteFormSchema,
+    ReferenceOptions,
+    type WebsiteForm,
+} from '@fizz-kidz/core'
+
 import { Button } from '../ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
@@ -13,60 +19,11 @@ import { SelectContent, SelectForm, SelectItem, SelectValue } from '../ui/select
 import { Toaster } from '../ui/sonner'
 import { Textarea } from '../ui/textarea'
 
-import { FORM_WEBHOOK } from '@/utils/constants'
-import { assertNoCorsRequestSucceeded } from '@/utils/no-cors-response'
-
-const formSchema = z
-    .object({
-        name: z.string().min(1, 'Contact name is required'),
-        email: z.string().min(1, 'Email address is required').email(),
-        contactNumber: z.string().min(10, 'Contact number must be at least 10 digits long'),
-        location: z
-            .enum(['balwyn', 'cheltenham', 'essendon', 'geelong', 'kingsville', 'malvern', 'at-home', 'other'])
-            .optional()
-            .refine((it) => !!it, 'Please select a location'),
-        suburb: z.string().optional(),
-        preferredDateAndTime: z.string().min(1, 'Please enter your preferred date and time'),
-        partyTheme: z
-            .enum([
-                'glam',
-                'fluid-bears',
-                'kpop',
-                'fairy',
-                'safari',
-                'science',
-                'slime',
-                'swiftie',
-                'tie-dye',
-                'own',
-                'mix',
-            ])
-            .optional()
-            .refine((it) => !!it, 'Please select your preferred party theme'),
-        enquiry: z.string().min(1, 'Please enter an enquiry'),
-        reference: z
-            .enum(['google', 'instagram', 'word-of-mouth', 'attended-fizz', 'other'])
-            .optional()
-            .refine((it) => !!it, {
-                message: 'Please select how you heard about us',
-            }),
-        referenceOther: z.string().optional(),
-    })
-    .superRefine((val, ctx) => {
-        if (val.location === 'at-home') {
-            if (!val.suburb) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Please enter your suburb',
-                    path: ['suburb'],
-                })
-            }
-        }
-    })
+import { submitWebsiteForm } from '@/utils/website-forms'
 
 function BookAPartyForm() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<WebsiteForm['party']>({
+        resolver: zodResolver(PartyWebsiteFormSchema),
         defaultValues: {
             name: '',
             email: '',
@@ -81,17 +38,12 @@ function BookAPartyForm() {
     })
 
     const [loading, setLoading] = useState(false)
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: WebsiteForm['party']) {
         if (loading) return
         setLoading(true)
 
         try {
-            const response = await fetch(`${FORM_WEBHOOK}?formId=party`, {
-                body: JSON.stringify(values),
-                method: 'POST',
-                mode: 'no-cors',
-            })
-            assertNoCorsRequestSucceeded(response)
+            await submitWebsiteForm('party', values)
 
             window.dataLayer = window.dataLayer || []
             window.dataLayer.push({
@@ -189,14 +141,11 @@ function BookAPartyForm() {
                                 >
                                     <SelectValue />
                                     <SelectContent>
-                                        <SelectItem value="balwyn">Balwyn</SelectItem>
-                                        <SelectItem value="cheltenham">Cheltenham</SelectItem>
-                                        <SelectItem value="essendon">Essendon</SelectItem>
-                                        <SelectItem value="geelong">Geelong</SelectItem>
-                                        <SelectItem value="kingsville">Kingsville</SelectItem>
-                                        <SelectItem value="malvern">Malvern</SelectItem>
-                                        <SelectItem value="at-home">At Home</SelectItem>
-                                        <SelectItem value="other">Other</SelectItem>
+                                        {ContactFormLocationOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </SelectForm>
                                 <FormMessage />
@@ -251,17 +200,11 @@ function BookAPartyForm() {
                                 >
                                     <SelectValue />
                                     <SelectContent>
-                                        <SelectItem value="glam">Glam Party</SelectItem>
-                                        <SelectItem value="fluid-bears">Fluid Bears Party</SelectItem>
-                                        <SelectItem value="kpop">Kpop Power Party</SelectItem>
-                                        <SelectItem value="fairy">Fairy Party</SelectItem>
-                                        <SelectItem value="safari">Jungle Safari Party</SelectItem>
-                                        <SelectItem value="science">Science Party</SelectItem>
-                                        <SelectItem value="slime">Slime Party</SelectItem>
-                                        <SelectItem value="swiftie">Swiftie Party</SelectItem>
-                                        <SelectItem value="tie-dye">Tie-Dye Party</SelectItem>
-                                        <SelectItem value="own">My own theme</SelectItem>
-                                        <SelectItem value="mix">A mix of the above</SelectItem>
+                                        {PartyThemeOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </SelectForm>
                                 <FormMessage />
@@ -297,11 +240,11 @@ function BookAPartyForm() {
                                 >
                                     <SelectValue />
                                     <SelectContent>
-                                        <SelectItem value="google">Google search</SelectItem>
-                                        <SelectItem value="instagram">Instagram</SelectItem>
-                                        <SelectItem value="word-of-mouth">Word of mouth</SelectItem>
-                                        <SelectItem value="attended-fizz">Attended a Fizz Kidz experience</SelectItem>
-                                        <SelectItem value="other">Other</SelectItem>
+                                        {ReferenceOptions.map(({ value, label }) => (
+                                            <SelectItem key={value} value={value}>
+                                                {label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </SelectForm>
                                 <FormMessage />

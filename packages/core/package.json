@@ -21,6 +21,9 @@
     },
     "author": "Ryan Saffer",
     "license": "ISC",
+    "dependencies": {
+        "zod": "3.25.76"
+    },
     "devDependencies": {
         "firebase-admin": "^11.11.0"
     }

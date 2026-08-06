@@ -25,7 +25,7 @@ The first implementation stage should only create the backend capability to defi
 - [x] Move inventory auth and permission checks into inventory-scoped tRPC procedures.
 - [x] Move inventory operation schemas into core modules so tRPC and server functions share the same input type.
 - [x] Standardise inventory discriminated union keys with the `$` prefix.
-- [x] Register the inventory router in `apps/server/src/app/trpc/trpc.app-router.ts`.
+- [x] Register the inventory router in `apps/server/src/app/trpc/app.trpc.ts`.
 - [x] Run `vp check` across the workspace (formatting, lint, type-aware lint, and TypeScript for Portal, server, and shared core).
 - [ ] Add tests for stock movement transactions and permission checks.
 - [ ] Create an initial seed/admin script for party-food inventory items if needed.
@@ -44,7 +44,7 @@ Inventory should follow the current repository architecture instead of becoming 
 - Typed Firestore collection/document references belong in `apps/server/src/integrations/firebase/firestore.refs.ts`.
 - Low-level database reads/writes belong in `apps/server/src/integrations/firebase/database.client.ts`.
 - Feature/business operations belong in `apps/server/src/<feature>/core`.
-- tRPC routers belong in `apps/server/src/<feature>/functions/trpc` and are registered in `apps/server/src/app/trpc/trpc.app-router.ts`.
+- tRPC routers belong in `apps/server/src/<feature>/functions/trpc` and are registered in `apps/server/src/app/trpc/app.trpc.ts`.
 - The Portal consumes the server router through the existing typed tRPC client in `apps/portal/src/integrations/trpc.ts`.
 
 ## Design Principles
@@ -588,11 +588,11 @@ export async function listInventoryStockMovements(
 
 Create:
 
-- `apps/server/src/features/inventory/functions/trpc/trpc.inventory.ts`
+- `apps/server/src/features/inventory/functions/trpc/inventory.trpc.ts`
 
 Register in:
 
-- `apps/server/src/app/trpc/trpc.app-router.ts`
+- `apps/server/src/app/trpc/app.trpc.ts`
 
 Recommended router surface:
 
