@@ -9,7 +9,7 @@ The deployment is deliberately small: one HTTP function and one Pub/Sub function
 - `src/index.ts` exports Firebase Functions.
 - `src/app/http/api.ts` exports the HTTP function and lazily loads `src/app/http/app.ts`.
 - `src/app/http/app.ts` mounts tRPC, webhooks, public API routes, and durable redirects.
-- `src/app/trpc/trpc.app-router.ts` combines the feature routers.
+- `src/app/trpc/app.trpc.ts` combines the feature routers.
 - `src/app/background/function.ts` dispatches messages from the shared `background` topic.
 - `src/features/<feature>/core` contains workflows.
 - `src/features/<feature>/functions` contains HTTP, tRPC, webhook, or job adapters.
@@ -25,12 +25,12 @@ The `api` function owns `/api/trpc`, `/api/webhooks/**`, public endpoints such a
 - Keep `DatabaseClient` about persistence, not business decisions. See [`src/integrations/firebase/README.md`](src/integrations/firebase/README.md).
 - Put browser/server-safe contracts and pure logic in `@fizz-kidz/core`.
 - Validate public website submissions with the shared schemas in `packages/core/src/website/website-forms.ts`; do not recreate payload types or cast request bodies.
-- Website form mutations live in `src/features/website/functions/trpc/trpc.website-forms.ts`, delegate to the workflow in `src/features/website/core`, and are registered under `websiteForms`.
+- Website form mutations live in `src/features/website/functions/trpc/website-forms.trpc.ts`, delegate to the workflow in `src/features/website/core`, and are registered under `websiteForms`.
 - Keep browser origins in `src/app/http/cors-origins.ts`; Firebase handles preflight before lazily loading Express.
 - Keep credentials, SDK clients, Firestore, and network calls here.
 - Name integration client modules `<provider-or-service>.client.ts`; use similarly descriptive dot-qualified names for reference registries and helpers where appropriate.
 - Load heavyweight SDKs lazily; Firebase cold starts notice everything.
-- Register new tRPC routers in `app/trpc/trpc.app-router.ts` and new background handlers in `app/background/function.ts`.
+- Register new tRPC routers in `app/trpc/app.trpc.ts` and new background handlers in `app/background/function.ts`.
 
 ## Run It
 

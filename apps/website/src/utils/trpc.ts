@@ -1,6 +1,6 @@
 import { createTRPCClient, httpLink } from '@trpc/client'
 
-import type { AppRouter } from '@server/app/trpc/trpc.app-router'
+import type { AppRouter } from '@server/app/trpc/app.trpc'
 
 const environment = import.meta.env.MODE === 'prod' ? 'prod' : 'dev'
 const serverBaseUrl =

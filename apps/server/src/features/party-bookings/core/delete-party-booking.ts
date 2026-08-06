@@ -1,6 +1,6 @@
 import { deleteInvitationV2 } from './rsvp/delete-invitation-v2'
 
-import type { DeletePartyBooking } from '../functions/trpc/trpc.parties'
+import type { DeletePartyBooking } from '../functions/trpc/parties.trpc'
 
 import { throwTrpcError } from '@/app/trpc/transport-errors'
 import { DatabaseClient } from '@/integrations/firebase/database.client'

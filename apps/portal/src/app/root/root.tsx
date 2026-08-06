@@ -22,7 +22,7 @@ import { ConfirmationDialogProvider } from '@shared/components/dialogs/confirmat
 
 import { AppUpdatePrompt } from './app-update-prompt'
 
-import type { AppRouter } from '@/app/trpc/trpc.app-router'
+import type { AppRouter } from '@/app/trpc/app.trpc'
 mixpanel.init(import.meta.env.VITE_MIXPANEL_API_KEY, { debug: import.meta.env.VITE_ENV === 'dev' })
 
 const theme = createTheme({

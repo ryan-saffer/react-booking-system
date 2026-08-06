@@ -97,7 +97,7 @@ vp add <package> --filter @fizz-kidz/core
 - Portal routes: `apps/portal/src/app/router.tsx`
 - Portal providers and tRPC client: `apps/portal/src/app/root/root.tsx`
 - Server HTTP composition: `apps/server/src/app/http/app.ts`
-- Server tRPC composition: `apps/server/src/app/trpc/trpc.app-router.ts`
+- Server tRPC composition: `apps/server/src/app/trpc/app.trpc.ts`
 - Background jobs: `apps/server/src/app/background/function.ts`
 - Shared exports: `packages/core/src/index.ts`
 - Firestore boundary: [`apps/server/src/integrations/firebase/README.md`](apps/server/src/integrations/firebase/README.md)

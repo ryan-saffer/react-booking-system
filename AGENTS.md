@@ -7,7 +7,7 @@ Read the root [`README.md`](README.md), then the README nearest the code being c
 - Portal routes: `apps/portal/src/app/router.tsx`
 - Portal providers/tRPC: `apps/portal/src/app/root/root.tsx`
 - Server HTTP: `apps/server/src/app/http/app.ts`
-- Server tRPC: `apps/server/src/app/trpc/trpc.app-router.ts`
+- Server tRPC: `apps/server/src/app/trpc/app.trpc.ts`
 - Background jobs: `apps/server/src/app/background/function.ts`
 - Shared exports: `packages/core/src/index.ts`
 - Tooling: `package.json` and `vite.config.ts`

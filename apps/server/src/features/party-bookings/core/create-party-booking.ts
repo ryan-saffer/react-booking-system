@@ -5,7 +5,7 @@ import { getApplicationDomain, getStudioAddress, getPartyEndDate, getPartyBirthd
 
 import { sendPartyBookingConfirmationEmail } from './send-party-booking-confirmation-email'
 
-import type { CreatePartyBooking } from '../functions/trpc/trpc.parties'
+import type { CreatePartyBooking } from '../functions/trpc/parties.trpc'
 
 import { env } from '@/app/init/firebase'
 import { throwTrpcError } from '@/app/trpc/transport-errors'

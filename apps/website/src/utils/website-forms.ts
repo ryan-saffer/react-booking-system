@@ -1,6 +1,6 @@
 import type { WebsiteForm, WebsiteFormId } from '@fizz-kidz/core'
 
-import type { AppRouter } from '@server/app/trpc/trpc.app-router'
+import type { AppRouter } from '@server/app/trpc/app.trpc'
 
 import type { inferRouterOutputs } from '@trpc/server'
 
